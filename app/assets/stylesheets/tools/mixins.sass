@@ -1,0 +1,18 @@
+
+@function calculateRem($size)
+  $remSize: $size / 16px
+  @return #{$remSize}rem
+
+=fontSize($size)
+  font-size: $size
+  font-size: calculateRem($size)
+
+=placeholder
+  &::-webkit-input-placeholder
+    @content
+  &:-moz-placeholder
+    @content
+  &::-moz-placeholder
+    @content
+  &:-ms-input-placeholder
+    @content

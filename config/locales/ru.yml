@@ -1,0 +1,47 @@
+ru:
+  time:
+    formats:
+      long: "%H:%M:%S %d-%m-%Y "
+  activerecord:
+    models:
+      user:
+        one:   "Участник"
+        few:   "Участников"
+        many:  "Участники"
+        other: "Участники"
+      article:
+        one:   "Статья"
+        few:   "Статей"
+        many:  "Статьи"
+        other: "Статьи"
+      programs:
+        one:   "Программа"
+        few:   "Программы"
+        many:  "Программы"
+        other: "Программы"
+
+    attributes:
+      article:
+        title: "Заголовок"
+        text: "Текст"
+        image: "Изображение"
+        created_at: "Создан"
+        updated_at: "Обновлен"
+      program:
+        main_heading: 'Название'
+        sub_heading: 'Подзаголовок'
+        desc: 'основной текст'
+        dark_background: 'Сделать текст белым цветом'
+        left_side_content: 'Расположить текст слева'
+        image: "Изображение"
+        mobile_image: "Изображение для мобильной версии"
+        link: "Ссылка кнопки #1"
+        button_text: "Текст кнопки #1"
+        link_two: "Ссылка кнопки #2"
+        button_two: "Текст кнопки #2"
+
+
+
+
+
+
