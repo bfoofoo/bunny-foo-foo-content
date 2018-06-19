@@ -12,8 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.slick
 //= require remodal
 //= require sweetalert
-//= require jquery.mask
 //= require_tree .
