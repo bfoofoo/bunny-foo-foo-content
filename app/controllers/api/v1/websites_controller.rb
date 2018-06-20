@@ -3,7 +3,7 @@ class Api::V1::WebsitesController < ApiController
 
   def index
     @websites = Website.all
-    render json: @websites
+    render json: paginate_items(@websites)
   end
 
   def show
@@ -34,6 +34,14 @@ class Api::V1::WebsitesController < ApiController
   private
     def set_website
       @website = Website.find(params[:id])
+    end
+
+    def paginate_items items
+      if items.is_a?(Array)
+        Kaminari.paginate_array(items).page(params[:page]).per(params[:per])
+      else
+        items.page(params[:page]).per(params[:per])
+      end
     end
 
 end

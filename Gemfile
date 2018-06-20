@@ -19,7 +19,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'normalize-rails', '~> 4.1.1'
 gem 'sweetalert-rails'
 gem 'yaml_db'
-
+gem 'kaminari'
 gem "jquery-slick-rails"
 gem 'autoprefixer-rails'
 gem 'jquery-rails'
