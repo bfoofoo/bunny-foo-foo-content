@@ -17,3 +17,78 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+// Overriding any non-variable SASS must be done after the fact.
+// For example, to change the default status-tag color:
+//
+//   .status_tag { background: #6090DB; }
+.col-image {
+  img {
+    max-width: 300px;
+  }
+}
+#main_content_wrapper {
+  img {
+    max-width: 300px;
+  }
+}
+
+
+.cke_contents {
+  min-height: 400px;
+}
+
+.cke_chrome {
+  width: 79.5% !important;
+  overflow: hidden;
+}
+
+#footer{
+  display: none;
+}
+
+#header{
+  li#assets{
+    display: none;
+  }
+}
+
+#dashboard_default_message{
+  display: none !important;
+}
+
+
+.wysihtml5-sandbox{
+  width: 98% !important
+}
+body.active_admin form .activeadmin-wysihtml5{
+  width: 80% !important;
+}
+.col-status{
+  min-width: 70px;
+}
+
+.row-image img{
+  max-width: 750px;
+  max-height: 750px;
+}
+
+label.default_label{
+  display: block;
+  width: 20%;
+  float: left;
+  font-size: 1.0em;
+  font-weight: bold;
+  color: #5E6469;
+  padding: 10px;
+  padding-right: 0px;
+}
+
+input[type="file"]{
+  padding: 10px;
+  padding-left: 0px;
+}
+
+#wrapper .sidebar_section.panel > h3, .panel > h3 {
+  margin-top: 0px;
+}

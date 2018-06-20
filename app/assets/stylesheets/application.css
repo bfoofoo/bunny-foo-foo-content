@@ -11,11 +11,5 @@
  * It is generally better to create a new file per style scope.
  *
  *= require normalize-rails
- *= require slick
- *= require slick-theme
- *= require remodal-default-theme
- *= require remodal
- *= require sweetalert
  *= require_self
- *= require index
  */

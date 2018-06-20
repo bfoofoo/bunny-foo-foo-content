@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180620122649) do
+ActiveRecord::Schema.define(version: 20180620131856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,6 +58,20 @@ ActiveRecord::Schema.define(version: 20180620122649) do
     t.integer  "website_id"
     t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
     t.index ["website_id"], name: "index_articles_on_website_id", using: :btree
+  end
+
+  create_table "assets", force: :cascade do |t|
+    t.string   "storage_uid"
+    t.string   "storage_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "storage_width"
+    t.integer  "storage_height"
+    t.float    "storage_aspect_ratio"
+    t.integer  "storage_depth"
+    t.string   "storage_format"
+    t.string   "storage_mime_type"
+    t.string   "storage_size"
   end
 
   create_table "categories", force: :cascade do |t|

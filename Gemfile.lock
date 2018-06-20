@@ -1,3 +1,20 @@
+GIT
+  remote: git://github.com/stefanoverna/activeadmin-dragonfly.git
+  revision: 611164ff0255c66a3e555b5d46dd99f0eff1f115
+  specs:
+    activeadmin-dragonfly (0.0.2)
+      activeadmin
+      dragonfly (= 0.9.15)
+      rack-cache
+
+GIT
+  remote: git://github.com/stefanoverna/activeadmin-wysihtml5.git
+  revision: cf609b7bd4331866a261bd04da81fd84b80d9469
+  specs:
+    activeadmin-wysihtml5 (1.0.0)
+      activeadmin
+      activeadmin-dragonfly
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -120,6 +137,9 @@ GEM
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
+    dragonfly (0.9.15)
+      multi_json (~> 1.0)
+      rack
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -237,6 +257,8 @@ GEM
       pry (~> 0.9)
       slop (~> 3.0)
     rack (2.0.3)
+    rack-cache (1.8.0)
+      rack (>= 0.4)
     rack-contrib (2.0.1)
       rack (~> 2.0)
     rack-test (0.6.3)
@@ -342,6 +364,8 @@ DEPENDENCIES
   active_admin_theme
   active_model_serializers (~> 0.10.0)
   activeadmin (~> 1.0.0)
+  activeadmin-dragonfly!
+  activeadmin-wysihtml5!
   autoprefixer-rails
   awesome_print
   better_errors

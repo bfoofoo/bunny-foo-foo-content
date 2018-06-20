@@ -36,8 +36,9 @@ gem 'mini_magick'
 gem "awesome_print", require: "ap"
 # ACTIVE ADMIN
 gem 'activeadmin', '~> 1.0.0'
-# gem 'activeadmin-dragonfly', github: 'stefanoverna/activeadmin-dragonfly'
-# gem 'activeadmin-wysihtml5', github: 'stefanoverna/activeadmin-wysihtml5'
+gem 'activeadmin-dragonfly', github: 'stefanoverna/activeadmin-dragonfly'
+gem 'activeadmin-wysihtml5', github: 'stefanoverna/activeadmin-wysihtml5'
+
 gem 'metamagic'
 gem 'active_admin_theme'
 
