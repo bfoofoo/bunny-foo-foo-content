@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170512135302) do
+ActiveRecord::Schema.define(version: 20180620110218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,4 +46,47 @@ ActiveRecord::Schema.define(version: 20170512135302) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  create_table "articles", force: :cascade do |t|
+    t.string   "name"
+    t.text     "content"
+    t.text     "short"
+    t.integer  "category_id"
+    t.string   "slug"
+    t.string   "cover_image"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.text     "description"
+    t.integer  "website_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["website_id"], name: "index_categories_on_website_id", using: :btree
+  end
+
+  create_table "configs", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "slug"
+    t.integer  "website_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
+  end
+
+  create_table "websites", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "url"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_foreign_key "articles", "categories"
+  add_foreign_key "categories", "websites"
+  add_foreign_key "configs", "websites"
 end
