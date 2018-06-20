@@ -17,7 +17,7 @@ class Api::V1::WebsitesController < ApiController
 
   def get_articles
     @articles = @website.articles
-    render json: @articles
+    render json: paginate_items(@articles)
   end
 
 
