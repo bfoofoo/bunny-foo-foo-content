@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180620110218) do
+ActiveRecord::Schema.define(version: 20180620122649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,7 +55,9 @@ ActiveRecord::Schema.define(version: 20180620110218) do
     t.string   "cover_image"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "website_id"
     t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
+    t.index ["website_id"], name: "index_articles_on_website_id", using: :btree
   end
 
   create_table "categories", force: :cascade do |t|
@@ -87,6 +89,7 @@ ActiveRecord::Schema.define(version: 20180620110218) do
   end
 
   add_foreign_key "articles", "categories"
+  add_foreign_key "articles", "websites"
   add_foreign_key "categories", "websites"
   add_foreign_key "configs", "websites"
 end
