@@ -25,6 +25,11 @@ GEM
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
     active_admin_theme (1.0.3)
+    active_model_serializers (0.10.7)
+      actionpack (>= 4.1, < 6)
+      activemodel (>= 4.1, < 6)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     activeadmin (1.0.0)
       arbre (>= 1.1.1)
       bourbon
@@ -96,6 +101,8 @@ GEM
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
+    case_transform (0.2)
+      activesupport
     coderay (1.1.2)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -166,6 +173,7 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.1.0)
+    jsonapi-renderer (0.2.0)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -332,6 +340,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_admin_theme
+  active_model_serializers (~> 0.10.0)
   activeadmin (~> 1.0.0)
   autoprefixer-rails
   awesome_print
@@ -378,4 +387,4 @@ RUBY VERSION
    ruby 2.4.1p111
 
 BUNDLED WITH
-   1.15.4
+   1.16.1
