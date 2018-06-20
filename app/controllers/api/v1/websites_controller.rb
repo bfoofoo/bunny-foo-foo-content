@@ -12,7 +12,7 @@ class Api::V1::WebsitesController < ApiController
 
   private
     def set_website
-      @website = Address.find(params[:id])
+      @website = Website.find(params[:id])
     end
 
 end
