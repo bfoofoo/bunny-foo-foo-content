@@ -9,7 +9,7 @@ require 'capistrano/passenger'
 require 'capistrano/bundler'
 require 'capistrano/rbenv'
 set :rbenv_type, :user
-set :rbenv_ruby, '2.2.9'
+set :rbenv_ruby, '2.4.1'
 set :rbenv_path, '/home/sammy/.rbenv/'
 install_plugin Capistrano::SCM::Git
 
