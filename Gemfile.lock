@@ -75,6 +75,8 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     airbrussh (1.3.0)
       sshkit (>= 1.6.1, != 1.7.0)
     arbre (1.1.1)
@@ -83,6 +85,10 @@ GEM
     autoprefixer-rails (7.2.3)
       execjs
     awesome_print (1.8.0)
+    axiom-types (0.1.1)
+      descendants_tracker (~> 0.0.4)
+      ice_nine (~> 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.11)
     better_errors (2.4.0)
       coderay (>= 1.0.0)
@@ -120,7 +126,11 @@ GEM
       mime-types (>= 1.16)
     case_transform (0.2)
       activesupport
+    cloudflare (3.2.1)
+      rest-client (~> 2.0.2)
     coderay (1.1.2)
+    coercible (1.0.0)
+      descendants_tracker (~> 0.0.1)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0)
@@ -131,22 +141,39 @@ GEM
     concurrent-ruby (1.0.5)
     crass (1.0.3)
     debug_inspector (0.0.3)
+    descendants_tracker (0.0.4)
+      thread_safe (~> 0.3, >= 0.3.1)
     devise (4.3.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
+    domain_name (0.5.20180417)
+      unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.5.0)
+    dotenv-rails (2.5.0)
+      dotenv (= 2.5.0)
+      railties (>= 3.2, < 6.0)
     dragonfly (0.9.15)
       multi_json (~> 1.0)
       rack
+    droplet_kit (2.3.0)
+      activesupport (> 3.0, < 6)
+      faraday (~> 0.9)
+      kartograph (~> 0.2.3)
+      resource_kit (~> 0.1.5)
+      virtus (~> 1.0.3)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
+    equalizer (0.0.11)
     erubi (1.7.0)
     erubis (2.7.0)
     eventmachine (1.2.5)
     execjs (2.7.0)
+    faraday (0.15.2)
+      multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
     flutie (2.0.0)
     formatador (0.2.5)
@@ -173,14 +200,18 @@ GEM
     has_scope (0.7.1)
       actionpack (>= 4.1, < 5.2)
       activesupport (>= 4.1, < 5.2)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
     http_parser.rb (0.6.0)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
+    ice_nine (0.11.2)
     inherited_resources (1.8.0)
       actionpack (>= 4.2, <= 5.2)
       has_scope (~> 0.6)
       railties (>= 4.2, <= 5.2)
       responders
+    interactor (3.1.1)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -206,6 +237,7 @@ GEM
       activerecord
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
+    kartograph (0.2.7)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -230,10 +262,12 @@ GEM
     mini_portile2 (2.3.0)
     minitest (5.10.3)
     multi_json (1.12.2)
+    multipart-post (2.0.0)
     nenv (0.3.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
+    netrc (0.11.0)
     nio4r (2.1.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
@@ -256,6 +290,7 @@ GEM
     pry-remote (0.1.8)
       pry (~> 0.9)
       slop (~> 3.0)
+    public_suffix (3.0.2)
     rack (2.0.3)
     rack-cache (1.8.0)
       rack (>= 0.4)
@@ -298,9 +333,15 @@ GEM
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     remodal-rails (1.1.1)
+    resource_kit (0.1.7)
+      addressable (>= 2.3.6, < 3.0.0)
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
+    rest-client (2.0.2)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     sass (3.5.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -344,6 +385,14 @@ GEM
     uglifier (2.6.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.5)
+    virtus (1.0.5)
+      axiom-types (~> 0.1)
+      coercible (~> 1.0)
+      descendants_tracker (~> 0.0, >= 0.0.3)
+      equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.7)
       rack (>= 1.0)
     web-console (3.5.1)
@@ -379,10 +428,14 @@ DEPENDENCIES
   capistrano-rails (~> 1.2)
   capistrano-rbenv (~> 2.1)
   carrierwave
+  cloudflare
   coffee-rails (~> 4.2)
   devise
+  dotenv-rails
+  droplet_kit
   flutie
   guard-livereload (~> 2.5)
+  interactor (~> 3.0)
   jbuilder (~> 2.5)
   jquery-rails
   jquery-slick-rails
@@ -392,6 +445,7 @@ DEPENDENCIES
   meta_request
   metamagic
   mini_magick
+  net-ssh
   normalize-rails (~> 4.1.1)
   pg
   pry-nav
@@ -411,7 +465,7 @@ DEPENDENCIES
   yaml_db
 
 RUBY VERSION
-   ruby 2.2.9p480
+   ruby 2.4.1p111
 
 BUNDLED WITH
    1.16.1
