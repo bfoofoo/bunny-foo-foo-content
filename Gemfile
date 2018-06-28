@@ -12,6 +12,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'rack-cors'
 gem 'dotenv-rails'
 gem 'net-ssh'
+gem 'nissh'
 gem "interactor", "~> 3.0"
 
 # APIS
