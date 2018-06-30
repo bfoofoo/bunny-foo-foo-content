@@ -63,17 +63,12 @@ module Deployer
 
     def setup_bash
       puts 'setup_bash'
-      bash_data = %Q{
-        export LC_ALL='en_US.UTF-8'
-        export LC_CTYPE='en_US.UTF-8'
-      }
-
-      bash_data_string = "'export LC_ALL=\"en_US.UTF-8\"'"
-      bash_data_string_sec = "'export LC_CTYPE=\"en_US.UTF-8\"'"
+      bash_data_string = "'export LC_ALL=en_US.UTF-8'"
+      bash_data_string_sec = "'export LC_CTYPE=en_US.UTF-8'"
       puts bash_data_string
       puts bash_data_string_sec
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile"
+        ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile; source ~/.profile"
       end
     end
 
@@ -84,8 +79,11 @@ module Deployer
         channel = ssh.open_channel do |channel, success|
           channel.on_data do |channel, data|
             puts "@@@@ #{data} @@@@"
-            if data =~ /^\[Do you want to continue\] /
-              puts 'Y'
+            if data =~ /^\Do you want to continue /
+              puts 'Y 1'
+              channel.send_data "Y\n"
+            elsif data =~ /\[Y/
+              puts 'Y 2'
               channel.send_data "Y\n"
             elsif data =~ /^\[sudo\] password for /
               channel.send_data "#{@password}\n"
@@ -94,7 +92,7 @@ module Deployer
             end
           end
           channel.request_pty
-          channel.exec "cd ~/certbot; ./certbot-auto --agree-tos --renew-by-default --standalone --standalone-supported-challenges http-01 --http-01-port 9999 --server https://acme-v01.api.letsencrypt.org/directory certonly -d #{@config[:name]} -d www.#{@config[:name]}"
+          channel.exec " source ~/.profile; cd ~/certbot; ./certbot-auto --agree-tos --renew-by-default --standalone --standalone-supported-challenges http-01 --http-01-port 9999 --server https://acme-v01.api.letsencrypt.org/directory certonly -d #{@config[:name]} -d www.#{@config[:name]}"
           channel.wait
         end
         channel.wait
