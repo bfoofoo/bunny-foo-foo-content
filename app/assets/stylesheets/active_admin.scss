@@ -92,3 +92,28 @@ input[type="file"]{
 #wrapper .sidebar_section.panel > h3, .panel > h3 {
   margin-top: 0px;
 }
+form .actions {
+  margin-left: 40px;
+}
+
+form fieldset.inputs ol > li input[type="submit"] {
+  background-color: #5ea3d3;
+
+}
+
+.activeadmin-wysihtml5-modal {
+  input[name="url"],
+  input[name="text"],
+  input[name="title"],
+  input[name="rel"],
+  input[name="email"],
+  input[name="anchor"],
+  input[name="alt"],
+  input[name="alignment"],
+  input[name="scale"],
+  input[name="width"],
+  input[name="height"],
+  input[name="_wysihtml5_mode"]  {
+    display: none !important;
+  }
+}

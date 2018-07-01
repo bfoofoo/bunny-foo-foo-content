@@ -1,6 +1,9 @@
 ActiveAdmin.register Article do
   permit_params :name, :content, :short, :slug, :cover_image, :website_id, :category_id
 
+  before_create do |article|
+    ["alt", "alignment", "scale", "width", "_wysihtml5_mode", "commit"].map{|i| params.delete(i)}
+  end
 
   form do |f|
     f.inputs '' do
@@ -13,5 +16,15 @@ ActiveAdmin.register Article do
       f.input :category_id, :label => 'Category', :as => :select, :collection => Category.all.map{|u| ["#{u.name}", u.id]}
       f.actions
     end
+  end
+
+  action_item :only => :show do
+    link_to("Make a Copy", clone_admin_article_path(id: params[:id]))
+  end
+
+  member_action :clone, method: :get do
+    article = Article.find(params[:id])
+    @article = article.dup
+    render :new, layout: false
   end
 end
