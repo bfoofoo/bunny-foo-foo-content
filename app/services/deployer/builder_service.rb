@@ -25,6 +25,7 @@ module Deployer
       pull_repo
       create_config_file
       generate_static
+      restart_nginx
     end
 
     private

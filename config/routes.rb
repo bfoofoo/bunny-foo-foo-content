@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
       resources :websites, only: [:index, :show] do
         collection do
+          get ':id/setup', to: 'websites#setup', as: 'setup'
+          get ':id/build', to: 'websites#build', as: 'build'
           get ':id/categories', to: 'websites#get_categories'
           get ':id/categories/:category_id', to: 'websites#get_category_with_articles'
           get ':id/articles', to: 'websites#get_articles'

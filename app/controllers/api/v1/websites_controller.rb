@@ -1,5 +1,9 @@
 class Api::V1::WebsitesController < ApiController
-  before_action :set_website, only: [:show, :get_categories, :get_articles, :get_category_with_articles, :get_category_article]
+  before_action :set_website, only: [
+      :show, :get_categories, :get_articles,
+      :get_category_with_articles, :get_category_article,
+      :setup, :build
+  ]
 
   def index
     @websites = Website.all
@@ -29,6 +33,16 @@ class Api::V1::WebsitesController < ApiController
   def get_category_article
     @article = @website.articles.find(params[:article_id])
     render json: @article
+  end
+
+  def setup
+    config = @website.builder_config
+    BuildersInteractor::SetupBuild.call({config: config})
+  end
+
+  def build
+    config = @website.builder_config
+    BuildersInteractor::RebuildBuild.call({config: config})
   end
 
   private
