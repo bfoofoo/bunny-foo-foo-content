@@ -22,6 +22,10 @@ ActiveAdmin.register Article do
     link_to("Make a Copy", clone_admin_article_path(id: params[:id]))
   end
 
+  action_item :new, :only => :show do
+    link_to("Add new", new_admin_article_path)
+  end
+
   member_action :clone, method: :get do
     article = Article.find(params[:id])
     @article = article.dup
