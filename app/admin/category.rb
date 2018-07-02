@@ -1,3 +1,14 @@
 ActiveAdmin.register Category do
-  permit_params :name, :description, :slug, :website_id
+  permit_params :name, :description, :slug, website_ids: []
+
+
+  form do |f|
+    f.inputs 'Category' do
+      f.input :name
+      f.input :description
+      f.input :slug
+      f.input :websites, :as => :select, :input_html => {:multiple => true}
+    end
+    f.actions
+  end
 end

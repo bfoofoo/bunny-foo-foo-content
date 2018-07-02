@@ -18,7 +18,7 @@ ActiveAdmin.register Article do
     end
   end
 
-  action_item :only => :show do
+  action_item :copy, :only => :show do
     link_to("Make a Copy", clone_admin_article_path(id: params[:id]))
   end
 
