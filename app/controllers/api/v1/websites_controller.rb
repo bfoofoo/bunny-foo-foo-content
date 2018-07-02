@@ -42,7 +42,7 @@ class Api::V1::WebsitesController < ApiController
 
   def build
     config = @website.builder_config
-    BuildersInteractor::RebuildBuild.call({config: config})
+    BuildersInteractor::RebuildHost.call({config: config})
   end
 
   private

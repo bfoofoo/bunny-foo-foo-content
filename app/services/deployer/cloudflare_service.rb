@@ -21,6 +21,11 @@ module Deployer
       content_type: 'application/json')
     end
 
+    def delete_zone(options)
+      zone = get_zone(options[:zone_id])
+      zone.delete
+    end
+
     def get_zone(id)
       @client.zones.find_by_id(id)
     end

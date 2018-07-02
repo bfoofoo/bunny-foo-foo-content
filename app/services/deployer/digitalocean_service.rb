@@ -14,6 +14,10 @@ module Deployer
       @client.droplets.create(droplet)
     end
 
+    def delete_droplet(options)
+      @client.droplets.delete(id: options[:droplet_id])
+    end
+
     def get_droplet(id)
       @client.droplets.find(id: id)
     end

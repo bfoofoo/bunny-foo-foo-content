@@ -1,10 +1,14 @@
 ActiveAdmin.register Website do
-  permit_params :name, :description, :url
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id
 
   index do
     column :id
     column :name
     column :description
+    column :url
+    column :droplet_id
+    column :droplet_ip
+    column :zone_id
     column :url
     column :created_at
     actions defaults: true do |website|

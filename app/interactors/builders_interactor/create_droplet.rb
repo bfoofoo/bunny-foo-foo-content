@@ -12,18 +12,21 @@ module BuildersInteractor
       context.droplet = droplet_service.get_droplet(droplet[:id])
 
       sleep 10
-      puts 'after sleep'
       while context.droplet.networks[:v4].length == 0 do
-        puts '5'
         sleep 5
         context.droplet = droplet_service.get_droplet(droplet[:id])
       end
+      save_droplet
       droplet
     end
 
-    def isDropletInited(droplet)
-      puts droplet
-      droplet.networks[:v4].length > 0
+    def save_droplet
+      Website.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+    end
+
+    def rollback
+      droplet_service = Deployer::DigitaloceanService.new
+      droplet_service.delete_droplet({droplet_id: context.droplet[:id]})
     end
   end
 end
