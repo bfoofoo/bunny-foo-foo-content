@@ -1,4 +1,4 @@
 class CategorySerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :slug
-  belongs_to :website, serializer: WebsiteSerializer
+  attributes :id, :name, :description, :slug, :websites
+  # has_and_belongs_to_many :website, serializer: WebsiteSerializer
 end
