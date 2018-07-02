@@ -4,6 +4,19 @@ ActiveAdmin.register Article do
   before_create do |article|
     ["alt", "alignment", "scale", "width", "_wysihtml5_mode", "commit"].map{|i| params.delete(i)}
   end
+  index do |poll|
+    selectable_column
+    id_column
+    column :name
+    column :slug
+    column :content
+    column :short
+
+    column "Website" do |article|
+      link_to(article.website.name, admin_website_path(article.website))
+    end
+    actions
+  end
 
   form do |f|
     f.inputs '' do

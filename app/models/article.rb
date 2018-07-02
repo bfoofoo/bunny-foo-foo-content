@@ -1,5 +1,6 @@
 class Article < ApplicationRecord
   belongs_to :category
+  belongs_to :website
 
   mount_uploader :cover_image, CommonUploader
 
