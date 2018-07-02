@@ -1,5 +1,5 @@
 ActiveAdmin.register Article do
-  permit_params :name, :content, :short, :slug, :cover_image, :website_id, :category_id
+  permit_params :name, :slug, :content, :short , :cover_image, :website_id, :category_id
 
   before_create do |article|
     ["alt", "alignment", "scale", "width", "_wysihtml5_mode", "commit"].map{|i| params.delete(i)}

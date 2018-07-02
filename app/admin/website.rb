@@ -12,19 +12,19 @@ ActiveAdmin.register Website do
     end
   end
 
-  action_item :only => :show do
+  action_item :copy, :only => :show do
     link_to("Make a Copy", clone_admin_website_path(id: website.id))
   end
 
-  action_item :only => :show do
+  action_item :setup, :only => :show do
     link_to setup_api_v1_websites_path(website), class: 'button', remote: true do
-      'SETUP WEBSITE'
+      'Setup Website'
     end
   end
 
-  action_item :only => :show do
+  action_item :rebuild, :only => :show do
     link_to build_api_v1_websites_path(website), class: 'button', remote: true do
-      'REBUILD WEBSITE'
+      'Rebuild Website'
     end
   end
 
