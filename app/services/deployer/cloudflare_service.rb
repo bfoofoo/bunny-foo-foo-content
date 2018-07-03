@@ -4,7 +4,8 @@ module Deployer
     # BASE_URL = "http://api.cloudflare.com"
 
     def initialize
-      @client = Cloudflare.connect(key: ENV['CLOUDFLARE_KEY'], email: ENV['CLOUDFLARE_EMAIL'])
+      # @client = Cloudflare.connect(key: ENV['CLOUDFLARE_KEY'], email: ENV['CLOUDFLARE_EMAIL'])
+      @client = Cloudflare.connect(key: 'a1510d55f0c8e5318d102eb84c6cd1a3198e5', email: 'mike@bunnyfoofoo.net')
     end
 
     def create_zone(name)
