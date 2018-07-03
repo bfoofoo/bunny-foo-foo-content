@@ -5,15 +5,21 @@ ActiveAdmin.register Website do
     column :id
     column :name
     column :description
-    column :url
     column :droplet_id
     column :droplet_ip
     column :zone_id
-    column :url
     column :created_at
     actions defaults: true do |website|
       link_to 'Duplicate', clone_admin_website_path(website)
     end
+  end
+
+  form do |f|
+    f.inputs 'Website' do
+      f.input :name
+      f.input :description
+    end
+    f.actions
   end
 
   action_item :copy, :only => :show do

@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  root 'main#index'
+  root :to => redirect('/admin')
 
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
@@ -17,8 +17,15 @@ Rails.application.routes.draw do
           get ':id/articles/:article_id', to: 'websites#get_category_article'
         end
       end
+
+      resources :formsites, only: [:index, :show] do
+        collection do
+          post ':id/add_user', to: 'formsites#add_formsite_user', as: 'add_user'
+          get ':id/setup', to: 'formsites#setup', as: 'setup'
+          get ':id/build', to: 'formsites#build', as: 'build'
+        end
+      end
       resources :categories, only: [:index, :show]
-      resources :articles, only: [:index, :show]
       resources :articles, only: [:index, :show]
     end
   end

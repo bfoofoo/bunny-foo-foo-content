@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180702121910) do
+ActiveRecord::Schema.define(version: 20180703155311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,15 @@ ActiveRecord::Schema.define(version: 20180702121910) do
     t.datetime "updated_at",                          null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
+  end
+
+  create_table "answers", force: :cascade do |t|
+    t.text     "text"
+    t.integer  "question_id"
+    t.boolean  "is_correct",  default: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
   end
 
   create_table "articles", force: :cascade do |t|
@@ -97,6 +106,46 @@ ActiveRecord::Schema.define(version: 20180702121910) do
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
   end
 
+  create_table "formsite_questions", force: :cascade do |t|
+    t.integer  "formsite_id"
+    t.integer  "question_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "formsite_users", force: :cascade do |t|
+    t.integer  "formsite_id"
+    t.integer  "user_id"
+    t.boolean  "is_verified"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "formsites", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "droplet_id"
+    t.integer  "droplet_ip"
+    t.integer  "zone_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.text     "text"
+    t.string   "link_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "email"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "websites", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -104,10 +153,11 @@ ActiveRecord::Schema.define(version: 20180702121910) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "droplet_id"
-    t.integer  "droplet_ip"
+    t.string   "droplet_ip"
     t.integer  "zone_id"
   end
 
+  add_foreign_key "answers", "questions"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
   add_foreign_key "configs", "websites"
