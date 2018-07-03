@@ -39,7 +39,7 @@ module Deployer
 
     def clone_repo
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone git@github.com:flywithmemsl/bunny-foo-foo-template.git site"
+        ssh.exec! "git clone #{@config.repo_url} site"
         ssh.exec! "cd site/; git checkout master"
         ssh.exec! "cd site/; git fetch --all"
         ssh.exec! "cd site/; git reset --hard origin/master"
