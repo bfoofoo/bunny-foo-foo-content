@@ -17,6 +17,12 @@ Rails.application.routes.draw do
           get ':id/articles/:article_id', to: 'websites#get_category_article'
         end
       end
+
+      resources :formsites, only: [:index, :show] do
+        collection do
+          post ':id/add_user', to: 'formsites#add_formsite_user', as: 'add_user'
+        end
+      end
       resources :categories, only: [:index, :show]
       resources :articles, only: [:index, :show]
     end
