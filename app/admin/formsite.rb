@@ -9,6 +9,7 @@ ActiveAdmin.register Formsite do
     column :droplet_ip
     column :zone_id
     column :created_at
+    actions
   end
 
   form do |f|
@@ -20,7 +21,6 @@ ActiveAdmin.register Formsite do
     f.actions
   end
 
-  # TODO change website to formsite
   action_item :setup, :only => :show do
     link_to setup_api_v1_formsites_path(formsite), class: 'button', remote: true do
       'Setup Formsite'
