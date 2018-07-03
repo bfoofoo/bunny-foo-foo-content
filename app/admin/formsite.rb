@@ -22,13 +22,13 @@ ActiveAdmin.register Formsite do
 
   # TODO change website to formsite
   action_item :setup, :only => :show do
-    link_to setup_api_v1_websites_path(formsite), class: 'button', remote: true do
+    link_to setup_api_v1_formsites_path(formsite), class: 'button', remote: true do
       'Setup Formsite'
     end
   end
 
   action_item :rebuild, :only => :show do
-    link_to build_api_v1_websites_path(formsite), class: 'button', remote: true do
+    link_to build_api_v1_formsites_path(formsite), class: 'button', remote: true do
       'Rebuild Formsite'
     end
   end

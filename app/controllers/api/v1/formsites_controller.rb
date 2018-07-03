@@ -24,6 +24,16 @@ class Api::V1::FormsitesController < ApplicationController
     render json: {user: user, is_verified: formsite_user.is_verified}
   end
 
+  def setup
+    config = @formsite.builder_config
+    BuildersInteractor::SetupBuild.call({config: config})
+  end
+
+  def build
+    config = @formsite.builder_config
+    BuildersInteractor::RebuildHost.call({config: config})
+  end
+
   private
 
   def set_formsite
