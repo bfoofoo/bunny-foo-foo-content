@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180702121910) do
+ActiveRecord::Schema.define(version: 20180703104738) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,32 @@ ActiveRecord::Schema.define(version: 20180702121910) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
+  end
+
+  create_table "formsite_users", force: :cascade do |t|
+    t.integer  "formsite_id"
+    t.integer  "user_id"
+    t.boolean  "is_verified"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "formsites", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "droplet_id"
+    t.integer  "droplet_ip"
+    t.integer  "zone_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "email"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "websites", force: :cascade do |t|

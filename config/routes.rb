@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  root 'main#index'
+  root :to => redirect('/admin')
 
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
@@ -18,7 +18,6 @@ Rails.application.routes.draw do
         end
       end
       resources :categories, only: [:index, :show]
-      resources :articles, only: [:index, :show]
       resources :articles, only: [:index, :show]
     end
   end
