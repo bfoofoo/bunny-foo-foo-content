@@ -8,7 +8,7 @@ module Deployer
       droplet = DropletKit::Droplet.new(
           name: options[:name],
           region: options[:region] || 'nyc1',
-          image: '35876901',
+          image: '35476884',
           size: 's-2vcpu-4gb'
       )
       @client.droplets.create(droplet)
