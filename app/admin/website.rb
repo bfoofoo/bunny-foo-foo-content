@@ -1,10 +1,11 @@
 ActiveAdmin.register Website do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url
 
   index do
     column :id
     column :name
     column :description
+    column :repo_url
     column :droplet_id
     column :droplet_ip
     column :zone_id
@@ -18,6 +19,7 @@ ActiveAdmin.register Website do
     f.inputs 'Website' do
       f.input :name
       f.input :description
+      f.input :repo_url
     end
     f.actions
   end

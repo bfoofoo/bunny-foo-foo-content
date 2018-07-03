@@ -26,7 +26,7 @@ class Formsite < ApplicationRecord
         droplet_ip: self.droplet_ip,
         droplet_id: self.droplet_id,
         zone_id: self.zone_id,
-        repo_url: 'git@github.com:flywithmemsl/bff-forms.git'
+        repo_url: self.repo_url
     }
   end
 end
