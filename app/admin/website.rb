@@ -19,6 +19,7 @@ ActiveAdmin.register Website do
       f.input :name
       f.input :description
     end
+    f.actions
   end
 
   action_item :copy, :only => :show do
