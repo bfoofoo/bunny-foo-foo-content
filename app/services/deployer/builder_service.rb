@@ -9,7 +9,7 @@ module Deployer
       puts 'setup'
       setup_host_data(host, user, password, config)
       clone_repo
-      create_config_file
+      # create_config_file
       generate_static
       setup_bash
       setup_certbot
@@ -23,7 +23,7 @@ module Deployer
     def rebuild(config, host, user = 'sammy', password = "42Iknow42")
       setup_host_data(host, user, password, config)
       pull_repo
-      create_config_file
+      # create_config_file
       generate_static
       restart_nginx
     end
