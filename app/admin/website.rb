@@ -1,5 +1,5 @@
 ActiveAdmin.register Website do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :ad_sidebar_id, :ad_top_id, :ad_middle_id, :ad_bottom_id
 
   index do
     column :id
@@ -10,6 +10,11 @@ ActiveAdmin.register Website do
     column :droplet_ip
     column :zone_id
     column :created_at
+    column :ad_client
+    column :ad_sidebar_id
+    column :ad_top_id
+    column :ad_middle_id
+    column :ad_bottom_id
     actions defaults: true do |website|
       link_to 'Duplicate', clone_admin_website_path(website)
     end
@@ -20,6 +25,11 @@ ActiveAdmin.register Website do
       f.input :name
       f.input :description
       f.input :repo_url
+      f.input :ad_client
+      f.input :ad_sidebar_id
+      f.input :ad_top_id
+      f.input :ad_middle_id
+      f.input :ad_bottom_id
     end
     f.actions
   end

@@ -22,6 +22,7 @@ class Formsite < ApplicationRecord
   def builder_config
     return {
         name: self.name,
+        description: self.description,
         website_id: self.id,
         droplet_ip: self.droplet_ip,
         droplet_id: self.droplet_id,

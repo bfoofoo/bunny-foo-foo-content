@@ -105,9 +105,26 @@ module Deployer
       site_config = %Q{
         module.exports = {
           'metaTitle': '#{@config[:name]}',
-          'metaDescription': 'testdesc',
+          'metaDescription': '#{@config[:description]}',
           'logoPath': '/logo.jpg',
           'email': 'admin@#{@config[:name]}',
+          'adClient': '#{@config[:ad_client]}',
+          'adSidebar': {
+            'type': 'google',
+            'id': '#{@config[:ad_sidebar_id]}'
+          },
+          'adTop': {
+            'type': 'google',
+            'id': '#{@config[:ad_top_id]}'
+          },
+          'adMiddle': {
+            'type': 'google',
+            'id': '#{@config[:ad_middle_id]}'
+          },
+          'adBottom': {
+            'type': 'google',
+            'id': '#{@config[:ad_bottom_id]}'
+          }
         }
       }
       Net::SSH.start(@host, @user, password: @password) do |ssh|
