@@ -111,7 +111,7 @@ module Deployer
         }
       }
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; echo '#{site_config.strip}' >> configs/#{@config[:name]}"
+        ssh.exec! "cd site/; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
       end
     end
 
