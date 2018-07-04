@@ -7,7 +7,7 @@ module BuildersInteractor
     def call
       host = context.config.droplet_ip
       builder_service = Deployer::BuilderService.new
-      builder_service.build(context.config, host)
+      builder_service.rebuild(context.config, host)
     end
   end
 end
