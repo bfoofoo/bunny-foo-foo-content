@@ -24,7 +24,6 @@ class Api::V1::WebsitesController < ApiController
     render json: paginate_items(@articles)
   end
 
-
   def get_category_with_articles
     @articles = @website.categories.find(params[:category_id]).articles
     render json: @articles
@@ -48,10 +47,10 @@ class Api::V1::WebsitesController < ApiController
   def build
     config = @website.builder_config
     context = BuildersInteractor::RebuildHost.call({config: config})
-    if context.error
-      render json: {error: context.error}
+    if context.errors
+      render json: {errors: context.errors}
     else
-      render json: {status: 200}
+      render json: {message: 'success'}
     end
   end
 

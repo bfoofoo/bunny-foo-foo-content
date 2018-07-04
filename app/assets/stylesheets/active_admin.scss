@@ -28,6 +28,14 @@ a.disabled {
   cursor: wait;
 }
 
+.loader {
+  display: none;
+
+  &.active {
+    display: inline;
+  }
+}
+
 .col-image {
   img {
     max-width: 300px;

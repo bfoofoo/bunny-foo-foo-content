@@ -9,7 +9,6 @@ ActiveAdmin.register Article do
     id_column
     column :name
     column :slug
-    column :content
     column :short
 
     column "Website" do |article|
