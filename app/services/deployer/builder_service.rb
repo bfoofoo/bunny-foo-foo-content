@@ -135,8 +135,8 @@ module Deployer
     def generate_static
       Net::SSH.start(@host, @user, password: @password) do |ssh|
         ssh.exec! "cd site/; npm install"
-        # ssh.exec! "cd site/; WEBSITE_NAME=#{@config[:name]}.com NODE_ENV=production npm run generate"
-        ssh.exec! "cd site/; WEBSITE_NAME=default NODE_ENV=production npm run generate"
+        ssh.exec! "cd site/; WEBSITE_NAME=#{@config[:name]} NODE_ENV=production npm run generate"
+        # ssh.exec! "cd site/; WEBSITE_NAME=default NODE_ENV=production npm run generate"
         ssh.exec! "cd site/; rm -rf ./production"
         ssh.exec! "cd site/; mkdir production"
         ssh.exec! "cd site/; cp -a ./dist/. ./production/"
