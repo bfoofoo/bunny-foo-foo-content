@@ -26,12 +26,22 @@ class Api::V1::FormsitesController < ApplicationController
 
   def setup
     config = @formsite.builder_config
-    BuildersInteractor::SetupBuild.call({config: config})
+    context = BuildersInteractor::SetupBuild.call({config: config})
+    if context.errors
+      render json: {errors: context.errors}
+    else
+      render json: {message: 'success'}
+    end
   end
 
   def build
     config = @formsite.builder_config
-    BuildersInteractor::RebuildHost.call({config: config})
+    context = BuildersInteractor::SetupBuild.call({config: config})
+    if context.errors
+      render json: {errors: context.errors}
+    else
+      render json: {message: 'success'}
+    end
   end
 
   private
