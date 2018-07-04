@@ -29,13 +29,13 @@ ActiveAdmin.register Website do
   end
 
   action_item :setup, :only => :show do
-    link_to setup_api_v1_websites_path(website), class: 'button', remote: true do
+    link_to setup_api_v1_websites_path(website), class: 'button builder_action', "data-type" => "json", remote: true do
       'Setup Website'
     end
   end
 
   action_item :rebuild, :only => :show do
-    link_to build_api_v1_websites_path(website), class: 'button', remote: true do
+    link_to build_api_v1_websites_path(website), class: 'button builder_action', "data-type" => "json", remote: true do
       'Rebuild Website'
     end
   end

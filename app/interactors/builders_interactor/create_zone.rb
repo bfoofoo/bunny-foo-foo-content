@@ -9,6 +9,12 @@ module BuildersInteractor
     def call
       zone_service = Deployer::CloudflareService.new
       zone = zone_service.create_zone(context.config[:name])
+
+      if zone.errors.length
+        context.errors = zone.errors.collect{|i| i[:message]}
+        context.fail!
+      end
+
       ip = context.droplet.networks[:v4][0][:ip_address]
       zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: ip})
       res = zone_service.add_dns_to_zone({id: zone.result[:id], name: "www.#{zone.result[:name]}", ip: ip})
@@ -17,7 +23,7 @@ module BuildersInteractor
     end
 
     def save_zone(zone)
-      Website.update(context.config[:website_id], zone_id: zone.result['id'])
+      Website.update(context.config[:website_id], zone_id: zone.result[:id])
     end
 
     def rollback

@@ -37,12 +37,22 @@ class Api::V1::WebsitesController < ApiController
 
   def setup
     config = @website.builder_config
-    BuildersInteractor::SetupBuild.call({config: config})
+    context = BuildersInteractor::SetupBuild.call({config: config})
+    if context.errors
+      render json: {errors: context.errors}
+    else
+      render json: {message: 'success'}
+    end
   end
 
   def build
     config = @website.builder_config
-    BuildersInteractor::RebuildHost.call({config: config})
+    context = BuildersInteractor::RebuildHost.call({config: config})
+    if context.error
+      render json: {error: context.error}
+    else
+      render json: {status: 200}
+    end
   end
 
   private

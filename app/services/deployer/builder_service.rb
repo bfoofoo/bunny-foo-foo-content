@@ -38,8 +38,9 @@ module Deployer
     end
 
     def clone_repo
+      puts @config[:repo_url]
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone #{@config.repo_url} site"
+        ssh.exec! "git clone #{@config[:repo_url]} site"
         ssh.exec! "cd site/; git checkout master"
         ssh.exec! "cd site/; git fetch --all"
         ssh.exec! "cd site/; git reset --hard origin/master"
