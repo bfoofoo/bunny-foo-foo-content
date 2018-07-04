@@ -40,7 +40,7 @@ module Deployer
     def clone_repo
       puts @config[:repo_url]
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone #{@config[:repo_url]} site"
+        ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} site"
         ssh.exec! "cd site/; git checkout master"
         ssh.exec! "cd site/; git fetch --all"
         ssh.exec! "cd site/; git reset --hard origin/master"
@@ -104,31 +104,31 @@ module Deployer
     def create_config_file
       site_config = %Q{
         module.exports = {
-          'metaTitle': '#{@config[:name]}',
-          'metaDescription': '#{@config[:description]}',
-          'logoPath': '/logo.jpg',
-          'email': 'admin@#{@config[:name]}',
-          'adClient': '#{@config[:ad_client]}',
-          'adSidebar': {
-            'type': 'google',
-            'id': '#{@config[:ad_sidebar_id]}'
+          "'metaTitle'": "'#{@config[:name]}'",
+          "'metaDescription'": "'#{@config[:description]}'",
+          "'logoPath'": "'/logo.jpg'",
+          "'email'": "'admin@#{@config[:name]}'",
+          "'adClient'": "'#{@config[:ad_client]}'",
+          "'adSidebar'": {
+            "'type'": "'google'",
+            "'id'": "'#{@config[:ad_sidebar_id]}'"
           },
-          'adTop': {
-            'type': 'google',
-            'id': '#{@config[:ad_top_id]}'
+          "'adTop'": {
+            "'type'": "'google'",
+            "'id'": "'#{@config[:ad_top_id]}'"
           },
-          'adMiddle': {
-            'type': 'google',
-            'id': '#{@config[:ad_middle_id]}'
+          "'adMiddle'": {
+            "'type'": "'google'",
+            "'id'": "'#{@config[:ad_middle_id]}'"
           },
-          'adBottom': {
-            'type': 'google',
-            'id': '#{@config[:ad_bottom_id]}'
+          "'adBottom'": {
+            "'type'": "'google'",
+            "'id'": "'#{@config[:ad_bottom_id]}'"
           }
         }
       }
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
+        ssh.exec! "cd site/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
       end
     end
 

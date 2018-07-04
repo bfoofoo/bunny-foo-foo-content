@@ -7,17 +7,17 @@ class Website < ApplicationRecord
   def builder_config
     return {
       name: self.name,
-      description: self.description,
+      description: self.description || 'test',
       website_id: self.id,
       droplet_ip: self.droplet_ip,
       droplet_id: self.droplet_id,
       zone_id: self.zone_id,
       repo_url: self.repo_url,
-      ad_client: self.ad_client,
-      ad_sidebar_id: self.ad_sidebar_id,
-      ad_top_id: self.ad_top_id,
-      ad_middle_id: self.ad_middle_id,
-      ad_bottom_id: self.ad_bottom_id,
+      ad_client: self.ad_client || 'test',
+      ad_sidebar_id: self.ad_sidebar_id || 'test',
+      ad_top_id: self.ad_top_id || 'test',
+      ad_middle_id: self.ad_middle_id || 'test',
+      ad_bottom_id: self.ad_bottom_id || 'test',
     }
   end
 end
