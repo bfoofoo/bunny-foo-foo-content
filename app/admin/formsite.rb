@@ -1,14 +1,6 @@
 ActiveAdmin.register Formsite do
   permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
 
-  controller do
-    def create
-      super do |format|
-       binding.pry
-      end
-    end
-  end
-
   index do
     column :id
     column :name
