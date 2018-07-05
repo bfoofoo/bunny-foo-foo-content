@@ -13,11 +13,11 @@ class Formsite < ApplicationRecord
     end
   end
 
-  accepts_nested_attributes_for :formsite_users, reject_if: :all_blank, allow_destroy: true
-  accepts_nested_attributes_for :users, reject_if: :all_blank, allow_destroy: true
+  accepts_nested_attributes_for :formsite_users, allow_destroy: true
+  accepts_nested_attributes_for :users, allow_destroy: true
 
-  accepts_nested_attributes_for :formsite_questions, reject_if: :all_blank, allow_destroy: true
-  accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
+  accepts_nested_attributes_for :formsite_questions, allow_destroy: true
+  accepts_nested_attributes_for :questions, allow_destroy: true
 
   def builder_config
     return {

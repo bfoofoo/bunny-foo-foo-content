@@ -18,7 +18,7 @@ ActiveAdmin.register Formsite do
       f.input :name
       f.input :description
       f.input :repo_url
-      f.input :questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
+      f.input :formsite_questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
     end
     f.actions
   end

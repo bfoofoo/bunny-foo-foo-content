@@ -1,9 +1,24 @@
+require 'rest-client'
 class FormsiteService
   def initialize
   end
 
   def is_useragent_valid(useragent)
     !unavailable_useragents.include? useragent
+  end
+
+  def is_impressionwise_test_success(user)
+    response = RestClient.get("http://post.impressionwise.com/verifyme.aspx", {
+      params: {
+        "code": '837001',
+        "pwd": '1ScRee',
+        "email": user[:email],
+        "fname": user[:first_name],
+        "lname": user[:last_name]
+      }
+    })
+    result = JSON.parse(response)["result"]
+    result == "CERTIFIED" || result == "DISCRETIONARY"
   end
 
   private

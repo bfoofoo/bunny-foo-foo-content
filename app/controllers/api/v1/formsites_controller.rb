@@ -16,6 +16,8 @@ class Api::V1::FormsitesController < ApplicationController
   end
 
   def add_formsite_user
+    formsite_service = FormsiteService.new()
+
     user = User.create_with(
       first_name: params[:user][:first_name],
       last_name: params[:user][:last_name]
@@ -23,7 +25,7 @@ class Api::V1::FormsitesController < ApplicationController
 
     formsite_user = @formsite.formsite_users.new(
         user_id: user.id,
-        is_verified: FormsiteService.new.is_useragent_valid(request.user_agent)
+        is_verified: formsite_service.is_useragent_valid(request.user_agent) && formsite_service.is_impressionwise_test_success(user)
     )
 
     render json: {user: user, is_verified: formsite_user.is_verified}
