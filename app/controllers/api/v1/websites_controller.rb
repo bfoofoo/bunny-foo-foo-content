@@ -25,7 +25,7 @@ class Api::V1::WebsitesController < ApiController
   end
 
   def get_category_with_articles
-    @articles = @website.categories.find(params[:category_id]).articles
+    @articles = @website.categories.find(params[:category_id]).articles.where(website_id: @website.id)
     render json: @articles
   end
 
