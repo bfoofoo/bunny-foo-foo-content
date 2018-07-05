@@ -30,7 +30,7 @@ module BuildersInteractor
 
     def save_zone(zone)
       puts "SAVE ZONE"
-      if context.config.type == 'website'
+      if context.config[:type] == 'website'
         Website.update(context.config[:website_id], zone_id: zone.result[:id])
       else
         Formsite.update(context.config[:website_id], zone_id: zone.result[:id])
