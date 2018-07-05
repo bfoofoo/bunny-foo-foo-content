@@ -1,5 +1,13 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, question_ids: []
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
+
+  controller do
+    def create
+      super do |format|
+       binding.pry
+      end
+    end
+  end
 
   index do
     column :id
@@ -18,7 +26,8 @@ ActiveAdmin.register Formsite do
       f.input :name
       f.input :description
       f.input :repo_url
-      f.input :formsite_questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
+      f.input :questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
+
     end
     f.actions
   end

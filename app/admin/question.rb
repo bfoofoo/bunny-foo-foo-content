@@ -3,25 +3,6 @@ ActiveAdmin.register Question do
                 answer_ids: [],
                 answers_attributes: [:id, :text, :is_correct, :question_id, :_create, :_destroy, :question]
 
-  controller do
-    def create
-      super do |format|
-        return if !resource[:text].present?
-        return if !resource[:link_url].present?
-
-        questionForm = {
-          text: resource[:text],
-          link_url: resource[:link_url]
-        }
-
-        question = Question.new(questionForm)
-        if question.save
-          question.answers.push(resource.answers)
-        end
-      end
-    end
-  end
-
   form do |f|
     f.semantic_errors
     f.inputs 'Question' do
