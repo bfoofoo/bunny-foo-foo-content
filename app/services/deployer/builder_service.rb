@@ -179,8 +179,10 @@ module Deployer
 
         rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
         rewrite ^/(.*)/$ /$1 permanent;
-        try_files $uri/index.html $uri.html $uri/ $uri =404;
 
+        location / {
+          try_files $uri/index.html $uri.html $uri/ $uri =404;
+        }
 
         location ~ ^/(.well-known/acme-challenge/.*)$ {
           proxy_pass http://127.0.0.1:9999/$1;
@@ -200,10 +202,9 @@ module Deployer
         root /home/sammy/autobuild/production;
 
         index index.html;
+
         rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
         rewrite ^/(.*)/$ /$1 permanent;
-        try_files $uri/index.html $uri.html $uri/ $uri =404;
-
 
         error_page 404 /404.html;
         error_page 500 502 503 504 /500.html;
