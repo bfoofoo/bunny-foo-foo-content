@@ -9,15 +9,15 @@ module Deployer
       puts 'setup'
       setup_host_data(host, user, password, config)
       clone_repo
-      # create_config_file
+      create_config_file
       generate_static
       setup_bash
       setup_certbot
       set_beforessl_nginx_site
       restart_nginx
-      generate_ssl
-      set_afterssl_nginx_site
-      restart_nginx
+      # generate_ssl
+      # set_afterssl_nginx_site
+      # restart_nginx
     end
 
     def rebuild(config, host, user = 'sammy', password = "42Iknow42")
@@ -40,19 +40,19 @@ module Deployer
     def clone_repo
       puts @config[:repo_url]
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} site"
-        ssh.exec! "cd site/; git checkout master"
-        ssh.exec! "cd site/; git fetch --all"
-        ssh.exec! "cd site/; git reset --hard origin/master"
+        ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} autobuild"
+        ssh.exec! "cd autobuild/; git checkout master"
+        ssh.exec! "cd autobuild/; git fetch --all"
+        ssh.exec! "cd autobuild/; git reset --hard origin/master"
       end
     end
 
     def pull_repo
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; git checkout master"
-        ssh.exec! "cd site/; git fetch --all"
-        ssh.exec! "cd site/; git reset --hard origin/master"
-        ssh.exec! "cd site/; npm install"
+        ssh.exec! "cd autobuild/; git checkout master"
+        ssh.exec! "cd autobuild/; git fetch --all"
+        ssh.exec! "cd autobuild/; git reset --hard origin/master"
+        ssh.exec! "cd autobuild/; npm install"
       end
     end
 
@@ -128,18 +128,18 @@ module Deployer
         }
       }
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
+        ssh.exec! "cd autobuild/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
       end
     end
 
     def generate_static
       Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; npm install"
-        ssh.exec! "cd site/; WEBSITE_NAME=#{@config[:name]} NODE_ENV=production npm run generate"
-        # ssh.exec! "cd site/; WEBSITE_NAME=default NODE_ENV=production npm run generate"
-        ssh.exec! "cd site/; rm -rf ./production"
-        ssh.exec! "cd site/; mkdir production"
-        ssh.exec! "cd site/; cp -a ./dist/. ./production/"
+        ssh.exec! "cd autobuild/; npm install"
+        ssh.exec! "cd autobuild/; WEBSITE_NAME=#{@config[:name]} NODE_ENV=production npm run generate"
+        # ssh.exec! "cd autobuild/; WEBSITE_NAME=default NODE_ENV=production npm run generate"
+        ssh.exec! "cd autobuild/; rm -rf ./production"
+        ssh.exec! "cd autobuild/; mkdir production"
+        ssh.exec! "cd autobuild/; cp -a ./dist/. ./production/"
       end
     end
 
@@ -174,7 +174,7 @@ module Deployer
         listen 0.0.0.0:80;
         server_name #{@config[:name]} www.#{@config[:name]};
 
-        root /home/sammy/site/production;
+        root /home/sammy/autobuild/production;
         index index.html;
 
         location ~ ^/(.well-known/acme-challenge/.*)$ {
@@ -192,7 +192,7 @@ module Deployer
         listen 443 http2 default_server;
         listen [::]:443 http2 default_server;
 
-        root /home/sammy/site/production;
+        root /home/sammy/autobuild/production;
 
         index index.html;
 
