@@ -15,9 +15,9 @@ module Deployer
       setup_certbot
       set_beforessl_nginx_site
       restart_nginx
-      # generate_ssl
-      # set_afterssl_nginx_site
-      # restart_nginx
+      generate_ssl
+      set_afterssl_nginx_site
+      restart_nginx
     end
 
     def rebuild(config, host, user = 'sammy', password = "42Iknow42")
