@@ -177,7 +177,7 @@ module Deployer
         root /home/sammy/autobuild/production;
         index index.html;
 
-        rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
+        rewrite ^(/.*)\\.html(\\?.*)?$ $1$2 permanent;
         rewrite ^/(.*)/$ /$1 permanent;
 
         location / {
@@ -203,7 +203,7 @@ module Deployer
 
         index index.html;
 
-        rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
+        rewrite ^(/.*)\\.html(\\?.*)?$ $1$2 permanent;
         rewrite ^/(.*)/$ /$1 permanent;
 
         error_page 404 /404.html;
