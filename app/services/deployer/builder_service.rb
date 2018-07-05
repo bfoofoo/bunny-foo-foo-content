@@ -177,6 +177,11 @@ module Deployer
         root /home/sammy/autobuild/production;
         index index.html;
 
+        rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
+        rewrite ^/(.*)/$ /$1 permanent;
+        try_files $uri/index.html $uri.html $uri/ $uri =404;
+
+
         location ~ ^/(.well-known/acme-challenge/.*)$ {
           proxy_pass http://127.0.0.1:9999/$1;
           proxy_set_header X-Real-IP $remote_addr;
