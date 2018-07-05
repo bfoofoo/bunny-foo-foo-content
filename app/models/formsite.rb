@@ -33,6 +33,7 @@ class Formsite < ApplicationRecord
         ad_top_id: self.ad_top_id || '',
         ad_middle_id: self.ad_middle_id || '',
         ad_bottom_id: self.ad_bottom_id || '',
+        type: 'formsite'
     }
   end
 end

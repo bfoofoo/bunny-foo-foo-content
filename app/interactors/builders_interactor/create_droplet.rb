@@ -21,7 +21,11 @@ module BuildersInteractor
     end
 
     def save_droplet
-      Website.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+      if context.config.type == 'website'
+        Website.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+      else
+        Formsite.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+      end
     end
 
     def rollback

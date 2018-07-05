@@ -1,5 +1,5 @@
 class Api::V1::FormsitesController < ApplicationController
-  before_action :set_formsite, only: [:show, :add_formsite_user]
+  before_action :set_formsite, only: [:show, :add_formsite_user, :setup, :build]
 
   def index
     @formsites = Formsite.all
