@@ -1,5 +1,5 @@
 class Api::V1::FormsitesController < ApplicationController
-  before_action :set_formsite, only: [:show, :add_formsite_user, :setup, :build]
+  before_action :set_formsite, only: [:show, :add_formsite_user, :get_formsite_questions, :setup, :build]
 
   def index
     @formsites = Formsite.all
@@ -8,6 +8,11 @@ class Api::V1::FormsitesController < ApplicationController
 
   def show
     render json: @formsite
+  end
+
+  def get_formsite_questions
+    @questions = @formsite.questions
+    render json: @questions
   end
 
   def add_formsite_user
