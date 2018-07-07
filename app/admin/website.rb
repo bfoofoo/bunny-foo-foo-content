@@ -21,6 +21,7 @@ ActiveAdmin.register Website do
   end
 
   form do |f|
+    f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-template.git' : f.object.repo_url
     f.inputs 'Website' do
       f.input :name
       f.input :description

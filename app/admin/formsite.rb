@@ -14,6 +14,7 @@ ActiveAdmin.register Formsite do
   end
 
   form do |f|
+    f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-forms.git' : f.object.repo_url
     f.inputs 'Formsite' do
       f.input :name
       f.input :description
