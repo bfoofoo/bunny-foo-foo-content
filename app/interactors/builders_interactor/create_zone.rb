@@ -11,8 +11,6 @@ module BuildersInteractor
       zone = zone_service.create_zone(context.config[:name])
       puts 'before error'
       if zone.errors.length > 0
-        puts 'in error'
-        binding.pry
         context.errors = zone.errors.collect{|i| i[:message]}
         context.fail!
       else
@@ -25,7 +23,6 @@ module BuildersInteractor
         context.zone = zone_service.get_zone(res.result[:id])
         save_zone(res)
       end
-      puts 'aftre error'
     end
 
     def save_zone(zone)

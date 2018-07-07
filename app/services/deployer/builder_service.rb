@@ -9,7 +9,7 @@ module Deployer
       puts 'setup'
       setup_host_data(host, user, password, config)
       clone_repo
-      create_config_file
+      config[:type] == 'website' && create_config_file
       generate_static
       setup_bash
       setup_certbot
@@ -39,38 +39,52 @@ module Deployer
 
     def clone_repo
       puts @config[:repo_url]
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} autobuild"
-        ssh.exec! "cd autobuild/; git checkout master"
-        ssh.exec! "cd autobuild/; git fetch --all"
-        ssh.exec! "cd autobuild/; git reset --hard origin/master"
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} autobuild"
+          ssh.exec! "cd autobuild/; git checkout master"
+          ssh.exec! "cd autobuild/; git fetch --all"
+          ssh.exec! "cd autobuild/; git reset --hard origin/master"
+        end
+      rescue => error
+        raise error
       end
     end
 
     def pull_repo
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd autobuild/; git checkout master"
-        ssh.exec! "cd autobuild/; git fetch --all"
-        ssh.exec! "cd autobuild/; git reset --hard origin/master"
-        ssh.exec! "cd autobuild/; npm install"
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "cd autobuild/; git checkout master"
+          ssh.exec! "cd autobuild/; git fetch --all"
+          ssh.exec! "cd autobuild/; git reset --hard origin/master"
+          ssh.exec! "cd autobuild/; npm install"
+        end
+      rescue
+        raise 'Pull failed'
       end
     end
 
     def setup_certbot
       puts 'setup_certbot'
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone https://github.com/certbot/certbot"
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "git clone https://github.com/certbot/certbot"
+        end
+      rescue => error
+        raise error
       end
     end
 
     def setup_bash
       puts 'setup_bash'
-      bash_data_string = "'export LC_ALL=en_US.UTF-8'"
-      bash_data_string_sec = "'export LC_CTYPE=en_US.UTF-8'"
-      puts bash_data_string
-      puts bash_data_string_sec
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile; source ~/.profile"
+      begin
+        bash_data_string = "'export LC_ALL=en_US.UTF-8'"
+        bash_data_string_sec = "'export LC_CTYPE=en_US.UTF-8'"
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile; source ~/.profile"
+        end
+      rescue => error
+        raise error
       end
     end
 
@@ -80,15 +94,15 @@ module Deployer
       Net::SSH.start(@host, @user, password: @password) do |ssh|
         channel = ssh.open_channel do |channel, success|
           channel.on_data do |channel, data|
-            puts "@@@@ #{data} @@@@"
-            if data =~ /^\Do you want to continue /
-              puts 'Y 1'
-              channel.send_data "Y\n"
-            elsif data =~ /\[Y/
-              puts 'Y 2'
+            puts "%%%% #{data} %%%%"
+            if data =~ /^\Do you want to continue / || data =~ /\[Y/
               channel.send_data "Y\n"
             elsif data =~ /^\[sudo\] password for /
               channel.send_data "#{@password}\n"
+            elsif data =~ /too many certificates already issued for exact set of domain/
+              raise "Generate ssl cert failed. Too many certificates already issued for exact set of domain #{@config[:name]}"
+            elsif data =~ /error/
+              raise 'Generate ssl cert failed'
             else
               result += data.to_s
             end
@@ -127,24 +141,30 @@ module Deployer
           }
         }
       }
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd autobuild/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "cd autobuild/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
+        end
+      rescue => error
+        raise error
       end
     end
 
     def generate_static
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd autobuild/; npm install"
-        ssh.exec! "cd autobuild/; WEBSITE_NAME=#{@config[:name]} NODE_ENV=production npm run generate"
-        # ssh.exec! "cd autobuild/; WEBSITE_NAME=default NODE_ENV=production npm run generate"
-        ssh.exec! "cd autobuild/; rm -rf ./production"
-        ssh.exec! "cd autobuild/; mkdir production"
-        ssh.exec! "cd autobuild/; cp -a ./dist/. ./production/"
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "cd autobuild/; npm install"
+          ssh.exec! "cd autobuild/; WEBSITE_NAME=#{@config[:name]} NODE_ENV=production npm run generate"
+          ssh.exec! "cd autobuild/; rm -rf ./production"
+          ssh.exec! "cd autobuild/; mkdir production"
+          ssh.exec! "cd autobuild/; cp -a ./dist/. ./production/"
+        end
+      rescue => error
+        raise error
       end
     end
 
     def update_nginx_sites(sites)
-      puts '@@@@ sites @@@@'
       puts sites
       sites_str = "'#{sites}'"
 
@@ -159,7 +179,6 @@ module Deployer
             end
           end
           channel.request_pty
-          # channel.exec("sudo touch /etc/nginx/sites-available/#{@config[:name]}; sudo chmod 777 /etc/nginx/sites-available/default; sudo > default; sudo chmod 777 /etc/nginx/sites-available/#{@config[:name]}; sudo echo #{sites_str} >> /etc/nginx/sites-available/#{@config[:name]}; sudo service nginx restart")
           channel.exec("sudo chmod 777 /etc/nginx/sites-available/default; sudo > /etc/nginx/sites-available/default; sudo echo #{sites_str} >> /etc/nginx/sites-available/default")
           puts '@@@ result @@@'
           puts result
@@ -233,13 +252,14 @@ module Deployer
     end
 
     def restart_nginx
-      puts 'restart_nginx'
       result = ''
       Net::SSH.start(@host, @user, password: @password) do |ssh|
         channel = ssh.open_channel do |channel, success|
           channel.on_data do |channel, data|
             if data =~ /^\[sudo\] password for /
               channel.send_data "#{@password}\n"
+            elsif data =~ /Job for nginx.service failed/
+              raise 'Restart nginx failed'
             else
               result += data.to_s
             end
@@ -251,7 +271,6 @@ module Deployer
         channel.wait
       end
     end
-
   end
 end
 
