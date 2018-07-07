@@ -5,7 +5,6 @@ ActiveAdmin.register Website do
     column :id
     column :name
     column :description
-    column :repo_url
     column :droplet_id
     column :droplet_ip
     column :zone_id
