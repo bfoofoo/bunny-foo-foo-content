@@ -6,6 +6,8 @@ class Article < ApplicationRecord
 
   before_save :update_slug
 
+  validates :name, presence: true
+
   private
 
   def update_slug

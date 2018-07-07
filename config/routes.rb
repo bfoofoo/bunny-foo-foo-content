@@ -26,8 +26,8 @@ Rails.application.routes.draw do
           get ':id/build', to: 'formsites#build', as: 'build'
         end
       end
-      resources :categories, only: [:index, :show]
-      resources :articles, only: [:index, :show]
+      resources :categories, only: [:index, :show, :create]
+      resources :articles, only: [:index, :show, :create]
     end
   end
 end

@@ -4,6 +4,8 @@ class Website < ApplicationRecord
 
   accepts_nested_attributes_for :categories
 
+  validates :name, presence: true
+
   def builder_config
     return {
       name: self.name,
