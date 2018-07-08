@@ -47,7 +47,7 @@ ActiveAdmin.register Website do
               </path>
             </svg>
         </span>'.html_safe
-    end
+    end if !website.droplet_ip.present? && !website.zone_id.present?
   end
 
   action_item :rebuild, :only => :show do
@@ -59,7 +59,7 @@ ActiveAdmin.register Website do
               </path>
             </svg>
         </span>'.html_safe
-    end
+    end if website.droplet_ip.present?
   end
 
   member_action :clone, method: :get do
