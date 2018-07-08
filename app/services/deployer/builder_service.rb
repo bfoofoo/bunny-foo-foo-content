@@ -6,7 +6,7 @@ module Deployer
     end
 
     def setup(config, host, user = 'sammy', password = "42Iknow42")
-      puts 'setup'
+      Rails.logger.info 'setup'
       setup_host_data(host, user, password, config)
       clone_repo
       config[:type] == 'website' && create_config_file
@@ -15,15 +15,14 @@ module Deployer
       setup_certbot
       set_beforessl_nginx_site
       restart_nginx
-      generate_ssl
-      set_afterssl_nginx_site
-      restart_nginx
+      # generate_ssl
+      # set_afterssl_nginx_site
+      # restart_nginx
     end
 
     def rebuild(config, host, user = 'sammy', password = "42Iknow42")
       setup_host_data(host, user, password, config)
       pull_repo
-      # create_config_file
       generate_static
       restart_nginx
     end
@@ -38,7 +37,7 @@ module Deployer
     end
 
     def clone_repo
-      puts @config[:repo_url]
+      Rails.logger.info @config[:repo_url]
       begin
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} autobuild"
@@ -65,7 +64,7 @@ module Deployer
     end
 
     def setup_certbot
-      puts 'setup_certbot'
+      Rails.logger.info 'setup_certbot'
       begin
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "git clone https://github.com/certbot/certbot"
@@ -76,7 +75,7 @@ module Deployer
     end
 
     def setup_bash
-      puts 'setup_bash'
+      Rails.logger.info 'setup_bash'
       begin
         bash_data_string = "'export LC_ALL=en_US.UTF-8'"
         bash_data_string_sec = "'export LC_CTYPE=en_US.UTF-8'"
@@ -89,12 +88,12 @@ module Deployer
     end
 
     def generate_ssl
-      puts 'generate_ssl'
+      Rails.logger.info 'generate_ssl'
       result = ''
       Net::SSH.start(@host, @user, password: @password) do |ssh|
         channel = ssh.open_channel do |channel, success|
           channel.on_data do |channel, data|
-            puts "%%%% #{data} %%%%"
+            Rails.logger.info "SSH LOG: #{data} | "
             if data =~ /^\Do you want to continue / || data =~ /\[Y/
               channel.send_data "Y\n"
             elsif data =~ /^\[sudo\] password for /
@@ -165,7 +164,6 @@ module Deployer
     end
 
     def update_nginx_sites(sites)
-      puts sites
       sites_str = "'#{sites}'"
 
       result = ''
@@ -180,8 +178,6 @@ module Deployer
           end
           channel.request_pty
           channel.exec("sudo chmod 777 /etc/nginx/sites-available/default; sudo > /etc/nginx/sites-available/default; sudo echo #{sites_str} >> /etc/nginx/sites-available/default")
-          puts '@@@ result @@@'
-          puts result
           channel.wait
         end
         channel.wait

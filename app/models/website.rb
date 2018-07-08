@@ -1,6 +1,6 @@
 class Website < ApplicationRecord
   has_and_belongs_to_many :categories
-  has_many :articles
+  has_many :articles, dependent: :destroy
 
   accepts_nested_attributes_for :categories
 

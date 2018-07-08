@@ -9,19 +9,18 @@ module BuildersInteractor
     def call
       zone_service = Deployer::CloudflareService.new
       zone = zone_service.create_zone(context.config[:name])
-      puts 'before error'
+      Rails.logger.info 'zone created'
       if zone.errors.length > 0
         context.errors = zone.errors.collect{|i| i[:message]}
         context.fail!
       else
-        puts 'no error'
         ip = context.droplet.networks[:v4][0][:ip_address]
-        puts 'zone id'
-        puts zone.result[:id]
+
         zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: ip})
-        res = zone_service.add_dns_to_zone({id: zone.result[:id], name: "www.#{zone.result[:name]}", ip: ip})
-        context.zone = zone_service.get_zone(res.result[:id])
-        save_zone(res)
+        zone_service.add_dns_to_zone({id: zone.result[:id], name: "www.#{zone.result[:name]}", ip: ip})
+
+        context.zone = zone_service.get_zone(zone.result[:id])
+        save_zone(zone)
       end
     end
 
