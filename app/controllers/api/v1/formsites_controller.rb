@@ -43,7 +43,7 @@ class Api::V1::FormsitesController < ApplicationController
 
   def build
     config = @formsite.builder_config
-    context = BuildersInteractor::SetupBuild.call({config: config})
+    context = BuildersInteractor::RebuildHost.call({config: config})
     if context.errors
       render json: {errors: context.errors}
     else
