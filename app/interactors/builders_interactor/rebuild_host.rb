@@ -5,9 +5,14 @@ module BuildersInteractor
     delegate :config, :to => :context
 
     def call
-      host = context.config[:droplet_ip]
-      builder_service = Deployer::BuilderService.new
-      builder_service.rebuild(context.config, host)
+      begin
+        host = context.config[:droplet_ip]
+        builder_service = Deployer::BuilderService.new
+        builder_service.rebuild(context.config, host)
+      rescue => e
+        context.errors = [e.message]
+        context.fail!
+      end
     end
   end
 end

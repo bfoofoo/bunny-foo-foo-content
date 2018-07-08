@@ -22,8 +22,7 @@ module BuildersInteractor
       zone_service = Deployer::CloudflareService.new
 
       droplet_service.delete_droplet({droplet_id: context.droplet[:id]})
-      z = zone_service.delete_zone({zone_id: context.zone[:id]})
-      binding.pry
+      zone_service.delete_zone({zone_id: context.zone[:id]})
     end
   end
 end
