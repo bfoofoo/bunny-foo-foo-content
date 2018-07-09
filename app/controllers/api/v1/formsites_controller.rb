@@ -11,7 +11,7 @@ class Api::V1::FormsitesController < ApplicationController
   end
 
   def get_formsite_questions
-    @questions = @formsite.questions
+    @questions = @formsite.questions.includes(:answers)
     render json: @questions
   end
 
@@ -55,6 +55,8 @@ class Api::V1::FormsitesController < ApplicationController
 
   def set_formsite
     @formsite = Formsite.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {message: e.message}
   end
 
   def formsite_params
