@@ -25,7 +25,7 @@ class Api::V1::WebsitesController < ApiController
   end
 
   def get_category_with_articles
-    @articles = @website.categories.find(params[:category_id]).articles.where(website_id: @website.id)
+    @articles = @website.categories.includes([:articles]).find(params[:category_id]).articles.where(website_id: @website.id)
     render json: @articles
   end
 
@@ -57,6 +57,8 @@ class Api::V1::WebsitesController < ApiController
   private
     def set_website
       @website = Website.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {message: e.message}
     end
 
     def paginate_items items

@@ -11,7 +11,7 @@ class Article < ApplicationRecord
   private
 
   def update_slug
-    unless slug_changed?
+    if self.slug.blank?
       self.slug = self.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
     else
       self.slug = self.slug.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')

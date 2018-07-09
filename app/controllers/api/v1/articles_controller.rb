@@ -17,11 +17,15 @@ class Api::V1::ArticlesController < ApiController
     else
       render json: @article.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {message: e.message}
   end
 
   private
     def set_article
       @article = Article.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {message: e.message}
     end
 
     def article_params

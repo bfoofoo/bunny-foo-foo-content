@@ -17,11 +17,15 @@ class Api::V1::CategoriesController < ApplicationController
     else
       render json: @category.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {message: e.message}
   end
 
   private
   def set_category
     @category = Category.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {message: e.message}
   end
 
   def category_params
