@@ -124,6 +124,9 @@ GEM
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
+    carrierwave-base64 (2.7.0)
+      carrierwave (>= 0.8.0)
+      mime-types (~> 3.0)
     case_transform (0.2)
       activesupport
     cloudflare (3.2.1)
@@ -430,6 +433,7 @@ DEPENDENCIES
   capistrano-rails (~> 1.2)
   capistrano-rbenv (~> 2.1)
   carrierwave
+  carrierwave-base64
   cloudflare
   coffee-rails (~> 4.2)
   devise

@@ -2,7 +2,7 @@ class Article < ApplicationRecord
   belongs_to :category
   belongs_to :website
 
-  mount_uploader :cover_image, CommonUploader
+  mount_base64_uploader :cover_image, CommonUploader
 
   before_save :update_slug
 

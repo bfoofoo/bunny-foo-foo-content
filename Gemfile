@@ -43,6 +43,7 @@ gem 'bigdecimal'
 gem 'remodal-rails', '~> 1.1.1'
 #IMAGES
 gem 'carrierwave'
+gem 'carrierwave-base64'
 gem 'mini_magick'
 gem "awesome_print", require: "ap"
 # ACTIVE ADMIN
