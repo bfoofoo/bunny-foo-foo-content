@@ -1,5 +1,5 @@
 ActiveAdmin.register Website do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :ad_sidebar_id, :ad_top_id, :ad_middle_id, :ad_bottom_id
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :ad_sidebar_id, :ad_top_id, :ad_middle_id, :ad_bottom_id, :favicon_image, :logo_image
 
   index do
     column :id
@@ -24,6 +24,8 @@ ActiveAdmin.register Website do
     f.inputs 'Website' do
       f.input :name
       f.input :description
+      f.input :favicon_image
+      f.input :logo_image
       f.input :repo_url
       f.input :ad_client
       f.input :ad_sidebar_id

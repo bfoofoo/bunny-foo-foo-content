@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180709073538) do
+ActiveRecord::Schema.define(version: 20180709081259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,8 @@ ActiveRecord::Schema.define(version: 20180709073538) do
     t.string   "ad_bottom_id"
     t.string   "first_redirect_url"
     t.string   "final_redirect_url"
+    t.string   "favicon_image"
+    t.string   "logo_image"
   end
 
   create_table "questions", force: :cascade do |t|
@@ -169,6 +171,8 @@ ActiveRecord::Schema.define(version: 20180709073538) do
     t.string   "ad_top_id"
     t.string   "ad_middle_id"
     t.string   "ad_bottom_id"
+    t.string   "favicon_image"
+    t.string   "logo_image"
   end
 
   add_foreign_key "answers", "questions"

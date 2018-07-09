@@ -6,10 +6,15 @@ class Website < ApplicationRecord
 
   validates :name, presence: true
 
+  mount_uploader :favicon_image, CommonUploader
+  mount_uploader :logo_image, CommonUploader
+
   def builder_config
     return {
       name: self.name,
       description: self.description || '',
+      favicon_image: self.favicon_image || '',
+      logo_image: self.logo_image || '',
       website_id: self.id,
       droplet_ip: self.droplet_ip,
       droplet_id: self.droplet_id,

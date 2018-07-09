@@ -119,6 +119,8 @@ module Deployer
         module.exports = {
           "'metaTitle'": "'#{@config[:name]}'",
           "'metaDescription'": "'#{@config[:description]}'",
+          "'faviconImageUrl'": "'#{@config[:favicon_image]}'",
+          "'logoImageUrl'": "'#{@config[:logo_image]}'",
           "'logoPath'": "'/logo.jpg'",
           "'email'": "'admin@#{@config[:name]}'",
           "'adClient'": "'#{@config[:ad_client]}'",
