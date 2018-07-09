@@ -26,8 +26,8 @@ class Formsite < ApplicationRecord
     return {
         name: self.name,
         description: self.description || '',
-        favicon_image: self.favicon_image || '',
-        logo_image: self.logo_image || '',
+        favicon_image: self.favicon_image.url || '',
+        logo_image: self.logo_image.url || '',
         website_id: self.id,
         droplet_ip: self.droplet_ip,
         droplet_id: self.droplet_id,

@@ -9,7 +9,9 @@ module Deployer
       Rails.logger.info 'setup'
       setup_host_data(host, user, password, config)
       clone_repo
-      config[:type] == 'website' && create_config_file
+      if config[:type] == 'website'
+        create_config_file
+      end
       generate_static
       setup_bash
       setup_certbot
