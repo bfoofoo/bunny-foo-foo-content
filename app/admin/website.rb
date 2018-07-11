@@ -27,6 +27,7 @@ ActiveAdmin.register Website do
       f.input :favicon_image
       f.input :logo_image
       f.input :repo_url
+      f.input :droplet_ip
       f.input :ad_client
       f.input :ad_sidebar_id
       f.input :ad_top_id

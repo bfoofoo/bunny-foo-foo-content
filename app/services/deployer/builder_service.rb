@@ -25,6 +25,9 @@ module Deployer
     def rebuild(config, host, user = 'sammy', password = "42Iknow42")
       setup_host_data(host, user, password, config)
       pull_repo
+      if config[:type] == 'website'
+        create_config_file
+      end
       generate_static
       restart_nginx
     end
