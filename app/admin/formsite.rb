@@ -1,10 +1,11 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :left_side_content, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
 
   index do
     column :id
     column :name
     column :description
+    column :is_thankyou
     column :droplet_id
     column :droplet_ip
     column :zone_id
@@ -17,13 +18,15 @@ ActiveAdmin.register Formsite do
     f.inputs 'Formsite' do
       f.input :name
       f.input :description
+      f.input :is_thankyou
       f.input :favicon_image
       f.input :logo_image
+      f.input :background
       f.input :repo_url
       f.input :first_redirect_url
       f.input :final_redirect_url
       f.input :questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
-
+      f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
     end
     f.actions
   end
@@ -49,6 +52,6 @@ ActiveAdmin.register Formsite do
               </path>
             </svg>
         </span>'.html_safe
-    end if !website.droplet_ip.blank?
+    end if !formsite.droplet_ip.blank?
   end
 end

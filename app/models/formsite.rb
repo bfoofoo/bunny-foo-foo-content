@@ -21,6 +21,7 @@ class Formsite < ApplicationRecord
 
   mount_uploader :favicon_image, CommonUploader
   mount_uploader :logo_image, CommonUploader
+  mount_uploader :background, CommonUploader
 
   def builder_config
     return {
