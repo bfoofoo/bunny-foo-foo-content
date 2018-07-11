@@ -52,6 +52,7 @@ module Deployer
           ssh.exec! "cd autobuild/; git reset --hard origin/master"
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       rescue => error
@@ -69,6 +70,7 @@ module Deployer
           ssh.exec! "cd autobuild/; npm install"
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       rescue => error
@@ -84,6 +86,7 @@ module Deployer
           ssh.exec! "git clone https://github.com/certbot/certbot"
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       rescue => error
@@ -101,6 +104,7 @@ module Deployer
           ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile; source ~/.profile"
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       rescue => error
@@ -136,6 +140,7 @@ module Deployer
           channel.wait
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       end
@@ -174,6 +179,7 @@ module Deployer
           ssh.exec! "cd autobuild/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       rescue => error
@@ -192,6 +198,7 @@ module Deployer
           ssh.exec! "cd autobuild/; cp -a ./dist/. ./production/"
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       rescue => error
@@ -220,6 +227,7 @@ module Deployer
           channel.wait
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       end
@@ -310,6 +318,7 @@ module Deployer
           channel.wait
         end
       rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
         tries =+ 1
         tries < 10 ? retry : raise(error)
       end
