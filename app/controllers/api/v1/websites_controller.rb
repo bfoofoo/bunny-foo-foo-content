@@ -62,6 +62,16 @@ class Api::V1::WebsitesController < ApiController
     end
   end
 
+  def rebuild_old
+    config = @website.builder_config
+    context = BuildersInteractor::RebuildHost.call({config: config})
+    if context.errors
+      render json: {errors: context.errors}
+    else
+      render json: {message: 'success'}
+    end
+  end
+
   private
     def set_website
       @website = Website.find(params[:id])

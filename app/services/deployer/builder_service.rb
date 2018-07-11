@@ -32,6 +32,17 @@ module Deployer
       restart_nginx
     end
 
+    def merge_old_site(config, host, user = 'sammy', password = "42Iknow42")
+      setup_host_data(host, user, password, config)
+      clone_repo
+      if config[:type] == 'website'
+        create_config_file
+      end
+      generate_static
+      set_migrate_nginx_site
+      restart_nginx
+    end
+
     private
 
     def setup_host_data(host, user, password, config)
@@ -293,6 +304,50 @@ module Deployer
         server_name #{@config[:name]} www.#{@config[:name]};
         rewrite ^ https://$host$request_uri? permanent;
       }}
+      update_nginx_sites(ssl_config)
+    end
+
+    def set_migrate_nginx_site
+      ssl_config = %Q{server {
+          listen 443 http2 default_server;
+          listen [::]:443 http2 default_server;
+
+          rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
+          rewrite ^/(.*)/$ /$1 permanent;
+
+          root /home/sammy/autobuild/production;
+
+          index index.html;
+
+          error_page 404 /404.html;
+          error_page 500 502 503 504 /500.html;
+
+          server_name #{@config[:name]} www.#{@config[:name]};
+
+          location / {
+            try_files $uri/index.html $uri.html $uri/ $uri =404;
+          }
+
+          if ($host !~* ^(www\.)?#{@config[:name]}\.com$ ) {
+            return 444;
+          }
+
+          ssl on;
+          ssl_certificate /etc/letsencrypt/live/#{@config[:name]}/fullchain.pem;
+          ssl_certificate_key /etc/letsencrypt/live/#{@config[:name]}/privkey.pem;
+
+           gzip on;
+           gzip_types application/javascript image/* text/css;
+           gunzip on;
+
+
+        }
+
+        server {
+          listen 0.0.0.0:80;
+          server_name #{@config[:name]} www.#{@config[:name]};
+          rewrite ^ https://$host$request_uri? permanent;
+        }}
       update_nginx_sites(ssl_config)
     end
 
