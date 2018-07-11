@@ -2,7 +2,7 @@ class Api::V1::ArticlesController < ApiController
   before_action :set_article, only: [:show]
 
   def index
-    @articles = Article.all
+    @articles = Article.all.order("created_at DESC")
     render json: @articles
   end
 
