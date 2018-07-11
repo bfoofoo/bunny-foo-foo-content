@@ -63,8 +63,8 @@ module Deployer
           ssh.exec! "cd autobuild/; git reset --hard origin/master"
           ssh.exec! "cd autobuild/; npm install"
         end
-      rescue
-        raise 'Pull failed'
+      rescue => error
+        raise "Pull step failed! #{error.message}"
       end
     end
 
