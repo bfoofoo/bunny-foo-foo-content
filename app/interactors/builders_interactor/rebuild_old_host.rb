@@ -1,5 +1,5 @@
 module BuildersInteractor
-  class RebuildHost
+  class RebuildOldHost
     include Interactor
 
     delegate :config, :to => :context

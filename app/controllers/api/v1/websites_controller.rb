@@ -64,7 +64,7 @@ class Api::V1::WebsitesController < ApiController
 
   def rebuild_old
     config = @website.builder_config
-    context = BuildersInteractor::RebuildHost.call({config: config})
+    context = BuildersInteractor::RebuildOldHost.call({config: config})
     if context.errors
       render json: {errors: context.errors}
     else
