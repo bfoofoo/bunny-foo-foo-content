@@ -37,7 +37,7 @@ ActiveAdmin.register Formsite do
               </path>
             </svg>
         </span>'.html_safe
-    end if !formsite.droplet_ip.present? && !formsite.zone_id.present?
+    end if formsite.droplet_ip.blank?
   end
 
   action_item :rebuild, :only => :show do
@@ -49,6 +49,6 @@ ActiveAdmin.register Formsite do
               </path>
             </svg>
         </span>'.html_safe
-    end if formsite.droplet_ip.present?
+    end if !website.droplet_ip.blank?
   end
 end
