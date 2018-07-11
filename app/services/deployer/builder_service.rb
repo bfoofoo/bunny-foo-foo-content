@@ -53,7 +53,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       rescue => error
         raise error
       end
