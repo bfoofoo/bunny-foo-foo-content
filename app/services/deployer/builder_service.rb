@@ -43,6 +43,7 @@ module Deployer
 
     def clone_repo
       Rails.logger.info @config[:repo_url]
+      tries = 0
       begin
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} autobuild"
@@ -50,12 +51,16 @@ module Deployer
           ssh.exec! "cd autobuild/; git fetch --all"
           ssh.exec! "cd autobuild/; git reset --hard origin/master"
         end
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       rescue => error
         raise error
       end
     end
 
     def pull_repo
+      tries = 0
       begin
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "cd autobuild/; git checkout master"
@@ -63,6 +68,9 @@ module Deployer
           ssh.exec! "cd autobuild/; git reset --hard origin/master"
           ssh.exec! "cd autobuild/; npm install"
         end
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       rescue => error
         raise "Pull step failed! #{error.message}"
       end
@@ -70,10 +78,14 @@ module Deployer
 
     def setup_certbot
       Rails.logger.info 'setup_certbot'
+      tries = 0
       begin
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "git clone https://github.com/certbot/certbot"
         end
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       rescue => error
         raise error
       end
@@ -81,12 +93,16 @@ module Deployer
 
     def setup_bash
       Rails.logger.info 'setup_bash'
+      tries = 0
       begin
         bash_data_string = "'export LC_ALL=en_US.UTF-8'"
         bash_data_string_sec = "'export LC_CTYPE=en_US.UTF-8'"
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile; source ~/.profile"
         end
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       rescue => error
         raise error
       end
@@ -95,27 +111,33 @@ module Deployer
     def generate_ssl
       Rails.logger.info 'generate_ssl'
       result = ''
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        channel = ssh.open_channel do |channel, success|
-          channel.on_data do |channel, data|
-            Rails.logger.info "SSH LOG: #{data} | "
-            if data =~ /^\Do you want to continue / || data =~ /\[Y/
-              channel.send_data "Y\n"
-            elsif data =~ /^\[sudo\] password for /
-              channel.send_data "#{@password}\n"
-            elsif data =~ /too many certificates already issued for exact set of domain/
-              raise "Generate ssl cert failed. Too many certificates already issued for exact set of domain #{@config[:name]}"
-            elsif data =~ /error/
-              raise 'Generate ssl cert failed'
-            else
-              result += data.to_s
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          channel = ssh.open_channel do |channel, success|
+            channel.on_data do |channel, data|
+              Rails.logger.info "SSH LOG: #{data} | "
+              if data =~ /^\Do you want to continue / || data =~ /\[Y/
+                channel.send_data "Y\n"
+              elsif data =~ /^\[sudo\] password for /
+                channel.send_data "#{@password}\n"
+              elsif data =~ /too many certificates already issued for exact set of domain/
+                raise "Generate ssl cert failed. Too many certificates already issued for exact set of domain #{@config[:name]}"
+              elsif data =~ /error/
+                raise 'Generate ssl cert failed'
+              else
+                result += data.to_s
+              end
             end
+            channel.request_pty
+            channel.exec " source ~/.profile; cd ~/certbot; ./certbot-auto --agree-tos --renew-by-default --standalone --standalone-supported-challenges http-01 --http-01-port 9999 --server https://acme-v01.api.letsencrypt.org/directory certonly -d #{@config[:name]} -d www.#{@config[:name]}"
+            channel.wait
           end
-          channel.request_pty
-          channel.exec " source ~/.profile; cd ~/certbot; ./certbot-auto --agree-tos --renew-by-default --standalone --standalone-supported-challenges http-01 --http-01-port 9999 --server https://acme-v01.api.letsencrypt.org/directory certonly -d #{@config[:name]} -d www.#{@config[:name]}"
           channel.wait
         end
-        channel.wait
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       end
     end
 
@@ -151,12 +173,16 @@ module Deployer
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "cd autobuild/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
         end
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       rescue => error
         raise error
       end
     end
 
     def generate_static
+      tries = 0
       begin
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "cd autobuild/; npm install"
@@ -165,6 +191,9 @@ module Deployer
           ssh.exec! "cd autobuild/; mkdir production"
           ssh.exec! "cd autobuild/; cp -a ./dist/. ./production/"
         end
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       rescue => error
         raise error
       end
@@ -172,22 +201,27 @@ module Deployer
 
     def update_nginx_sites(sites)
       sites_str = "'#{sites}'"
-
+      tries = 0
       result = ''
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        channel = ssh.open_channel do |channel, success|
-          channel.on_data do |channel, data|
-            if data =~ /^\[sudo\] password for /
-              channel.send_data "#{@password}\n"
-            else
-              result += data.to_s
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          channel = ssh.open_channel do |channel, success|
+            channel.on_data do |channel, data|
+              if data =~ /^\[sudo\] password for /
+                channel.send_data "#{@password}\n"
+              else
+                result += data.to_s
+              end
             end
+            channel.request_pty
+            channel.exec("sudo chmod 777 /etc/nginx/sites-available/default; sudo > /etc/nginx/sites-available/default; sudo echo #{sites_str} >> /etc/nginx/sites-available/default")
+            channel.wait
           end
-          channel.request_pty
-          channel.exec("sudo chmod 777 /etc/nginx/sites-available/default; sudo > /etc/nginx/sites-available/default; sudo echo #{sites_str} >> /etc/nginx/sites-available/default")
           channel.wait
         end
-        channel.wait
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       end
     end
 
@@ -256,22 +290,28 @@ module Deployer
 
     def restart_nginx
       result = ''
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        channel = ssh.open_channel do |channel, success|
-          channel.on_data do |channel, data|
-            if data =~ /^\[sudo\] password for /
-              channel.send_data "#{@password}\n"
-            elsif data =~ /Job for nginx.service failed/
-              raise 'Restart nginx failed'
-            else
-              result += data.to_s
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          channel = ssh.open_channel do |channel, success|
+            channel.on_data do |channel, data|
+              if data =~ /^\[sudo\] password for /
+                channel.send_data "#{@password}\n"
+              elsif data =~ /Job for nginx.service failed/
+                raise 'Restart nginx failed'
+              else
+                result += data.to_s
+              end
             end
+            channel.request_pty
+            channel.exec("sudo service nginx restart")
+            channel.wait
           end
-          channel.request_pty
-          channel.exec("sudo service nginx restart")
           channel.wait
         end
-        channel.wait
+      rescue Net::SSH::ConnectionTimeout => error
+        tries =+ 1
+        tries < 10 ? retry : raise error
       end
     end
   end
