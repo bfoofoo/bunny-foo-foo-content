@@ -70,7 +70,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       rescue => error
         raise "Pull step failed! #{error.message}"
       end
@@ -85,7 +85,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       rescue => error
         raise error
       end
@@ -102,7 +102,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       rescue => error
         raise error
       end
@@ -137,7 +137,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       end
     end
 
@@ -175,7 +175,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       rescue => error
         raise error
       end
@@ -193,7 +193,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       rescue => error
         raise error
       end
@@ -221,7 +221,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       end
     end
 
@@ -311,7 +311,7 @@ module Deployer
         end
       rescue Net::SSH::ConnectionTimeout => error
         tries =+ 1
-        tries < 10 ? retry : raise error
+        tries < 10 ? retry : raise(error)
       end
     end
   end
