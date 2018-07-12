@@ -23,7 +23,7 @@ class Api::V1::WebsitesController < ApiController
 
   def get_articles
     @articles = @website.articles.order("created_at DESC")
-    render json: paginate_items(@articles)
+    render json: @articles
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end
