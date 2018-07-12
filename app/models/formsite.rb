@@ -25,6 +25,7 @@ class Formsite < ApplicationRecord
 
   def builder_config
     return {
+        id: self.id,
         name: self.name,
         description: self.description || '',
         favicon_image: self.favicon_image.url || '',

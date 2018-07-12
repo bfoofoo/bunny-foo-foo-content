@@ -2,7 +2,7 @@ class Api::V1::WebsitesController < ApiController
   before_action :set_website, only: [
       :show, :get_categories, :get_articles,
       :get_category_with_articles, :get_category_article,
-      :setup, :build, :rebuild_old
+      :setup, :build, :rebuild_old, :get_config
   ]
 
   def index
@@ -40,6 +40,35 @@ class Api::V1::WebsitesController < ApiController
     render json: @article
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
+  end
+
+  def get_config
+    @config = @website.builder_config
+    ads = @config[:ads].map {|ad|
+      %Q{
+          "#{ad.position}": {
+            "type": "#{ad.variety}",
+            "google_id": "'#{ad.google_id}'",
+            "'widget'": "'#{ad.widget}'",
+            "'innerHTML'": "'#{ad.innerHTML}'"
+          }
+       }
+    }
+
+    site_config = %Q{
+          module.exports = {
+            "'metaTitle'": "'#{@config[:name]}'",
+            "'metaDescription'": "'#{@config[:description]}'",
+            "'faviconImageUrl'": "'#{@config[:favicon_image]}'",
+            "'logoImageUrl'": "'#{@config[:logo_image]}'",
+            "'logoPath'": "'/logo.jpg'",
+            "'email'": "'admin@#{@config[:name]}'",
+            "'adClient'": "'#{@config[:ad_client]}'",
+            #{ads.inject {|acc, elem| acc + ", " + elem}}
+          }
+        }
+
+    render json: {"#{@config[:name].strip}": site_config}
   end
 
   def setup

@@ -58,6 +58,8 @@ gem 'active_admin_theme'
 gem 'devise'
 
 
+gem 'aweber'
+
 
 group :development, :test do
   gem 'byebug', platform: :mri

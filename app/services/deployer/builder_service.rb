@@ -9,9 +9,6 @@ module Deployer
       Rails.logger.info 'setup'
       setup_host_data(host, user, password, config)
       clone_repo
-      if config[:type] == 'website'
-        create_config_file
-      end
       generate_static
       setup_bash
       setup_certbot
@@ -25,9 +22,6 @@ module Deployer
     def rebuild(config, host, user = 'sammy', password = "42Iknow42")
       setup_host_data(host, user, password, config)
       pull_repo
-      if config[:type] == 'website'
-        create_config_file
-      end
       generate_static
       restart_nginx
     end
@@ -35,9 +29,6 @@ module Deployer
     def merge_old_site(config, host, user = 'sammy', password = "42Iknow42")
       setup_host_data(host, user, password, config)
       clone_repo
-      if config[:type] == 'website'
-        create_config_file
-      end
       generate_static
       set_afterssl_nginx_site
       restart_nginx
@@ -180,9 +171,8 @@ module Deployer
             #{ads.inject {|acc, elem| acc + ", " + elem}}
           }
         }
-        Rails.logger.info site_config
         Net::SSH.start(@host, @user, password: @password) do |ssh|
-          ssh.exec! "cd autobuild/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
+          ssh.exec! "cd autobuild/; rm configs/#{@config[:name].strip}.js;> configs/#{@config[:name].strip}.js; echo '#{site_config.strip}' >> configs/#{@config[:name].strip}.js"
         end
       rescue Net::SSH::ConnectionTimeout => error
         Rails.logger.info error
@@ -198,7 +188,7 @@ module Deployer
       begin
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "cd autobuild/; npm install"
-          ssh.exec! "cd autobuild/; WEBSITE_NAME=#{@config[:name]} NODE_ENV=production npm run generate"
+          ssh.exec! "cd autobuild/; WEBSITE_NAME=#{@config[:name]} WEBSITE_ID=#{@config[:id]} NODE_ENV=production npm run generate"
           ssh.exec! "cd autobuild/; rm -rf ./production"
           ssh.exec! "cd autobuild/; mkdir production"
           ssh.exec! "cd autobuild/; cp -a ./dist/. ./production/"
