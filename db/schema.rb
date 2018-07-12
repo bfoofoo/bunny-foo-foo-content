@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180712121708) do
+ActiveRecord::Schema.define(version: 20180712142056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,9 +59,10 @@ ActiveRecord::Schema.define(version: 20180712121708) do
   create_table "answers", force: :cascade do |t|
     t.text     "text"
     t.integer  "question_id"
-    t.boolean  "is_correct",  default: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.boolean  "is_correct",   default: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "redirect_url"
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
   end
 
@@ -137,8 +138,8 @@ ActiveRecord::Schema.define(version: 20180712121708) do
     t.integer  "droplet_id"
     t.string   "droplet_ip"
     t.string   "zone_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.string   "repo_url"
     t.string   "ad_client"
     t.string   "ad_sidebar_id"
@@ -152,13 +153,12 @@ ActiveRecord::Schema.define(version: 20180712121708) do
     t.boolean  "is_thankyou"
     t.string   "background"
     t.text     "left_side_content"
-    t.string   "one_signal_id"
-    t.string   "pixel_id"
+    t.text     "first_question_code_snippet"
+    t.text     "head_code_snippet"
   end
 
   create_table "questions", force: :cascade do |t|
     t.text     "text"
-    t.string   "link_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
