@@ -2,7 +2,7 @@ class Api::V1::WebsitesController < ApiController
   before_action :set_website, only: [
       :show, :get_categories, :get_articles,
       :get_category_with_articles, :get_category_article,
-      :setup, :build
+      :setup, :build, :rebuild_old
   ]
 
   def index
