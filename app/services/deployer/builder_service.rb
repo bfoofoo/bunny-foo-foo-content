@@ -306,7 +306,7 @@ module Deployer
           listen 443 http2 default_server;
           listen [::]:443 http2 default_server;
 
-          rewrite ^(/.*)\.html(\?.*)?$ $1$2 permanent;
+          rewrite ^(/.*)\\.html(\\?.*)?$ $1$2 permanent;
           rewrite ^/(.*)/$ /$1 permanent;
 
           root /home/sammy/autobuild/production;
