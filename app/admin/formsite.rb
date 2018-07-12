@@ -1,11 +1,12 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :left_side_content, :first_question_code_snippet, :head_code_snippet, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :is_checkboxes, :left_side_content, :first_question_code_snippet, :head_code_snippet, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
 
   index do
     column :id
     column :name
     column :description
     column :is_thankyou
+    column :is_checkboxes
     column :droplet_id
     column :droplet_ip
     column :zone_id
@@ -19,6 +20,7 @@ ActiveAdmin.register Formsite do
       f.input :name
       f.input :description
       f.input :is_thankyou
+      f.input :is_checkboxes
       f.input :favicon_image
       f.input :logo_image
       f.input :background

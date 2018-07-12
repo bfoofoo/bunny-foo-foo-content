@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180712142056) do
+ActiveRecord::Schema.define(version: 20180712142826) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,6 +155,7 @@ ActiveRecord::Schema.define(version: 20180712142056) do
     t.text     "left_side_content"
     t.text     "first_question_code_snippet"
     t.text     "head_code_snippet"
+    t.boolean  "is_checkboxes"
   end
 
   create_table "questions", force: :cascade do |t|

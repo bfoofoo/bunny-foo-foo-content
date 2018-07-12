@@ -156,30 +156,31 @@ module Deployer
     end
 
     def create_config_file
-      ads = @config[:ads].map {|ad|
-        %Q{
-          "#{ad.position}": {
-            "type": "#{ad.variety}",
-            "google_id": "'#{ad.google_id}'",
-            "'widget'": "'#{ad.widget}'",
-            "'innerHTML'": "'#{ad.innerHTML}'"
+      begin
+        ads = @config[:ads].map {|ad|
+          %Q{
+            "#{ad.position}": {
+              "type": "#{ad.variety}",
+              "google_id": "'#{ad.google_id}'",
+              "'widget'": "'#{ad.widget}'",
+              "'innerHTML'": "'#{ad.innerHTML}'"
+            }
           }
         }
-      }
 
-      site_config = %Q{
-        module.exports = {
-          "'metaTitle'": "'#{@config[:name]}'",
-          "'metaDescription'": "'#{@config[:description]}'",
-          "'faviconImageUrl'": "'#{@config[:favicon_image]}'",
-          "'logoImageUrl'": "'#{@config[:logo_image]}'",
-          "'logoPath'": "'/logo.jpg'",
-          "'email'": "'admin@#{@config[:name]}'",
-          "'adClient'": "'#{@config[:ad_client]}'",
-          #{ads.inject {|acc, elem| acc + ", " + elem}}
+        site_config = %Q{
+          module.exports = {
+            "'metaTitle'": "'#{@config[:name]}'",
+            "'metaDescription'": "'#{@config[:description]}'",
+            "'faviconImageUrl'": "'#{@config[:favicon_image]}'",
+            "'logoImageUrl'": "'#{@config[:logo_image]}'",
+            "'logoPath'": "'/logo.jpg'",
+            "'email'": "'admin@#{@config[:name]}'",
+            "'adClient'": "'#{@config[:ad_client]}'",
+            #{ads.inject {|acc, elem| acc + ", " + elem}}
+          }
         }
-      }
-      begin
+        Rails.logger.info site_config
         Net::SSH.start(@host, @user, password: @password) do |ssh|
           ssh.exec! "cd autobuild/; > configs/#{@config[:name]}.js; echo '#{site_config.strip}' >> configs/#{@config[:name]}.js"
         end
@@ -298,50 +299,6 @@ module Deployer
         server_name #{@config[:name]} www.#{@config[:name]};
         rewrite ^ https://$host$request_uri? permanent;
       }}
-      update_nginx_sites(ssl_config)
-    end
-
-    def set_migrate_nginx_site
-      ssl_config = %Q{server {
-          listen 443 http2 default_server;
-          listen [::]:443 http2 default_server;
-
-          rewrite ^(/.*)\\.html(\\?.*)?$ $1$2 permanent;
-          rewrite ^/(.*)/$ /$1 permanent;
-
-          root /home/sammy/autobuild/production;
-
-          index index.html;
-
-          error_page 404 /404.html;
-          error_page 500 502 503 504 /500.html;
-
-          server_name #{@config[:name]} www.#{@config[:name]};
-
-          location / {
-            try_files $uri/index.html $uri.html $uri/ $uri =404;
-          }
-
-          if ($host !~* ^(www\.)?#{@config[:name]}\.com$ ) {
-            return 444;
-          }
-
-          ssl on;
-          ssl_certificate /etc/letsencrypt/live/#{@config[:name]}/fullchain.pem;
-          ssl_certificate_key /etc/letsencrypt/live/#{@config[:name]}/privkey.pem;
-
-           gzip on;
-           gzip_types application/javascript image/* text/css;
-           gunzip on;
-
-
-        }
-
-        server {
-          listen 0.0.0.0:80;
-          server_name #{@config[:name]} www.#{@config[:name]};
-          rewrite ^ https://$host$request_uri? permanent;
-        }}
       update_nginx_sites(ssl_config)
     end
 
