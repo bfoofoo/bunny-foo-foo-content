@@ -39,7 +39,7 @@ module Deployer
         create_config_file
       end
       generate_static
-      set_migrate_nginx_site
+      set_afterssl_nginx_site
       restart_nginx
     end
 
