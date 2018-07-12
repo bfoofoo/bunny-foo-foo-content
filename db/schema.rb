@@ -152,8 +152,8 @@ ActiveRecord::Schema.define(version: 20180712121708) do
     t.boolean  "is_thankyou"
     t.string   "background"
     t.text     "left_side_content"
-    t.string   "pixel_id"
     t.string   "one_signal_id"
+    t.string   "pixel_id"
   end
 
   create_table "questions", force: :cascade do |t|
