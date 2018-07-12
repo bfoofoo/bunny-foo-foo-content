@@ -50,7 +50,7 @@ class Api::V1::WebsitesController < ApiController
             "type": "#{ad.variety}",
             "google_id": "'#{ad.google_id}'",
             "'widget'": "'#{ad.widget}'",
-            "'innerHTML'": "'#{ad.innerHTML}'"
+            "'innerHTML'": `'#{ad.innerHTML}'`
           }
        }
     }
