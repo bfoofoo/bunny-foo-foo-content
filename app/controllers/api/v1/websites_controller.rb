@@ -48,22 +48,22 @@ class Api::V1::WebsitesController < ApiController
       %Q{
           "#{ad.position}": {
             "type": "#{ad.variety}",
-            "google_id": "'#{ad.google_id}'",
-            "'widget'": "'#{ad.widget}'",
-            "'innerHTML'": `'#{ad.innerHTML}'`
+            "google_id": "#{ad.google_id}",
+            "widget": "#{ad.widget}",
+            "innerHTML": `#{ad.innerHTML}`
           }
        }
     }
 
     site_config = %Q{
           module.exports = {
-            "'metaTitle'": "'#{@config[:name]}'",
-            "'metaDescription'": "'#{@config[:description]}'",
-            "'faviconImageUrl'": "'#{@config[:favicon_image]}'",
-            "'logoImageUrl'": "'#{@config[:logo_image]}'",
-            "'logoPath'": "'/logo.jpg'",
-            "'email'": "'admin@#{@config[:name]}'",
-            "'adClient'": "'#{@config[:ad_client]}'",
+            "metaTitle": "#{@config[:name]}",
+            "metaDescription": "#{@config[:description]}",
+            "faviconImageUrl": "#{@config[:favicon_image]}",
+            "logoImageUrl": "#{@config[:logo_image]}",
+            "logoPath": "/logo.jpg",
+            "email": "admin@#{@config[:name]}",
+            "adClient": "#{@config[:ad_client]}",
             #{ads.inject {|acc, elem| acc + ", " + elem}}
           }
         }
