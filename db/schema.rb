@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180712120842) do
+ActiveRecord::Schema.define(version: 20180712121708) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -152,6 +152,8 @@ ActiveRecord::Schema.define(version: 20180712120842) do
     t.boolean  "is_thankyou"
     t.string   "background"
     t.text     "left_side_content"
+    t.string   "pixel_id"
+    t.string   "one_signal_id"
   end
 
   create_table "questions", force: :cascade do |t|

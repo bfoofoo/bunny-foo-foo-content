@@ -1,5 +1,5 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :left_side_content, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :left_side_content, :one_signal_id, :pixel_id, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
 
   index do
     column :id
@@ -23,6 +23,8 @@ ActiveAdmin.register Formsite do
       f.input :logo_image
       f.input :background
       f.input :repo_url
+      f.input :one_signal_id
+      f.input :pixel_id
       f.input :first_redirect_url
       f.input :final_redirect_url
       f.input :questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
