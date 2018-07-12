@@ -1,8 +1,13 @@
 class Website < ApplicationRecord
   has_and_belongs_to_many :categories
   has_many :articles, dependent: :destroy
+  has_many :website_ads, dependent: :destroy
+  has_many :ads, :through => :website_ads
 
   accepts_nested_attributes_for :categories
+  accepts_nested_attributes_for :website_ads
+  accepts_nested_attributes_for :ads
+
 
   validates :name, presence: true
 
@@ -21,10 +26,7 @@ class Website < ApplicationRecord
       zone_id: self.zone_id,
       repo_url: self.repo_url,
       ad_client: self.ad_client || '',
-      ad_sidebar_id: self.ad_sidebar_id || '',
-      ad_top_id: self.ad_top_id || '',
-      ad_middle_id: self.ad_middle_id || '',
-      ad_bottom_id: self.ad_bottom_id || '',
+      ads: self.ads,
       type: 'website'
     }
   end

@@ -43,8 +43,6 @@ module Deployer
       restart_nginx
     end
 
-    private
-
     def setup_host_data(host, user, password, config)
       @host = host
       @user = user
@@ -158,6 +156,17 @@ module Deployer
     end
 
     def create_config_file
+      ads = @config[:ads].map {|ad|
+        %Q{
+          "#{ad.position}": {
+            "type": "#{ad.variety}",
+            "google_id": "'#{ad.google_id}'",
+            "'widget'": "'#{ad.widget}'",
+            "'innerHTML'": "'#{ad.innerHTML}'"
+          }
+        }
+      }
+
       site_config = %Q{
         module.exports = {
           "'metaTitle'": "'#{@config[:name]}'",
@@ -167,22 +176,7 @@ module Deployer
           "'logoPath'": "'/logo.jpg'",
           "'email'": "'admin@#{@config[:name]}'",
           "'adClient'": "'#{@config[:ad_client]}'",
-          "'adSidebar'": {
-            "'type'": "'google'",
-            "'id'": "'#{@config[:ad_sidebar_id]}'"
-          },
-          "'adTop'": {
-            "'type'": "'google'",
-            "'id'": "'#{@config[:ad_top_id]}'"
-          },
-          "'adMiddle'": {
-            "'type'": "'google'",
-            "'id'": "'#{@config[:ad_middle_id]}'"
-          },
-          "'adBottom'": {
-            "'type'": "'google'",
-            "'id'": "'#{@config[:ad_bottom_id]}'"
-          }
+          #{ads.inject {|acc, elem| acc + ", " + elem}}
         }
       }
       begin

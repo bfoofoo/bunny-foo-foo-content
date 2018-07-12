@@ -1,5 +1,8 @@
 ActiveAdmin.register Website do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :ad_sidebar_id, :ad_top_id, :ad_middle_id, :ad_bottom_id, :favicon_image, :logo_image
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :favicon_image, :logo_image, ad_ids: [], ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
+
+  AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
+  AD_TYPES = ['embed', 'google', 'custom', 'text/javascript']
 
   index do
     column :id
@@ -10,29 +13,37 @@ ActiveAdmin.register Website do
     column :zone_id
     column :created_at
     column :ad_client
-    column :ad_sidebar_id
-    column :ad_top_id
-    column :ad_middle_id
-    column :ad_bottom_id
     actions defaults: true do |website|
       link_to 'Duplicate', clone_admin_website_path(website)
     end
   end
 
   form do |f|
-    f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-template.git' : f.object.repo_url
-    f.inputs 'Website' do
-      f.input :name
-      f.input :description
-      f.input :favicon_image
-      f.input :logo_image
-      f.input :repo_url
-      f.input :droplet_ip
-      f.input :ad_client
-      f.input :ad_sidebar_id
-      f.input :ad_top_id
-      f.input :ad_middle_id
-      f.input :ad_bottom_id
+    tabs do
+      tab 'SITE SETTINGS' do
+        f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-template.git' : f.object.repo_url
+        f.inputs 'Website' do
+          f.input :name
+          f.input :description
+          f.input :favicon_image
+          f.input :logo_image
+          f.input :repo_url
+          f.input :droplet_ip
+          f.input :ad_client
+        end
+      end
+      tab 'ADS' do
+        f.inputs 'Ads' do
+          f.has_many :ads, allow_destroy: true, new_record: true do |ff|
+            ff.semantic_errors
+            ff.input :position, :as => :select, :collection => AD_POSITIONS
+            ff.input :variety, :as => :select, :collection => AD_TYPES
+            ff.input :widget
+            ff.input :google_id, :label => 'Google ID'
+            ff.input :innerHTML
+          end
+        end
+      end
     end
     f.actions
   end
