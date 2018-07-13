@@ -1,6 +1,5 @@
 ActiveAdmin.register Question do
-  permit_params :id, :text, :link_url,
-                answer_ids: [],
+  permit_params :id, :text, answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
 
   form do |f|
