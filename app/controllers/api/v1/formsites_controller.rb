@@ -23,9 +23,14 @@ class Api::V1::FormsitesController < ApplicationController
       last_name: params[:user][:last_name]
     ).find_or_create_by(email: params[:user][:email])
 
+    is_useragent_valid = formsite_service.is_useragent_valid(request.user_agent)
+    is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(user)
+
     formsite_user = @formsite.formsite_users.create!(
         user_id: user.id,
-        is_verified: formsite_service.is_useragent_valid(request.user_agent) && formsite_service.is_impressionwise_test_success(user)
+        is_verified: is_useragent_valid && is_impressionwise_test_success,
+        is_useragent_valid: is_useragent_valid,
+        is_impressionwise_test_success: is_impressionwise_test_success
     )
 
     render json: {user: user, is_verified: formsite_user.is_verified}

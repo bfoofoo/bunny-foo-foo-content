@@ -4,6 +4,8 @@ ActiveAdmin.register FormsiteUser do
     column :formsite
     column :user
     column :is_verified
+    column :is_useragent_valid
+    column :is_impressionwise_test_success
   end
 
 end
