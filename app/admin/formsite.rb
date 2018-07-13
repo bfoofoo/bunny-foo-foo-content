@@ -1,5 +1,15 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :is_checkboxes, :left_side_content, :first_question_code_snippet, :head_code_snippet, question_ids: [], questions_attributes: [:id, :text, :_update,:_create], ad_ids: [], ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
+  permit_params :name, :description, :url,
+                :droplet_id, :droplet_ip, :zone_id,
+                :repo_url, :first_redirect_url, :final_redirect_url,
+                :favicon_image, :logo_image, :background,
+                :is_thankyou, :is_checkboxes,
+                :left_side_content, :right_side_content,
+                :first_question_code_snippet, :head_code_snippet,
+                question_ids: [],
+                questions_attributes: [:id, :text, :_update,:_create],
+                ad_ids: [],
+                ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
 
   AD_POSITIONS = ['tracker']
   AD_TYPES = ['text/javascript']
@@ -35,6 +45,7 @@ ActiveAdmin.register Formsite do
           f.input :first_redirect_url
           f.input :final_redirect_url
           f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+          f.input :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
         end
       end
       tab 'QUESTIONS' do
