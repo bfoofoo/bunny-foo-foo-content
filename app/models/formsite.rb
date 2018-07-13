@@ -1,7 +1,4 @@
 class Formsite < ApplicationRecord
-  has_many :formsite_questions
-  has_many :questions, :through => :formsite_questions
-
   has_many :formsite_users
   has_many :users, :through => :formsite_users do
     def verified
@@ -12,6 +9,15 @@ class Formsite < ApplicationRecord
       where("formsite_users.is_verified= ?", false)
     end
   end
+
+  has_many :formsite_questions
+  has_many :questions, :through => :formsite_questions
+
+  has_many :formsite_ads, dependent: :destroy
+  has_many :ads, :through => :formsite_ads
+
+  accepts_nested_attributes_for :formsite_ads
+  accepts_nested_attributes_for :ads
 
   accepts_nested_attributes_for :formsite_users, allow_destroy: true
   accepts_nested_attributes_for :users, allow_destroy: true

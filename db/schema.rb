@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180712142826) do
+ActiveRecord::Schema.define(version: 20180713100915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,15 @@ ActiveRecord::Schema.define(version: 20180712142826) do
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
   end
 
+  create_table "formsite_ads", force: :cascade do |t|
+    t.integer  "formsite_id"
+    t.integer  "ad_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["ad_id"], name: "index_formsite_ads_on_ad_id", using: :btree
+    t.index ["formsite_id"], name: "index_formsite_ads_on_formsite_id", using: :btree
+  end
+
   create_table "formsite_questions", force: :cascade do |t|
     t.integer  "formsite_id"
     t.integer  "question_id"
@@ -200,6 +209,8 @@ ActiveRecord::Schema.define(version: 20180712142826) do
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
   add_foreign_key "configs", "websites"
+  add_foreign_key "formsite_ads", "ads"
+  add_foreign_key "formsite_ads", "formsites"
   add_foreign_key "website_ads", "ads"
   add_foreign_key "website_ads", "websites"
 end

@@ -1,5 +1,8 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :is_checkboxes, :left_side_content, :first_question_code_snippet, :head_code_snippet, question_ids: [], questions_attributes: [:id, :text, :_update,:_create]
+  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :first_redirect_url, :final_redirect_url, :favicon_image, :logo_image, :background, :is_thankyou, :is_checkboxes, :left_side_content, :first_question_code_snippet, :head_code_snippet, question_ids: [], questions_attributes: [:id, :text, :_update,:_create], ad_ids: [], ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
+
+  AD_POSITIONS = ['tracker']
+  AD_TYPES = ['text/javascript']
 
   index do
     column :id
@@ -15,23 +18,44 @@ ActiveAdmin.register Formsite do
   end
 
   form do |f|
-    f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-forms.git' : f.object.repo_url
-    f.inputs 'Formsite' do
-      f.input :name
-      f.input :description
-      f.input :is_thankyou
-      f.input :is_checkboxes
-      f.input :favicon_image
-      f.input :logo_image
-      f.input :background
-      f.input :repo_url
-      f.input :first_question_code_snippet
-      f.input :head_code_snippet
-      f.input :first_redirect_url
-      f.input :final_redirect_url
-      f.input :questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
-      f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+    tabs do
+      tab 'FORM SETTINGS' do
+        f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-forms.git' : f.object.repo_url
+        f.inputs 'Formsite' do
+          f.input :name
+          f.input :description
+          f.input :is_thankyou
+          f.input :is_checkboxes
+          f.input :favicon_image
+          f.input :logo_image
+          f.input :background
+          f.input :repo_url
+          f.input :first_question_code_snippet
+          f.input :head_code_snippet
+          f.input :first_redirect_url
+          f.input :final_redirect_url
+          f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+        end
+      end
+      tab 'QUESTIONS' do
+        f.inputs 'Formsite' do
+          f.input :questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
+        end
+      end
+      tab 'ADS AND TRACKER' do
+        f.inputs 'Ads' do
+          f.has_many :ads, allow_destroy: true, new_record: true do |ff|
+            ff.semantic_errors
+            ff.input :position, :as => :select, :collection => AD_POSITIONS
+            ff.input :variety, :as => :select, :collection => AD_TYPES
+            ff.input :widget
+            ff.input :google_id, :label => 'Google ID'
+            ff.input :innerHTML
+          end
+        end
+      end
     end
+
     f.actions
   end
 
