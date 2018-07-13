@@ -4,9 +4,9 @@ class Website < ApplicationRecord
   has_many :website_ads, dependent: :destroy
   has_many :ads, :through => :website_ads
 
-  accepts_nested_attributes_for :categories
-  accepts_nested_attributes_for :website_ads
-  accepts_nested_attributes_for :ads
+  accepts_nested_attributes_for :categories, allow_destroy: true
+  accepts_nested_attributes_for :website_ads, allow_destroy: true
+  accepts_nested_attributes_for :ads, allow_destroy: true
 
 
   validates :name, presence: true
