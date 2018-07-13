@@ -2,7 +2,7 @@ ActiveAdmin.register Website do
   permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :favicon_image, :logo_image, ad_ids: [], ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
 
   AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
-  AD_TYPES = ['embed', 'google', 'custom', 'text/javascript']
+  AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
 
   index do
     column :id
