@@ -11,9 +11,6 @@ ActiveAdmin.register Formsite do
                 ad_ids: [],
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
 
-  AD_POSITIONS = ['tracker']
-  AD_TYPES = ['text/javascript']
-
   index do
     column :id
     column :name
@@ -54,6 +51,9 @@ ActiveAdmin.register Formsite do
         end
       end
       tab 'ADS AND TRACKER' do
+        AD_POSITIONS = ['tracker']
+        AD_TYPES = ['text/javascript']
+
         f.inputs 'Ads' do
           f.has_many :ads, allow_destroy: true, new_record: true do |ff|
             ff.semantic_errors

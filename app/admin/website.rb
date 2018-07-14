@@ -1,9 +1,6 @@
 ActiveAdmin.register Website do
   permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :favicon_image, :logo_image, ad_ids: [], ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
 
-  AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
-  AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
-
   index do
     column :id
     column :name
@@ -33,6 +30,9 @@ ActiveAdmin.register Website do
         end
       end
       tab 'ADS' do
+        AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
+        AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
+
         f.inputs 'Ads' do
           f.has_many :ads, allow_destroy: true, new_record: true do |ff|
             ff.semantic_errors
