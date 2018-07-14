@@ -28,6 +28,13 @@ class Api::V1::WebsitesController < ApiController
     render json: {message: e.message}
   end
 
+  def get_product_cards
+    @articles = @website.product_cards.order("created_at DESC")
+    render json: @articles
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {message: e.message}
+  end
+
   def get_category_with_articles
     @articles = @website.categories.includes([:articles]).find(params[:category_id]).articles.where(website_id: @website.id).order("created_at DESC")
     render json: @articles

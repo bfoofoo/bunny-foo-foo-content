@@ -1,5 +1,12 @@
 ActiveAdmin.register Website do
-  permit_params :name, :description, :url, :droplet_id, :droplet_ip, :zone_id, :repo_url, :ad_client, :favicon_image, :logo_image, ad_ids: [], ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
+  permit_params :name, :description, :url,
+                :droplet_id, :droplet_ip, :zone_id,
+                :repo_url, :ad_client,
+                :favicon_image, :logo_image,
+                product_card_ids: [],
+                product_cards_attributes: [:id, :title, :description, :image, :rate, :website_id, :_create, :_destroy],
+                ad_ids: [],
+                ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
 
   index do
     column :id
@@ -27,6 +34,17 @@ ActiveAdmin.register Website do
           f.input :repo_url
           f.input :droplet_ip
           f.input :ad_client
+        end
+      end
+      tab 'PRODUCT CARDS' do
+        f.inputs 'product cards' do
+          f.has_many :product_cards, allow_destroy: true, new_record: true do |ff|
+            ff.semantic_errors
+            ff.input :title
+            ff.input :description
+            ff.input :image
+            ff.input :rate
+          end
         end
       end
       tab 'ADS' do

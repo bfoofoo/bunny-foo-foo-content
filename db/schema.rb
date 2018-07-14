@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180713125243) do
+ActiveRecord::Schema.define(version: 20180714101602) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +177,8 @@ ActiveRecord::Schema.define(version: 20180713125243) do
     t.integer  "rate"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "website_id"
+    t.index ["website_id"], name: "index_product_cards_on_website_id", using: :btree
   end
 
   create_table "questions", force: :cascade do |t|
@@ -223,6 +225,7 @@ ActiveRecord::Schema.define(version: 20180713125243) do
   add_foreign_key "configs", "websites"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
+  add_foreign_key "product_cards", "websites"
   add_foreign_key "website_ads", "ads"
   add_foreign_key "website_ads", "websites"
 end

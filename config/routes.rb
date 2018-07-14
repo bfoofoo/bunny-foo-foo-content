@@ -16,6 +16,7 @@ Rails.application.routes.draw do
           get ':id/categories', to: 'websites#get_categories'
           get ':id/categories/:category_id', to: 'websites#get_category_with_articles'
           get ':id/articles', to: 'websites#get_articles'
+          get ':id/product_cards', to: 'websites#get_product_cards'
           get ':id/articles/:article_id', to: 'websites#get_category_article'
         end
       end
