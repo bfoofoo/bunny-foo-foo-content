@@ -14,12 +14,15 @@ module Deployer
 
     def add_dns_to_zone(options)
       zone = get_zone(options[:id])
-      zone.dns_records.post({
-        "type": options[:type],
-        "name": options[:name],
-        "content": options[:ip],
-        "proxied": true
-      }.to_json,
+      dns_conf = {
+          "type": options[:type],
+          "name": options[:name],
+          "content": options[:ip]
+      }
+      options[:proxied] && dns_conf["proxied"] = options[:proxied]
+      options[:ttl] && dns_conf["ttl"] = options[:ttl]
+      options[:priority] && dns_conf["priority"] = options[:priority]
+      zone.dns_records.post(dns_conf.to_json,
       content_type: 'application/json')
     end
 

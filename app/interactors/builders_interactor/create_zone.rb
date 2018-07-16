@@ -16,13 +16,14 @@ module BuildersInteractor
       else
         ip = context.droplet.networks[:v4][0][:ip_address]
 
-        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: ip, type: "A"})
-        zone_service.add_dns_to_zone({id: zone.result[:id], name: "www.#{zone.result[:name]}", ip: ip, type: "A"})
+        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: ip, type: "A", proxied: true, ttl: 1})
+        zone_service.add_dns_to_zone({id: zone.result[:id], name: "www.#{zone.result[:name]}", ip: ip, type: "A", proxied: true, ttl: 1})
 
-        zone_service.add_dns_to_zone({id: zone.result[:id], name: "autodiscover", ip: 'autodiscover.emailsrvr.com', type: "CNAME"})
-        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: 'mx1.emailsrvr.com', type: "MX"})
-        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: 'mx2.emailsrvr.com', type: "MX"})
-        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: 'v=spf1 include:emailsrvr.com ~all', type: "TXTs"})
+        zone_service.add_dns_to_zone({id: zone.result[:id], name: "autodiscover", ip: 'autodiscover.emailsrvr.com', type: "CNAME", proxied: true, ttl: 1})
+        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: "v=spf1 include:emailsrvr.com ~all", type: "TXT"})
+
+        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: 'mx1.emailsrvr.com', type: "MX", ttl: 60000})
+        zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: 'mx2.emailsrvr.com', type: "MX", ttl: 60000})
 
         context.zone = zone_service.get_zone(zone.result[:id])
         save_zone(zone)
