@@ -25,6 +25,8 @@ module BuildersInteractor
         zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: 'mx1.emailsrvr.com', type: "MX", ttl: 60000})
         zone_service.add_dns_to_zone({id: zone.result[:id], name: zone.result[:name], ip: 'mx2.emailsrvr.com', type: "MX", ttl: 60000})
 
+        zone_service.change_ssl_settings({id: zone.result[:id]})
+
         context.zone = zone_service.get_zone(zone.result[:id])
         save_zone(zone)
       end
