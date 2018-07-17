@@ -94,18 +94,6 @@ ActiveAdmin.register Website do
     end if !website.droplet_ip.blank?
   end
 
-  action_item :rebuild_old_site, :only => :show do
-    link_to rebuild_old_api_v1_websites_path(website), class: 'button builder_action', "data-type" => "json", remote: true do
-      '<span>Rebuild Old Website</span> <span class="loader">
-            <svg height="10px" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1">
-              <path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#ffffff">
-                <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur=".5s" fill="freeze" repeatCount="indefinite"></animateTransform>
-              </path>
-            </svg>
-        </span>'.html_safe
-    end if !website.droplet_ip.blank?
-  end
-
   member_action :clone, method: :get do
     website = Website.find(params[:id])
     @website = website.dup
