@@ -7,9 +7,16 @@ ActiveAdmin.register Formsite do
                 :left_side_content, :right_side_content,
                 :first_question_code_snippet, :head_code_snippet,
                 question_ids: [],
-                questions_attributes: [:id, :text, :_update,:_create],
+                questions_attributes: [
+                    :id, :text, :position, :_update, :_create, :_destroy,
+                    answer_ids: [],
+                    answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question
+                  ]
+                ],
                 ad_ids: [],
-                ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
+                ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
+                answer_ids: [],
+                answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
 
   index do
     column :id
@@ -44,11 +51,11 @@ ActiveAdmin.register Formsite do
           f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
           f.input :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
         end
+        f.actions
       end
       tab 'QUESTIONS' do
-        f.inputs 'Formsite' do
-          f.input :questions, as: :check_boxes, :collection => Question.all.map{ |q|  [q.text, q.id] }
-        end
+        render "questions"
+        f.actions
       end
       tab 'ADS AND TRACKER' do
         AD_POSITIONS = ['tracker']
@@ -64,10 +71,10 @@ ActiveAdmin.register Formsite do
             ff.input :innerHTML
           end
         end
+        f.actions
       end
     end
 
-    f.actions
   end
 
   action_item :setup, :only => :show do

@@ -10,8 +10,7 @@ class Formsite < ApplicationRecord
     end
   end
 
-  has_many :formsite_questions
-  has_many :questions, :through => :formsite_questions
+  has_many :questions
 
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, :through => :formsite_ads
@@ -19,11 +18,10 @@ class Formsite < ApplicationRecord
   accepts_nested_attributes_for :formsite_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true
 
-  accepts_nested_attributes_for :formsite_users, allow_destroy: true, allow_destroy: true
-  accepts_nested_attributes_for :users, allow_destroy: true, allow_destroy: true
+  accepts_nested_attributes_for :formsite_users, allow_destroy: true
+  accepts_nested_attributes_for :users, allow_destroy: true
 
-  accepts_nested_attributes_for :formsite_questions, allow_destroy: true, allow_destroy: true
-  accepts_nested_attributes_for :questions, allow_destroy: true, allow_destroy: true
+  accepts_nested_attributes_for :questions, allow_destroy: true
 
   mount_uploader :favicon_image, CommonUploader
   mount_uploader :logo_image, CommonUploader

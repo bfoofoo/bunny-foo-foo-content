@@ -54,9 +54,9 @@ gem 'activeadmin-wysihtml5', github: 'stefanoverna/activeadmin-wysihtml5'
 gem 'metamagic'
 gem 'active_admin_theme'
 
-
+gem 'formtastic', '~> 3.0'
 gem 'devise'
-
+gem "active_admin-sortable_tree", "~> 1.0.0"
 
 gem 'aweber'
 
