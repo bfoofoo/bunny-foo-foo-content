@@ -14,6 +14,7 @@ Rails.application.routes.draw do
           get ':id/rebuild_old', to: 'websites#rebuild_old', as: 'rebuild_old'
           get ':id/config', to: 'websites#get_config', as: 'get_config'
           get ':id/categories', to: 'websites#get_categories'
+          get ':id/product_cards', to: 'websites#get_product_cards'
           get ':id/categories/:category_id', to: 'websites#get_category_with_articles'
           get ':id/articles', to: 'websites#get_articles'
           get ':id/product_cards', to: 'websites#get_product_cards'
