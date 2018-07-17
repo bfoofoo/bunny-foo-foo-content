@@ -1,7 +1,7 @@
 ActiveAdmin.register Website do
   permit_params :name, :description, :url,
                 :droplet_id, :droplet_ip, :zone_id,
-                :repo_url, :ad_client,
+                :repo_url, :ad_client, :shortname,
                 :favicon_image, :logo_image,
                 product_card_ids: [],
                 product_cards_attributes: [:id, :title, :description, :image, :rate, :website_id, :_create, :_destroy],
@@ -17,6 +17,7 @@ ActiveAdmin.register Website do
     column :zone_id
     column :created_at
     column :ad_client
+    column :shortname
     actions defaults: true do |website|
       link_to 'Duplicate', clone_admin_website_path(website)
     end
@@ -34,6 +35,7 @@ ActiveAdmin.register Website do
           f.input :repo_url
           f.input :droplet_ip
           f.input :ad_client
+          f.input :shortname, :label => 'Discus shortname'
         end
       end
       tab 'PRODUCT CARDS' do
