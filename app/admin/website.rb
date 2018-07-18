@@ -38,17 +38,7 @@ ActiveAdmin.register Website do
           f.input :shortname, :label => 'Discus shortname'
         end
       end
-      tab 'PRODUCT CARDS' do
-        f.inputs 'product cards' do
-          f.has_many :product_cards, allow_destroy: true, new_record: true do |ff|
-            ff.semantic_errors
-            ff.input :title
-            ff.input :description
-            ff.input :image
-            ff.input :rate
-          end
-        end
-      end
+
       tab 'ADS' do
         AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
         AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
