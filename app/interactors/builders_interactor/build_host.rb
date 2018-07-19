@@ -18,7 +18,11 @@ module BuildersInteractor
     end
 
     def rollback
-      droplet_service = Deployer::DigitaloceanService.new
+      if context.config[:type] == 'website'
+        droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
+      elsif context.config[:type] == 'formsite'
+        droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
+      end
       zone_service = Deployer::CloudflareService.new
 
       droplet_service.delete_droplet({droplet_id: context.droplet[:id]})
