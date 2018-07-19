@@ -8,12 +8,14 @@ module BuildersInteractor
 
     def call
       begin
-        droplet_service = if config.type == 'website'
-          Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
+         if config.type == 'website'
+           droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
+           image = '35876901'
         elsif config.type == 'formsite'
-          Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
+          droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
+          image = '36375081'
         end
-        droplet = droplet_service.setup_droplet({name: context.config[:name]})
+        droplet = droplet_service.setup_droplet({name: context.config[:name], image: image})
         context.droplet = droplet_service.get_droplet(droplet[:id])
         Rails.logger.info 'Droplet created'
         sleep 10

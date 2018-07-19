@@ -9,7 +9,7 @@ module Deployer
       droplet = DropletKit::Droplet.new(
           name: options[:name],
           region: options[:region] || 'nyc1',
-          image: '35876901',
+          image: options[:image],
           size: 's-2vcpu-4gb'
       )
       @client.droplets.create(droplet)
@@ -25,6 +25,10 @@ module Deployer
 
     def get_snapshot(id)
       @client.snapshots.find(id: id)
+    end
+
+    def get_client
+      @client
     end
   end
 end
