@@ -8,10 +8,10 @@ module BuildersInteractor
 
     def call
       begin
-         if config.type == 'website'
+         if config[:type] == 'website'
            droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
            image = '35876901'
-        elsif config.type == 'formsite'
+        elsif config[:type] == 'formsite'
           droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
           image = '36375081'
         end
