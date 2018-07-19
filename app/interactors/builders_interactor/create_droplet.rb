@@ -8,7 +8,11 @@ module BuildersInteractor
 
     def call
       begin
-        droplet_service = Deployer::DigitaloceanService.new
+        droplet_service = if config.type == 'website'
+          Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
+        elsif config.type == 'formsite'
+          Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
+        end
         droplet = droplet_service.setup_droplet({name: context.config[:name]})
         context.droplet = droplet_service.get_droplet(droplet[:id])
         Rails.logger.info 'Droplet created'

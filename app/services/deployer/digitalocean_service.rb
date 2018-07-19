@@ -1,8 +1,8 @@
 module Deployer
   class DigitaloceanService
-    def initialize
+    def initialize(token)
       # @client = DropletKit::Client.new(access_token: 'ENV['DIGITALOCEAN_KEY']')
-      @client = DropletKit::Client.new(access_token: '5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
+      @client = DropletKit::Client.new(access_token: token)
     end
 
     def setup_droplet(options)
