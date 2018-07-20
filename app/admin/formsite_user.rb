@@ -1,6 +1,6 @@
 ActiveAdmin.register FormsiteUser do
   index do |poll|
-    id_column
+    column :created_at
     column :formsite
     column :user
     column :is_verified
