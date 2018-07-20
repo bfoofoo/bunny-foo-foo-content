@@ -25,13 +25,13 @@ ActiveAdmin.register Formsite do
     column :is_checkboxes
     column :droplet_ip
     column "Total users" do |formsite|
-      link_to "#{formsite.formsite_users.count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+      link_to "#{formsite.formsite_users.count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
     end
     column "Passed useragent users" do |formsite|
-      link_to "#{formsite.formsite_users.where(is_useragent_valid: true).count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+      link_to "#{formsite.formsite_users.where(is_useragent_valid: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
     end
     column "Passed impressionwise test users" do |formsite|
-      link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+      link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
     end
     column :created_at
     actions
@@ -57,13 +57,13 @@ ActiveAdmin.register Formsite do
       row :first_redirect_url
       row :final_redirect_url
       row "Total users" do |formsite|
-        link_to "#{formsite.formsite_users.count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+        link_to "#{formsite.formsite_users.count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
       end
       row "Passed useragent users" do |formsite|
-        link_to "#{formsite.formsite_users.where(is_useragent_valid: true).count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+        link_to "#{formsite.formsite_users.where(is_useragent_valid: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
       end
       row "Passed impressionwise test users" do |formsite|
-        link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+        link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
       end
       row :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
       row :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
