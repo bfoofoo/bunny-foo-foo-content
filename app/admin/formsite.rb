@@ -32,6 +32,9 @@ ActiveAdmin.register Formsite do
     end
     column "Passed impressionwise test users" do |formsite|
       link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_impressionwise_test_success_eq%5D=true&commit=Filter&order=id_desc"
+      end
+    column "Duplicate users" do |formsite|
+      link_to "#{formsite.formsite_users.where(is_duplicate: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_duplicate_eq%5D=true&commit=Filter&order=id_desc"
     end
     column :created_at
     actions
@@ -64,6 +67,9 @@ ActiveAdmin.register Formsite do
       end
       row "Passed impressionwise test users" do |formsite|
         link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_impressionwise_test_success_eq%5D=true&commit=Filter&order=id_desc"
+      end
+      row "Duplicate users" do |formsite|
+        link_to "#{formsite.formsite_users.where(is_duplicate: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_duplicate_eq%5D=true&commit=Filter&order=id_desc"
       end
       row :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
       row :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
