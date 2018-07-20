@@ -21,14 +21,44 @@ ActiveAdmin.register Formsite do
   index do
     column :id
     column :name
-    column :description
     column :is_thankyou
     column :is_checkboxes
-    column :droplet_id
     column :droplet_ip
-    column :zone_id
+    column "Total users" do |formsite|
+      link_to "#{formsite.formsite_users.count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+    end
+    column "Passed useragent users" do |formsite|
+      link_to "#{formsite.formsite_users.where(is_useragent_valid: true).count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+    end
+    column "Passed impressionwise test users" do |formsite|
+      link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
+    end
     column :created_at
     actions
+  end
+
+  show do
+    attributes_table do
+      row :name
+      row :is_thankyou
+      row :is_checkboxes
+      row :favicon_image
+      row :logo_image do |formsite|
+        image_tag formsite.logo_image.url unless formsite.logo_image.url.nil?
+      end
+      row :background do |formsite|
+        image_tag formsite.background.url unless formsite.background.url.nil?
+      end
+      row :repo_url
+      row :first_question_code_snippet
+      row :head_code_snippet
+      row :first_redirect_url
+      row :final_redirect_url
+      row :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+      row :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+
+    end
+    active_admin_comments
   end
 
   form do |f|
@@ -37,7 +67,6 @@ ActiveAdmin.register Formsite do
         f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-forms.git' : f.object.repo_url
         f.inputs 'Formsite' do
           f.input :name
-          f.input :description
           f.input :is_thankyou
           f.input :is_checkboxes
           f.input :favicon_image
