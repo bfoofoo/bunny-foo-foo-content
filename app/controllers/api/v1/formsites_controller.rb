@@ -29,8 +29,8 @@ class Api::V1::FormsitesController < ApplicationController
 
     formsite_user = @formsite.formsite_users.create!(
         user_id: user.id,
-        s4: user.s4,
-        s5: user.s5,
+        s4: params[:user][:s4],
+        s5: params[:user][:s5],
         is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
         is_useragent_valid: is_useragent_valid,
         is_impressionwise_test_success: is_impressionwise_test_success,
