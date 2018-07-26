@@ -6,6 +6,7 @@ ActiveAdmin.register Formsite do
                 :is_thankyou, :is_checkboxes,
                 :left_side_content, :right_side_content,
                 :first_question_code_snippet, :head_code_snippet,
+                :s1_description, :s2_description, :s3_description, :s4_description, :s5_description,
                 question_ids: [],
                 questions_attributes: [
                     :id, :text, :position, :_update, :_create, :_destroy,
@@ -74,6 +75,12 @@ ActiveAdmin.register Formsite do
       row :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
       row :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
 
+      row :s1_description
+      row :s2_description
+      row :s3_description
+      row :s4_description
+      row :s5_description
+
     end
     active_admin_comments
   end
@@ -96,6 +103,12 @@ ActiveAdmin.register Formsite do
           f.input :final_redirect_url
           f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
           f.input :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+
+          f.input :s1_description
+          f.input :s2_description
+          f.input :s3_description
+          f.input :s4_description
+          f.input :s5_description
         end
         f.actions
       end

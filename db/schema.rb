@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180726133147) do
+ActiveRecord::Schema.define(version: 20180726135550) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -175,6 +175,11 @@ ActiveRecord::Schema.define(version: 20180726133147) do
     t.text     "head_code_snippet"
     t.boolean  "is_checkboxes"
     t.text     "right_side_content"
+    t.string   "s1_description"
+    t.string   "s2_description"
+    t.string   "s3_description"
+    t.string   "s4_description"
+    t.string   "s5_description"
   end
 
   create_table "product_cards", force: :cascade do |t|
