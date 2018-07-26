@@ -3,11 +3,15 @@ class Website < ApplicationRecord
   has_many :articles, dependent: :destroy
   has_many :website_ads, dependent: :destroy
   has_many :ads, :through => :website_ads
+
+  has_many :trackers, -> { trackers } , :through => :website_ads, source: :ad
+
   has_many :product_cards, dependent: :destroy
 
   accepts_nested_attributes_for :categories, allow_destroy: true
   accepts_nested_attributes_for :website_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true
+  accepts_nested_attributes_for :trackers, allow_destroy: true
   accepts_nested_attributes_for :product_cards, allow_destroy: true
 
 
