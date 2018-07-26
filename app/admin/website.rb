@@ -6,6 +6,7 @@ ActiveAdmin.register Website do
                 product_card_ids: [],
                 product_cards_attributes: [:id, :title, :description, :image, :rate, :website_id, :_create, :_destroy],
                 ad_ids: [],
+                
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
                 trackers_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
                 advertisements_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
