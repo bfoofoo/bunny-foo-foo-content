@@ -7,6 +7,9 @@ ActiveAdmin.register FormsiteUser do
     column :is_useragent_valid
     column :is_impressionwise_test_success
     column :is_duplicate
+    column :s1
+    column :s2
+    column :s3
     column :s4
     column :s5
     column "First name" do |user|
