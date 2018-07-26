@@ -11,9 +11,13 @@ Rails.application.routes.draw do
         collection do
           get ':id/setup', to: 'websites#setup', as: 'setup'
           get ':id/build', to: 'websites#build', as: 'build'
+          get ':id/rebuild_old', to: 'websites#rebuild_old', as: 'rebuild_old'
+          get ':id/config', to: 'websites#get_config', as: 'get_config'
           get ':id/categories', to: 'websites#get_categories'
+          get ':id/product_cards', to: 'websites#get_product_cards'
           get ':id/categories/:category_id', to: 'websites#get_category_with_articles'
           get ':id/articles', to: 'websites#get_articles'
+          get ':id/product_cards', to: 'websites#get_product_cards'
           get ':id/articles/:article_id', to: 'websites#get_category_article'
         end
       end
@@ -21,12 +25,13 @@ Rails.application.routes.draw do
       resources :formsites, only: [:index, :show] do
         collection do
           post ':id/add_user', to: 'formsites#add_formsite_user', as: 'add_user'
+          get ':id/questions', to: 'formsites#get_formsite_questions'
           get ':id/setup', to: 'formsites#setup', as: 'setup'
           get ':id/build', to: 'formsites#build', as: 'build'
         end
       end
-      resources :categories, only: [:index, :show]
-      resources :articles, only: [:index, :show]
+      resources :categories, only: [:index, :show, :create]
+      resources :articles, only: [:index, :show, :create]
     end
   end
 end

@@ -1,5 +1,5 @@
 class Api::V1::FormsitesController < ApplicationController
-  before_action :set_formsite, only: [:show, :add_formsite_user]
+  before_action :set_formsite, only: [:show, :add_formsite_user, :get_formsite_questions, :setup, :build]
 
   def index
     @formsites = Formsite.all
@@ -10,15 +10,31 @@ class Api::V1::FormsitesController < ApplicationController
     render json: @formsite
   end
 
+  def get_formsite_questions
+    @questions = @formsite.questions.includes(:answers)
+    render json: @questions
+  end
+
   def add_formsite_user
+    formsite_service = FormsiteService.new()
+
     user = User.create_with(
       first_name: params[:user][:first_name],
       last_name: params[:user][:last_name]
     ).find_or_create_by(email: params[:user][:email])
 
-    formsite_user = @formsite.formsite_users.new(
+    is_useragent_valid = formsite_service.is_useragent_valid(request.user_agent)
+    is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(user)
+    is_duplicate =  !@formsite.formsite_users.joins(:user).where("users.email = ?", "test1@test.com").blank?
+
+    formsite_user = @formsite.formsite_users.create!(
         user_id: user.id,
-        is_verified: FormsiteService.new.is_useragent_valid(request.user_agent)
+        s4: params[:user][:s4],
+        s5: params[:user][:s5],
+        is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
+        is_useragent_valid: is_useragent_valid,
+        is_impressionwise_test_success: is_impressionwise_test_success,
+        is_duplicate: is_duplicate
     )
 
     render json: {user: user, is_verified: formsite_user.is_verified}
@@ -26,18 +42,30 @@ class Api::V1::FormsitesController < ApplicationController
 
   def setup
     config = @formsite.builder_config
-    BuildersInteractor::SetupBuild.call({config: config})
+    context = BuildersInteractor::SetupBuild.call({config: config})
+    if context.errors
+      render json: {errors: context.errors}
+    else
+      render json: {message: 'success'}
+    end
   end
 
   def build
     config = @formsite.builder_config
-    BuildersInteractor::RebuildHost.call({config: config})
+    context = BuildersInteractor::RebuildHost.call({config: config})
+    if context.errors
+      render json: {errors: context.errors}
+    else
+      render json: {message: 'success'}
+    end
   end
 
   private
 
   def set_formsite
     @formsite = Formsite.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {message: e.message}
   end
 
   def formsite_params

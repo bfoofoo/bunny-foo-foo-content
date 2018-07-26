@@ -35,6 +35,7 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem "flutie"
+gem 'rest-client', '~> 2.0', '>= 2.0.2'
 # gem 'redis', '~> 3.0'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'json'
@@ -42,6 +43,7 @@ gem 'bigdecimal'
 gem 'remodal-rails', '~> 1.1.1'
 #IMAGES
 gem 'carrierwave'
+gem 'carrierwave-base64'
 gem 'mini_magick'
 gem "awesome_print", require: "ap"
 # ACTIVE ADMIN
@@ -52,10 +54,12 @@ gem 'activeadmin-wysihtml5', github: 'stefanoverna/activeadmin-wysihtml5'
 gem 'metamagic'
 gem 'active_admin_theme'
 
-
+gem 'formtastic', '~> 3.0'
 gem 'devise'
+gem "active_admin-sortable_tree", "~> 1.0.0"
 
-
+gem 'aweber'
+gem 'rollbar'
 
 group :development, :test do
   gem 'byebug', platform: :mri

@@ -7,25 +7,45 @@ module BuildersInteractor
     delegate :zone, :to => :context
 
     def call
-      droplet_service = Deployer::DigitaloceanService.new
-      droplet = droplet_service.setup_droplet({name: context.config[:name]})
-      context.droplet = droplet_service.get_droplet(droplet[:id])
-
-      sleep 10
-      while context.droplet.networks[:v4].length == 0 do
-        sleep 5
+      begin
+         if context.config[:type] == 'website'
+           droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
+           image = '35876901'
+        elsif context.config[:type] == 'formsite'
+          droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
+          image = '36375081'
+        end
+        droplet = droplet_service.setup_droplet({name: context.config[:name], image: image})
         context.droplet = droplet_service.get_droplet(droplet[:id])
+        Rails.logger.info 'Droplet created'
+        sleep 10
+        while context.droplet.networks[:v4].length == 0 do
+          sleep 5
+          context.droplet = droplet_service.get_droplet(droplet[:id])
+        end
+        Rails.logger.info 'Droplet loaded'
+        save_droplet
+        droplet
+      rescue => error
+        context.errors = [error.message]
+        context.fail!
       end
-      save_droplet
-      droplet
     end
 
     def save_droplet
-      Website.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+      if context.config[:type] == 'website'
+        Website.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+      else
+        Formsite.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+      end
     end
 
     def rollback
-      droplet_service = Deployer::DigitaloceanService.new
+      if context.config[:type] == 'website'
+        droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
+      elsif context.config[:type] == 'formsite'
+        droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
+      end
       droplet_service.delete_droplet({droplet_id: context.droplet[:id]})
     end
   end

@@ -8,11 +8,11 @@
 // $sidebar-width: 242px;
 
 // Active Admin's got SASS!
-
+@import "sweetalert";
 @import "active_admin/mixins";
 @import "active_admin/base";
 @import "wigu/active_admin_theme";
-
+@import "active_admin/sortable";
 // Overriding any non-variable SASS must be done after the fact.
 // For example, to change the default status-tag color:
 //
@@ -22,6 +22,20 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+a.disabled {
+  opacity: 0.8;
+  pointer-events: none;
+  cursor: wait;
+}
+
+.loader {
+  display: none;
+
+  &.active {
+    display: inline;
+  }
+}
+
 .col-image {
   img {
     max-width: 300px;
@@ -101,19 +115,19 @@ form fieldset.inputs ol > li input[type="submit"] {
 
 }
 
-.activeadmin-wysihtml5-modal {
-  input[name="url"],
-  input[name="text"],
-  input[name="title"],
-  input[name="rel"],
-  input[name="email"],
-  input[name="anchor"],
-  input[name="alt"],
-  input[name="alignment"],
-  input[name="scale"],
-  input[name="width"],
-  input[name="height"],
-  input[name="_wysihtml5_mode"]  {
-    display: none !important;
-  }
-}
+//.activeadmin-wysihtml5-modal {
+//  input[name="url"],
+//  input[name="text"],
+//  input[name="title"],
+//  input[name="rel"],
+//  input[name="email"],
+//  input[name="anchor"],
+//  input[name="alt"],
+//  input[name="alignment"],
+//  input[name="scale"],
+//  input[name="width"],
+//  input[name="height"],
+//  input[name="_wysihtml5_mode"]  {
+//    display: none !important;
+//  }
+//}

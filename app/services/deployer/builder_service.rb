@@ -6,10 +6,9 @@ module Deployer
     end
 
     def setup(config, host, user = 'sammy', password = "42Iknow42")
-      puts 'setup'
+      Rails.logger.info 'setup'
       setup_host_data(host, user, password, config)
       clone_repo
-      create_config_file
       generate_static
       setup_bash
       setup_certbot
@@ -23,12 +22,17 @@ module Deployer
     def rebuild(config, host, user = 'sammy', password = "42Iknow42")
       setup_host_data(host, user, password, config)
       pull_repo
-      create_config_file
       generate_static
       restart_nginx
     end
 
-    private
+    def merge_old_site(config, host, user = 'sammy', password = "42Iknow42")
+      setup_host_data(host, user, password, config)
+      clone_repo
+      generate_static
+      set_afterssl_nginx_site
+      restart_nginx
+    end
 
     def setup_host_data(host, user, password, config)
       @host = host
@@ -38,116 +42,190 @@ module Deployer
     end
 
     def clone_repo
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone #{@config.repo_url} site"
-        ssh.exec! "cd site/; git checkout master"
-        ssh.exec! "cd site/; git fetch --all"
-        ssh.exec! "cd site/; git reset --hard origin/master"
+      Rails.logger.info @config[:repo_url]
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "git clone --single-branch -b master #{@config[:repo_url]} autobuild"
+          ssh.exec! "cd autobuild/; git checkout master"
+          ssh.exec! "cd autobuild/; git fetch --all"
+          ssh.exec! "cd autobuild/; git reset --hard origin/master"
+        end
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
+      rescue => error
+        raise error
       end
     end
 
     def pull_repo
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; git checkout master"
-        ssh.exec! "cd site/; git fetch --all"
-        ssh.exec! "cd site/; git reset --hard origin/master"
-        ssh.exec! "cd site/; npm install"
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "cd autobuild/; git checkout master"
+          ssh.exec! "cd autobuild/; git fetch --all"
+          ssh.exec! "cd autobuild/; git reset --hard origin/master"
+          ssh.exec! "cd autobuild/; npm install"
+        end
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
+      rescue => error
+        raise "Pull step failed! #{error.message}"
       end
     end
 
     def setup_certbot
-      puts 'setup_certbot'
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "git clone https://github.com/certbot/certbot"
+      Rails.logger.info 'setup_certbot'
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "git clone https://github.com/certbot/certbot"
+        end
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
+      rescue => error
+        raise error
       end
     end
 
     def setup_bash
-      puts 'setup_bash'
-      bash_data_string = "'export LC_ALL=en_US.UTF-8'"
-      bash_data_string_sec = "'export LC_CTYPE=en_US.UTF-8'"
-      puts bash_data_string
-      puts bash_data_string_sec
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile; source ~/.profile"
+      Rails.logger.info 'setup_bash'
+      tries = 0
+      begin
+        bash_data_string = "'export LC_ALL=en_US.UTF-8'"
+        bash_data_string_sec = "'export LC_CTYPE=en_US.UTF-8'"
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "echo #{bash_data_string} >> ~/.profile; echo #{bash_data_string_sec}  >> ~/.profile; source ~/.profile"
+        end
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
+      rescue => error
+        raise error
       end
     end
 
     def generate_ssl
-      puts 'generate_ssl'
+      Rails.logger.info 'generate_ssl'
       result = ''
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        channel = ssh.open_channel do |channel, success|
-          channel.on_data do |channel, data|
-            puts "@@@@ #{data} @@@@"
-            if data =~ /^\Do you want to continue /
-              puts 'Y 1'
-              channel.send_data "Y\n"
-            elsif data =~ /\[Y/
-              puts 'Y 2'
-              channel.send_data "Y\n"
-            elsif data =~ /^\[sudo\] password for /
-              channel.send_data "#{@password}\n"
-            else
-              result += data.to_s
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          channel = ssh.open_channel do |channel, success|
+            channel.on_data do |channel, data|
+              Rails.logger.info "SSH LOG: #{data} | "
+              if data =~ /^\Do you want to continue / || data =~ /\[Y/
+                channel.send_data "Y\n"
+              elsif data =~ /^\[sudo\] password for /
+                channel.send_data "#{@password}\n"
+              elsif data =~ /too many certificates already issued for exact set of domain/
+                raise "Generate ssl cert failed. Too many certificates already issued for exact set of domain #{@config[:name]}"
+              elsif data =~ /error/
+                raise 'Generate ssl cert failed'
+              else
+                result += data.to_s
+              end
             end
+            channel.request_pty
+            channel.exec " source ~/.profile; cd ~/certbot; ./certbot-auto --agree-tos --renew-by-default --standalone --standalone-supported-challenges http-01 --http-01-port 9999 --server https://acme-v01.api.letsencrypt.org/directory certonly -d #{@config[:name]} -d www.#{@config[:name]}"
+            channel.wait
           end
-          channel.request_pty
-          channel.exec " source ~/.profile; cd ~/certbot; ./certbot-auto --agree-tos --renew-by-default --standalone --standalone-supported-challenges http-01 --http-01-port 9999 --server https://acme-v01.api.letsencrypt.org/directory certonly -d #{@config[:name]} -d www.#{@config[:name]}"
           channel.wait
         end
-        channel.wait
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
       end
     end
 
     def create_config_file
-      site_config = %Q{
-        module.exports = {
-          'metaTitle': '#{@config[:name]}',
-          'metaDescription': 'testdesc',
-          'logoPath': '/logo.jpg',
-          'email': 'admin@#{@config[:name]}',
+      begin
+        ads = @config[:ads].map {|ad|
+          %Q{
+            "#{ad.position}": {
+              "type": "#{ad.variety}",
+              "google_id": "'#{ad.google_id}'",
+              "'widget'": "'#{ad.widget}'",
+              "'innerHTML'": "'#{ad.innerHTML}'"
+            }
+          }
         }
-      }
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; echo '#{site_config.strip}' >> configs/#{@config[:name]}"
+
+        site_config = %Q{
+          module.exports = {
+            "'metaTitle'": "'#{@config[:name]}'",
+            "'metaDescription'": "'#{@config[:description]}'",
+            "'faviconImageUrl'": "'#{@config[:favicon_image]}'",
+            "'logoImageUrl'": "'#{@config[:logo_image]}'",
+            "'logoPath'": "'/logo.jpg'",
+            "'email'": "'admin@#{@config[:name]}'",
+            "'adClient'": "'#{@config[:ad_client]}'",
+            #{ads.inject {|acc, elem| acc + ", " + elem}}
+          }
+        }
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "cd autobuild/; rm configs/#{@config[:name].strip}.js;> configs/#{@config[:name].strip}.js; echo '#{site_config.strip}' >> configs/#{@config[:name].strip}.js"
+        end
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
+      rescue => error
+        raise error
       end
     end
 
     def generate_static
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        ssh.exec! "cd site/; npm install"
-        # ssh.exec! "cd site/; WEBSITE_NAME=#{@config[:name]}.com NODE_ENV=production npm run generate"
-        ssh.exec! "cd site/; WEBSITE_NAME=default NODE_ENV=production npm run generate"
-        ssh.exec! "cd site/; rm -rf ./production"
-        ssh.exec! "cd site/; mkdir production"
-        ssh.exec! "cd site/; cp -a ./dist/. ./production/"
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          ssh.exec! "cd autobuild/; npm install"
+          ssh.exec! "cd autobuild/; WEBSITE_NAME=#{@config[:name]} WEBSITE_ID=#{@config[:id]} NODE_ENV=production npm run generate"
+          ssh.exec! "cd autobuild/; rm -rf ./production"
+          ssh.exec! "cd autobuild/; mkdir production"
+          ssh.exec! "cd autobuild/; cp -a ./dist/. ./production/"
+        end
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
+      rescue => error
+        raise error
       end
     end
 
     def update_nginx_sites(sites)
-      puts '@@@@ sites @@@@'
-      puts sites
       sites_str = "'#{sites}'"
-
+      tries = 0
       result = ''
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        channel = ssh.open_channel do |channel, success|
-          channel.on_data do |channel, data|
-            if data =~ /^\[sudo\] password for /
-              channel.send_data "#{@password}\n"
-            else
-              result += data.to_s
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          channel = ssh.open_channel do |channel, success|
+            channel.on_data do |channel, data|
+              if data =~ /^\[sudo\] password for /
+                channel.send_data "#{@password}\n"
+              else
+                result += data.to_s
+              end
             end
+            channel.request_pty
+            channel.exec("sudo chmod 777 /etc/nginx/sites-available/default; sudo > /etc/nginx/sites-available/default; sudo echo #{sites_str} >> /etc/nginx/sites-available/default")
+            channel.wait
           end
-          channel.request_pty
-          # channel.exec("sudo touch /etc/nginx/sites-available/#{@config[:name]}; sudo chmod 777 /etc/nginx/sites-available/default; sudo > default; sudo chmod 777 /etc/nginx/sites-available/#{@config[:name]}; sudo echo #{sites_str} >> /etc/nginx/sites-available/#{@config[:name]}; sudo service nginx restart")
-          channel.exec("sudo chmod 777 /etc/nginx/sites-available/default; sudo > /etc/nginx/sites-available/default; sudo echo #{sites_str} >> /etc/nginx/sites-available/default")
-          puts '@@@ result @@@'
-          puts result
           channel.wait
         end
-        channel.wait
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
       end
     end
 
@@ -156,8 +234,15 @@ module Deployer
         listen 0.0.0.0:80;
         server_name #{@config[:name]} www.#{@config[:name]};
 
-        root /home/sammy/site/production;
+        root /home/sammy/autobuild/production;
         index index.html;
+
+        rewrite ^(/.*)\\.html(\\?.*)?$ $1$2 permanent;
+        rewrite ^/(.*)/$ /$1 permanent;
+
+        location / {
+          try_files $uri/index.html $uri.html $uri/ $uri =404;
+        }
 
         location ~ ^/(.well-known/acme-challenge/.*)$ {
           proxy_pass http://127.0.0.1:9999/$1;
@@ -174,9 +259,12 @@ module Deployer
         listen 443 http2 default_server;
         listen [::]:443 http2 default_server;
 
-        root /home/sammy/site/production;
+        root /home/sammy/autobuild/production;
 
         index index.html;
+
+        rewrite ^(/.*)\\.html(\\?.*)?$ $1$2 permanent;
+        rewrite ^/(.*)/$ /$1 permanent;
 
         error_page 404 /404.html;
         error_page 500 502 503 504 /500.html;
@@ -205,25 +293,32 @@ module Deployer
     end
 
     def restart_nginx
-      puts 'restart_nginx'
       result = ''
-      Net::SSH.start(@host, @user, password: @password) do |ssh|
-        channel = ssh.open_channel do |channel, success|
-          channel.on_data do |channel, data|
-            if data =~ /^\[sudo\] password for /
-              channel.send_data "#{@password}\n"
-            else
-              result += data.to_s
+      tries = 0
+      begin
+        Net::SSH.start(@host, @user, password: @password) do |ssh|
+          channel = ssh.open_channel do |channel, success|
+            channel.on_data do |channel, data|
+              if data =~ /^\[sudo\] password for /
+                channel.send_data "#{@password}\n"
+              elsif data =~ /Job for nginx.service failed/
+                raise 'Restart nginx failed'
+              else
+                result += data.to_s
+              end
             end
+            channel.request_pty
+            channel.exec("sudo service nginx restart")
+            channel.wait
           end
-          channel.request_pty
-          channel.exec("sudo service nginx restart")
           channel.wait
         end
-        channel.wait
+      rescue Net::SSH::ConnectionTimeout => error
+        Rails.logger.info error
+        tries =+ 1
+        tries < 10 ? retry : raise(error)
       end
     end
-
   end
 end
 

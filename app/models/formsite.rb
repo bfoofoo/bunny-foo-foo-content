@@ -1,7 +1,4 @@
 class Formsite < ApplicationRecord
-  has_many :formsite_questions
-  has_many :questions, :through => :formsite_questions
-
   has_many :formsite_users
   has_many :users, :through => :formsite_users do
     def verified
@@ -13,20 +10,37 @@ class Formsite < ApplicationRecord
     end
   end
 
-  accepts_nested_attributes_for :formsite_users, reject_if: :all_blank, allow_destroy: true
-  accepts_nested_attributes_for :users, reject_if: :all_blank, allow_destroy: true
+  has_many :questions
 
-  accepts_nested_attributes_for :formsite_questions, reject_if: :all_blank, allow_destroy: true
-  accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
+  has_many :formsite_ads, dependent: :destroy
+  has_many :ads, :through => :formsite_ads
+
+  accepts_nested_attributes_for :formsite_ads, allow_destroy: true
+  accepts_nested_attributes_for :ads, allow_destroy: true
+
+  accepts_nested_attributes_for :formsite_users, allow_destroy: true
+  accepts_nested_attributes_for :users, allow_destroy: true
+
+  accepts_nested_attributes_for :questions, allow_destroy: true
+
+  mount_uploader :favicon_image, CommonUploader
+  mount_uploader :logo_image, CommonUploader
+  mount_uploader :background, CommonUploader
 
   def builder_config
     return {
+        id: self.id,
         name: self.name,
+        description: self.description || '',
+        favicon_image: self.favicon_image.url || '',
+        logo_image: self.logo_image.url || '',
         website_id: self.id,
         droplet_ip: self.droplet_ip,
         droplet_id: self.droplet_id,
         zone_id: self.zone_id,
-        repo_url: 'git@github.com:flywithmemsl/bff-forms.git'
+        repo_url: self.repo_url,
+        ad_client: self.ad_client || '',
+        type: 'formsite'
     }
   end
 end

@@ -1,0 +1,12 @@
+<%= semantic_form_for [:admin, @formsite], builder: ActiveAdmin::FormBuilder do |f| %>
+
+    <% f.has_many :questions, sortable: :position, sortable_start: 1 do |t| %>
+      <% t.input :position %>
+      <% t.input :text %>
+      <% t.input :_destroy, :as => :boolean, :required => false, :label => 'Remove' %>
+      <% t.has_many :answers do |a| %>
+        <% a.input :text %>
+        <% a.input :redirect_url %>
+      <% end %>
+    <% end %>
+<% end %>
