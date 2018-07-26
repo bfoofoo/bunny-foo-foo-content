@@ -6,7 +6,9 @@ ActiveAdmin.register Website do
                 product_card_ids: [],
                 product_cards_attributes: [:id, :title, :description, :image, :rate, :website_id, :_create, :_destroy],
                 ad_ids: [],
-                ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
+                ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
+                trackers_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
+                advertisements_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
 
   index do
     column :id
@@ -39,19 +41,30 @@ ActiveAdmin.register Website do
         end
       end
 
-      tab 'ADS' do
-        AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
-        AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
+      form_builder = Admin::FormBuilders::Website.new(f)
+      AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
+      AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
 
+      tab 'ADS' do
         f.inputs 'Ads' do
-          f.has_many :ads, allow_destroy: true, new_record: true do |ff|
-            ff.semantic_errors
-            ff.input :position, :as => :select, :collection => AD_POSITIONS
-            ff.input :variety, :as => :select, :collection => AD_TYPES
-            ff.input :widget
-            ff.input :google_id, :label => 'Google ID'
-            ff.input :innerHTML
-          end
+          form_builder.ads_nested_fields(
+            :advertisements,
+            {allow_destroy: true, new_record: true},
+            positions: AD_POSITIONS - ["tracker"], 
+            types: AD_TYPES
+          )
+        end
+      end
+
+      tab 'Trackers' do
+        form_builder = Admin::FormBuilders::Website.new(f)
+        f.inputs 'Ads' do
+          form_builder.ads_nested_fields(
+            :trackers,
+            {allow_destroy: true, new_record: true},
+            positions: AD_POSITIONS & ["tracker"],
+            types: AD_TYPES - ['google']
+          )
         end
       end
     end
