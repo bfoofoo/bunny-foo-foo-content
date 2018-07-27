@@ -19,6 +19,12 @@ ActiveAdmin.register Formsite do
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
 
+  controller do
+    def scoped_collection
+      super.includes :formsite_users
+    end
+  end
+
   index do
     column :id
     column :name
@@ -37,6 +43,23 @@ ActiveAdmin.register Formsite do
     column "Duplicate users" do |formsite|
       link_to "#{formsite.formsite_users.where(is_duplicate: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_duplicate_eq%5D=true&commit=Filter&order=id_desc"
     end
+
+    column "S1 users_count" do |formsite|
+      link_to "#{formsite.formsite_users.by_s_filter(:s1).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs1_blank%5D=false&commit=Filter&order=id_desc"
+    end
+    column "S2 users_count" do |formsite|
+      link_to "#{formsite.formsite_users.by_s_filter(:s2).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs2_blank%5D=false&commit=Filter&order=id_desc"
+    end
+    column "S3 users_count" do |formsite|
+      link_to "#{formsite.formsite_users.by_s_filter(:s3).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs3_blank%5D=false&commit=Filter&order=id_desc"
+    end
+    column "S4 users_count" do |formsite|
+      link_to "#{formsite.formsite_users.by_s_filter(:s4).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs4_blank%5D=false&commit=Filter&order=id_desc"
+    end
+    column "S5 users_count" do |formsite|
+      link_to "#{formsite.formsite_users.by_s_filter(:s5).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs5_blank%5D=false&commit=Filter&order=id_desc"
+    end
+
     column :created_at
     actions
   end
