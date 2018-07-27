@@ -23,8 +23,7 @@ class Formsite
       end
 
       def formsite_users
-        return @formsite_users if !@formsite_users.blank?
-        @formsite_users = formsite.formsite_users
+        return formsite.formsite_users
       end
 
       def handle_formsite formsite
