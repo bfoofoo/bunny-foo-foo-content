@@ -20,9 +20,16 @@ ActiveAdmin.register Formsite do
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
 
   controller do
+    before_action :initialize_data, only: :index
+
+    def initialize_data
+      @s_couter_use_case = Formsite::STotalCountersUseCase.new()
+    end
+
     def scoped_collection
       super.includes :formsite_users
     end
+
   end
 
   index do
@@ -45,19 +52,19 @@ ActiveAdmin.register Formsite do
     end
 
     column "S1 users_count" do |formsite|
-      link_to "#{formsite.formsite_users.by_s_filter(:s1).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs1_blank%5D=false&commit=Filter&order=id_desc"
+      link_to "#{s_couter_use_case.s_users_counters(formsite)["s1"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs1_blank%5D=false&commit=Filter&order=id_desc"
     end
     column "S2 users_count" do |formsite|
-      link_to "#{formsite.formsite_users.by_s_filter(:s2).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs2_blank%5D=false&commit=Filter&order=id_desc"
+      link_to "#{s_couter_use_case.s_users_counters(formsite)["s2"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs2_blank%5D=false&commit=Filter&order=id_desc"
     end
     column "S3 users_count" do |formsite|
-      link_to "#{formsite.formsite_users.by_s_filter(:s3).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs3_blank%5D=false&commit=Filter&order=id_desc"
+      link_to "#{s_couter_use_case.s_users_counters(formsite)["s3"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs3_blank%5D=false&commit=Filter&order=id_desc"
     end
     column "S4 users_count" do |formsite|
-      link_to "#{formsite.formsite_users.by_s_filter(:s4).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs4_blank%5D=false&commit=Filter&order=id_desc"
+      link_to "#{s_couter_use_case.s_users_counters(formsite)["s4"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs4_blank%5D=false&commit=Filter&order=id_desc"
     end
     column "S5 users_count" do |formsite|
-      link_to "#{formsite.formsite_users.by_s_filter(:s5).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs5_blank%5D=false&commit=Filter&order=id_desc"
+      link_to "#{s_couter_use_case.s_users_counters(formsite)["s5"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs5_blank%5D=false&commit=Filter&order=id_desc"
     end
 
     column :created_at
