@@ -90,6 +90,7 @@ ActiveAdmin.register Formsite do
       row :head_code_snippet
       row :first_redirect_url
       row :final_redirect_url
+      row :droplet_ip
       row "Total users" do |formsite|
         link_to "#{formsite.formsite_users.count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
       end
@@ -133,6 +134,7 @@ ActiveAdmin.register Formsite do
           f.input :final_redirect_url
           f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
           f.input :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+          f.input :droplet_ip
 
           f.input :s1_description
           f.input :s2_description
