@@ -1,0 +1,19 @@
+render 'formsites', chart_data: chart_data
+table class: "index_table index" do
+  thead do
+    tr do
+      sormsites_statistics.count_by_s_description.keys.each do |key|
+        th class: "col col-id" do
+          "#{key} Users Count"
+        end
+      end
+    end
+  end
+  tbody do
+    sormsites_statistics.count_by_s_description.keys.each do |key|
+      td class: "col col-id" do
+        sormsites_statistics.count_by_s_description[key]
+      end
+    end
+  end
+end
