@@ -1,4 +1,4 @@
-ActiveAdmin.register_page "Formsites Statistics" do
+ActiveAdmin.register_page "Leadgen Sites Statistics" do
   menu parent: "Statistics"
 
   controller do
@@ -10,6 +10,9 @@ ActiveAdmin.register_page "Formsites Statistics" do
   end
 
   content do
+    # app/views/admin/calendar/_calendar.html.arb
+    # render partial: 'calendar'
+
     table class: "index_table index" do
       thead do
         tr do
