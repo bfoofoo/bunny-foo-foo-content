@@ -1,10 +1,12 @@
 module Statistics
   class FormsitesStatistics
-    attr_reader :formsites, :counter_hash
+    attr_reader :formsites, :counter_hash, :startDate, :endDate
 
     S_FIELDS = ["s1", "s2", "s3", "s4", "s5"]
 
-    def initialize
+    def initialize(params)
+      @startDate = params[:startDate]
+      @endDate = params[:endDate]
       @counter_hash = {}
     end
 
@@ -31,7 +33,7 @@ module Statistics
 
     private 
     def fill_counter_hash site
-      site.formsite_users.each do |user|
+      formsite_users(site).each do |user|
         S_FIELDS.each do |field|
           if !user[field].blank?
             site_field = site_description_field site, field
@@ -40,6 +42,14 @@ module Statistics
             end
           end
         end
+      end
+    end
+
+    def formsite_users site
+      if !startDate.blank? && !endDate.blank?
+        site.formsite_users.where("created_at >= ? AND created_at <= ?", startDate, endDate)
+      else
+        site.formsite_users
       end
     end
 
@@ -55,5 +65,6 @@ module Statistics
     def site_description_field site, field
       site["#{field}_description"]
     end
+
   end
 end

@@ -5,31 +5,25 @@ ActiveAdmin.register_page "Leadgen Sites Statistics" do
     before_action :initialize_data, only: :index
 
     def initialize_data
-      @sormsites_statistics = Statistics::FormsitesStatistics.new()
+      @sormsites_statistics = Statistics::FormsitesStatistics.new(params)
       @sormsites_statistics.count_by_s_description
     end
   end
 
-  content do
-    render 'formsites', chart_data: sormsites_statistics.count_by_s_charts()
+  sidebar :help do
+    render 'filters'
+  end
 
-    table class: "index_table index" do
-      thead do
-        tr do
-          sormsites_statistics.count_by_s_description.keys.each do |key|
-            th class: "col col-id" do
-              "#{key} Users Count"
-            end
-          end
-        end
-      end
-      tbody do
-        sormsites_statistics.count_by_s_description.keys.each do |key|
-          td class: "col col-id" do
-            sormsites_statistics.count_by_s_description[key]
-          end
+  content do
+    if !sormsites_statistics.count_by_s_description.blank?      
+      render 'formsites_stats', chart_data: sormsites_statistics.count_by_s_charts(), sormsites_statistics: sormsites_statistics
+    else
+      div do
+        h1 do
+          "There is no results for these dates."
         end
       end
     end
+
   end
 end
