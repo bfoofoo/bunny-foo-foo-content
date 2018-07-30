@@ -17,6 +17,18 @@ module Statistics
       return @counter_hash
     end
 
+    def count_by_s_charts
+      response = {
+        name: "Users Count",
+        colorByPoint: true,
+        data: []
+      }
+      response[:data] = count_by_s_description.map do |key, value| 
+        [key, value]
+      end
+      return [response]
+    end
+
     private 
     def fill_counter_hash site
       site.formsite_users.each do |user|

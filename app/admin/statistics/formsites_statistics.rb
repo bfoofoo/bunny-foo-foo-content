@@ -6,12 +6,12 @@ ActiveAdmin.register_page "Leadgen Sites Statistics" do
 
     def initialize_data
       @sormsites_statistics = Statistics::FormsitesStatistics.new()
+      @sormsites_statistics.count_by_s_description
     end
   end
 
   content do
-    # app/views/admin/calendar/_calendar.html.arb
-    # render partial: 'calendar'
+    render 'formsites', chart_data: sormsites_statistics.count_by_s_charts()
 
     table class: "index_table index" do
       thead do
