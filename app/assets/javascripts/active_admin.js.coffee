@@ -3,6 +3,13 @@
 #= require sweetalert
 #= require active_admin/base
 #= require active_admin/sortable
+#= require active_admin/base
+
+#= require_tree ./admin
+
+#= require highcharts
+#= require highcharts/highcharts-more
+
 $ ->
   $(document).on "ajax:beforeSend", ".builder_action", (event, jqxhr, settings, exception) ->
     $('.builder_action').attr('disabled', true)

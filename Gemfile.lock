@@ -136,6 +136,7 @@ GEM
       mime-types (~> 3.0)
     case_transform (0.2)
       activesupport
+    chartkick (2.3.5)
     cloudflare (3.2.1)
       rest-client (~> 2.0.2)
     coderay (1.1.2)
@@ -210,6 +211,8 @@ GEM
     has_scope (0.7.1)
       actionpack (>= 4.1, < 5.2)
       activesupport (>= 4.1, < 5.2)
+    highcharts-rails (6.0.3)
+      railties (>= 3.1)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http_parser.rb (0.6.0)
@@ -446,6 +449,7 @@ DEPENDENCIES
   capistrano-rbenv (~> 2.1)
   carrierwave
   carrierwave-base64
+  chartkick
   cloudflare
   coffee-rails (~> 4.2)
   devise
@@ -454,6 +458,7 @@ DEPENDENCIES
   flutie
   formtastic (~> 3.0)
   guard-livereload (~> 2.5)
+  highcharts-rails
   interactor (~> 3.0)
   jbuilder (~> 2.5)
   jquery-rails

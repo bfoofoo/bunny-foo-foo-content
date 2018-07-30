@@ -46,7 +46,9 @@ gem 'carrierwave'
 gem 'carrierwave-base64'
 gem 'mini_magick'
 gem "awesome_print", require: "ap"
+
 # ACTIVE ADMIN
+gem "highcharts-rails"
 gem 'activeadmin', '~> 1.0.0'
 gem 'activeadmin-dragonfly', github: 'stefanoverna/activeadmin-dragonfly'
 gem 'activeadmin-wysihtml5', github: 'stefanoverna/activeadmin-wysihtml5'
