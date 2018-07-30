@@ -20,7 +20,7 @@ ActiveAdmin.register_page "Leadgen Sites Statistics" do
     else
       div do
         h1 do
-          "There is no results for these dates."
+          "There is no results."
         end
       end
     end
