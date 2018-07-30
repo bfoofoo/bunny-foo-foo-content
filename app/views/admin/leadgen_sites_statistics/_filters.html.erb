@@ -1,0 +1,17 @@
+<div class="panel_contents">
+  <%= form_tag(admin_leadgen_sites_statistics_path, method: "get", class: "filter_form") do %>
+    <div class="filter_form_field">
+      <%= label_tag(:startDate, "Start Date") %>
+      <%= date_field_tag(:startDate, params[:startDate]) %>
+    </div>
+
+    <div class="filter_form_field">
+      <%= label_tag(:endDate, "End Date") %>
+      <%= date_field_tag(:endDate, params[:endDate]) %>
+    </div>
+    <div class="buttons">
+      <input type="submit" name="commit" value="Filter">
+      <a class="clear_filters_btn" href="<%= admin_leadgen_sites_statistics_path %>">Clear Filters</a>
+    </div>
+  <% end %>
+</div>
