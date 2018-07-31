@@ -117,6 +117,7 @@ ActiveAdmin.register Formsite do
   end
 
   form do |f|
+    TOOLBAR_BUTTONS = ['undo', 'redo', 'bold', 'italic', 'underline', 'color', 'insertLink','fontFamily', 'fontSize', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote']
     tabs do
       tab 'FORM SETTINGS' do
         f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-forms.git' : f.object.repo_url
@@ -132,8 +133,9 @@ ActiveAdmin.register Formsite do
           f.input :head_code_snippet
           f.input :first_redirect_url
           f.input :final_redirect_url
-          f.input :left_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
-          f.input :right_side_content, as: :wysihtml5, commands: 'all', blocks: 'all', height: 'huge'
+          f.input :left_side_content, as: :froala_editor, input_html: f.object.decorate.admin_contet_wysiwyg_config
+          f.input :right_side_content, as: :froala_editor, input_html: f.object.decorate.admin_contet_wysiwyg_config
+          
           f.input :droplet_ip
 
           f.input :s1_description
