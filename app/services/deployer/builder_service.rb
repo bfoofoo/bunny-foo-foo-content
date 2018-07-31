@@ -164,6 +164,7 @@ module Deployer
             "'metaTitle'": "'#{@config[:name]}'",
             "'metaDescription'": "'#{@config[:description]}'",
             "'faviconImageUrl'": "'#{@config[:favicon_image]}'",
+            "'textFile'": "'#{@config[:text_file]}'",
             "'logoImageUrl'": "'#{@config[:logo_image]}'",
             "'logoPath'": "'/logo.jpg'",
             "'email'": "'admin@#{@config[:name]}'",

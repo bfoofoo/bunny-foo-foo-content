@@ -10,6 +10,9 @@
 #= require highcharts
 #= require highcharts/highcharts-more
 
+#= require activeadmin/froala_editor/froala_editor.pkgd.min
+#= require activeadmin/froala_editor_input
+
 $ ->
   $(document).on "ajax:beforeSend", ".builder_action", (event, jqxhr, settings, exception) ->
     $('.builder_action').attr('disabled', true)

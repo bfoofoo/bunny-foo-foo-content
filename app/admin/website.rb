@@ -2,7 +2,7 @@ ActiveAdmin.register Website do
   permit_params :name, :description, :url,
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :ad_client, :shortname,
-                :favicon_image, :logo_image,
+                :favicon_image, :logo_image, :text_file,
                 product_card_ids: [],
                 product_cards_attributes: [:id, :title, :description, :image, :rate, :website_id, :_create, :_destroy],
                 ad_ids: [],
@@ -34,6 +34,7 @@ ActiveAdmin.register Website do
           f.input :name
           f.input :description
           f.input :favicon_image
+          f.input :text_file
           f.input :logo_image
           f.input :repo_url
           f.input :droplet_ip
