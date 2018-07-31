@@ -17,6 +17,7 @@
 @import 'font-awesome/font-awesome';
 @import 'activeadmin/froala_editor_input';
 
+
 // Overriding any non-variable SASS must be done after the fact.
 // For example, to change the default status-tag color:
 //
@@ -26,6 +27,10 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+.fr-wrapper > div > a {
+  display: none !important;
+}
+
 a.disabled {
   opacity: 0.8;
   pointer-events: none;
