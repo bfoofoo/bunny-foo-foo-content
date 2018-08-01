@@ -6,7 +6,7 @@ ActiveAdmin.register_page "Leadgen Sites Statistics" do
 
     def initialize_data
       @sormsites_statistics = Statistics::FormsitesStatistics.new(params)
-      @sormsites_statistics.count_by_s_description
+      @sormsites_statistics.count_by_s
     end
   end
 
@@ -15,7 +15,7 @@ ActiveAdmin.register_page "Leadgen Sites Statistics" do
   end
 
   content do
-    if !sormsites_statistics.count_by_s_description.blank?      
+    if !sormsites_statistics.count_by_s.blank?      
       render 'formsites_stats', chart_data: sormsites_statistics.count_by_s_charts(), sormsites_statistics: sormsites_statistics
     else
       div do
