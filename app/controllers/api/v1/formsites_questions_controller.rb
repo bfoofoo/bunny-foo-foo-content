@@ -9,7 +9,7 @@ class Api::V1::FormsitesQuestionsController < ApplicationController
   end
 
   def create_answer
-    answer = @question.answers.build(answer_params.merge({user_id: @formsite_user.id}))
+    answer = @question.answers.build(answer_params.merge({formsite_user_id: @formsite_user.id}))
     if answer.save
       render json: answer
     else
