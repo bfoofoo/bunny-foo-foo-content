@@ -34,6 +34,7 @@ class Api::V1::FormsitesController < ApplicationController
         s3: params[:user][:s3],
         s4: params[:user][:s4],
         s5: params[:user][:s5],
+        ndm_token: params[:user][:ndm_token],
         is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
         is_useragent_valid: is_useragent_valid,
         is_impressionwise_test_success: is_impressionwise_test_success,
