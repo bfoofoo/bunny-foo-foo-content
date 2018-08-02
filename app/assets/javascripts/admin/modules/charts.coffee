@@ -1,64 +1,22 @@
 init_charts = (element, series, chartType, y_title, topTitle) -> 
-  new Highcharts.Chart({
-      chart: {
-          renderTo: element,
-          type: "column"
-      },
+  Highcharts.chart(element,
+    chart: {
+      type: chartType || "column"
+    },
+    title: {
+      text: topTitle 
+    },
+    xAxis: {
+      type: 'category'
+    },
+    yAxis: {
+      allowDecimals: false,
       title: {
-        text: "sdsdf"
-      },
-      series: [{
-          name: "Yes",
-          data: [4, 14, 4, 5]
-      },
-      {
-          name: "No",
-          data: [4, 14, 4, 5]
-      },
-      {
-          name: "B",
-          data: [4, 14, 5]
+        text: y_title || 'Users Count'
       }
-      ],
-      yAxis: {
-        title: {
-          text: "ASDASDASDf"
-        }
-      },
-      xAxis: {
-          categories: [
-            {	
-                colorByPoint: true,
-                name: "Q1",
-                categories: ["s1", "s2"]
-            },
-            {
-                colorByPoint: true,
-                name: "Q2",
-                categories: ["s1", "s2"]
-            }
-          ]
-      }
-  })
-
-  # Highcharts.chart(element,
-  #   chart: {
-  #     type: chartType || "column"
-  #   },
-  #   title: {
-  #     text: topTitle 
-  #   },
-  #   xAxis: {
-  #     type: 'category'
-  #   },
-  #   yAxis: {
-  #     allowDecimals: false,
-  #     title: {
-  #       text: y_title || 'Users Count'
-  #     }
-  #   }
-  #   series: series || []
-  # )
+    }
+    series: series || []
+  )
 
 $ ->
   $(".highchart").each () ->
