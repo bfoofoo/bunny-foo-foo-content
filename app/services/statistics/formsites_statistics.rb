@@ -1,22 +1,23 @@
 module Statistics
   class FormsitesStatistics
-    attr_reader :formsites, :counter_hash, :startDate, :endDate
+    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id
 
     S_FIELDS = ["s1", "s2", "s3", "s4", "s5"]
 
     def initialize(params)
-      @startDate = params[:startDate]
-      @endDate = params[:endDate]
-      @counter_hash = {}
+      @start_date = params[:start_date]
+      @end_date = params[:end_date]
+      @formsite_id = params[:formsite_id]
     end
 
-    def count_by_s_description
-      return @count_by_s_description if !@count_by_s_description.blank?
-      formsites.each do |site|
-        fill_counter_hash(site)
-      end
-      @count_by_s_description = @counter_hash
-      return @counter_hash
+    def count_by_s
+      return @count_by_s if !@count_by_s.blank?
+      @count_by_s = 
+        if formsite_selected?
+          single_form_statistic
+        else
+          total_statistic
+        end
     end
 
     def count_by_s_charts
@@ -25,36 +26,22 @@ module Statistics
         colorByPoint: true,
         data: []
       }
-      response[:data] = count_by_s_description.map do |key, value| 
+      response[:data] = count_by_s.map do |key, value| 
         [key, value]
       end
       return [response]
     end
 
+    
     private 
-    def fill_counter_hash site
-      formsite_users(site).each do |user|
-        S_FIELDS.each do |field|
-          if !user[field].blank?
-            site_field = site_description_field site, field
-            if !site_field.blank?
-              @counter_hash[site_field] = counter_hash_vaue(site_field) + 1
-            end
-          end
-        end
-      end
+    
+    def formsite_selected?
+      !formsite.blank?
     end
-
-    def formsite_users site
-      if !startDate.blank? && !endDate.blank?
-        site.formsite_users.where("created_at >= ? AND created_at <= ?", startDate, endDate)
-      else
-        site.formsite_users
-      end
-    end
-
-    def counter_hash_vaue field
-      @counter_hash[field] || 0
+    
+    def formsite
+      return @formsite if !@formsite.blank?
+      @formsite = Formsite.find_by_id(formsite_id)
     end
 
     def formsites
@@ -62,9 +49,57 @@ module Statistics
       @formsites = Formsite.includes(:formsite_users).all
     end
 
+    def total_statistic
+      hash = {}
+      formsites.each do |site|
+        hash = fill_total_counter_hash(site, hash)
+      end
+      return hash
+    end
+
+    def single_form_statistic
+      hash = Hash[ S_FIELDS.collect { |field| [field, 0] } ]
+      fill_single_counter_hash(hash)
+    end
+
+
+    def fill_single_counter_hash hash
+      formsite_users(formsite).each do |user|
+        S_FIELDS.each do |field|
+          if !user[field].blank?
+            hash[field] = counter_hash_value(field, hash) + 1
+          end
+        end
+      end
+      return hash
+    end
+
+    def fill_total_counter_hash site, hash
+      formsite_users(site).each do |user|
+        S_FIELDS.each do |field|
+          if !user[field].blank?
+            counter_field = user[field]
+            hash[counter_field] = counter_hash_value(counter_field, hash) + 1
+          end
+        end
+      end
+      return hash
+    end
+
+    def formsite_users site
+      if !start_date.blank? && !end_date.blank?
+        site.formsite_users.between_dates(start_date, end_date)
+      else
+        site.formsite_users
+      end
+    end
+
+    def counter_hash_value field, hash
+      hash[field] || 0
+    end
+
     def site_description_field site, field
       site["#{field}_description"]
     end
-
   end
 end

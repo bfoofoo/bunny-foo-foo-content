@@ -25,7 +25,7 @@ class Api::V1::FormsitesController < ApplicationController
 
     is_useragent_valid = formsite_service.is_useragent_valid(request.user_agent)
     is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(user)
-    is_duplicate =  !@formsite.formsite_users.joins(:user).where("users.email = ?", "test1@test.com").blank?
+    is_duplicate =  !@formsite.formsite_users.joins(:user).where("users.email = ?", user.email).blank?
 
     formsite_user = @formsite.formsite_users.create!(
         user_id: user.id,
@@ -34,6 +34,7 @@ class Api::V1::FormsitesController < ApplicationController
         s3: params[:user][:s3],
         s4: params[:user][:s4],
         s5: params[:user][:s5],
+        ndm_token: params[:user][:ndm_token],
         is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
         is_useragent_valid: is_useragent_valid,
         is_impressionwise_test_success: is_impressionwise_test_success,

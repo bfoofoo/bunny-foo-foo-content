@@ -58,6 +58,7 @@ ActiveAdmin.register FormsiteUser do
     column :s3
     column :s4
     column :s5
+    column :ndm_token
     column "First name" do |user|
       user.user.first_name
     end

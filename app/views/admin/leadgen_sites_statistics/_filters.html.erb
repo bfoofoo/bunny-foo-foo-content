@@ -1,13 +1,18 @@
 <div class="panel_contents">
   <%= form_tag(admin_leadgen_sites_statistics_path, method: "get", class: "filter_form") do %>
     <div class="filter_form_field">
-      <%= label_tag(:startDate, "Start Date") %>
-      <%= date_field_tag(:startDate, params[:startDate]) %>
+      <%= label_tag(:formsite_id, "Form Site") %>
+      <%= select_tag "formsite_id", options_from_collection_for_select(Formsite.all, "id", "name", params[:formsite_id]), include_blank: "Total Statistics" %>
     </div>
 
     <div class="filter_form_field">
-      <%= label_tag(:endDate, "End Date") %>
-      <%= date_field_tag(:endDate, params[:endDate]) %>
+      <%= label_tag(:start_date, "Start Date") %>
+      <%= date_field_tag(:start_date, params[:start_date]) %>
+    </div>
+
+    <div class="filter_form_field">
+      <%= label_tag(:end_date, "End Date") %>
+      <%= date_field_tag(:end_date, params[:end_date]) %>
     </div>
     <div class="buttons">
       <input type="submit" name="commit" value="Filter">

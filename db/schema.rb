@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180731223435) do
+ActiveRecord::Schema.define(version: 20180802143338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,10 +59,11 @@ ActiveRecord::Schema.define(version: 20180731223435) do
   create_table "answers", force: :cascade do |t|
     t.text     "text"
     t.integer  "question_id"
-    t.boolean  "is_correct",   default: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.boolean  "is_correct",       default: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "redirect_url"
+    t.integer  "formsite_user_id"
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
   end
 
@@ -148,6 +149,7 @@ ActiveRecord::Schema.define(version: 20180731223435) do
     t.string   "s1"
     t.string   "s2"
     t.string   "s3"
+    t.string   "ndm_token"
   end
 
   create_table "formsites", force: :cascade do |t|
