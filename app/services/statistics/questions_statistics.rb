@@ -18,7 +18,7 @@ module Statistics
     def categories
       filtered_questions.map do |question|
         {
-          name: question.text,
+          name: question.id,
           categories: filtered_s_fields
         }
       end
