@@ -1,15 +1,5 @@
 module Statistics
-  class FormsitesStatistics
-    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id
-
-    S_FIELDS = ["s1", "s2", "s3", "s4", "s5"]
-
-    def initialize(params)
-      @start_date = params[:start_date]
-      @end_date = params[:end_date]
-      @formsite_id = params[:formsite_id]
-    end
-
+  class FormsitesStatistics < Statistics::BaseStatistic
     def count_by_s
       return @count_by_s if !@count_by_s.blank?
       @count_by_s = 

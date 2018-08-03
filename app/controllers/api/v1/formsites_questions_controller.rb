@@ -1,5 +1,5 @@
 class Api::V1::FormsitesQuestionsController < ApplicationController
-  before_action :set_formsite, only: [:index]
+  before_action :set_formsite, only: [:index, :create_answer]
   before_action :set_question, only: [:create_answer]
   before_action :set_formsite_user, only: [:create_answer]
 
@@ -9,7 +9,7 @@ class Api::V1::FormsitesQuestionsController < ApplicationController
   end
 
   def create_answer
-    answer = @question.answers.build(answer_params.merge({formsite_user_id: @formsite_user.id}))
+    answer = @question.formsite_user_answers.build(answer_params.merge({formsite_user_id: @formsite_user.id, formsite_id: @formsite.id}))
     if answer.save
       render json: answer
     else
@@ -19,7 +19,7 @@ class Api::V1::FormsitesQuestionsController < ApplicationController
 
   private 
     def answer_params
-      params.require(:answer).permit(:question_id, :text, :redirect_url)
+      params.require(:answer).permit(:question_id, :answer_id)
     end
 
     def set_formsite_user
@@ -29,7 +29,7 @@ class Api::V1::FormsitesQuestionsController < ApplicationController
     end
 
     def set_formsite
-      @formsite = Formsite.find(params[:id])
+      @formsite = Formsite.find(params[:formsite_id])
     rescue ActiveRecord::RecordNotFound => e
       render json: {message: e.message}
     end
