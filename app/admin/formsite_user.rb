@@ -25,6 +25,7 @@ ActiveAdmin.register FormsiteUser do
 
   
   index do |poll|
+    column :id
     column :created_at
     column :formsite
     column :user
