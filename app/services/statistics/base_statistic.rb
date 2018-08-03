@@ -23,7 +23,16 @@ module Statistics
 
       def answers
         return @answers if !@answers.blank?
-        @answers = Answer.all.order_by_question_id
+        @answers = Answer.includes([:question]).all.order_by_question_id
+      end
+
+      def filtered_answers
+        return @filtered_answers if !@filtered_answers.blank?
+        if formsite_selected?
+          answers.select {|a| a.question.formsite_id == formsite_id}
+        else
+          answers
+        end
       end
       
       def formsite
@@ -34,6 +43,15 @@ module Statistics
       def formsites
         return @formsites if !@formsites.blank?
         @formsites = Formsite.includes(:formsite_users).all
+      end
+
+      def filtered_s_fields
+        return @filtered_s_fields if !@filtered_s_fields.blank?
+        @filtered_s_fields = if s_fields_filter.blank?
+          S_FIELDS
+        else
+          S_FIELDS & s_fields_filter
+        end
       end
 
   end
