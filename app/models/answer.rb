@@ -2,6 +2,8 @@ class Answer < ApplicationRecord
   belongs_to :question, optional: true
   belongs_to :formsite_user, optional: true
 
+  has_many :formsite_user_answers
+
   validates :text, presence: true
 
   scope :order_by_id, -> () { order(id: :asc) }

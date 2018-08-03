@@ -1,0 +1,2 @@
+class FormsiteUserAnswer < ApplicationRecord
+end
