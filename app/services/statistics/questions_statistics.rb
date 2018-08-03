@@ -26,7 +26,7 @@ module Statistics
 
     def series 
       answers_hash = {}
-      questions.map do |question|
+      questions.each do |question|
         answers = question.answers
         S_FIELDS.each do |field|
           answers_hash = fill_answers_hash(answers_hash, field, question, answers)
