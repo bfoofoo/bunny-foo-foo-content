@@ -1,6 +1,40 @@
 class Api::V1::ArticlesController < ApiController
+  include Swagger::Blocks
   before_action :set_article, only: [:show]
   before_action :authenticate, only: [:create]
+
+  swagger_path '/articles/' do
+    operation :get do
+      key :summary, 'Get all articles'
+    end
+  end
+
+  swagger_path '/articles/{id}' do
+    operation :get do
+      key :summary, 'Find Article by ID'
+      key :operationId, 'findArticleById'
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of article to fetch'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      response 200 do
+        key :description, 'article response'
+        schema do
+          key :'$ref', :Article
+        end
+      end
+      response :default do
+        key :description, 'unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+  end
 
   def index
     @articles = Article.all.order("created_at DESC")

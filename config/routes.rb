@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   root :to => redirect('/admin')
+  resources :apidocs, only: [:index]
+  get '/api' => redirect('/swagger/dist/index.html?url=/apidocs')
 
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
