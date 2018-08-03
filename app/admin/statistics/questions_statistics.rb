@@ -10,7 +10,7 @@ ActiveAdmin.register_page "Questions Statistics" do
   end
 
   sidebar :help do
-    # render 'filter
+    render 'filters'
   end
 
   content do

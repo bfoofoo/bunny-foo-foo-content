@@ -16,19 +16,19 @@ module Statistics
     end
 
     def categories
-      questions.map do |question|
+      filtered_questions.map do |question|
         {
           name: question.text,
-          categories: S_FIELDS
+          categories: filtered_s_fields
         }
       end
     end
 
     def series 
       answers_hash = {}
-      questions.each do |question|
+      filtered_questions.each do |question|
         answers = question.answers
-        S_FIELDS.each do |field|
+        filtered_s_fields.each do |field|
           answers_hash = fill_answers_hash(answers_hash, field, question, answers)
         end
       end
@@ -36,6 +36,15 @@ module Statistics
     end
 
     private 
+    def filtered_questions
+      return @filtered_questions if !@filtered_questions.blank?
+      @filtered_questions = 
+        if formsite_selected?
+          questions.where(formsite_id: formsite.id)
+        else
+          questions
+        end
+    end
 
     def fill_answers_hash(answers_hash, field, question, answers)
       answers.each do |answer|
@@ -47,9 +56,19 @@ module Statistics
     end
 
     def answers_count answer, field
-      answer.formsite_user_answers.select {|user_answer| 
+      filtered_formsite_user_answers(answer).select {|user_answer| 
         user_answer.answer_id ==  answer.id && !user_answer.formsite_user[field].blank?
       }.count
+    end
+
+    def filtered_formsite_user_answers answer
+      if !start_date.blank? && !end_date.blank?
+        answer.formsite_user_answers.select { |user_answer|
+          user_answer.created_at >= start_date && user_answer.created_at <= end_date
+        }
+      else
+        answer.formsite_user_answers
+      end
     end
 
     def answer_hash_to_flat_list hash
@@ -79,7 +98,16 @@ module Statistics
 
     def s_fields_hash
       return @s_fields_hash if !@s_fields_hash.blank?
-      @s_fields_hash = Hash[ S_FIELDS.collect { |field| [field, 0] } ]
+      @s_fields_hash = Hash[ filtered_s_fields.collect { |field| [field, 0] } ]
+    end
+
+    def filtered_s_fields
+      return @filtered_s_fields if !@filtered_s_fields.blank?
+      @filtered_s_fields = if s_fields_filter.blank?
+        S_FIELDS
+      else
+        S_FIELDS & s_fields_filter
+      end
     end
   end
 end
