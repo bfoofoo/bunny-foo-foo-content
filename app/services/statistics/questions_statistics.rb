@@ -92,22 +92,13 @@ module Statistics
 
     def answer_texts_hash
       return @answer_texts_hash if !@answer_texts_hash.blank?
-      texts = answers.pluck(:text).uniq.map {|text| text.downcase}
+      texts = filtered_answers.pluck(:text).uniq.map {|text| text.downcase}
       return @answer_texts_hash = Hash[ texts.collect { |field| [field, []] } ]
     end
 
     def s_fields_hash
       return @s_fields_hash if !@s_fields_hash.blank?
       @s_fields_hash = Hash[ filtered_s_fields.collect { |field| [field, 0] } ]
-    end
-
-    def filtered_s_fields
-      return @filtered_s_fields if !@filtered_s_fields.blank?
-      @filtered_s_fields = if s_fields_filter.blank?
-        S_FIELDS
-      else
-        S_FIELDS & s_fields_filter
-      end
     end
   end
 end
