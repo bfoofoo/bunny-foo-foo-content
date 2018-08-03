@@ -29,7 +29,7 @@ module Statistics
       def filtered_answers
         return @filtered_answers if !@filtered_answers.blank?
         if formsite_selected?
-          answers.select {|a| a.question.formsite_id == formsite_id}
+          answers.select {|a| a.question.formsite_id == formsite_id.to_i}
         else
           answers
         end
