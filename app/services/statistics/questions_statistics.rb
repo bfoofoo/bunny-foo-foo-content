@@ -41,8 +41,8 @@ module Statistics
       answers.each do |answer|
         answer_text = answer.text.downcase
         answers_hash[question.id] ||= default_answer_hash.deep_dup
-        answers_hash[question.id][answer_text][field] = answers.select{|a| 
-          a.formsite_user && !a.formsite_user[field].blank? && a.text.downcase == answer_text
+        answers_hash[question.id][answer_text][field] = answer.formsite_user_answers.select {|user_answer| 
+            user_answer.answer_id ==  answer.id && !user_answer.formsite_user[field].blank?
         }.count
       end
       return answers_hash
