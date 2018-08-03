@@ -1,5 +1,6 @@
 class Api::V1::ArticlesController < ApiController
   before_action :set_article, only: [:show]
+  before_action :authenticate, only: [:create]
 
   def index
     @articles = Article.all.order("created_at DESC")
@@ -17,7 +18,7 @@ class Api::V1::ArticlesController < ApiController
     else
       render json: @article.errors, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordNotFound => e
+  rescue => e
     render json: {message: e.message}
   end
 

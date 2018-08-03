@@ -65,6 +65,7 @@ gem "active_admin-sortable_tree", "~> 1.0.0"
 
 gem 'aweber'
 gem 'rollbar'
+gem 'swagger-docs'
 
 group :development, :test do
   gem 'byebug', platform: :mri
