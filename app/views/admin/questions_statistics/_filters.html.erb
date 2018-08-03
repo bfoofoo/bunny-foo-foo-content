@@ -10,7 +10,7 @@
       <%= label_tag(:s_fields_filter, "Form Site") %>
        <% Statistics::QuestionsStatistics::S_FIELDS.each do |field| %>
           <%= field %>
-          <%= check_box_tag "s_fields_filter[]", field, params[:s_fields_filter].include?(field) -%>
+          <%= check_box_tag "s_fields_filter[]", field, params[:s_fields_filter] && params[:s_fields_filter].include?(field) -%>
         <% end %>
     </div>
 
