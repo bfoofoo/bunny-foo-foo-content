@@ -24,21 +24,6 @@ module Statistics
 
     
     private 
-    
-    def formsite_selected?
-      !formsite.blank?
-    end
-    
-    def formsite
-      return @formsite if !@formsite.blank?
-      @formsite = Formsite.find_by_id(formsite_id)
-    end
-
-    def formsites
-      return @formsites if !@formsites.blank?
-      @formsites = Formsite.includes(:formsite_users).all
-    end
-
     def total_statistic
       hash = {}
       formsites.each do |site|

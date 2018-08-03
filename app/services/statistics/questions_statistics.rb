@@ -41,11 +41,15 @@ module Statistics
       answers.each do |answer|
         answer_text = answer.text.downcase
         answers_hash[question.id] ||= default_answer_hash.deep_dup
-        answers_hash[question.id][answer_text][field] = answer.formsite_user_answers.select {|user_answer| 
-            user_answer.answer_id ==  answer.id && !user_answer.formsite_user[field].blank?
-        }.count
+        answers_hash[question.id][answer_text][field] = answers_count(answer, field)
       end
       return answers_hash
+    end
+
+    def answers_count answer, field
+      answer.formsite_user_answers.select {|user_answer| 
+        user_answer.answer_id ==  answer.id && !user_answer.formsite_user[field].blank?
+      }.count
     end
 
     def answer_hash_to_flat_list hash
@@ -57,7 +61,6 @@ module Statistics
       end
       response.map {|key, value| {name: key, data: value}}
     end
-
 
     def default_answer_hash
       return @default_answer_hash if !@default_answer_hash.blank?
