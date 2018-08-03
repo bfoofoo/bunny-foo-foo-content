@@ -7,4 +7,6 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :formsite_questions, allow_destroy: true
 
   validates :text, presence: true
+
+  scope :order_by_id, -> () { order(id: :asc) }
 end
