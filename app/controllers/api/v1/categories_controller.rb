@@ -1,5 +1,6 @@
-class Api::V1::CategoriesController < ApplicationController
+class Api::V1::CategoriesController < ApiController
   before_action :set_category, only: [:show]
+  before_action :authenticate, only: [:create, :update]
 
   def index
     @categories = Category.all

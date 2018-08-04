@@ -1,4 +1,5 @@
-class Api::V1::FormsitesQuestionsController < ApplicationController
+class Api::V1::FormsitesQuestionsController < ApiController
+  before_action :authenticate, only: [:create, :update]
   before_action :set_formsite, only: [:index]
   before_action :set_question, only: [:create_answer]
   before_action :set_formsite_user, only: [:create_answer]
