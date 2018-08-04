@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180804093449) do
+ActiveRecord::Schema.define(version: 20180803124450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,33 +65,6 @@ ActiveRecord::Schema.define(version: 20180804093449) do
     t.string   "redirect_url"
     t.integer  "formsite_user_id"
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
-  end
-
-  create_table "api_clients", force: :cascade do |t|
-    t.string   "token"
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "api_users", force: :cascade do |t|
-    t.integer  "api_client_id"
-    t.string   "email"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.boolean  "is_verified"
-    t.boolean  "is_useragent_valid"
-    t.boolean  "is_impressionwise_test_success"
-    t.boolean  "is_duplicate"
-    t.string   "s1"
-    t.string   "s2"
-    t.string   "s3"
-    t.string   "s4"
-    t.string   "s5"
-    t.string   "website"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.index ["api_client_id"], name: "index_api_users_on_api_client_id", using: :btree
   end
 
   create_table "articles", force: :cascade do |t|
@@ -160,6 +133,16 @@ ActiveRecord::Schema.define(version: 20180804093449) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "position"
+  end
+
+  create_table "formsite_user_answers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "formsite_id"
+    t.integer  "question_id"
+    t.integer  "answer_id"
+    t.integer  "formsite_user_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "formsite_users", force: :cascade do |t|
@@ -268,7 +251,6 @@ ActiveRecord::Schema.define(version: 20180804093449) do
   end
 
   add_foreign_key "answers", "questions"
-  add_foreign_key "api_users", "api_clients"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
   add_foreign_key "configs", "websites"
