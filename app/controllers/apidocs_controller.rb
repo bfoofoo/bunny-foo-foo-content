@@ -11,7 +11,7 @@ class ApidocsController < ActionController::Base
       key :name, 'article'
       key :description, 'Articles operations'
     end
-    key :host, 'admin.bunny-foo-foo.app'
+    key :host, 'https://admin.bunny-foo-foo.app'
     key :basePath, '/api/v1/'
     key :consumes, ['application/json']
     key :produces, ['application/json']
