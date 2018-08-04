@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       end
       resources :categories, only: [:index, :show, :create]
       resources :articles, only: [:index, :show, :create]
+      resources :api_users, only: [:index, :show, :create, :update]
     end
   end
 end
