@@ -14,19 +14,4 @@ ActiveAdmin.register ApiUser do
   scope :is_duplicate do
     ApiUser.where("is_duplicate = ?", true)
   end
-
-  filter :s1
-  filter :s1_blank,   :as => :boolean
-
-  filter :s2
-  filter :s2_blank,   :as => :boolean
-
-  filter :s3
-  filter :s3_blank,   :as => :boolean
-
-  filter :s4
-  filter :s4_blank,   :as => :boolean
-
-  filter :s5
-  filter :s5_blank,   :as => :boolean
 end

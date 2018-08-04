@@ -1,7 +1,47 @@
 class Api::V1::ApiUsersController < ApiController
+  include Swagger::Blocks
+
   before_action :set_api_user, only: [:show, :update]
   before_action :set_api_client, only: [:create]
   before_action :authenticate, only: [:create, :update]
+
+
+  swagger_path '/api_users/' do
+    operation :post do
+      security do
+        key :api_key, []
+      end
+      key :produces, [
+        'application/json'
+      ]
+      key :summary, 'Create new api user'
+      key :operationId, 'createNewApiUser'
+      key :tags, [
+          'api_user'
+      ]
+      parameter do
+        key :name, :api_user
+        key :in, :body
+        key :required, true
+        schema do
+          key :'$ref', :ApiUserInput
+        end
+      end
+
+      response 200 do
+        key :description, 'response'
+        schema do
+          key :'$ref', :ApiUser
+        end
+      end
+      response :default do
+        key :description, 'unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+  end
 
   def index
     @api_users = ApiUser.all
@@ -14,6 +54,7 @@ class Api::V1::ApiUsersController < ApiController
 
   def create
     formsite_service = FormsiteService.new()
+
     is_useragent_valid = formsite_service.is_useragent_valid(request.user_agent)
     is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(api_user_params)
     is_duplicate = !ApiUser.all.where("email = ?", api_user_params[:email]).blank?

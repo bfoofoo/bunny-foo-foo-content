@@ -8,19 +8,24 @@ class ApidocsController < ActionController::Base
       key :title, 'BFF Admin api'
     end
     tag do
-      key :name, 'article'
-      key :description, 'Articles operations'
+      key :name, 'api_user'
+      key :description, 'Api Users operations'
     end
-    key :host, 'https://admin.bunny-foo-foo.app'
+    key :host, ''
     key :basePath, '/api/v1/'
     key :consumes, ['application/json']
     key :produces, ['application/json']
+    security_definition :api_key do
+      key :type, :apiKey
+      key :name, :Authorization
+      key :in, :header
+    end
   end
 
   # A list of all classes that have swagger_* declarations.
   SWAGGERED_CLASSES = [
-      Api::V1::ArticlesController,
-      Article,
+      Api::V1::ApiUsersController,
+      ApiUser,
       ErrorModel,
       self,
   ].freeze
