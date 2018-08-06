@@ -106,7 +106,10 @@ module Statistics
 
     def answer_texts_hash
       return @answer_texts_hash if !@answer_texts_hash.blank?
-      texts = filtered_answers.pluck(:text).uniq.map {|text| text.downcase}
+      texts = filtered_answers
+                .sort!{ |a, b|  a.id <=> b.id } 
+                .pluck(:text).uniq
+                .map {|text| text.downcase}
       return @answer_texts_hash = Hash[ texts.collect { |field| [field, []] } ]
     end
 
