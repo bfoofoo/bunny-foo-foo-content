@@ -10,7 +10,12 @@ module Statistics
       @formsite_id = params[:formsite_id]
       @s_fields_filter = params[:s_fields_filter]
     end
-
+    
+    def formsite
+      return @formsite if !@formsite.blank?
+      @formsite = Formsite.find_by_id(formsite_id)
+    end
+    
     private 
       def formsite_selected?
         !formsite.blank?
@@ -35,10 +40,6 @@ module Statistics
         end
       end
       
-      def formsite
-        return @formsite if !@formsite.blank?
-        @formsite = Formsite.find_by_id(formsite_id)
-      end
 
       def formsites
         return @formsites if !@formsites.blank?

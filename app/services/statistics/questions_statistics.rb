@@ -18,7 +18,7 @@ module Statistics
     def categories
       filtered_questions.map do |question|
         {
-          name: question.id,
+          name: question_identification(question),
           categories: filtered_s_fields
         }
       end
@@ -35,6 +35,16 @@ module Statistics
       return answer_hash_to_flat_list(answers_hash)
     end
 
+    def formsite
+      return @formsite if !@formsite.blank?
+      @formsite = 
+        if !formsite_id.blank?
+          Formsite.find_by_id(formsite_id)
+        else
+          formsites.first
+        end
+    end
+
     private 
     def filtered_questions
       return @filtered_questions if !@filtered_questions.blank?
@@ -46,11 +56,15 @@ module Statistics
         end
     end
 
+    def question_identification question
+      question.position
+    end
+
     def fill_answers_hash(answers_hash, field, question, answers)
       answers.each do |answer|
         answer_text = answer.text.downcase
-        answers_hash[question.id] ||= default_answer_hash.deep_dup
-        answers_hash[question.id][answer_text][field] = answers_count(answer, field)
+        answers_hash[question_identification(question)] ||= default_answer_hash.deep_dup
+        answers_hash[question_identification(question)][answer_text][field] = answers_count(answer, field)
       end
       return answers_hash
     end
