@@ -12,7 +12,7 @@ class Api::V1::FormsitesController < ApiController
   end
 
   def get_formsite_questions
-    @questions = @formsite.questions.includes(:answers)
+    @questions = @formsite.questions.order_by_position.includes(:answers)
     render json: @questions
   end
 
