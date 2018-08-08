@@ -15,6 +15,10 @@ ActiveAdmin.register AweberAccount do
     column :account_id
     column :access_token
     column :secret_token
+    column "Lists count" do |account|
+      account.aweber_lists.count
+    end
+    
     column :created_at
     actions
   end
@@ -26,6 +30,12 @@ ActiveAdmin.register AweberAccount do
       row :access_token
       row :secret_token
       row :created_at
+      panel "Lists" do
+        table_for aweber_account.aweber_lists do
+          column :id
+          column :name
+        end
+      end
     end
     active_admin_comments
   end
