@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180808192150) do
+ActiveRecord::Schema.define(version: 20180808210704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -237,6 +237,7 @@ ActiveRecord::Schema.define(version: 20180808192150) do
     t.string   "s4_description"
     t.string   "s5_description"
     t.string   "form_box_title_text"
+    t.integer  "aweber_list_id"
   end
 
   create_table "product_cards", force: :cascade do |t|

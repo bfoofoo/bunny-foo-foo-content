@@ -1,4 +1,6 @@
 class Formsite < ApplicationRecord
+  belongs_to :aweber_list, optional: true
+
   has_many :formsite_users
   has_many :users, :through => :formsite_users do
     def verified
