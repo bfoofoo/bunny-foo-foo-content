@@ -28,6 +28,10 @@ class Api::V1::FormsitesController < ApiController
     is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(user)
     is_duplicate =  !@formsite.formsite_users.joins(:user).where("users.email = ?", user.email).blank?
 
+    if !is_duplicate && !@formsite.aweber_list.blank?
+      EmailMarketerService::Aweber::SubscriptionsService.new(list: @formsite.aweber_list).add_subscriber(user)
+    end
+
     formsite_user = @formsite.formsite_users.create!(
         user_id: user.id,
         s1: params[:user][:s1],
