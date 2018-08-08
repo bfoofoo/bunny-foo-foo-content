@@ -75,6 +75,7 @@ group :development, :test do
   gem 'capistrano-bundler', '~> 1.2'
   gem 'capistrano-rails', '~> 1.2'
   gem 'capistrano-passenger', '~> 0.2.0'
+  gem 'capistrano-dotenv-tasks', require: false
   gem 'capistrano-rbenv', '~> 2.1'
 end
 
