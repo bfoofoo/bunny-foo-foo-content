@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   namespace :callbacks do
     namespace :aweber do
-      get "/test", to: "accounts#test"
+      get "/auth_account", to: "accounts#auth_account"
     end
   end
 
