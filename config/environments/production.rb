@@ -1,4 +1,4 @@
-SITE_HOST= 'http://78.155.217.67'
+SITE_HOST= 'https://admin.bunnyfoofoo.app'
 Rails.application.routes.default_url_options[:host]= SITE_HOST
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
