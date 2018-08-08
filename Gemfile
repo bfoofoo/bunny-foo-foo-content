@@ -68,6 +68,7 @@ gem 'rollbar'
 gem 'swagger-docs'
 gem 'swagger-blocks'
 
+gem 'capistrano-dotenv-tasks', require: false
 group :development, :test do
   gem 'byebug', platform: :mri
   #deploy
@@ -75,7 +76,6 @@ group :development, :test do
   gem 'capistrano-bundler', '~> 1.2'
   gem 'capistrano-rails', '~> 1.2'
   gem 'capistrano-passenger', '~> 0.2.0'
-  gem 'capistrano-dotenv-tasks', require: false
   gem 'capistrano-rbenv', '~> 2.1'
 end
 
