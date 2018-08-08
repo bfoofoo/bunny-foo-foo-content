@@ -5,7 +5,6 @@ require "capistrano/deploy"
 require "capistrano/scm/git"
 require 'capistrano/rails'
 # require 'capistrano/rails/migrations'
-require 'capistrano/dotenv'
 require 'capistrano/dotenv/tasks'
 require 'capistrano/passenger'
 require 'capistrano/bundler'
