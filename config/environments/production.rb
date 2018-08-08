@@ -1,3 +1,5 @@
+SITE_HOST= 'http://78.155.217.67'
+Rails.application.routes.default_url_options[:host]= SITE_HOST
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -85,7 +87,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_mailer.default_url_options = { :host => '78.155.217.67' }
-  config.action_mailer.asset_host = 'http://78.155.217.67'
+  config.action_mailer.asset_host = SITE_HOST
   config.action_mailer.delivery_method = :smtp
   # change to true to allow email to be sent during development
   config.action_mailer.perform_deliveries = true
