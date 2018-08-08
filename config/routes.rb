@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   resources :apidocs, only: [:index]
   get '/api' => redirect('/swagger/dist/index.html?url=/apidocs')
 
+  namespace :callbacks do
+    namespace :aweber do
+      get "/test", to: "accounts#test"
+    end
+  end
+
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
 
