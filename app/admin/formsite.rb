@@ -1,5 +1,5 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url,
+  permit_params :name, :description, :url, :aweber_list_id, 
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :first_redirect_url, :final_redirect_url,
                 :favicon_image, :logo_image, :background,
@@ -113,6 +113,10 @@ ActiveAdmin.register Formsite do
       row :s4_description
       row :s5_description
 
+      row "Aweber List" do |formsite|
+        formsite.aweber_list.name
+      end if !formsite.aweber_list.blank?
+
     end
     active_admin_comments
   end
@@ -145,6 +149,8 @@ ActiveAdmin.register Formsite do
           f.input :s3_description
           f.input :s4_description
           f.input :s5_description
+
+          f.input :aweber_list, :as => :select, :collection => AweberList.all
         end
         f.actions
       end

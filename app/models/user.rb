@@ -5,4 +5,8 @@ class User < ApplicationRecord
 
   accepts_nested_attributes_for :formsite_users
   accepts_nested_attributes_for :formsites
+
+  def full_name
+    "#{self.first_name} #{self.last_name}"
+  end
 end
