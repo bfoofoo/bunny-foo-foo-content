@@ -1,5 +1,5 @@
 ActiveAdmin.register FormsiteUser do
-  permit_params :s1, :s2, :s3, :s4, :s5, :ndm_token
+  permit_params :affiliate, :s1, :s2, :s3, :s4, :s5, :ndm_token
 
   filter :created_at
   filter :formsite
@@ -8,6 +8,9 @@ ActiveAdmin.register FormsiteUser do
   filter :is_useragent_valid
   filter :is_impressionwise_test_success
   filter :is_duplicate
+
+  filter :affiliate
+  filter :affiliate_blank,   :as => :boolean
 
   filter :s1
   filter :s1_blank,   :as => :boolean
@@ -34,6 +37,7 @@ ActiveAdmin.register FormsiteUser do
     column :is_useragent_valid
     column :is_impressionwise_test_success
     column :is_duplicate
+    column :affiliate
     column :s1
     column :s2
     column :s3
@@ -57,6 +61,7 @@ ActiveAdmin.register FormsiteUser do
     column :is_useragent_valid
     column :is_impressionwise_test_success
     column :is_duplicate
+    column :affiliate
     column :s1
     column :s2
     column :s3

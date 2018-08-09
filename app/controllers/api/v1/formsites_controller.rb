@@ -34,6 +34,7 @@ class Api::V1::FormsitesController < ApiController
 
     formsite_user = @formsite.formsite_users.create!(
         user_id: user.id,
+        affiliate: params[:user][:a],
         s1: params[:user][:s1],
         s2: params[:user][:s2],
         s3: params[:user][:s3],

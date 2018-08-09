@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180808210704) do
+ActiveRecord::Schema.define(version: 20180809222437) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 20180808210704) do
     t.string   "s2"
     t.string   "s3"
     t.string   "ndm_token"
+    t.string   "affiliate"
   end
 
   create_table "formsites", force: :cascade do |t|
