@@ -40,7 +40,6 @@ module Statistics
         end
       end
       
-
       def formsites
         return @formsites if !@formsites.blank?
         @formsites = Formsite.includes(:formsite_users).all
