@@ -14,9 +14,9 @@ module Statistics
       end
 
       def type_fields
-        FormsiteUser.where.not(affiliate: nil).pluck(:affiliate).uniq
+        formsite.formsite_users.where.not(affiliate: nil).pluck(:affiliate).uniq
       end
-      
+
     end
   end
 end
