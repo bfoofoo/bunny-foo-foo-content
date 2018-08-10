@@ -126,6 +126,8 @@ GEM
     capistrano-bundler (1.3.0)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
+    capistrano-dotenv-tasks (0.1.5)
+      capistrano (~> 3.0)
     capistrano-passenger (0.2.0)
       capistrano (~> 3.0)
     capistrano-rails (1.3.1)
@@ -464,6 +466,7 @@ DEPENDENCIES
   byebug
   capistrano (~> 3.7, >= 3.7.1)
   capistrano-bundler (~> 1.2)
+  capistrano-dotenv-tasks
   capistrano-passenger (~> 0.2.0)
   capistrano-rails (~> 1.2)
   capistrano-rbenv (~> 2.1)

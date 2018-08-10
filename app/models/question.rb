@@ -11,4 +11,5 @@ class Question < ApplicationRecord
   validates :text, presence: true
 
   scope :order_by_id, -> () { order(id: :asc) }
+  scope :order_by_position, -> (position=:asc) { order(position: position) }
 end
