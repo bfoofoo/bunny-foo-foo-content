@@ -6,7 +6,7 @@ ActiveAdmin.register Formsite do
                 :is_thankyou, :is_checkboxes, :form_box_title_text,
                 :left_side_content, :right_side_content,
                 :first_question_code_snippet, :head_code_snippet,
-                :s1_description, :s2_description, :s3_description, :s4_description, :s5_description,
+                :s1_description, :s2_description, :s3_description, :s4_description, :s5_description, :affiliate_description,
                 question_ids: [],
                 questions_attributes: [
                     :id, :text, :position, :_update, :_create, :_destroy,
@@ -112,6 +112,7 @@ ActiveAdmin.register Formsite do
       row :s3_description
       row :s4_description
       row :s5_description
+      row :affiliate_description
 
       row "Aweber List" do |formsite|
         formsite.aweber_list.name
@@ -149,6 +150,7 @@ ActiveAdmin.register Formsite do
           f.input :s3_description
           f.input :s4_description
           f.input :s5_description
+          f.input :affiliate_description
 
           f.input :aweber_list, :as => :select, :collection => AweberList.all
         end
