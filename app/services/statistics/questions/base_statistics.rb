@@ -54,7 +54,7 @@ module Statistics
       end
   
       def question_identification question
-        question.position
+        "Q#{question.position}"
       end
   
       def fill_answers_hash(answers_hash, field, question, answers)
