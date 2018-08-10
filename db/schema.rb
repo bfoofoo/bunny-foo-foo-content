@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180808210704) do
+ActiveRecord::Schema.define(version: 20180810174338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 20180808210704) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.string   "oauth_token"
+    t.string   "name"
   end
 
   create_table "aweber_lists", force: :cascade do |t|
@@ -204,6 +205,7 @@ ActiveRecord::Schema.define(version: 20180808210704) do
     t.string   "s2"
     t.string   "s3"
     t.string   "ndm_token"
+    t.string   "affiliate"
   end
 
   create_table "formsites", force: :cascade do |t|

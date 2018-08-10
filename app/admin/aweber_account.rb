@@ -1,6 +1,6 @@
 ActiveAdmin.register AweberAccount do
 
-  permit_params :account_id, :access_token, :secret_token
+  permit_params :name, :account_id, :access_token, :secret_token
 
   controller do
     before_action :initialize_data, only: :index
@@ -12,6 +12,7 @@ ActiveAdmin.register AweberAccount do
 
   index do
     column :id
+    column :name
     column :account_id
     column :access_token
     column :secret_token
@@ -26,6 +27,7 @@ ActiveAdmin.register AweberAccount do
   show do
     attributes_table do
       row :id
+      row :name
       row :account_id
       row :access_token
       row :secret_token
