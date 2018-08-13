@@ -23,7 +23,7 @@ module Statistics
 
       def questions
         return @questions if !@questions.blank?
-        @questions = Question.includes(answers: [formsite_user_answers: [:formsite_user]]).all
+        @questions = Question.includes(answers: [formsite_user_answers: [:formsite_user]]).order_by_position.all
       end
 
       def answers
