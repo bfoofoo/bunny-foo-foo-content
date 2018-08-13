@@ -6,10 +6,10 @@ ActiveAdmin.register AweberRule do
   index do
     column :id
     column "List From" do |rule|
-      "#{rule.list_from.aweber_account.name} - #{rule.list_from.name}"
+      rule.list_from.full_name
     end
     column "List To" do |rule|
-      "#{rule.list_to.aweber_account.name} - #{rule.list_to.name}"
+      rule.list_to.full_name
     end
     
     column :time
@@ -18,7 +18,7 @@ ActiveAdmin.register AweberRule do
   end
 
   form do |f|
-    lists = AweberList.all.map{|list| ["#{list.aweber_account.name}-#{list.name}", list.id]}
+    lists = AweberList.all.map{|list| [list.full_name, list.id]}
     f.inputs 'Aweber Rule' do
       f.input :list_from, :as => :select, :collection => lists
       f.input :list_to, :as => :select, :collection => lists
@@ -33,10 +33,10 @@ ActiveAdmin.register AweberRule do
     attributes_table do
       row :id
       row "List From" do |rule|
-        "#{rule.list_from.aweber_account.name} - #{rule.list_from.name}"
+        rule.list_from.full_name
       end
       row "List To" do |rule|
-        "#{rule.list_to.aweber_account.name} - #{rule.list_to.name}"
+        rule.list_to.full_name
       end
       row :time
     end

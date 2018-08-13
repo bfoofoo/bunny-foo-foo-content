@@ -115,7 +115,7 @@ ActiveAdmin.register Formsite do
       row :affiliate_description
 
       row "Aweber List" do |formsite|
-        formsite.aweber_list.name
+        formsite.aweber_list.full_name
       end if !formsite.aweber_list.blank?
 
     end
