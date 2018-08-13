@@ -9,14 +9,15 @@ module EmailMarketerService
 
       def add_subscriber(user)
         begin
-          aweber_list.subscribers.create({"name" => user.full_name, "email" => user.email})
+          user_name = user.try(:full_name).blank? ? user.name : user.full_name
+          aweber_list.subscribers.create({"name" => user_name, "email" => user.email})
         rescue AWeber::CreationError => e
-          puts e
+          puts "Aweber adding subscriber error - #{e}".red
         end
       end
 
-      def subscribers
-        aweber_list.subscribers
+      def subscribers(search_params={})
+        aweber_list.subscribers.search(search_params)
       end
 
       private
