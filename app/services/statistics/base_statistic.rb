@@ -14,7 +14,7 @@ module Statistics
     
     def formsite
       return @formsite if !@formsite.blank?
-      @formsite = Formsite.find_by_id(formsite_id).includes([:formsite_users])
+      @formsite = Formsite.includes([:formsite_users]).find_by_id(formsite_id)
     end
     
     private 
