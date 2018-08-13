@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180810184339) do
+ActiveRecord::Schema.define(version: 20180813171221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,6 +180,13 @@ ActiveRecord::Schema.define(version: 20180810184339) do
     t.index ["formsite_id"], name: "index_formsite_ads_on_formsite_id", using: :btree
   end
 
+  create_table "formsite_aweber_lists", force: :cascade do |t|
+    t.integer  "aweber_list_id"
+    t.integer  "formsite_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
   create_table "formsite_questions", force: :cascade do |t|
     t.integer  "formsite_id"
     t.integer  "question_id"
@@ -247,7 +254,6 @@ ActiveRecord::Schema.define(version: 20180810184339) do
     t.string   "s4_description"
     t.string   "s5_description"
     t.string   "form_box_title_text"
-    t.integer  "aweber_list_id"
     t.string   "affiliate_description"
   end
 

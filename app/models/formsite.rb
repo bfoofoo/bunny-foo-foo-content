@@ -1,21 +1,27 @@
 class Formsite < ApplicationRecord
-  belongs_to :aweber_list, optional: true
 
+  
   has_many :formsite_users
   has_many :users, :through => :formsite_users do
     def verified
       where("formsite_users.is_verified= ?", true)
     end
-
+    
     def unverified
       where("formsite_users.is_verified= ?", false)
     end
   end
-
+  
   has_many :questions
+  
+  has_many :formsite_aweber_lists, dependent: :destroy
+  has_many :aweber_lists, :through => :formsite_aweber_lists
 
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, :through => :formsite_ads
+
+  accepts_nested_attributes_for :formsite_aweber_lists, allow_destroy: true
+  accepts_nested_attributes_for :aweber_lists, allow_destroy: true
 
   accepts_nested_attributes_for :formsite_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true

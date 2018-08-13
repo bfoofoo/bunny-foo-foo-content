@@ -28,24 +28,23 @@ class Api::V1::FormsitesController < ApiController
     is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(user)
     is_duplicate =  !@formsite.formsite_users.joins(:user).where("users.email = ?", user.email).blank?
 
-    if !is_duplicate && !@formsite.aweber_list.blank?
-      EmailMarketerService::Aweber::SubscriptionsService.new(list: @formsite.aweber_list).add_subscriber(user)
-    end
-
+    
     formsite_user = @formsite.formsite_users.create!(
-        user_id: user.id,
-        affiliate: params[:user][:a],
-        s1: params[:user][:s1],
-        s2: params[:user][:s2],
-        s3: params[:user][:s3],
-        s4: params[:user][:s4],
-        s5: params[:user][:s5],
-        ndm_token: params[:user][:ndm_token],
-        is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
-        is_useragent_valid: is_useragent_valid,
-        is_impressionwise_test_success: is_impressionwise_test_success,
-        is_duplicate: is_duplicate
-    )
+      user_id: user.id,
+      affiliate: params[:user][:a],
+      s1: params[:user][:s1],
+      s2: params[:user][:s2],
+      s3: params[:user][:s3],
+      s4: params[:user][:s4],
+      s5: params[:user][:s5],
+      ndm_token: params[:user][:ndm_token],
+      is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
+      is_useragent_valid: is_useragent_valid,
+      is_impressionwise_test_success: is_impressionwise_test_success,
+      is_duplicate: is_duplicate
+      )
+      
+    Formsite::AddNewUserToAweberUseCase.new(@formsite, user).preform()
 
     render json: {user: user, is_verified: formsite_user.is_verified}
   end
