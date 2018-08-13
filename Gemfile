@@ -17,6 +17,7 @@ gem "interactor", "~> 3.0"
 gem 'draper'
 gem 'bower-rails', '~> 0.11.0'
 gem "colorize"
+gem 'whenever', require: false
 
 # APIS
 gem 'cloudflare'
