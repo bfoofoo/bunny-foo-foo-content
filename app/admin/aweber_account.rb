@@ -1,5 +1,4 @@
 ActiveAdmin.register AweberAccount do
-
   permit_params :name, :account_id, :access_token, :secret_token
 
   controller do

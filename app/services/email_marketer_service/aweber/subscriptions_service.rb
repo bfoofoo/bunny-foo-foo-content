@@ -15,6 +15,10 @@ module EmailMarketerService
         end
       end
 
+      def subscribers
+        aweber_list.subscribers
+      end
+
       private
       def auth_service
         return @auth_service if !@auth_service.blank?
