@@ -6,6 +6,10 @@ module Statistics
         total_chart_statistics(DEFAULT_CHART_RESPONSE)
       end
 
+      def available_affiliate_stats
+        formsite.formsite_users.pluck(:affiliate).uniq.compact
+      end
+
       private 
       def answers_count answer, field
         filtered_formsite_user_answers(answer).select {|user_answer| 
@@ -14,7 +18,14 @@ module Statistics
       end
 
       def type_fields
-        formsite.formsite_users.where.not(affiliate: nil).pluck(:affiliate).uniq
+        return @type_fields if !@type_fields.blank?
+        fields = formsite.formsite_users.where.not(affiliate: nil).pluck(:affiliate).uniq
+        @type_fields = 
+          if a_fields_filter.blank?
+            fields
+          else
+            fields & a_fields_filter
+          end 
       end
 
     end
