@@ -12,7 +12,10 @@ ActiveAdmin.register AweberRule do
       rule.list_to.full_name
     end
     
-    column :time
+    column "Time in days" do |rule|
+      rule.time
+    end
+    
     column :created_at
     actions
   end
@@ -22,7 +25,7 @@ ActiveAdmin.register AweberRule do
     f.inputs 'Aweber Rule' do
       f.input :list_from, :as => :select, :collection => lists
       f.input :list_to, :as => :select, :collection => lists
-      f.input :time
+      f.input :time, :label => 'Time in days'
     end
     f.actions
   end
@@ -38,7 +41,10 @@ ActiveAdmin.register AweberRule do
       row "List To" do |rule|
         rule.list_to.full_name
       end
-      row :time
+
+      row "Time in days" do |rule|
+        rule.time
+      end
     end
     active_admin_comments
   end
