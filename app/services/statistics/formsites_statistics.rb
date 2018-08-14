@@ -44,7 +44,7 @@ module Statistics
         all_fields.each do |field|
           if !user[field].blank?
             counter_field = AFFILIATE_FIELDS.include?(field) ? user[field] : field
-            hash[counter_field] = counter_hash_value(field, hash) + 1
+            hash[counter_field] = counter_hash_value(counter_field, hash) + 1
           end
         end
       end
