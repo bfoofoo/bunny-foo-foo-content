@@ -12,6 +12,7 @@ class ApidocsController < ActionController::Base
       key :description, 'Api Users operations'
     end
     key :host, ''
+    key :schemes, ['http']
     key :basePath, '/api/v1/'
     key :consumes, ['application/json']
     key :produces, ['application/json']
