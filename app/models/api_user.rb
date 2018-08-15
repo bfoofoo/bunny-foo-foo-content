@@ -1,6 +1,9 @@
 class ApiUser < ApplicationRecord
   include Swagger::Blocks
   belongs_to :api_client
+  
+  validates :email, :first_name, :last_name, presence: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
 
   swagger_schema :ApiUser do
     key :required, [:email, :first_name, :last_name]
