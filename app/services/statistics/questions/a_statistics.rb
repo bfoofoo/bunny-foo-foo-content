@@ -6,10 +6,6 @@ module Statistics
         total_chart_statistics(DEFAULT_CHART_RESPONSE)
       end
 
-      def available_affiliate_stats
-        formsite.formsite_users.pluck(:affiliate).uniq.compact
-      end
-
       private 
       def answers_count answer, field
         filtered_formsite_user_answers(answer).select {|user_answer| 

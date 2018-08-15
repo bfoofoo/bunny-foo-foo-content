@@ -21,6 +21,14 @@ module Statistics
       return @formsite if !@formsite.blank?
       @formsite = Formsite.includes([:formsite_users]).find_by_id(formsite_id)
     end
+
+    def available_affiliate_stats
+      if formsite.blank?
+        FormsiteUser.all.pluck(:affiliate).uniq.compact
+      else
+        formsite.formsite_users.pluck(:affiliate).uniq.compact
+      end
+    end
     
     private 
       def formsite_selected?
