@@ -1,9 +1,20 @@
+<%- available_affiliate_stats =  stats_service.available_affiliate_stats %>
 <div class="panel_contents">
   <%= form_tag(admin_leadgen_sites_statistics_path, method: "get", class: "filter_form") do %>
     <div class="filter_form_field">
       <%= label_tag(:formsite_id, "Form Site") %>
       <%= select_tag "formsite_id", options_from_collection_for_select(Formsite.all, "id", "name", params[:formsite_id]), include_blank: "Total Statistics" %>
     </div>
+
+    <%- if !available_affiliate_stats.blank? %>
+      <div class="filter_form_field">
+        <%= label_tag(:s_fields_filter, "Affiliate Filters") %>
+        <% available_affiliate_stats.each do |field| %>
+            <%= "A #{field}" %>
+            <%= check_box_tag "a_fields_filter[]", field, params[:a_fields_filter] && params[:a_fields_filter].include?(field) -%>
+          <% end %>
+      </div>
+    <%- end %>
 
     <div class="filter_form_field">
       <%= label_tag(:start_date, "Start Date") %>
