@@ -17,6 +17,8 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   config.serve_static_assets = true
+  config.public_file_server.enabled = true
+
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
