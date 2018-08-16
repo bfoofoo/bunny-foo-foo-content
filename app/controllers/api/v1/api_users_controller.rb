@@ -27,13 +27,7 @@ class Api::V1::ApiUsersController < ApiController
           key :'$ref', :ApiUserInput
         end
       end
-
-      response 200 do
-        key :description, 'response'
-        schema do
-          key :'$ref', :ApiUser
-        end
-      end
+      
       response :default do
         key :description, 'unexpected error'
         schema do
