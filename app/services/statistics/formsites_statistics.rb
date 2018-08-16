@@ -16,9 +16,10 @@ module Statistics
         colorByPoint: true,
         data: []
       }
-      response[:data] = count_by_s.map do |key, value| 
+      response[:data] = count_by_s.sort.to_h.map do |key, value| 
         [key, value]
       end
+
       return [response]
     end
 
