@@ -17,39 +17,15 @@ class Api::V1::FormsitesController < ApiController
   end
 
   def add_formsite_user
-    formsite_service = FormsiteService.new()
+    formsite_interactor = FormsiteInteractor::AddUser.call({
+      params: params,
+      request: request,
+      formsite: @formsite
+    })
 
-    user = User.create_with(
-      first_name: params[:user][:first_name],
-      last_name: params[:user][:last_name]
-    ).find_or_create_by(email: params[:user][:email])
+    Formsite::AddNewUserToAweberUseCase.new(@formsite, formsite_interactor.user).preform()
 
-    is_useragent_valid = formsite_service.is_useragent_valid(request.user_agent)
-    is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(user)
-    is_duplicate =  !@formsite.formsite_users.joins(:user).where("users.email = ?", user.email).blank?
-
-    
-    formsite_user = @formsite.formsite_users.create!(
-      user_id: user.id,
-      affiliate: params[:user][:a],
-      s1: params[:user][:s1],
-      s2: params[:user][:s2],
-      s3: params[:user][:s3],
-      s4: params[:user][:s4],
-      s5: params[:user][:s5],
-      birthday: params[:user][:birthday],
-      phone: params[:user][:phone],
-      zip: params[:user][:zip],
-      ndm_token: params[:user][:ndm_token],
-      is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
-      is_useragent_valid: is_useragent_valid,
-      is_impressionwise_test_success: is_impressionwise_test_success,
-      is_duplicate: is_duplicate
-      )
-      
-    Formsite::AddNewUserToAweberUseCase.new(@formsite, user).preform()
-
-    render json: {user: user, is_verified: formsite_user.is_verified}
+    render json: {user: formsite_interactor.user, is_verified: formsite_interactor.formsite_user}
   end
 
   def setup

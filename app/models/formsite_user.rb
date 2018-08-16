@@ -1,6 +1,6 @@
 class FormsiteUser < ApplicationRecord
   belongs_to :formsite
-  belongs_to :user
+  belongs_to :user, optional: true
 
   delegate :email, to: :user, allow_nil: true
 
