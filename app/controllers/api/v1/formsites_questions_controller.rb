@@ -4,7 +4,7 @@ class Api::V1::FormsitesQuestionsController < ApplicationController
   before_action :set_formsite_user, only: [:create_answer]
 
   def index
-    @questions = @formsite.questions.includes(:answers)
+    @questions = @formsite.questions.order_by_position.includes(:answers)
     render json: @questions
   end
 

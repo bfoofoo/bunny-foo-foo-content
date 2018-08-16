@@ -1,19 +1,1 @@
 render 'formsites', chart_data: chart_data
-table class: "index_table index" do
-  thead do
-    tr do
-      formsites_statistics.count_by_s.keys.each do |key|
-        th class: "col col-id" do
-          "#{key} Users Count"
-        end
-      end
-    end
-  end
-  tbody do
-    formsites_statistics.count_by_s.keys.each do |key|
-      td class: "col col-id" do
-        formsites_statistics.count_by_s[key]
-      end
-    end
-  end
-end

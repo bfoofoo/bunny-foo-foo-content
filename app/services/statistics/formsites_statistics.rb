@@ -33,16 +33,20 @@ module Statistics
     end
 
     def single_form_statistic
-      hash = Hash[ S_FIELDS.collect { |field| [field, 0] } ]
-      fill_single_counter_hash(hash)
+      fields = all_fields - AFFILIATE_FIELDS
+      hash = Hash[ fields.collect { |field| [field, 0] } ]
+      fill_single_counter_hash({})
     end
 
 
     def fill_single_counter_hash hash
       formsite_users(formsite).each do |user|
-        S_FIELDS.each do |field|
-          if !user[field].blank?
-            hash[field] = counter_hash_value(field, hash) + 1
+        all_fields.each do |field|
+          valid = !user[field].blank?
+          valid = valid && a_fields_filter.include?(user["affiliate"]) if !a_fields_filter.blank?
+          if valid
+            counter_field = AFFILIATE_FIELDS.include?(field) ? user[field] : field
+            hash[counter_field] = counter_hash_value(counter_field, hash) + 1
           end
         end
       end
@@ -51,8 +55,10 @@ module Statistics
 
     def fill_total_counter_hash site, hash
       formsite_users(site).each do |user|
-        S_FIELDS.each do |field|
-          if !user[field].blank?
+        all_fields.each do |field|
+          valid = !user[field].blank?
+          valid = valid && a_fields_filter.include?(user["affiliate"]) if !a_fields_filter.blank?
+          if valid
             counter_field = user[field]
             hash[counter_field] = counter_hash_value(counter_field, hash) + 1
           end

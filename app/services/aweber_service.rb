@@ -1,12 +1,20 @@
 require 'aweber'
 class AweberService
+  attr_reader :client
+
   def initialize
-    oauth = AWeber::OAuth.new('AkjqtV9OAjXAqvrRb53uLdN1', 'p71QEVG1oWSVqWfvV40oFwaNHzNag6Y13qbw53hg')
-    oauth.authorize_with_access('AgXDZhnE92QzaZuRfj050cwt', 'UkfeCE2P77rHMQWxrrhc05ohAVgxPudo70xnpV6G')
-    @client = AWeber::Base.new(oauth)
   end
 
   def get_lists
-    @client.account.lists
+    client.account.lists
+  end
+
+  def client(oauth)
+    AWeber::Base.new(oauth) 
+  end
+
+  def account
+    return @account if !@account.blank?
+    @account = client.account
   end
 end

@@ -1,12 +1,12 @@
 ActiveAdmin.register Formsite do
-  permit_params :name, :description, :url,
+  permit_params :name, :description, :url, :aweber_list_id, 
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :first_redirect_url, :final_redirect_url,
                 :favicon_image, :logo_image, :background,
                 :is_thankyou, :is_checkboxes, :form_box_title_text,
                 :left_side_content, :right_side_content,
                 :first_question_code_snippet, :head_code_snippet,
-                :s1_description, :s2_description, :s3_description, :s4_description, :s5_description,
+                :s1_description, :s2_description, :s3_description, :s4_description, :s5_description, :affiliate_description,
                 question_ids: [],
                 questions_attributes: [
                     :id, :text, :position, :_update, :_create, :_destroy,
@@ -16,6 +16,10 @@ ActiveAdmin.register Formsite do
                 ],
                 ad_ids: [],
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
+
+                formsite_aweber_lists_attributes: [:id, :formsite_id, :aweber_list_id],
+
+
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
 
@@ -112,6 +116,11 @@ ActiveAdmin.register Formsite do
       row :s3_description
       row :s4_description
       row :s5_description
+      row :affiliate_description
+
+      row "Aweber Lists" do |formsite|
+        formsite.aweber_lists.map(&:full_name).join(",")
+      end
 
     end
     active_admin_comments
@@ -145,6 +154,14 @@ ActiveAdmin.register Formsite do
           f.input :s3_description
           f.input :s4_description
           f.input :s5_description
+          f.input :affiliate_description
+
+          f.inputs 'Aweber Lists' do
+            f.has_many :formsite_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
+              ff.semantic_errors
+              ff.input :aweber_list, :label => 'List', :as => :select, :collection => AweberList.all
+            end
+          end
         end
         f.actions
       end

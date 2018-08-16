@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180804093449) do
+ActiveRecord::Schema.define(version: 20180814134544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,32 @@ ActiveRecord::Schema.define(version: 20180804093449) do
     t.string   "storage_size"
   end
 
+  create_table "aweber_accounts", force: :cascade do |t|
+    t.integer  "account_id"
+    t.string   "access_token"
+    t.string   "secret_token"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "oauth_token"
+    t.string   "name"
+  end
+
+  create_table "aweber_lists", force: :cascade do |t|
+    t.integer  "aweber_account_id"
+    t.string   "name"
+    t.integer  "list_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  create_table "aweber_rules", force: :cascade do |t|
+    t.integer  "list_from_id"
+    t.integer  "list_to_id"
+    t.string   "time"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string   "name"
     t.string   "slug"
@@ -152,6 +178,13 @@ ActiveRecord::Schema.define(version: 20180804093449) do
     t.datetime "updated_at",  null: false
     t.index ["ad_id"], name: "index_formsite_ads_on_ad_id", using: :btree
     t.index ["formsite_id"], name: "index_formsite_ads_on_formsite_id", using: :btree
+  end
+
+  create_table "formsite_aweber_lists", force: :cascade do |t|
+    t.integer  "aweber_list_id"
+    t.integer  "formsite_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "formsite_questions", force: :cascade do |t|
@@ -187,6 +220,10 @@ ActiveRecord::Schema.define(version: 20180804093449) do
     t.string   "s2"
     t.string   "s3"
     t.string   "ndm_token"
+    t.string   "affiliate"
+    t.datetime "birthday"
+    t.string   "zip"
+    t.string   "phone"
   end
 
   create_table "formsites", force: :cascade do |t|
@@ -220,6 +257,7 @@ ActiveRecord::Schema.define(version: 20180804093449) do
     t.string   "s4_description"
     t.string   "s5_description"
     t.string   "form_box_title_text"
+    t.string   "affiliate_description"
   end
 
   create_table "product_cards", force: :cascade do |t|

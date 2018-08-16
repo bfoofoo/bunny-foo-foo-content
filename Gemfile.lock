@@ -126,6 +126,8 @@ GEM
     capistrano-bundler (1.3.0)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
+    capistrano-dotenv-tasks (0.1.5)
+      capistrano (~> 3.0)
     capistrano-passenger (0.2.0)
       capistrano (~> 3.0)
     capistrano-rails (1.3.1)
@@ -143,6 +145,7 @@ GEM
       mime-types (~> 3.0)
     case_transform (0.2)
       activesupport
+    chronic (0.10.2)
     cloudflare (3.2.1)
       rest-client (~> 2.0.2)
     coderay (1.1.2)
@@ -155,6 +158,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
+    colorize (0.8.1)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
     debug_inspector (0.0.3)
@@ -439,6 +443,8 @@ GEM
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
+    whenever (0.10.0)
+      chronic (>= 0.6.3)
     yaml_db (0.6.0)
       rails (>= 3.0, < 5.2)
       rake (>= 0.8.7)
@@ -464,6 +470,7 @@ DEPENDENCIES
   byebug
   capistrano (~> 3.7, >= 3.7.1)
   capistrano-bundler (~> 1.2)
+  capistrano-dotenv-tasks
   capistrano-passenger (~> 0.2.0)
   capistrano-rails (~> 1.2)
   capistrano-rbenv (~> 2.1)
@@ -471,6 +478,7 @@ DEPENDENCIES
   carrierwave-base64
   cloudflare
   coffee-rails (~> 4.2)
+  colorize
   devise
   dotenv-rails
   draper
@@ -511,6 +519,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (~> 2.6.1)
   web-console (>= 3.3.0)
+  whenever
   yaml_db
 
 RUBY VERSION
