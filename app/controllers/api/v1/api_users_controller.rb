@@ -14,7 +14,7 @@ class Api::V1::ApiUsersController < ApiController
       key :produces, [
         'application/json'
       ]
-      key :summary, 'Create new api user'
+      key :summary, 'Add new api user'
       key :operationId, 'createNewApiUser'
       key :tags, [
           'api_user'
@@ -94,7 +94,7 @@ class Api::V1::ApiUsersController < ApiController
   end
 
   def api_user_params
-    params.require(:api_user).permit(:id, :email, :first_name, :last_name, :is_verified, :is_useragent_valid, :is_impressionwise_test_success, :is_duplicate, :s1, :s2, :s3, :s4, :s5, :website, :api_client_id)
+    params.require(:api_user).permit(:id, :email, :first_name, :last_name, :is_verified, :is_useragent_valid, :is_impressionwise_test_success, :is_duplicate, :s1, :s2, :s3, :s4, :s5, :website, :api_client_id, :ip, :captured, :lead_id, :zip, :state, :phone1, :job)
   end
 
 end

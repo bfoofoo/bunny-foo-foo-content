@@ -23,6 +23,35 @@ class ApiUser < ApplicationRecord
     property :website do
       key :type, :string
     end
+
+    property :ip do
+      key :type, :string
+    end
+
+    property :captured do
+      key :type, :datetime
+    end
+
+    property :lead_id do
+      key :type, :string
+    end
+
+    property :zip do
+      key :type, :string
+    end
+
+    property :state do
+      key :type, :string
+    end
+
+    property :phone1 do
+      key :type, :string
+    end
+
+    property :job do
+      key :type, :string
+    end
+
     property :s1 do
       key :type, :string
     end
@@ -68,6 +97,36 @@ class ApiUser < ApplicationRecord
         property :website do
           key :type, :string
         end
+
+        property :ip do
+          key :type, :string
+        end
+
+        property :captured do
+          key :format, 'date-time'
+          key :type, :string
+        end
+
+        property :lead_id do
+          key :type, :string
+        end
+
+        property :zip do
+          key :type, :string
+        end
+
+        property :state do
+          key :type, :string
+        end
+
+        property :phone1 do
+          key :type, :string
+        end
+
+        property :job do
+          key :type, :string
+        end
+
         property :s1 do
           key :type, :string
         end

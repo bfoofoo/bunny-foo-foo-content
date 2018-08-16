@@ -1,4 +1,4 @@
-ActiveAdmin.register_page "Leadgen Sites Statistics" do
+ActiveAdmin.register_page "API Users Statistics" do
   menu parent: "Statistics"
 
   controller do
@@ -8,10 +8,6 @@ ActiveAdmin.register_page "Leadgen Sites Statistics" do
       @formsites_statistics = Statistics::FormsitesStatistics.new(params)
       @formsites_statistics.count_by_s
     end
-  end
-
-  sidebar :help do
-    render 'filters', stats_service: sormsites_statistics
   end
 
   content do
