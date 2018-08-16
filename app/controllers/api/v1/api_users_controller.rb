@@ -70,12 +70,12 @@ class Api::V1::ApiUsersController < ApiController
     )
 
     if @api_user.save
-      render json: @api_user
+      render json: {message: 'success'}, status: 200
     else
       render json: @api_user.errors, status: :unprocessable_entity
     end
   rescue => e
-    render json: {message: e.message}
+    render json: {message: e.message}, status: 500
   end
 
   private
