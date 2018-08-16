@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180814134544) do
+ActiveRecord::Schema.define(version: 20180816101613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,13 @@ ActiveRecord::Schema.define(version: 20180814134544) do
     t.string   "website"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.string   "ip"
+    t.datetime "captured"
+    t.string   "lead_id"
+    t.string   "zip"
+    t.string   "state"
+    t.string   "phone1"
+    t.string   "job"
     t.index ["api_client_id"], name: "index_api_users_on_api_client_id", using: :btree
   end
 
