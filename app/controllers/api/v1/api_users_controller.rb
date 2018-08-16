@@ -88,7 +88,7 @@ class Api::V1::ApiUsersController < ApiController
   end
 
   def set_api_user
-    @api_user = Article.find(params[:id])
+    @api_user = ApiUser.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end
