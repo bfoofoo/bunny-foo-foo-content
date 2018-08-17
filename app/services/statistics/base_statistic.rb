@@ -6,8 +6,11 @@ module Statistics
     AFFILIATE_FIELDS = ["affiliate"]
 
     def initialize(params={})
-      @start_date = params[:start_date]
-      @end_date = params[:end_date]
+# TODO: remove that
+      @start_date = params[:start_date] || DateTime.now.beginning_of_week
+      @end_date = params[:end_date] || DateTime.now.end_of_week
+
+
       @formsite_id = params[:formsite_id]
       @s_fields_filter = params[:s_fields_filter] || []
       @a_fields_filter = params[:a_fields_filter] || []
