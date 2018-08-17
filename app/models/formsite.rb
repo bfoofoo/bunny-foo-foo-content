@@ -1,7 +1,7 @@
 class Formsite < ApplicationRecord
 
   
-  has_many :formsite_users
+  has_many :formsite_users, dependent: :destroy
   has_many :users, :through => :formsite_users do
     def verified
       where("formsite_users.is_verified= ?", true)
@@ -12,7 +12,7 @@ class Formsite < ApplicationRecord
     end
   end
   
-  has_many :questions
+  has_many :questions, dependent: :destroy
   
   has_many :formsite_aweber_lists, dependent: :destroy
   has_many :aweber_lists, :through => :formsite_aweber_lists
