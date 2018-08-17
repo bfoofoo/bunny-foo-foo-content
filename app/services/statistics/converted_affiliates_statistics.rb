@@ -1,29 +1,31 @@
 module Statistics
-  class FormsitesStatistics < Statistics::BaseStatistic
-    def count_by_s
-      return @count_by_s if !@count_by_s.blank?
-      @count_by_s = 
-        if formsite_selected?
-          single_form_statistic
-        else
-          total_statistic
-        end
+  class ConvertedAffiliatesStatistics < Statistics::BaseStatistic
+    def chart_data
+      hash = {
+        categories: categories,
+        series: series
+      }
+      return hash
     end
 
-    def count_by_s_charts
-      response = {
-        name: "Users Count",
-        colorByPoint: true,
-        data: []
-      }
-      response[:data] = count_by_s.sort.to_h.map do |key, value| 
-        [key, value]
-      end
-      return [response]
-    end
 
     
     private 
+
+    def categories
+      (start_date .. end_date).map do |day|
+        day.strftime("%F")
+      end
+    end
+
+    def series 
+      return [
+        {:name=>"yes", :data=>[1, 2, 3, 4, 5, 6, 7]},
+        {:name=>"no", :data=>[1, 2, 3]}
+      ]
+    end
+
+
     def total_statistic
       hash = {}
       formsites.each do |site|
