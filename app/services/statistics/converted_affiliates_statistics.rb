@@ -55,14 +55,14 @@ module Statistics
     end
 
     def check_with_params user, day
-      response = user.created_at.beginning_of_day.to_date == day.to_date && !user.user_id.blank?
+      response = user.created_at.beginning_of_day.to_date == day.to_date && !user.user_id.blank? && !user.is_duplicate
       handle_converted_filter response, user
     end
 
     def total_users_data
       date_range.map do |day|
         formsite_users.select {|user| 
-          response = user.created_at.beginning_of_day.to_date == day.to_date
+          response = user.created_at.beginning_of_day.to_date == day.to_date && !user.is_duplicate
           handle_converted_filter response, user
         }.count
       end
