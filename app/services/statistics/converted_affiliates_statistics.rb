@@ -56,24 +56,29 @@ module Statistics
 
     def check_with_params user, day
       response = user.created_at.beginning_of_day.to_date == day.to_date && !user.user_id.blank?
-      case converted_filter
-        when "total"
-          response
-        when "only_affiliates"
-          response && !user["affiliate"].blank?
-        when "without_affiliates"
-          response && user["affiliate"].blank?
-        else
-          response
-      end
+      handle_converted_filter response, user
     end
 
     def total_users_data
-      response =  []
-      date_range.each do |day|
-        response << formsite_users.select {|user| user.created_at.beginning_of_day.to_date == day.to_date }.count
+      date_range.map do |day|
+        formsite_users.select {|user| 
+          response = user.created_at.beginning_of_day.to_date == day.to_date
+          handle_converted_filter response, user
+        }.count
       end
-      response
+    end
+
+    def handle_converted_filter status, user
+      case converted_filter
+        when "total"
+          status
+        when "only_affiliates"
+          status && !user["affiliate"].blank?
+        when "without_affiliates"
+          status && user["affiliate"].blank?
+        else
+          status
+      end
     end
 
     def formsite_users
