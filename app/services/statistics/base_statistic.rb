@@ -1,16 +1,15 @@
 module Statistics
   class BaseStatistic
-    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id, :s_fields_filter, :a_fields_filter
+    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id, :s_fields_filter, :a_fields_filter, :converted_filter
 
     S_FIELDS = ["s1", "s2", "s3", "s4", "s5"]
     AFFILIATE_FIELDS = ["affiliate"]
 
     def initialize(params={})
-# TODO: remove that
-      @start_date = params[:start_date] || DateTime.now.beginning_of_week
-      @end_date = params[:end_date] || DateTime.now.end_of_week
+      @start_date = params[:start_date]
+      @end_date = params[:end_date]
 
-
+      @converted_filter = params[:converted_filter]
       @formsite_id = params[:formsite_id]
       @s_fields_filter = params[:s_fields_filter] || []
       @a_fields_filter = params[:a_fields_filter] || []
