@@ -13,5 +13,6 @@ class Formsite
         EmailMarketerService::Aweber::SubscriptionsService.new(list: list).add_subscriber(user)
       end
     end
+    
   end
 end
