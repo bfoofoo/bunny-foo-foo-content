@@ -47,7 +47,7 @@ class Api::V1::FormsitesController < ApiController
       is_duplicate: is_duplicate
       )
       
-    Formsite::AddNewUserToAweberUseCase.new(@formsite, user).preform()
+    Formsite::AddNewUserToAweberUseCase.new(@formsite, user, formsite_user).preform()
 
     render json: {user: user, is_verified: formsite_user.is_verified}
   end

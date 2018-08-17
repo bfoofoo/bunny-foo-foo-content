@@ -14,6 +14,7 @@ module EmailMarketerService
             aweber_list.subscribers.create({"name" => user_name, "email" => user.email}) 
           end
         rescue AWeber::CreationError => e
+          handle_user_record(user) if e.message == "email: Subscriber already subscribed."
           puts "Aweber adding subscriber error - #{e}".red
         end
       end

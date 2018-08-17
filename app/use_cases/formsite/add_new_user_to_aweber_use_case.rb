@@ -1,9 +1,9 @@
 class Formsite
   class AddNewUserToAweberUseCase
-    attr_reader :formsite, :user
+    attr_reader :formsite, :user, :formsite_user
 
-    def initialize(formsite, user)
-      context.fail! if !user.is_verified
+    def initialize(formsite, user, formsite_user)
+      context.fail! if !formsite_user.is_verified
       @user = user
       @formsite = formsite
     end
@@ -13,6 +13,6 @@ class Formsite
         EmailMarketerService::Aweber::SubscriptionsService.new(list: list).add_subscriber(user)
       end
     end
-    
+
   end
 end
