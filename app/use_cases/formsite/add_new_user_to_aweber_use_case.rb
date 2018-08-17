@@ -3,6 +3,7 @@ class Formsite
     attr_reader :formsite, :user
 
     def initialize(formsite, user)
+      context.fail! if !user.is_verified
       @user = user
       @formsite = formsite
     end
