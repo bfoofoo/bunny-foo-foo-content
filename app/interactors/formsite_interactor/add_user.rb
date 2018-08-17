@@ -41,7 +41,7 @@ module FormsiteInteractor
       end
 
       def create_formsite_user
-        formsite.formsite_users.find_or_initialize_by(ndm_token: params[:user][:ndm_token]).tap do |formsite_user|
+        context.formsite_user = formsite.formsite_users.find_or_initialize_by(ndm_token: params[:user][:ndm_token]).tap do |formsite_user|
           formsite_user.update_attributes(formsite_user_params.merge({
             user_id: user.blank? ? nil : user.id,
             is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,

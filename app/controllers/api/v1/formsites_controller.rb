@@ -22,7 +22,7 @@ class Api::V1::FormsitesController < ApiController
       request: request,
       formsite: @formsite
     })
-
+    
     Formsite::AddNewUserToAweberUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).preform()
 
     render json: {user: formsite_interactor.user, is_verified: formsite_interactor.formsite_user}
