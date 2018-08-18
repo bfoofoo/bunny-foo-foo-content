@@ -50,7 +50,7 @@ module Statistics
 
     def converted_users_data
       date_range.map do |day|
-        formsite_users.select {|user| check_with_params(user, day) }.count
+        formsite_users.is_verified.select {|user| check_with_params(user, day) }.count
       end
     end
 
@@ -82,7 +82,7 @@ module Statistics
     end
 
     def formsite_users
-      @formsite_users ||= formsite.formsite_users.is_verified.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
+      @formsite_users ||= formsite.formsite_users.not_duplicate.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
     end
 
     def formsite_users_hash
