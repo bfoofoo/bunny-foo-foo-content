@@ -26,9 +26,9 @@ module Statistics
 
     def available_affiliate_stats
       if formsite.blank?
-        FormsiteUser.all.pluck(:affiliate).uniq.compact
+        FormsiteUser.not_duplicate.all.pluck(:affiliate).uniq.compact
       else
-        formsite.formsite_users.pluck(:affiliate).uniq.compact
+        formsite.formsite_users.not_duplicate.pluck(:affiliate).uniq.compact
       end
     end
     

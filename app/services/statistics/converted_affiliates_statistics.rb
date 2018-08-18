@@ -55,14 +55,14 @@ module Statistics
     end
 
     def check_with_params user, day
-      response = user.created_at.beginning_of_day.to_date == day.to_date && !user.user_id.blank? && !user.is_duplicate
+      response = user.created_at.beginning_of_day.to_date == day.to_date && !user.user_id.blank?
       handle_converted_filter response, user
     end
 
     def total_users_data
       date_range.map do |day|
         formsite_users.select {|user| 
-          response = user.created_at.beginning_of_day.to_date == day.to_date && !user.is_duplicate
+          response = user.created_at.beginning_of_day.to_date == day.to_date
           handle_converted_filter response, user
         }.count
       end
@@ -82,7 +82,7 @@ module Statistics
     end
 
     def formsite_users
-      @formsite_users ||= formsite.formsite_users.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
+      @formsite_users ||= formsite.formsite_users.is_verified.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
     end
 
     def formsite_users_hash
