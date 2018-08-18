@@ -1,18 +1,18 @@
-<% @api_clients.each do |api_client| %>
-  <table class="index_table index">
-    <thead>
-      <tr>
-        <th>API client</th>
-        <th>Total Leads</th>
-        <th>Is Verified Count </th>
-      </tr>
-    </thead>
-    <tbody>
+<table class="index_table index">
+  <thead>
+    <tr>
+      <th>API client</th>
+      <th>Total Leads</th>
+      <th>Is Verified Count </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @api_clients.each do |api_client| %>
       <tr>
         <td><%= api_client.name %></td>
         <td><%= api_client.api_users.count %></td>
         <td><%= api_client.api_users.verified.count %></td>
       </tr>
-    </tbody>
-  </table>
-<% end %>
+    <% end %>
+  </tbody>
+</table>
