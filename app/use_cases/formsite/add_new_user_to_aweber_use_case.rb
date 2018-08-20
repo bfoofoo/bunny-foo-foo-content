@@ -8,12 +8,12 @@ class Formsite
       @formsite_user = formsite_user
     end
     
-    def preform
+    def perform
       return false if !formsite_user.is_verified || user.blank?
-      formsite.aweber_lists.each do |list| 
-      EmailMarketerService::Aweber::SubscriptionsService.new(list: list).add_subscriber(user)
+      formsite.aweber_lists.each do |list|
+        EmailMarketerService::Aweber::SubscriptionsService.new(list: list).add_subscriber(user)
+      end
     end
-  end
   
   end
 end

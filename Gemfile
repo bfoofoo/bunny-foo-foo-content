@@ -66,6 +66,7 @@ gem 'devise'
 gem "active_admin-sortable_tree", "~> 1.0.0"
 
 gem 'aweber'
+gem 'maropost_api'
 gem 'rollbar'
 gem 'swagger-docs'
 gem 'swagger-blocks'
