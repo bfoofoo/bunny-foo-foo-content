@@ -43,29 +43,46 @@ module Statistics
 
     def series 
       return [
-        {:name=>"Total", :data=>total_users_data},
-        {:name=>"Converted", :data=>converted_users_data}
+        {:name=>"Total", :data=> get_stats_type(calculated_stats, :total) },
+        {:name=>"Converted", :data=> get_stats_type(calculated_stats, :converted) }
       ]
     end
 
-    def converted_users_data
+    def calculated_stats
+      calc_response = {}
       date_range.map do |day|
-        formsite_users.is_verified.select {|user| check_with_params(user, day) }.count
+        day = day.to_date
+        users = grouped_users[day] || []
+        calc_response = handle_count_response(day, calc_response)
+        calc_response = fill_counters(users, calc_response, day)
       end
+      calc_response
     end
 
-    def check_with_params user, day
-      response = user.created_at.beginning_of_day.to_date == day.to_date && !user.user_id.blank?
-      handle_converted_filter response, user
+    def fill_counters(users, calc_response, day)
+      users.each do |user|
+        response = user.created_at.beginning_of_day.to_date == day.to_date
+        response = handle_converted_filter response, user
+
+        if response
+          calc_response[day][:total] = calc_response[day][:total] + 1
+        end
+        if response && !user.user_id.blank? && user.is_verified
+          calc_response[day][:converted] = calc_response[day][:converted] + 1
+        end
+      end
+      return calc_response
     end
 
-    def total_users_data
-      date_range.map do |day|
-        formsite_users.select {|user| 
-          response = user.created_at.beginning_of_day.to_date == day.to_date
-          handle_converted_filter response, user
-        }.count
-      end
+    def get_stats_type stats, type
+      stats.map {|date, stats| stats[type]}
+    end
+
+    def handle_count_response day, response={}
+      response[day] ||= {}
+      response[day][:total] ||= 0
+      response[day][:converted] ||= 0
+      return response
     end
 
     def handle_converted_filter status, user
@@ -82,12 +99,13 @@ module Statistics
     end
 
     def formsite_users
-      @formsite_users ||= formsite.formsite_users.not_duplicate.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
+      return @formsite_users if !@formsite_users.blank?
+      @formsite_users = formsite.formsite_users.not_duplicate.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
     end
 
-    def formsite_users_hash
-      return @formsite_users_hash if !@formsite_users_hash.blank?
-      @formsite_users_hash = Hash[ formsite_users.collect { |user| [user.created_at.beginning_of_day, user] } ]
+    def grouped_users
+      return @grouped_users if !@grouped_users.blank?
+      @grouped_users = formsite_users.group_by {|item| item.created_at.beginning_of_day.to_date }
     end
 
     def date_range
