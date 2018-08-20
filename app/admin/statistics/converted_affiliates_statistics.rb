@@ -5,12 +5,13 @@ ActiveAdmin.register_page "Converted Affiliates Statistics" do
     before_action :initialize_data, only: :index
 
     def initialize_data
+      @formsites = Formsite.all
       @stats_service = Statistics::ConvertedAffiliatesStatistics.new(params)
     end
   end
 
   sidebar :help do
-    render 'filters', stats_service: stats_service
+    render 'filters', stats_service: stats_service, formsites: formsites
   end
 
   content do

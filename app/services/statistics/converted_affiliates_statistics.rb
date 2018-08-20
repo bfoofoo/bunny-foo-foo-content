@@ -35,13 +35,25 @@ module Statistics
     
     private 
 
+
     def categories
       date_range.map do |day|
-        day.strftime("%F")
+        category = day.strftime("%F")
+        if converted_filter == "only_affiliates"
+          category = {
+            name: category,
+            categories: affiliate_categories
+          }
+        end
+        category
       end
     end
 
-    def series 
+    def affiliate_categories
+      a_fields_filter.blank? ? available_affiliate_stats : a_fields_filter
+    end
+
+    def series
       return [
         {:name=>"Total", :data=> get_stats_type(calculated_stats, :total) },
         {:name=>"Converted", :data=> get_stats_type(calculated_stats, :converted) }
@@ -49,40 +61,73 @@ module Statistics
     end
 
     def calculated_stats
+      return @calculated_stats if !@calculated_stats.blank?
       calc_response = {}
       date_range.map do |day|
         day = day.to_date
         users = grouped_users[day] || []
-        calc_response = handle_count_response(day, calc_response)
+        calc_response[day] ||= {}
         calc_response = fill_counters(users, calc_response, day)
       end
-      calc_response
+      @calculated_stats = calc_response
     end
 
     def fill_counters(users, calc_response, day)
       users.each do |user|
         response = user.created_at.beginning_of_day.to_date == day.to_date
         response = handle_converted_filter response, user
-
-        if response
-          calc_response[day][:total] = calc_response[day][:total] + 1
-        end
-        if response && !user.user_id.blank? && user.is_verified
-          calc_response[day][:converted] = calc_response[day][:converted] + 1
+        if converted_filter == "only_affiliates"
+          calc_response = affiliate_calcs(response, calc_response, day, user)
+        else
+          calc_response = total_stats_calc(response, calc_response, day, user)
         end
       end
       return calc_response
     end
 
-    def get_stats_type stats, type
-      stats.map {|date, stats| stats[type]}
+    def affiliate_calcs(user_status, calc_response, day, user)
+      affiliate_categories.each do |affiliate_category|
+        user_valid = user_status && user["affiliate"] == affiliate_category
+
+        calc_response[day][affiliate_category] ||= {}
+        calc_response[day][affiliate_category][:total] ||= 0
+        calc_response[day][affiliate_category][:converted] ||= 0
+
+        calc_response[day][affiliate_category] = fill_day_counter(
+          calc_response[day][affiliate_category],
+          user,
+          user_valid
+        )
+
+      end
+      calc_response
     end
 
-    def handle_count_response day, response={}
-      response[day] ||= {}
-      response[day][:total] ||= 0
-      response[day][:converted] ||= 0
-      return response
+    def total_stats_calc(response, calc_response, day, user)
+      calc_response[day][:total] ||= 0
+      calc_response[day][:converted] ||= 0
+      calc_response[day] = fill_day_counter(calc_response[day], user, response)
+      calc_response
+    end
+
+    def fill_day_counter hash, user, user_valid
+      if user_valid
+        hash[:total] = hash[:total] + 1
+      end
+      if user_valid && !user.user_id.blank? && user.is_verified
+        hash[:converted] = hash[:converted] + 1
+      end
+      hash
+    end
+
+    def get_stats_type stats, type
+      stats.map {|date, stats| 
+        if converted_filter == "only_affiliates"
+          stats.map {|affiliate, stats| stats[type] }
+        else
+          stats[type]
+        end
+      }.flatten
     end
 
     def handle_converted_filter status, user

@@ -25,7 +25,8 @@ module Statistics
     end
 
     def available_affiliate_stats
-      if formsite.blank?
+      return @available_affiliate_stats if !@available_affiliate_stats.blank?
+      @available_affiliate_stats = if formsite.blank?
         FormsiteUser.not_duplicate.all.pluck(:affiliate).uniq.compact
       else
         formsite.formsite_users.not_duplicate.pluck(:affiliate).uniq.compact
