@@ -21,8 +21,9 @@
     <div class="filter_form_field">
       <%= label_tag(:s_fields_filter, "S Filters") %>
        <% Statistics::Questions::SStatistics::S_FIELDS.each do |field| %>
+          <%- field_selected = params[:s_fields_filter].blank? ? true : params[:s_fields_filter].include?(field) %>
           <%= field %>
-          <%= check_box_tag "s_fields_filter[]", field, params[:s_fields_filter] && params[:s_fields_filter].include?(field) -%>
+          <%= check_box_tag "s_fields_filter[]", field, field_selected -%>
         <% end %>
     </div>
 
