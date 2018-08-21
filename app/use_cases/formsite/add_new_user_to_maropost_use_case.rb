@@ -1,6 +1,6 @@
 class Formsite
   class AddNewUserToMaropostUseCase
-    attr_reader :formsite, :user
+    attr_reader :formsite, :user, :formsite_user
 
     def initialize(formsite, user, formsite_user)
       @user = user
