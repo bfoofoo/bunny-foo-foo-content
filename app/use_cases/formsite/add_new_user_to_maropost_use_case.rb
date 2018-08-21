@@ -2,13 +2,14 @@ class Formsite
   class AddNewUserToMaropostUseCase
     attr_reader :formsite, :user
 
-    def initialize(formsite, user)
+    def initialize(formsite, user, formsite_user)
       @user = user
       @formsite = formsite
+      @formsite_user = formsite_user
     end
 
     def perform
-      return false if !user.is_verified || user.blank?
+      return false if !formsite_user.is_verified || user.blank?
       formsite.maropost_lists.each do |list|
         EmailMarketerService::Maropost::Subscription.new(list: list).add_subscriber(user)
       end
