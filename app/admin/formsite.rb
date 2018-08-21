@@ -18,7 +18,7 @@ ActiveAdmin.register Formsite do
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
 
                 formsite_aweber_lists_attributes: [:id, :formsite_id, :aweber_list_id],
-
+                formsite_maropost_lists_attributes: [:id, :formsite_id, :maropost_list_id],
 
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
@@ -122,6 +122,10 @@ ActiveAdmin.register Formsite do
         formsite.aweber_lists.map(&:full_name).join(",")
       end
 
+      row 'Maropost Lists' do |formsite|
+        formsite.maropost_lists.map(&:full_name).join(',')
+      end
+
     end
     active_admin_comments
   end
@@ -160,6 +164,13 @@ ActiveAdmin.register Formsite do
             f.has_many :formsite_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
               ff.semantic_errors
               ff.input :aweber_list, :label => 'List', :as => :select, :collection => AweberList.all
+            end
+          end
+
+          f.inputs 'Maropost Lists' do
+            f.has_many :formsite_maropost_lists, allow_destroy: true, new_record: true, heading: false do |ff|
+              ff.semantic_errors
+              ff.input :maropost_list, label: 'List', as: :select, collection: MaropostList.all
             end
           end
         end

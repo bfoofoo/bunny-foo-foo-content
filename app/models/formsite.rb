@@ -1,7 +1,7 @@
 class Formsite < ApplicationRecord
 
   
-  has_many :formsite_users
+  has_many :formsite_users, dependent: :destroy
   has_many :users, :through => :formsite_users do
     def verified
       where("formsite_users.is_verified= ?", true)
@@ -12,16 +12,21 @@ class Formsite < ApplicationRecord
     end
   end
   
-  has_many :questions
+  has_many :questions, dependent: :destroy
   
   has_many :formsite_aweber_lists, dependent: :destroy
-  has_many :aweber_lists, :through => :formsite_aweber_lists
+  has_many :aweber_lists, through: :formsite_aweber_lists
+  has_many :formsite_maropost_lists, dependent: :destroy
+  has_many :maropost_lists, through: :formsite_maropost_lists
 
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, :through => :formsite_ads
 
   accepts_nested_attributes_for :formsite_aweber_lists, allow_destroy: true
   accepts_nested_attributes_for :aweber_lists, allow_destroy: true
+
+  accepts_nested_attributes_for :formsite_maropost_lists, allow_destroy: true
+  accepts_nested_attributes_for :maropost_lists, allow_destroy: true
 
   accepts_nested_attributes_for :formsite_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true

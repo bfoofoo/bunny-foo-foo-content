@@ -1,6 +1,6 @@
 module Statistics
   class BaseStatistic
-    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id, :s_fields_filter, :a_fields_filter
+    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id, :s_fields_filter, :a_fields_filter, :converted_filter
 
     S_FIELDS = ["s1", "s2", "s3", "s4", "s5"]
     AFFILIATE_FIELDS = ["affiliate"]
@@ -8,6 +8,8 @@ module Statistics
     def initialize(params={})
       @start_date = params[:start_date]
       @end_date = params[:end_date]
+
+      @converted_filter = params[:converted_filter]
       @formsite_id = params[:formsite_id]
       @s_fields_filter = params[:s_fields_filter] || []
       @a_fields_filter = params[:a_fields_filter] || []
@@ -23,10 +25,11 @@ module Statistics
     end
 
     def available_affiliate_stats
-      if formsite.blank?
-        FormsiteUser.all.pluck(:affiliate).uniq.compact
+      return @available_affiliate_stats if !@available_affiliate_stats.blank?
+      @available_affiliate_stats = if formsite.blank?
+        FormsiteUser.not_duplicate.all.pluck(:affiliate).uniq.compact
       else
-        formsite.formsite_users.pluck(:affiliate).uniq.compact
+        formsite.formsite_users.not_duplicate.pluck(:affiliate).uniq.compact
       end
     end
     

@@ -11,7 +11,7 @@ ActiveAdmin.register_page "Leadgen Sites Statistics" do
   end
 
   sidebar :help do
-    render 'filters', stats_service: sormsites_statistics
+    render 'filters', stats_service: formsites_statistics
   end
 
   content do

@@ -16,7 +16,7 @@ module Statistics
         colorByPoint: true,
         data: []
       }
-      response[:data] = count_by_s.map do |key, value| 
+      response[:data] = count_by_s.sort.to_h.map do |key, value| 
         [key, value]
       end
       return [response]
@@ -37,7 +37,6 @@ module Statistics
       hash = Hash[ fields.collect { |field| [field, 0] } ]
       fill_single_counter_hash({})
     end
-
 
     def fill_single_counter_hash hash
       formsite_users(formsite).each do |user|
@@ -69,7 +68,7 @@ module Statistics
 
     def formsite_users site
       if !start_date.blank? && !end_date.blank?
-        site.formsite_users.between_dates(start_date, end_date)
+        site.formsite_users.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day).where(is_duplicate: false)
       else
         site.formsite_users
       end

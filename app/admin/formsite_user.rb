@@ -49,11 +49,11 @@ ActiveAdmin.register FormsiteUser do
     column :birthday
     column :phone
     column :zip
-    column "First name" do |user|
-      span user.user.first_name
+    column "First name" do |formsite_user|
+      span formsite_user&.user&.first_name
     end
-    column "Last name" do |user|
-      span user.user.last_name
+    column "Last name" do |formsite_user|
+      span formsite_user&.user&.last_name
     end
     actions
   end
@@ -73,11 +73,11 @@ ActiveAdmin.register FormsiteUser do
     column :s4
     column :s5
     column :ndm_token
-    column "First name" do |user|
-      user.user.first_name
+    column "First name" do |formsite_user|
+      formsite_user&.user&.first_name
     end
-    column "Last name" do |user|
-      user.user.last_name
+    column "Last name" do |formsite_user|
+      formsite_user&.user&.last_name
     end
   end
 end

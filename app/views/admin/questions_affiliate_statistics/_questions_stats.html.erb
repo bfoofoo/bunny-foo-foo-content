@@ -1,3 +1,17 @@
+<div class="table_tools">
+  <ul class="scopes table_tools_segmented_control" >
+    <li class="scope all">
+      <%= link_to "Subaffilates Statistics", admin_questions_statistics_path, class:  "table_tools_button" %>
+    </li>
+
+    <li class="scope all selected">
+      <%= link_to "Affiliates Statistics", admin_questions_affiliate_statistics_path, class:  "table_tools_button" %>
+    </li>
+  </ul>
+</div>
+
+
+
 <%- if chart_data[:categories].blank? %>
   <h2>There is no questions for selected Leadgen Site.</h2>
 <% else %>

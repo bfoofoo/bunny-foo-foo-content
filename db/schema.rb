@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180816101613) do
+ActiveRecord::Schema.define(version: 20180820144732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,6 +194,13 @@ ActiveRecord::Schema.define(version: 20180816101613) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "formsite_maropost_lists", force: :cascade do |t|
+    t.integer "maropost_list_id", null: false
+    t.integer "formsite_id",      null: false
+    t.index ["formsite_id"], name: "index_formsite_maropost_lists_on_formsite_id", using: :btree
+    t.index ["maropost_list_id"], name: "index_formsite_maropost_lists_on_maropost_list_id", using: :btree
+  end
+
   create_table "formsite_questions", force: :cascade do |t|
     t.integer  "formsite_id"
     t.integer  "question_id"
@@ -267,6 +274,23 @@ ActiveRecord::Schema.define(version: 20180816101613) do
     t.string   "affiliate_description"
   end
 
+  create_table "maropost_accounts", force: :cascade do |t|
+    t.integer  "account_id", null: false
+    t.text     "auth_token", null: false
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "maropost_lists", force: :cascade do |t|
+    t.integer  "maropost_account_id", null: false
+    t.integer  "list_id",             null: false
+    t.string   "name",                null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
+  end
+
   create_table "product_cards", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
@@ -292,8 +316,9 @@ ActiveRecord::Schema.define(version: 20180816101613) do
     t.string   "email"
     t.string   "first_name"
     t.string   "last_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "added_to_aweber", default: false
   end
 
   create_table "website_ads", force: :cascade do |t|
@@ -329,6 +354,9 @@ ActiveRecord::Schema.define(version: 20180816101613) do
   add_foreign_key "configs", "websites"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
+  add_foreign_key "formsite_maropost_lists", "formsites"
+  add_foreign_key "formsite_maropost_lists", "maropost_lists"
+  add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
   add_foreign_key "website_ads", "ads"
