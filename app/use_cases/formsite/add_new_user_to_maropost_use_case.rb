@@ -8,7 +8,7 @@ class Formsite
     end
 
     def perform
-      return false if !formsite_user.is_verified || user.blank?
+      return false if !user.is_verified || user.blank?
       formsite.maropost_lists.each do |list|
         EmailMarketerService::Maropost::Subscription.new(list: list).add_subscriber(user)
       end
