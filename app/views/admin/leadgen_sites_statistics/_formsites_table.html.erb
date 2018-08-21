@@ -1,0 +1,24 @@
+<table class="index_table index">
+  <thead>
+    <tr>
+      <th>Formsite</th>
+      <th>Total</th>
+      <th>Total Converted</th>
+      <th>Failed impressionwise</th>
+      <th>Failed useragent</th>
+      <th>Failed duplicate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- formsites_statistics.converted_counts_hash.each do |formsite_name, stats| %>
+      <tr>
+        <td><%=formsite_name%></td>
+        <td><%=stats[:total]%></td>
+        <td><%=stats[:total_converted]%></td>
+        <td><%=stats[:failed_impressionwise]%></td>
+        <td><%=stats[:failed_useragent]%></td>
+        <td><%=stats[:failed_dulpicate]%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

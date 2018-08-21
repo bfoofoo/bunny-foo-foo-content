@@ -1,5 +1,20 @@
 module Statistics
   class FormsitesStatistics < Statistics::BaseStatistic
+
+    def converted_counts_hash
+      response = {}
+      formsites.each do |formsite|
+        response[formsite.name] = {
+          total: filtered_users_by_affiliate(formsite).select {|user| !user.user_id.blank?}.count,
+          total_converted: filtered_users_by_affiliate(formsite).select {|user| !user.user_id.blank? && user.is_verified}.count,
+          failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success}.count,
+          failed_useragent: filtered_users_by_affiliate(formsite).select {|user| !user.is_useragent_valid}.count,
+          failed_dulpicate: filtered_users_by_affiliate(formsite).select {|user| user.is_duplicate}.count
+        }
+      end
+      return response
+    end
+
     def count_by_s
       return @count_by_s if !@count_by_s.blank?
       @count_by_s = 
@@ -71,6 +86,14 @@ module Statistics
         site.formsite_users.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day).where(is_duplicate: false)
       else
         site.formsite_users
+      end
+    end
+
+    def filtered_users_by_affiliate site
+      if !a_fields_filter.blank?
+        formsite_users(site).select {|user| available_affiliate_stats.include?(user["affiliate"])}
+      else
+        formsite_users(site)
       end
     end
 
