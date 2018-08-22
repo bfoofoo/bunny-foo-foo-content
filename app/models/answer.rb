@@ -6,6 +6,9 @@ class Answer < ApplicationRecord
 
   validates :text, presence: true
 
+  
   scope :order_by_id, -> () { order(id: :asc) }
   scope :order_by_question_id, -> () { order(question_id: :asc) }
+
+  default_scope {order(id: :asc)}
 end
