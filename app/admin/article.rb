@@ -1,5 +1,5 @@
 ActiveAdmin.register Article do
-  permit_params :name, :slug, :content, :short , :cover_image, :website_id, :category_id
+  permit_params :name, :slug, :content, :short , :cover_image, :website_id, :category_id, :formsite_id
 
   before_create do |article|
     ["alt", "alignment", "scale", "width", "_wysihtml5_mode", "commit"].map{|i| params.delete(i)}
@@ -14,6 +14,11 @@ ActiveAdmin.register Article do
     column "Website" do |article|
       link_to(article.website.name, admin_website_path(article.website))
     end
+
+    column "Leadgen Site" do |article|
+      link_to(article.formsite.name, admin_formsite_path(article.formsite)) if !article.formsite.blank?
+    end
+
     actions
   end
 
@@ -25,6 +30,7 @@ ActiveAdmin.register Article do
       f.input :short
       f.input :cover_image
       f.input :website_id, :label => 'Website', :as => :select, :collection => Website.all.map{|u| ["#{u.name}", u.id]}
+      f.input :formsite_id, :label => 'Leadgen Site', :as => :select, :collection => Formsite.all.map{|u| ["#{u.name}", u.id]}
       f.input :category_id, :label => 'Category', :as => :select, :collection => Category.all.map{|u| ["#{u.name}", u.id]}
       f.actions
     end

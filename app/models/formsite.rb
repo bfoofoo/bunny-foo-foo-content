@@ -13,7 +13,8 @@ class Formsite < ApplicationRecord
   end
   
   has_many :questions, dependent: :destroy
-  
+
+  has_many :articles, dependent: :destroy
   has_many :formsite_aweber_lists, dependent: :destroy
   has_many :aweber_lists, through: :formsite_aweber_lists
   has_many :formsite_maropost_lists, dependent: :destroy
