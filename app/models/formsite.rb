@@ -1,6 +1,6 @@
 class Formsite < ApplicationRecord
 
-  
+  has_and_belongs_to_many :categories
   has_many :formsite_users, dependent: :destroy
   has_many :users, :through => :formsite_users do
     def verified
@@ -22,6 +22,7 @@ class Formsite < ApplicationRecord
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, :through => :formsite_ads
 
+  accepts_nested_attributes_for :categories, allow_destroy: true
   accepts_nested_attributes_for :formsite_aweber_lists, allow_destroy: true
   accepts_nested_attributes_for :aweber_lists, allow_destroy: true
 
