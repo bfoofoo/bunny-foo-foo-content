@@ -9,7 +9,7 @@ module Statistics
       private 
       def answers_count answer, field
         filtered_formsite_user_answers(answer).select {|user_answer| 
-          response = user_answer.answer_id ==  answer.id && !user_answer.formsite_user.is_duplicate
+          response = user_answer.answer_id ==  answer.id && !user_answer.formsite_user.blank? && !user_answer.formsite_user.is_duplicate
           response = response && s_values_valid(user_answer, field)
           if !a_fields_filter.blank?
             response = response && a_fields_filter.include?(user_answer.formsite_user["affiliate"]) 
