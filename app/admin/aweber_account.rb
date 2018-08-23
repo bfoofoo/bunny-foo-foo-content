@@ -45,6 +45,7 @@ ActiveAdmin.register AweberAccount do
       panel "Lists" do
         table_for aweber_account.aweber_lists do
           column :id
+          column 'List ID', :list_id
           column :name
         end
       end
