@@ -18,6 +18,7 @@ gem 'draper'
 gem 'bower-rails', '~> 0.11.0'
 gem "colorize"
 gem 'whenever', require: false
+gem 'activerecord-import'
 
 # APIS
 gem 'cloudflare'
@@ -65,7 +66,7 @@ gem 'formtastic', '~> 3.0'
 gem 'devise'
 gem "active_admin-sortable_tree", "~> 1.0.0"
 
-gem 'aweber'
+gem 'aweber', github: 'fixtheclouds/AWeber-API-Ruby-Library'
 gem 'maropost_api'
 gem 'rollbar'
 gem 'swagger-docs'

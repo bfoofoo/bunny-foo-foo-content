@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/fixtheclouds/AWeber-API-Ruby-Library.git
+  revision: 27e613daf77856c1a4690acc982f2355fc3db15c
+  specs:
+    aweber (1.6.1)
+      json
+      oauth
+
+GIT
   remote: git://github.com/stefanoverna/activeadmin-dragonfly.git
   revision: 611164ff0255c66a3e555b5d46dd99f0eff1f115
   specs:
@@ -80,6 +88,8 @@ GEM
       activemodel (= 5.0.6)
       activesupport (= 5.0.6)
       arel (~> 7.0)
+    activerecord-import (0.25.0)
+      activerecord (>= 3.2)
     activesupport (5.0.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
@@ -94,9 +104,6 @@ GEM
     arel (7.1.4)
     autoprefixer-rails (7.2.3)
       execjs
-    aweber (1.6.1)
-      json
-      oauth
     awesome_print (1.8.0)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
@@ -467,8 +474,9 @@ DEPENDENCIES
   activeadmin-dragonfly!
   activeadmin-wysihtml5!
   activeadmin_froala_editor
+  activerecord-import
   autoprefixer-rails
-  aweber
+  aweber!
   awesome_print
   better_errors
   bigdecimal

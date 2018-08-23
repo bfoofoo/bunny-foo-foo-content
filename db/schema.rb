@@ -280,6 +280,16 @@ ActiveRecord::Schema.define(version: 20180822220331) do
     t.string   "affiliate_description"
   end
 
+  create_table "leads", force: :cascade do |t|
+    t.string   "type"
+    t.string   "email"
+    t.string   "full_name"
+    t.json     "details",      default: {}, null: false
+    t.datetime "converted_at"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   create_table "maropost_accounts", force: :cascade do |t|
     t.integer  "account_id", null: false
     t.text     "auth_token", null: false

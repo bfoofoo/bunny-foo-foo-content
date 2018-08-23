@@ -23,6 +23,7 @@ ActiveAdmin.register MaropostAccount do
       row :created_at
       panel "Lists" do
         table_for maropost_account.lists do
+          column :id
           column 'List ID', :list_id
           column :name
         end
