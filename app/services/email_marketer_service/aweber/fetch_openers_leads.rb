@@ -2,12 +2,13 @@ module EmailMarketerService
   module Aweber
     class FetchOpenersLeads
 
-      attr_reader :list
+      attr_reader :list, :since
 
       OPENERS_TAG = 'openers' # as set in Aweber Broadcast automations
 
-      def initialize(list: nil)
+      def initialize(list: nil, since: nil)
         @list = list
+        @since = Date.parse(since) rescue nil
         @current_index = 0
       end
 
@@ -51,12 +52,19 @@ module EmailMarketerService
 
       def build_lead_list(subscribers)
         subscribers.each_with_object([]) do |subscriber, memo|
-          next if existing_lead_emails.include?(subscriber.email)
+          next if should_skip_subscriber?(subscriber)
           memo << {
             email: subscriber.email,
-            full_name: subscriber.name
+            full_name: subscriber.name,
+            details: {
+              subscribed_at: subscriber.subscribed_at
+            }
           }
         end
+      end
+
+      def should_skip_subscriber?(subscriber)
+        existing_lead_emails.include?(subscriber.email) || (since.present? && Date.parse(subscriber.subscribed_at) < since)
       end
 
       def create_leads(leads)
