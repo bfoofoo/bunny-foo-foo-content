@@ -5,7 +5,7 @@ class CreateLeads < ActiveRecord::Migration[5.0]
       t.string :email
       t.string :full_name
       t.json :details, null: false, default: {}
-      t.datetime :sent_at
+      t.datetime :converted_at
 
       t.timestamps null: false
     end

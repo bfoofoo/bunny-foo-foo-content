@@ -1,7 +1,6 @@
 module EmailMarketerService
   module Aweber
     class FetchOpenersLeads
-
       attr_reader :list, :since
 
       OPENERS_TAG = 'openers' # as set in Aweber Broadcast automations
