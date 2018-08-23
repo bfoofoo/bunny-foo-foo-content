@@ -5,9 +5,9 @@ module Statistics
       response = {}
       formsites.each do |formsite|
         response[formsite.name] = {
-          total: filtered_users_by_affiliate(formsite).select {|user| !user.user_id.blank?}.count,
-          total_converted: filtered_users_by_affiliate(formsite).select {|user| !user.user_id.blank? && user.is_verified}.count,
-          failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success}.count,
+          total: filtered_users_by_affiliate(formsite).count,
+          total_converted: filtered_users_by_affiliate(formsite).select {|user| user.is_verified}.count,
+          failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success && !user.is_duplicate}.count,
           failed_useragent: filtered_users_by_affiliate(formsite).select {|user| !user.is_useragent_valid}.count,
           failed_dulpicate: filtered_users_by_affiliate(formsite).select {|user| user.is_duplicate}.count
         }
@@ -90,11 +90,12 @@ module Statistics
     end
 
     def filtered_users_by_affiliate site
-      if !a_fields_filter.blank?
+      users = if !a_fields_filter.blank?
         formsite_users(site).select {|user| available_affiliate_stats.include?(user["affiliate"])}
       else
         formsite_users(site)
       end
+      users.select {|user| !user.user_id.blank?}
     end
 
     def counter_hash_value field, hash
