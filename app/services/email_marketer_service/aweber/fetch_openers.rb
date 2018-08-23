@@ -1,13 +1,13 @@
 module EmailMarketerService
   module Aweber
-    class FetchOpenersLeads
+    class FetchOpeners
       attr_reader :list, :since
 
       OPENERS_TAG = 'openers' # as set in Aweber Broadcast automations
 
       def initialize(list: nil, since: nil)
         @list = list
-        @since = Date.parse(since) rescue nil
+        @since = since.is_a?(Date) ? since : Date.parse(since) rescue nil
         @current_index = 0
       end
 
@@ -15,7 +15,7 @@ module EmailMarketerService
         # Aweber API 1.0 allows to fetch only up to 100 subscribers per request, so let's process 'em in batches
         while @current_index < total_subscribers_count do
           subscribers = subscribers_for_list.search(search_params)&.entries&.values.to_a
-          create_leads(build_lead_list(subscribers)) unless subscribers.empty?
+          yield subscribers if block_given?
           @current_index += subscribers.size
         end
       end
@@ -49,35 +49,8 @@ module EmailMarketerService
         }
       end
 
-      def build_lead_list(subscribers)
-        subscribers.each_with_object([]) do |subscriber, memo|
-          next if should_skip_subscriber?(subscriber)
-          memo << {
-            email: subscriber.email,
-            full_name: subscriber.name,
-            details: {
-              subscribed_at: subscriber.subscribed_at
-            }
-          }
-        end
-      end
-
-      def should_skip_subscriber?(subscriber)
-        existing_lead_emails.include?(subscriber.email) || (since.present? && Date.parse(subscriber.subscribed_at) < since)
-      end
-
-      def create_leads(leads)
-        Leads::AweberToMaropost.import(leads)
-      rescue => e
-        puts "Error during import: #{e.to_s}"
-      end
-
       def total_subscribers_count
         @total_subscribers_count ||= subscribers_for_list.search('tags' => [OPENERS_TAG], 'ws.show' => 'total_size')
-      end
-
-      def existing_lead_emails
-        @existing_lead_emails ||= Leads::AweberToMaropost.pluck(:email)
       end
     end
   end
