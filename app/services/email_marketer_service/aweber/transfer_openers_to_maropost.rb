@@ -20,6 +20,8 @@ module EmailMarketerService
         subscribers.each_with_object([]) do |subscriber, memo|
           next if should_skip_subscriber?(subscriber)
           memo << {
+            source_id: @aweber_list.id,
+            destination_id: @maropost_list.id,
             email: subscriber.email,
             full_name: subscriber.name,
             details: {

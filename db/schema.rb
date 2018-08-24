@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180824122840) do
+ActiveRecord::Schema.define(version: 20180824125327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -296,10 +296,12 @@ ActiveRecord::Schema.define(version: 20180824122840) do
     t.string   "type"
     t.string   "email"
     t.string   "full_name"
-    t.json     "details",      default: {}, null: false
+    t.json     "details",        default: {}, null: false
     t.datetime "converted_at"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "source_id"
+    t.integer  "destination_id"
   end
 
   create_table "maropost_accounts", force: :cascade do |t|
