@@ -66,8 +66,10 @@ gem 'formtastic', '~> 3.0'
 gem 'devise'
 gem "active_admin-sortable_tree", "~> 1.0.0"
 
+# Email marketing services
 gem 'aweber', github: 'fixtheclouds/AWeber-API-Ruby-Library'
-gem 'maropost_api'
+gem 'maropost_api', github: 'fixtheclouds/maropost_api'
+
 gem 'rollbar'
 gem 'swagger-docs'
 gem 'swagger-blocks'
