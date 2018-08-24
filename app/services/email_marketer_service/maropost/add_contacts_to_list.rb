@@ -3,18 +3,17 @@ module EmailMarketerService
     class AddContactsToList
       attr_reader :list
 
-      def initialize(list: nil)
+      def initialize(list:)
         @list = list
       end
 
-      # TODO update maropost_api gem to add contacts directly to list on creation
       def add(user)
-        client.contacts.create(params: {
+        client.contacts.create_for_list(list_id: list.list_id, params: {
             email: user.email,
             first_name: user.first_name,
-            last_name: user.last_name
+            last_name: user.last_name,
+            subscribe: true
         })
-        client.contacts.add_to_list(list_ids: list.list_id, params: { email: user.email })
         true
       rescue MaropostApi::Errors => e
         puts "Maropost has failed to add contact due to error - #{e}".red
