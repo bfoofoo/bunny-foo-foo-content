@@ -7,14 +7,13 @@ namespace :aweber do
   task transfer_to_maropost: :environment do |_, args|
     log = ActiveSupport::Logger.new('log/aweber.log')
 
-    # TODO make something convenient to set aweber list to maropost list mapping
-    mapping = { 15 => 19}
+    mappings = EmailMarketerMapping.where(source_type: 'AweberList', destination_type: 'MaropostList')
 
-    mapping.each do |source, destination|
-      log.info("[#{Time.current.to_s}] Aweber (list # #{source}) to Maropost (list # #{destination}) transfering has started")
+    mappings.each do |m|
+      log.info("[#{Time.current.to_s}] #{m.source_type} # #{m.source_id} to #{m.destination_type} # #{m.destination_id}) transfering has started")
       service = EmailMarketerService::Aweber::TransferOpenersToMaropost.new(
-        aweber_list: AweberList.find(source),
-        maropost_list: MaropostList.find(destination),
+        aweber_list: m.source,
+        maropost_list: m.destination,
         since: Date.new(2018, 8, 24))
 
       result = service.call
