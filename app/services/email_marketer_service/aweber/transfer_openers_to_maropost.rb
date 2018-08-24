@@ -36,7 +36,7 @@ module EmailMarketerService
       end
 
       def create_leads(leads)
-        return if leads.empty?
+        return false if leads.empty?
         Leads::AweberToMaropost.import(leads)
       rescue => e
         puts "Error during import: #{e.to_s}"

@@ -18,6 +18,8 @@ module EmailMarketerService
           yield subscribers if block_given?
           @current_index += subscribers.size
         end
+      rescue AWeber::UnknownRequestError => e
+        return []
       end
 
       private
