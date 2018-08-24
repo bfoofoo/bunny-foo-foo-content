@@ -5,13 +5,17 @@ module EmailMarketerService
         @aweber_list = aweber_list
         @maropost_list = maropost_list
         @since = since.is_a?(Date) ? since : Date.parse(since) rescue nil
+        @total_count = 0
       end
 
       def call
         FetchOpeners.new(list: @aweber_list, since: @since).call do |subscribers|
-          create_leads(build_lead_list(subscribers))
+          result = create_leads(build_lead_list(subscribers))
+          if result
+            @total_count += EmailMarketerService::Converters::AweberToMaropost.new(maropost_list: @maropost_list, ids: result.ids).call
+          end
         end
-        EmailMarketerService::Converters::AweberToMaropost.new(maropost_list: @maropost_list).call
+        @total_count
       end
 
       private
@@ -36,6 +40,7 @@ module EmailMarketerService
         Leads::AweberToMaropost.import(leads)
       rescue => e
         puts "Error during import: #{e.to_s}"
+        return false
       end
 
       def should_skip_subscriber?(subscriber)
