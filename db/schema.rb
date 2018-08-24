@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180822220331) do
+ActiveRecord::Schema.define(version: 20180824125327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,18 @@ ActiveRecord::Schema.define(version: 20180822220331) do
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
   end
 
+  create_table "email_marketer_mappings", force: :cascade do |t|
+    t.string   "source_type"
+    t.integer  "source_id"
+    t.string   "destination_type"
+    t.integer  "destination_id"
+    t.date     "start_date"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["destination_type", "destination_id"], name: "index_email_marketer_mappings_on_source", using: :btree
+    t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
+  end
+
   create_table "formsite_ads", force: :cascade do |t|
     t.integer  "formsite_id"
     t.integer  "ad_id"
@@ -284,10 +296,12 @@ ActiveRecord::Schema.define(version: 20180822220331) do
     t.string   "type"
     t.string   "email"
     t.string   "full_name"
-    t.json     "details",      default: {}, null: false
+    t.json     "details",        default: {}, null: false
     t.datetime "converted_at"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "source_id"
+    t.integer  "destination_id"
   end
 
   create_table "maropost_accounts", force: :cascade do |t|
