@@ -17,7 +17,7 @@ namespace :aweber do
         since: m.start_date)
 
       service.call
-      Rails.logger.info("[#{Time.current.to_s}] Finished transferring. Fetched leads: #{service.result[:fetched]}, sent leads: #{service.result[:sent]}.")
+      Rails.logger.info("[#{Time.current.to_s}] Finished transferring. Subscribers processed: #{service.result[:fetched]}, leads created: #{service.result[:created]}, leads imported: #{service.result[:sent]}.")
     end
   end
 end

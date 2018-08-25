@@ -7,7 +7,7 @@ module EmailMarketerService
         @aweber_list = aweber_list
         @maropost_list = maropost_list
         @since = since.is_a?(Date) ? since : Date.parse(since) rescue nil
-        @result = { fetched: 0, sent: 0 }
+        @result = { fetched: 0, created: 0, sent: 0 }
       end
 
       def call
@@ -15,6 +15,7 @@ module EmailMarketerService
           result[:fetched] += subscribers.count
           created = create_leads(build_lead_list(subscribers))
           if created
+            result[:created] += created.ids.count
             result[:sent] += EmailMarketerService::Converters::AweberToMaropost.new(maropost_list: @maropost_list, ids: created.ids).call
           end
         end
