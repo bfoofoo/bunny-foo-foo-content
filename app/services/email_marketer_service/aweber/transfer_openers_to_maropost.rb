@@ -1,21 +1,23 @@
 module EmailMarketerService
   module Aweber
     class TransferOpenersToMaropost
+      attr_reader :result
+
       def initialize(aweber_list: nil, maropost_list: nil, since: nil)
         @aweber_list = aweber_list
         @maropost_list = maropost_list
         @since = since.is_a?(Date) ? since : Date.parse(since) rescue nil
-        @total_count = 0
+        @result = { fetched: 0, sent: 0 }
       end
 
       def call
         FetchOpeners.new(list: @aweber_list, since: @since).call do |subscribers|
-          result = create_leads(build_lead_list(subscribers))
-          if result
-            @total_count += EmailMarketerService::Converters::AweberToMaropost.new(maropost_list: @maropost_list, ids: result.ids).call
+          result[:fetched] += subscribers.count
+          created = create_leads(build_lead_list(subscribers))
+          if created
+            result[:sent] += EmailMarketerService::Converters::AweberToMaropost.new(maropost_list: @maropost_list, ids: created.ids).call
           end
         end
-        @total_count
       end
 
       private

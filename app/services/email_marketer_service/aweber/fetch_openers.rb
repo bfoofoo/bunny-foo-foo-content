@@ -4,6 +4,7 @@ module EmailMarketerService
       attr_reader :list, :since
 
       OPENERS_TAG = 'openers' # as set in Aweber Broadcast automations
+      GROUP_SIZE = 100 # as set by Aweber API 1.0
 
       def initialize(list: nil, since: nil)
         @list = list
@@ -14,11 +15,19 @@ module EmailMarketerService
       def call
         # Aweber API 1.0 allows to fetch only up to 100 subscribers per request, so let's process 'em in batches
         while @current_index < total_subscribers_count do
-          subscribers = subscribers_for_list.search(search_params)&.entries&.values.to_a
-          yield subscribers if block_given?
-          @current_index += subscribers.size
+          begin
+            subscribers = subscribers_for_list.search(search_params)&.entries&.values.to_a
+          rescue AWeber::UnknownRequestError => e
+            Rails.logger.error(e.to_s)
+            @current_index += GROUP_SIZE
+          else
+            yield subscribers if block_given?
+            @current_index += subscribers.size
+          end
         end
       rescue AWeber::UnknownRequestError => e
+        # Also catch from total_subscriber_count method
+        Rails.logger.error(e.to_s)
         return []
       end
 
