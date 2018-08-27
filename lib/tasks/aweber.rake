@@ -14,9 +14,11 @@ namespace :aweber do
       service = EmailMarketerService::Aweber::TransferOpenersToMaropost.new(
         aweber_list: m.source,
         maropost_list: m.destination,
-        since: m.start_date)
+        since: m.start_from
+      )
 
       service.call
+      m.touch(:last_transfer_at) if service.result[:sent] > 0
       Rails.logger.info("[#{Time.current.to_s}] Finished transferring. Subscribers processed: #{service.result[:fetched]}, leads created: #{service.result[:created]}, leads imported: #{service.result[:sent]}.")
     end
   end

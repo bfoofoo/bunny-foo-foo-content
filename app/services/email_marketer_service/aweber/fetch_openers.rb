@@ -10,25 +10,35 @@ module EmailMarketerService
         @list = list
         @since = since.is_a?(Date) ? since : Date.parse(since) rescue nil
         @current_index = 0
+        @date = @since || Date.current
+        @total_subscribers_counts = {}
       end
 
       def call
+        end_date = Date.current
         # Aweber API 1.0 allows to fetch only up to 100 subscribers per request, so let's process 'em in batches
-        while @current_index < total_subscribers_count do
-          begin
-            retries = 0
-            subscribers = subscribers_for_list.search(search_params)&.entries&.values.to_a
-          rescue AWeber::UnknownRequestError => e
-            Rails.logger.error(e.to_s)
-            @current_index += GROUP_SIZE
-            retries += 1
-            retry if e.to_s == 'Invalid/used nonce' && retries < 2
-          else
-            yield subscribers if block_given?
-            @current_index += subscribers.size
-          ensure
-            sleep 0.6 # to bypass AWeber Rate Limit
+        while @date <= end_date
+          while @current_index < total_subscribers_count do
+            begin
+              retries = 0
+              subscribers = subscribers_for_list.search(search_params)&.entries&.values.to_a
+            rescue AWeber::UnknownRequestError => e
+              Rails.logger.error("[#{Time.current.to_s}] #{e.to_s}")
+              @current_index += GROUP_SIZE
+              retries += 1
+              retry if e.to_s == 'Invalid/used nonce' && retries < 2
+            rescue AWeber::ServiceUnavailableError => e
+              retries += 1
+              retry if retries < 2
+            else
+              yield subscribers if block_given?
+              @current_index += subscribers.size
+            ensure
+              sleep 0.6 # to bypass AWeber Rate Limit
+            end
           end
+          @current_index = 0
+          @date += 1.day
         end
       # Also catch from total_subscriber_count method
       rescue AWeber::UnknownRequestError => e
@@ -61,12 +71,14 @@ module EmailMarketerService
       def search_params
         {
           'tags' => [OPENERS_TAG],
-          'ws.start' => @current_index
+          'ws.start' => @current_index,
+          'subscribed_at' => @date
         }
       end
 
       def total_subscribers_count
-        @total_subscribers_count ||= subscribers_for_list.search('tags' => [OPENERS_TAG], 'ws.show' => 'total_size')
+        @total_subscribers_counts[@date.to_s] ||=
+          subscribers_for_list.search('tags' => [OPENERS_TAG], 'ws.show' => 'total_size', 'subscribed_at' => @date.to_s)
       end
     end
   end
