@@ -12,7 +12,7 @@ ActiveAdmin.register Article do
     column :short
 
     column "Website" do |article|
-      link_to(article.website.name, admin_website_path(article.website))
+      link_to(article.website.name, admin_website_path(article.website)) if !article.website.blank?
     end
 
     column "Leadgen Site" do |article|
