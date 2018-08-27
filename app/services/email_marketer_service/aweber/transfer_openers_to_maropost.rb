@@ -47,7 +47,7 @@ module EmailMarketerService
       end
 
       def should_skip_subscriber?(subscriber)
-        existing_lead_emails.include?(subscriber.email) || (@since.present? && Date.parse(subscriber.subscribed_at) < @since)
+        existing_lead_emails.include?(subscriber.email)
       end
 
       def existing_lead_emails
