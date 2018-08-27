@@ -16,17 +16,22 @@ module EmailMarketerService
         # Aweber API 1.0 allows to fetch only up to 100 subscribers per request, so let's process 'em in batches
         while @current_index < total_subscribers_count do
           begin
+            retries = 0
             subscribers = subscribers_for_list.search(search_params)&.entries&.values.to_a
           rescue AWeber::UnknownRequestError => e
             Rails.logger.error(e.to_s)
             @current_index += GROUP_SIZE
+            retries += 1
+            retry if e.to_s == 'Invalid/used nonce' && retries < 2
           else
             yield subscribers if block_given?
             @current_index += subscribers.size
+          ensure
+            sleep 0.6 # to bypass AWeber Rate Limit
           end
         end
+      # Also catch from total_subscriber_count method
       rescue AWeber::UnknownRequestError => e
-        # Also catch from total_subscriber_count method
         Rails.logger.error(e.to_s)
         return []
       end
@@ -46,7 +51,7 @@ module EmailMarketerService
         @auth_service = AuthService.new(
           access_token: account.access_token,
           secret_token: account.secret_token,
-          )
+        )
       end
 
       def subscribers_for_list
