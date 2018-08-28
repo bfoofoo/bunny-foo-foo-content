@@ -18,11 +18,12 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+job_type :rake_verbose, "cd :path && :environment_variable=:environment :bundle_command rake :task :output"
 
 every 1.day do
   rake "aweber:migrate_subscribers"
 end
 
 every 12.hours do
-  rake "aweber:transfer_to_maropost"
+  rake_verbose "aweber:transfer_to_maropost"
 end

@@ -18,7 +18,7 @@ namespace :aweber do
       )
 
       service.call
-      m.touch(:last_transfer_at) if service.result[:sent] > 0
+      m.touch(:last_transfer_at)
       Rails.logger.info("[#{Time.current.to_s}] Finished transferring. Subscribers processed: #{service.result[:fetched]}, leads created: #{service.result[:created]}, leads imported: #{service.result[:sent]}.")
     end
   end
