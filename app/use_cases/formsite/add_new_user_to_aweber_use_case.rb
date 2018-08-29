@@ -10,8 +10,9 @@ class Formsite
     
     def perform
       return false if !formsite_user.is_verified || user.blank?
+      params = { affiliate: formsite_user.affiliate }.compact
       formsite.aweber_lists.each do |list|
-        EmailMarketerService::Aweber::SubscriptionsService.new(list: list).add_subscriber(user)
+        EmailMarketerService::Aweber::SubscriptionsService.new(list: list, params: params).add_subscriber(user)
       end
     end
   
