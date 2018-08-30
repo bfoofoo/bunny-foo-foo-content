@@ -7,8 +7,7 @@ module Statistics
       end
 
       private 
-      def answers_count answer, field
-        binding.pry
+      def answers_count answer
         filtered_formsite_user_answers(answer).select {|user_answer| 
           user_answer.answer_id == answer.id && !user_answer.formsite_user.blank? && !user_answer.formsite_user.is_duplicate
         }.count
