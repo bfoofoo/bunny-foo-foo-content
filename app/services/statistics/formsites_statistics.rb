@@ -2,17 +2,20 @@ module Statistics
   class FormsitesStatistics < Statistics::BaseStatistic
 
     def converted_counts_hash
+      return @converted_counts_hash if !@converted_counts_hash.blank? 
       response = {}
       formsites.each do |formsite|
         response[formsite.name] = {
-          total: filtered_users_by_affiliate(formsite).count,
+          total: formsite_users(formsite).count,
+          submitted: filtered_users_by_affiliate(formsite).count,
           total_converted: filtered_users_by_affiliate(formsite).select {|user| user.is_verified}.count,
           failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success && !user.is_duplicate}.count,
           failed_useragent: filtered_users_by_affiliate(formsite).select {|user| !user.is_useragent_valid}.count,
           failed_dulpicate: filtered_users_by_affiliate(formsite).select {|user| user.is_duplicate}.count
         }
       end
-      return response
+      @converted_counts_hash = response
+      return @converted_counts_hash
     end
 
     def count_by_s
@@ -82,10 +85,15 @@ module Statistics
     end
 
     def formsite_users site
-      if !start_date.blank? && !end_date.blank?
-        site.formsite_users.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day).where(is_duplicate: false)
+      if @site != site
+        @site = site
+        @formsite_users = if !start_date.blank? && !end_date.blank?
+          site.formsite_users.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day).where(is_duplicate: false)
+        else
+          site.formsite_users
+        end
       else
-        site.formsite_users
+        return @formsite_users
       end
     end
 

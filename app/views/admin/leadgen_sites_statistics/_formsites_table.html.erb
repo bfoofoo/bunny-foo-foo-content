@@ -2,6 +2,7 @@
   <thead>
     <tr>
       <th>Formsite</th>
+      <th>Total</th>
       <th>Submitted</th>
       <th>Is Verified</th>
       <th>Failed impressionwise</th>
@@ -14,6 +15,7 @@
       <tr>
         <td><%=formsite_name%></td>
         <td><%=stats[:total]%></td>
+        <td><%=stats[:submitted]%></td>
         <td><%=stats[:total_converted]%></td>
         <td><%=stats[:failed_impressionwise]%></td>
         <td><%=stats[:failed_useragent]%></td>

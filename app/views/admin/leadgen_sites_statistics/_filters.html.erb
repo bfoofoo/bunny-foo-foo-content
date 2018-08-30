@@ -17,15 +17,15 @@
       </div>
     <%- end %>
 
-    <%# <div class="filter_form_field"> %>
-      <%#= label_tag(:start_date, "Start Date") %>
-      <%#= date_field_tag(:start_date, params[:start_date]) %>
-    <%# </div> %>
+    <div class="filter_form_field">
+      <%= label_tag(:start_date, "Start Date") %>
+      <%= date_field_tag(:start_date, params[:start_date]) %>
+    </div>
 
-    <%# <div class="filter_form_field"> %>
-      <%#= label_tag(:end_date, "End Date") %>
-      <%#= date_field_tag(:end_date, params[:end_date]) %>
-    <%# </div> %>
+    <div class="filter_form_field">
+      <%= label_tag(:end_date, "End Date") %>
+      <%= date_field_tag(:end_date, params[:end_date]) %>
+    </div>
 
     <div class="buttons">
       <input type="submit" name="commit" value="Filter">
