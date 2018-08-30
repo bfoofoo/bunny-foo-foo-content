@@ -14,10 +14,14 @@ module Statistics
   
       def categories
         filtered_questions.map do |question|
-          {
-            name: question_identification(question),
-            categories: type_fields
-          }
+          if !type_fields.blank?
+            {
+              name: question_identification(question),
+              categories: type_fields
+            }
+          else
+            question_identification(question)
+          end
         end
       end
   
@@ -25,8 +29,12 @@ module Statistics
         answers_hash = {}
         filtered_questions.each do |question|
           answers = question.answers
-          type_fields.each do |field|
-            answers_hash = fill_answers_hash(answers_hash, field, question, answers)
+          if type_fields.blank?
+            answers_hash = fill_answers_hash_total(answers_hash, question, answers)
+          else
+            type_fields.each do |field|
+              answers_hash = fill_answers_hash(answers_hash, field, question, answers)
+            end
           end
         end
         return answer_hash_to_flat_list(answers_hash)
@@ -56,6 +64,15 @@ module Statistics
       def question_identification question
         "Q#{question.position}"
       end
+
+      def fill_answers_hash_total answers_hash, question, answers
+        answers.each do |answer|
+          answer_text = answer.text.downcase
+          answers_hash[question_identification(question)] ||= default_answer_hash.deep_dup
+          answers_hash[question_identification(question)][answer_text] = answers_count(answer)
+        end
+        return answers_hash
+      end
   
       def fill_answers_hash(answers_hash, field, question, answers)
         answers.each do |answer|
@@ -80,7 +97,11 @@ module Statistics
         response = answer_texts_hash
         hash.each do |question_id, question_answer_hash|
           question_answer_hash.each do |answer_text, s_counter_hash|
-            response[answer_text].concat s_counter_hash.map {|key, value| value}
+            if s_counter_hash.is_a? Integer
+              response[answer_text].<< s_counter_hash
+            else
+              response[answer_text].concat s_counter_hash.map {|key, value| value}
+            end
           end
         end
         response.map {|key, value| {name: key, data: value}}
