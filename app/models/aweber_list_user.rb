@@ -1,0 +1,2 @@
+class AweberListUser < EmailMarketerListUser
+end

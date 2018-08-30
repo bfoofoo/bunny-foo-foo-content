@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180827121115) do
+ActiveRecord::Schema.define(version: 20180830120650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,14 @@ ActiveRecord::Schema.define(version: 20180827121115) do
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
   end
 
+  create_table "email_marketer_list_users", force: :cascade do |t|
+    t.string  "list_type"
+    t.integer "list_id"
+    t.integer "user_id"
+    t.index ["list_type", "list_id"], name: "index_email_marketer_list_users_on_list_type_and_list_id", using: :btree
+    t.index ["user_id"], name: "index_email_marketer_list_users_on_user_id", using: :btree
+  end
+
   create_table "email_marketer_mappings", force: :cascade do |t|
     t.string   "source_type"
     t.integer  "source_id"
@@ -297,12 +305,16 @@ ActiveRecord::Schema.define(version: 20180827121115) do
     t.string   "type"
     t.string   "email"
     t.string   "full_name"
-    t.json     "details",        default: {}, null: false
+    t.jsonb    "details",        default: {}, null: false
     t.datetime "converted_at"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.integer  "source_id"
     t.integer  "destination_id"
+    t.integer  "user_id"
+    t.string   "status"
+    t.string   "affiliate"
+    t.index ["user_id"], name: "index_leads_on_user_id", using: :btree
   end
 
   create_table "maropost_accounts", force: :cascade do |t|
@@ -383,10 +395,12 @@ ActiveRecord::Schema.define(version: 20180827121115) do
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
   add_foreign_key "configs", "websites"
+  add_foreign_key "email_marketer_list_users", "users"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
   add_foreign_key "formsite_maropost_lists", "formsites"
   add_foreign_key "formsite_maropost_lists", "maropost_lists"
+  add_foreign_key "leads", "users"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
