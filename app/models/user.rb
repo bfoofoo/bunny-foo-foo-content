@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_many :formsite_users
   has_many :formsites, through: :formsite_users
   has_many :formsite_user_answers
+  has_many :leads
 
   has_one :aweber_list_user, class_name: 'AweberListUser'
   has_one :aweber_list, through: :aweber_list_user, source: :list, source_type: 'AweberList'

@@ -1,6 +1,8 @@
 module EmailMarketerService
   module Aweber
-    class FindOpenerUsers
+    class FindLeads
+      EVENT_TYPES = %w(open click).freeze
+
       def initialize(since: nil)
         @auth_services = {}
         @accounts = {}
@@ -9,44 +11,46 @@ module EmailMarketerService
       end
 
       def call
-        AweberOpener.import(collect_openers)
+        Leads::Aweber.import(collect_leads)
       end
 
       private
 
       def users
-        User
-          .left_joins(aweber_list: :openers)
-          .where.not(aweber_lists: { id: nil })
-          .where(email_marketer_openers: { id: nil })
-          .distinct
+        @users ||= User.added_to_aweber.includes(:aweber_list).includes(:leads)
       end
 
-      def collect_openers
-        openers = []
+      def collect_leads
+        leads = []
         users.each do |user|
+          next if user.leads.where(status: EVENT_TYPES).exists?
+
           begin
             subscriber = subscribers_for(user.aweber_list).search('email' => user.email)&.entries&.values&.first
             next unless subscriber || subscriber.custom_fields['Affiliate']
             subscriber.activity.each_page do |activity|
               values = activity&.entries&.values.to_a
-              finds = values.select { |a| a.type == 'open' && a.event_time.to_date >= @since }
-              openers << build_opener(user, subscriber) if finds.present?
-              break if finds.present? || (values.present? && values.last.event_time.to_date < @since)
+              click = values.detect { |a| a.event_time.to_date >= @since }
+              open = values.detect { |a| a.event_time.to_date >= @since }
+
+              [click, open].compact.each do |event|
+                leads << build_lead(user, subscriber, event)
+              end
+              break if click || open || (values.present? && values.last.event_time.to_date < @since)
             end
           rescue AWeber::ServiceUnavailableError, AWeber::UnknownRequestError => e
             puts "Aweber failed due to error: #{e.to_s}"
           end
         end
-        openers
+        leads
       end
 
-      def build_opener(user, subscriber)
+      def build_lead(user, subscriber, event)
         {
-          source_list_id: user.aweber_list.id,
-          source_list_type: 'AweberList',
+          source_id: user.aweber_list.id,
           email: user.email,
-          affiliate: subscriber.custom_fields['Affiliate']
+          affiliate: subscriber.custom_fields['Affiliate'],
+          status: event.type
         }
       end
 
@@ -64,7 +68,7 @@ module EmailMarketerService
         @auth_services[id] = EmailMarketerService::Aweber::AuthService.new(
           access_token: account_for(list).access_token,
           secret_token: account_for(list).secret_token,
-          )
+        )
       end
     end
   end
