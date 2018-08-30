@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180829125254) do
+ActiveRecord::Schema.define(version: 20180830063515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,13 +140,6 @@ ActiveRecord::Schema.define(version: 20180829125254) do
     t.string   "name"
   end
 
-  create_table "aweber_list_users", force: :cascade do |t|
-    t.integer "aweber_list_id"
-    t.integer "user_id"
-    t.index ["aweber_list_id"], name: "index_aweber_list_users_on_aweber_list_id", using: :btree
-    t.index ["user_id"], name: "index_aweber_list_users_on_user_id", using: :btree
-  end
-
   create_table "aweber_lists", force: :cascade do |t|
     t.integer  "aweber_account_id"
     t.string   "name"
@@ -191,6 +184,14 @@ ActiveRecord::Schema.define(version: 20180829125254) do
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
   end
 
+  create_table "email_marketer_list_users", force: :cascade do |t|
+    t.string  "list_type"
+    t.integer "list_id"
+    t.integer "user_id"
+    t.index ["list_type", "list_id"], name: "index_email_marketer_list_users_on_list_type_and_list_id", using: :btree
+    t.index ["user_id"], name: "index_email_marketer_list_users_on_user_id", using: :btree
+  end
+
   create_table "email_marketer_mappings", force: :cascade do |t|
     t.string   "source_type"
     t.integer  "source_id"
@@ -202,6 +203,16 @@ ActiveRecord::Schema.define(version: 20180829125254) do
     t.datetime "last_transfer_at"
     t.index ["destination_type", "destination_id"], name: "index_email_marketer_mappings_on_source", using: :btree
     t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
+  end
+
+  create_table "email_marketer_openers", force: :cascade do |t|
+    t.string   "source_list_type"
+    t.integer  "source_list_id"
+    t.string   "affiliate"
+    t.string   "email"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["source_list_type", "source_list_id"], name: "index_email_marketer_openers_on_source", using: :btree
   end
 
   create_table "formsite_ads", force: :cascade do |t|
@@ -389,9 +400,8 @@ ActiveRecord::Schema.define(version: 20180829125254) do
   add_foreign_key "api_users", "api_clients"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
-  add_foreign_key "aweber_list_users", "aweber_lists"
-  add_foreign_key "aweber_list_users", "users"
   add_foreign_key "configs", "websites"
+  add_foreign_key "email_marketer_list_users", "users"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
   add_foreign_key "formsite_maropost_lists", "formsites"
