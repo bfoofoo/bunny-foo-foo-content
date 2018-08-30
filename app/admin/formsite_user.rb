@@ -60,8 +60,14 @@ ActiveAdmin.register FormsiteUser do
 
   csv do
     column :created_at
-    column :formsite
-    column :user
+
+    column "formsite" do |formsite_user|
+      formsite_user&.formsite&.name
+    end
+
+    column "user_id" do |formsite_user|
+      formsite_user.user_id
+    end
     column :is_verified
     column :is_useragent_valid
     column :is_impressionwise_test_success
@@ -76,8 +82,13 @@ ActiveAdmin.register FormsiteUser do
     column "First name" do |formsite_user|
       formsite_user&.user&.first_name
     end
-    column "Last name" do |formsite_user|
-      formsite_user&.user&.last_name
+
+    column "First name" do |formsite_user|
+      formsite_user&.user&.first_name
+    end
+
+    column "Email" do |formsite_user|
+      formsite_user&.user&.email
     end
   end
 end
