@@ -83,8 +83,8 @@ ActiveAdmin.register FormsiteUser do
       formsite_user&.user&.first_name
     end
 
-    column "First name" do |formsite_user|
-      formsite_user&.user&.first_name
+    column "Last name" do |formsite_user|
+      formsite_user&.user&.last_name
     end
 
     column "Email" do |formsite_user|
