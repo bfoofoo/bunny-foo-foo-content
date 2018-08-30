@@ -53,7 +53,7 @@ module Statistics
           end
       end
   
-      def question_identification question
+      def question_identification(question)
         "Q#{question.position}"
       end
   
@@ -66,7 +66,7 @@ module Statistics
         return answers_hash
       end
   
-      def filtered_formsite_user_answers answer
+      def filtered_formsite_user_answers(answer)
         if !start_date.blank? && !end_date.blank?
           answer.formsite_user_answers.select { |user_answer|
             user_answer.created_at >= start_date && user_answer.created_at <= end_date

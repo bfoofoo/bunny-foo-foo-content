@@ -12,4 +12,8 @@ ActiveAdmin.register_page "Aweber Statistics" do
   sidebar :help do
     render 'filters', stats_service: stats_service
   end
+
+  content do
+    render 'stats', chart_data: stats_service.affiliate_chart_data
+  end
 end
