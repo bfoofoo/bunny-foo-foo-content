@@ -14,10 +14,14 @@ module Statistics
   
       def categories
         filtered_questions.map do |question|
-          {
-            name: question_identification(question),
-            categories: type_fields
-          }
+          if !type_fields.blank?
+            {
+              name: question_identification(question),
+              categories: type_fields
+            }
+          else
+            {name: question_identification(question)}
+          end
         end
       end
   

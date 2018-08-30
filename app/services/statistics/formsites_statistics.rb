@@ -98,10 +98,7 @@ module Statistics
       users.select {|user| !user.user_id.blank?}
     end
 
-    def counter_hash_value field, hash
-      hash[field] || 0
-    end
-
+      
     def site_description_field site, field
       site["#{field}_description"]
     end
