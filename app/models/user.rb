@@ -5,6 +5,7 @@ class User < ApplicationRecord
 
   has_one :aweber_list_user, class_name: 'AweberListUser'
   has_one :aweber_list, through: :aweber_list_user, source: :list, source_type: 'AweberList'
+  has_one :aweber_opener, through: :aweber_list, source: :openers
 
   accepts_nested_attributes_for :formsite_users
   accepts_nested_attributes_for :formsites

@@ -15,7 +15,11 @@ module EmailMarketerService
       private
 
       def users
-        User.added_to_aweber.includes(:aweber_list)
+        User
+          .left_joins(aweber_list: :openers)
+          .where.not(aweber_lists: { id: nil })
+          .where(email_marketer_openers: { id: nil })
+          .distinct
       end
 
       def collect_openers
