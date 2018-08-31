@@ -23,6 +23,10 @@ class Api::V1::FormsitesController < ApiController
       formsite: @formsite
     })
 
+
+    Rails.logger = ActiveSupport::Logger.new('log/ips.log')
+    Rails.logger.info(request.env['REMOTE_ADDR'])
+
     Formsite::AddNewUserToAweberUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
     Formsite::AddNewUserToMaropostUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
 
