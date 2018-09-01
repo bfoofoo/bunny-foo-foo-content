@@ -15,7 +15,7 @@
 
     <%- if !available_affiliate_stats.blank? && params[:converted_filter] == "only_affiliates" %>
       <div class="filter_form_field">
-        <%= label_tag(:s_fields_filter, "Affiliate Filters") %>
+        <%= label_tag(:a_fields_filter, "Affiliate Filters") %>
         <% available_affiliate_stats.each do |field| %>
             <%- field_selected = params[:a_fields_filter].blank? ? true : params[:a_fields_filter].include?(field) %>
             <%= "A #{field}" %>

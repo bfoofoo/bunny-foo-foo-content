@@ -9,13 +9,22 @@
 
     <%- if !available_affiliate_stats.blank? %>
       <div class="filter_form_field">
-        <%= label_tag(:s_fields_filter, "Affiliate Filters") %>
+        <%= label_tag(:a_fields_filter, "Affiliate Filters") %>
         <% available_affiliate_stats.each do |field| %>
             <%= "A #{field}" %>
             <%= check_box_tag "a_fields_filter[]", field, params[:a_fields_filter] && params[:a_fields_filter].include?(field) -%>
           <% end %>
       </div>
     <%- end %>
+
+    <div class="filter_form_field">
+      <%= label_tag(:s_fields_filter, "S Filters") %>
+       <% Statistics::Questions::SStatistics::S_FIELDS.each do |field| %>
+          <%- field_selected = params[:s_fields_filter] && params[:s_fields_filter].include?(field) %>
+          <%= field %>
+          <%= check_box_tag "s_fields_filter[]", field, field_selected -%>
+        <% end %>
+    </div>
 
     <div class="filter_form_field">
       <%= label_tag(:start_date, "Start Date") %>

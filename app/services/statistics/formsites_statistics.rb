@@ -39,7 +39,6 @@ module Statistics
       end
       return [response]
     end
-
     
     private 
     def total_statistic
@@ -98,13 +97,24 @@ module Statistics
     end
 
     def filtered_users_by_affiliate site
-      users = if !a_fields_filter.blank?
-        formsite_users(site).select {|user| available_affiliate_stats.include?(user["affiliate"])}
-      else
+      users = if a_fields_filter.blank? && s_fields_filter.blank?
         formsite_users(site)
+      else
+        formsite_users(site).select do |user|
+          response = true
+          if !a_fields_filter.blank?
+            response = response && a_fields_filter.include?(user["affiliate"])
+          end
+
+          if !s_fields_filter.blank?
+            response = response && s_fields_filter.map {|field| !user[field].blank? }.any?
+          end
+
+          response
+        end
       end
       users.select {|user| !user.user_id.blank?}
-    end
+    end 
 
     def counter_hash_value field, hash
       hash[field] || 0
