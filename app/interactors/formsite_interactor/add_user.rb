@@ -41,9 +41,9 @@ module FormsiteInteractor
       end
 
       def create_formsite_user
-        context.formsite_user = formsite.formsite_users.find_or_initialize_by(ndm_token: params[:user][:ndm_token]).tap do |formsite_user|
+        context.formsite_user = formsite.formsite_users.find_or_initialize_by(ip: request.env['REMOTE_ADDR']).tap do |formsite_user|
           formsite_user.update_attributes(formsite_user_params.merge({
-            user_id: user.blank? ? nil : user.id,
+            user_id: formsite_user.user_id.blank? ? (user.blank? ? nil : user.id) : formsite_user.user_id,
             is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
             is_useragent_valid: is_useragent_valid,
             is_impressionwise_test_success: is_impressionwise_test_success,

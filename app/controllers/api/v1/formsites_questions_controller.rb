@@ -23,7 +23,7 @@ class Api::V1::FormsitesQuestionsController < ApplicationController
     end
 
     def set_formsite_user
-      @formsite_user = FormsiteUser.find_by_ndm_token!(params.dig(:answer, :ndm_token))
+      @formsite_user = FormsiteUser.find_by_ip!(request.env['REMOTE_ADDR'])
     rescue ActiveRecord::RecordNotFound => e
       render json: {message: e.message}
     end

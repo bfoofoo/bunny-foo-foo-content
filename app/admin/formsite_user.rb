@@ -1,5 +1,5 @@
 ActiveAdmin.register FormsiteUser do
-  permit_params :affiliate, :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip
+  permit_params :affiliate, :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip, :ip
   
   
 
@@ -45,6 +45,7 @@ ActiveAdmin.register FormsiteUser do
     column :s3
     column :s4
     column :s5
+    column :ip
     column :ndm_token
     column :birthday
     column :phone
@@ -79,6 +80,7 @@ ActiveAdmin.register FormsiteUser do
     column :s4
     column :s5
     column :ndm_token
+    column :ip
     column "First name" do |formsite_user|
       formsite_user&.user&.first_name
     end
