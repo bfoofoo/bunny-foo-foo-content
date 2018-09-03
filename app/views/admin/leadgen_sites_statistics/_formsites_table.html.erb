@@ -13,13 +13,28 @@
   <tbody>
     <%- formsites_statistics.converted_counts_hash.each do |formsite_name, stats| %>
       <tr>
-        <td><%=formsite_name%></td>
-        <td><%=stats[:total]%></td>
-        <td><%=stats[:submitted]%></td>
-        <td><%=stats[:total_converted]%></td>
-        <td><%=stats[:failed_impressionwise]%></td>
-        <td><%=stats[:failed_useragent]%></td>
-        <td><%=stats[:failed_dulpicate]%></td>
+        <td><%= link_to formsite_name, admin_formsite_users_path(q: {formsite_id_eq: stats[:formsite]}) %></td>
+        <td><%= link_to stats[:total], admin_formsite_users_path(formsites_statistics.query_params_hash(stats)) %></td>
+        <td><%= link_to stats[:submitted], admin_formsite_users_path(formsites_statistics.query_params_hash(stats, {user_id_not_null: true})) %></td>
+        <td><%= link_to stats[:total_converted], admin_formsite_users_path(
+              formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_verified_eq: true})
+            ) %>
+        </td>
+        <td><%= link_to stats[:failed_impressionwise], admin_formsite_users_path(
+              formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_impressionwise_test_success_eq: false})
+            ) %>
+        </td>
+
+        <td><%= link_to stats[:failed_useragent], admin_formsite_users_path(
+              formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_useragent_valid_eq: false})
+            ) %>
+        </td>
+
+        <td><%= link_to stats[:failed_dulpicate], admin_formsite_users_path(
+              formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_duplicate_eq: true})
+            ) %>
+        </td>
+        
       </tr>
     <% end %>
   </tbody>

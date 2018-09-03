@@ -6,16 +6,45 @@ module Statistics
       response = {}
       formsites.each do |formsite|
         response[formsite.name] = {
+          formsite: formsite,
           total: filtered_users_by_affiliate(formsite, skip_converted: true).count,
           submitted: filtered_users_by_affiliate(formsite).count,
           total_converted: filtered_users_by_affiliate(formsite).select {|user| user.is_verified}.count,
-          failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success && !user.is_duplicate}.count,
+          failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success}.count,
           failed_useragent: filtered_users_by_affiliate(formsite).select {|user| !user.is_useragent_valid}.count,
-          failed_dulpicate: filtered_users_by_affiliate(formsite).select {|user| user.is_duplicate}.count
+          failed_dulpicate: filtered_users_by_affiliate(formsite, skip_duplicated: false).select {|user| user.is_duplicate}.count
         }
       end
       @converted_counts_hash = response
       return @converted_counts_hash
+    end
+
+    def query_params_hash(stats, custom_hash={})
+      response =  {
+        q: {
+          formsite_id_eq: stats[:formsite], 
+          is_duplicate_eq: false
+        }
+      }
+
+      if !start_date.blank? && !end_date.blank?
+        response[:q][:created_at_gteq] = start_date.to_datetime.beginning_of_day
+        response[:q][:created_at_lteq] = end_date.to_datetime.beginning_of_day
+      end
+
+      if !a_fields_filter.blank?
+        response[:q][:affiliate_matches_any] = a_fields_filter
+      end
+
+      if !s_fields_filter.blank?
+        s_fields_filter.each do |s_field| 
+          response[:q]["#{s_field}_blank".to_sym] = false
+        end
+      end
+
+      response[:q] = response[:q].merge(custom_hash) if !custom_hash.blank?
+
+      return response
     end
 
     def count_by_s
@@ -87,7 +116,7 @@ module Statistics
       if @site != site
         @site = site
         @formsite_users = if !start_date.blank? && !end_date.blank?
-          site.formsite_users.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day).where(is_duplicate: false)
+          site.formsite_users.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day)
         else
           site.formsite_users
         end
@@ -96,7 +125,7 @@ module Statistics
       end
     end
 
-    def filtered_users_by_affiliate site, skip_converted:false
+    def filtered_users_by_affiliate site, skip_converted:false, skip_duplicated: true
       users = if a_fields_filter.blank? && s_fields_filter.blank?
         formsite_users(site)
       else
@@ -112,6 +141,10 @@ module Statistics
 
           response
         end
+      end
+
+      if skip_duplicated
+        users = users.where(is_duplicate: false)
       end
       
       if skip_converted
