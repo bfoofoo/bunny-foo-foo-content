@@ -6,7 +6,7 @@ module Statistics
       response = {}
       formsites.each do |formsite|
         response[formsite.name] = {
-          total: formsite_users(formsite).count,
+          total: filtered_users_by_affiliate(formsite, skip_converted: true).count,
           submitted: filtered_users_by_affiliate(formsite).count,
           total_converted: filtered_users_by_affiliate(formsite).select {|user| user.is_verified}.count,
           failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success && !user.is_duplicate}.count,
@@ -96,7 +96,7 @@ module Statistics
       end
     end
 
-    def filtered_users_by_affiliate site
+    def filtered_users_by_affiliate site, skip_converted:false
       users = if a_fields_filter.blank? && s_fields_filter.blank?
         formsite_users(site)
       else
@@ -113,7 +113,12 @@ module Statistics
           response
         end
       end
-      users.select {|user| !user.user_id.blank?}
+      
+      if skip_converted
+        users
+      else
+        users.select {|user| !user.user_id.blank?}
+      end
     end 
 
     def counter_hash_value field, hash
