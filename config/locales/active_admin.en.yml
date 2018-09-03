@@ -4,6 +4,9 @@ en:
       formsite: 
         one: Leadgen Site
         other: Leadgen Sites    
+      formsite_user: 
+        one: Leadgen Site User
+        other: Leadgen Site Users  
       website: 
         one: Revenue Site
         other: Revenue Sites

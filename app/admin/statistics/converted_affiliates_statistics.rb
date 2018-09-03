@@ -1,4 +1,4 @@
-ActiveAdmin.register_page "Converted Affiliates Statistics" do
+ActiveAdmin.register_page "Leadgensites Graph Stats" do
   menu parent: "Statistics"
   
   controller do
