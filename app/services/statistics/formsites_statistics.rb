@@ -80,7 +80,7 @@ module Statistics
       end
 
       if skip_duplicated
-        users = users.where(is_duplicate: false)
+        users = users.select {|user| user.is_duplicate.blank?}
       end
       
       if skip_converted
