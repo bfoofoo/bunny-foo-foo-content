@@ -1,0 +1,14 @@
+<% if flash[:notice] %>
+  <div class="notice"><%= flash[:notice] %></div>
+<% end %>
+
+<% if flash[:error] %>
+  <div class="error"><%= flash[:error] %></div>
+<% end %>
+
+<%= form_tag(download_suppression_lists_path, method: :get) do -%>
+  <div><%= text_field_tag 'token' %></div>
+  <div><%= date_field_tag 'start_date' %></div>
+  <div><%= date_field_tag 'end_date' %></div>
+  <div><%= submit_tag 'Download' %></div>
+<% end -%>
