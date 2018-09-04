@@ -5,6 +5,10 @@ ActiveAdmin.register SuppresionList do
   index do
     column :id
     column :created_at
+    column "file name" do |list|
+      list.file.file.filename
+    end
+    actions
   end
 
   form do |f|
