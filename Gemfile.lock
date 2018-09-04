@@ -397,6 +397,7 @@ GEM
       netrc (~> 0.8)
     rollbar (2.16.3)
       multi_json
+    rubyzip (1.2.2)
     sass (3.5.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -530,6 +531,7 @@ DEPENDENCIES
   remodal-rails (~> 1.1.1)
   rest-client (~> 2.0, >= 2.0.2)
   rollbar
+  rubyzip
   sass-rails (~> 5.0)
   spring
   spring-watcher-listen (~> 2.0.0)

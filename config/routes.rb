@@ -48,6 +48,12 @@ Rails.application.routes.draw do
       resources :categories, only: [:index, :show, :create]
       resources :articles, only: [:index, :show, :create]
       resources :api_users, only: [:index, :show, :create, :update]
+
+      resources :suppression_lists, only: [] do
+        collection do
+          get '/download', to: 'suppression_lists#download'
+        end
+      end
     end
   end
 end

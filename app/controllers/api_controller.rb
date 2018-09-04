@@ -7,6 +7,10 @@ class ApiController < ActionController::API
     authenticate_token || render_unauthorized
   end
 
+  def authenticate_url
+    authenticate_token_from_url || render_unauthorized
+  end
+
   def authenticate_token
     begin
       authenticate_with_http_token do |token, options|
@@ -15,6 +19,11 @@ class ApiController < ActionController::API
     rescue => e
       puts e
     end
+  end
+
+  def authenticate_token_from_url
+    return false if params["token"].blank?
+    return ApiClient.find_by_token(params["token"]).present?
   end
 
   def render_unauthorized
