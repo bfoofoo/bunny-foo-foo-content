@@ -1,4 +1,6 @@
 ActiveAdmin.register FormsiteUser do
+  menu false
+  
   permit_params :affiliate, :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip, :ip
   
   

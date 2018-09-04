@@ -1,4 +1,5 @@
 ActiveAdmin.register User do
+  menu false
   permit_params :first_name, :last_name, :email
 
   scope :verified, :default => true do |users|
