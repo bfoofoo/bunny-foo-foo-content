@@ -20,6 +20,7 @@ gem "colorize"
 gem 'whenever', require: false
 gem 'activerecord-import'
 gem 'rubyzip'
+gem 'simple_enum'
 
 
 # APIS
