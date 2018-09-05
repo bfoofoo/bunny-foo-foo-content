@@ -2,11 +2,12 @@ module EmailMarketerService
   module Aweber
     class FindLeads
       EVENT_TYPES = %w(open click).freeze
+      DEFAULT_DATE = Date.new(2018, 8, 30)
 
       def initialize(since: nil)
         @auth_services = {}
         @accounts = {}
-        @since = since ? since : Date.current
+        @since = since ? since : last_lead_date
         @openers = []
       end
 
@@ -27,7 +28,7 @@ module EmailMarketerService
 
           begin
             subscriber = subscribers_for(user.aweber_list).search('email' => user.email)&.entries&.values&.first
-            next unless subscriber || subscriber.custom_fields['Affiliate']
+            next if subscriber.nil? || !subscriber.custom_fields['Affiliate']
             subscriber.activity.each_page do |activity|
               values = activity&.entries&.values.to_a
               click = values.detect { |a| a.event_time.to_date >= @since }
@@ -69,6 +70,10 @@ module EmailMarketerService
           access_token: account_for(list).access_token,
           secret_token: account_for(list).secret_token,
         )
+      end
+
+      def last_lead_date
+        Leads::Aweber.maximum(:created_at)&.to_date || DEFAULT_DATE
       end
     end
   end
