@@ -6,7 +6,9 @@ class Answer < ApplicationRecord
 
   validates :text, presence: true
 
-  
+  as_enum :input_type, [:default, :date, :select], source: :input_type, map: :string
+  as_enum :flow, [:vertical, :horizontal, :grid], source: :flow, map: :string
+
   scope :order_by_id, -> () { order(id: :asc) }
   scope :order_by_question_id, -> () { order(question_id: :asc) }
 

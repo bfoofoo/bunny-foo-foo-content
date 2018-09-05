@@ -7,6 +7,9 @@
       <% t.has_many :answers do |a| %>
         <% a.input :text %>
         <% a.input :redirect_url %>
+        
+        <% a.input :flow, :as => :select, :collection => Answer.flows.keys, :include_blank => false %>
+        <% a.input :input_type, :as => :select, :collection => Answer.input_types.keys, :include_blank => false %>
       <% end %>
     <% end %>
 <% end %>
