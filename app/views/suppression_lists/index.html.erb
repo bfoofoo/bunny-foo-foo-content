@@ -19,5 +19,13 @@
     <span>End date</span>
     <%= date_field_tag 'end_date' %>
   </div>
+
+  <div>
+    <span>List</span>
+    <%= select_tag "list", options_for_select(SuppresionList.list_uniq_file_lists, SuppresionList.list_uniq_file_lists.first) %>
+  </div>
+
+  <br/>
+
   <div><%= submit_tag 'Download' %></div>
 <% end -%>
