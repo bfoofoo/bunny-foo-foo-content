@@ -2,7 +2,7 @@ module EmailMarketerService
   module Aweber
     class FindLeads
       EVENT_TYPES = %w(open click).freeze
-      DEFAULT_DATE = Date.new(2018, 8, 30)
+      DEFAULT_DATE = Date.new(2018, 8, 30) # Date since when statistic collectiong began
 
       def initialize(since: nil)
         @auth_services = {}
@@ -24,15 +24,15 @@ module EmailMarketerService
       def collect_leads
         leads = []
         users.each do |user|
-          next if user.leads.where(status: EVENT_TYPES).exists?
+          next if user.leads.to_a.any? { |lead| lead.status.in?(EVENT_TYPES) }
 
           begin
             subscriber = subscribers_for(user.aweber_list).search('email' => user.email)&.entries&.values&.first
             next if subscriber.nil? || !subscriber.custom_fields['Affiliate']
             subscriber.activity.each_page do |activity|
               values = activity&.entries&.values.to_a
-              click = values.detect { |a| a.event_time.to_date >= @since }
-              open = values.detect { |a| a.event_time.to_date >= @since }
+              click = values.detect { |a| a.event_time.to_date >= @since && a.type = 'click' }
+              open = values.detect { |a| a.event_time.to_date >= @since && a.type = 'open' }
 
               [click, open].compact.each do |event|
                 leads << build_lead(user, subscriber, event)
@@ -51,7 +51,8 @@ module EmailMarketerService
           source_id: user.aweber_list.id,
           email: user.email,
           affiliate: subscriber.custom_fields['Affiliate'],
-          status: event.type
+          status: event.type,
+          user_id: user.id
         }
       end
 

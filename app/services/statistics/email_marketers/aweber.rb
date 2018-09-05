@@ -34,7 +34,7 @@ module Statistics
           name: 'total',
           data: leads_total_list
         }]
-        array + all_types.map do |type|
+        array + types_of_leads.map do |type|
           {
             name: type,
             data: leads_list_by_type(type)
