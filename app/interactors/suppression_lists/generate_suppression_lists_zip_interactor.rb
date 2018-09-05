@@ -23,7 +23,7 @@ module SuppressionLists
       def suppression_lists
         @suppression_lists ||= SuppresionList.between_dates(
           params[:start_date].to_date.beginning_of_day, params[:end_date].to_date.end_of_day
-        )
+        ).for_list(params[:list])
       end
 
       def generated_zip
