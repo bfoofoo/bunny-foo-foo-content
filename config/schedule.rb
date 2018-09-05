@@ -24,6 +24,6 @@ every 1.day do
   rake "aweber:migrate_subscribers"
 end
 
-every 12.hours do
+every 1.day do
   rake_verbose "aweber:transfer_to_maropost"
 end
