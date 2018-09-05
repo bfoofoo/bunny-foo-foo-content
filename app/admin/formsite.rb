@@ -11,7 +11,7 @@ ActiveAdmin.register Formsite do
                 questions_attributes: [
                     :id, :text, :position, :_update, :_create, :_destroy,
                     answer_ids: [],
-                    answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question
+                    answers_attributes: [:id, :flow, :input_type, :text, :redirect_url, :question_id, :_create, :_destroy, :question
                   ]
                 ],
                 ad_ids: [],
