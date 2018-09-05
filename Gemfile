@@ -73,6 +73,9 @@ gem "active_admin-sortable_tree", "~> 1.0.0"
 gem 'aweber', github: 'fixtheclouds/AWeber-API-Ruby-Library'
 gem 'maropost_api', github: 'fixtheclouds/maropost_api'
 
+# Background jobs
+gem 'sucker_punch'
+
 gem 'rollbar'
 gem 'swagger-docs'
 gem 'swagger-blocks'
