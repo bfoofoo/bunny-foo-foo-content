@@ -8,7 +8,7 @@ class SuppressionListsController < ApplicationController
   def download
     response = SuppressionLists::GenerateSuppressionListsZipInteractor.call({params: params})
     if response.success?
-      send_file response.generated_zip, type: "application/zip", disposition: "attachment", filename: "#{params[:list]}-SuppressionLists.zip"
+      send_file response.generated_zip, type: "application/zip", disposition: "attachment", filename: "SuppressionLists.zip"
     else
       flash[:notice] = response.error_message[:message]
       render :index
