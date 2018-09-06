@@ -428,6 +428,8 @@ GEM
     sshkit (1.15.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    sucker_punch (2.1.1)
+      concurrent-ruby (~> 1.0)
     swagger-blocks (2.0.2)
     swagger-docs (0.2.9)
       activesupport (>= 3)
@@ -538,6 +540,7 @@ DEPENDENCIES
   simple_enum
   spring
   spring-watcher-listen (~> 2.0.0)
+  sucker_punch
   swagger-blocks
   swagger-docs
   sweetalert-rails

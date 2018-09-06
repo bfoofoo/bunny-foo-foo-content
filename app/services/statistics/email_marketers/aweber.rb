@@ -1,9 +1,12 @@
 module Statistics
   module EmailMarketers
     class Aweber
+      attr_reader :aweber_list_id, :start_date, :end_date
 
       def initialize(params = {})
-        # TODO add params
+        @start_date = params[:start_date]
+        @end_date = params[:end_date]
+        @aweber_list_id = params[:aweber_list_id]
         @leads_by_types = {}
       end
 
@@ -14,7 +17,23 @@ module Statistics
         }
       end
 
+
+      def aweber_list
+        return @aweber_list if !@aweber_list.blank?
+        @aweber_list =
+          if !aweber_list_id.blank?
+            AweberList.find_by(id: aweber_list_id)
+          else
+            aweber_lists.first
+          end
+      end
+
       private
+
+      def aweber_lists
+        return @aweber_lists if !@aweber_lists.blank?
+        @aweber_lists = AweberList.all
+      end
 
       def total_users
         FormsiteUser.joins(user: :aweber_list)
@@ -34,7 +53,7 @@ module Statistics
           name: 'total',
           data: leads_total_list
         }]
-        array + all_types.map do |type|
+        array + types_of_leads.map do |type|
           {
             name: type,
             data: leads_list_by_type(type)
@@ -43,7 +62,17 @@ module Statistics
       end
 
       def leads_total_list
-        grouped_leads = FormsiteUser.select('COUNT(affiliate), affiliate').joins(user: :aweber_list).where.not(affiliate: nil).group(:affiliate).to_a
+        query =
+          FormsiteUser
+            .select('COUNT(affiliate), affiliate')
+            .joins(user: :aweber_list)
+            .where.not(affiliate: nil)
+
+        query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
+        query = query.where('formsite_users.created_at > ?', start_date) if start_date
+        query = query.where('formsite_users.created_at < ?', end_date) if end_date
+
+        grouped_leads = query.group(:affiliate).to_a
         types_of_leads.each do |type|
           grouped_leads += leads_by_type(type)
         end
@@ -56,7 +85,17 @@ module Statistics
       end
 
       def leads_by_type(type)
-        @leads_by_types[type] ||= Leads::Aweber.select('COUNT(affiliate), affiliate').where(status: type).group(:affiliate).to_a
+        return @leads_by_types[type] if @leads_by_types[type]
+        query =
+          Leads::Aweber
+            .select('COUNT(affiliate), affiliate')
+            .joins(:source)
+            .where(status: type)
+
+        query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
+        query = query.where('leads.date > ?', start_date) if start_date
+        query = query.where('leads.date < ?', end_date) if end_date
+        @leads_by_types[type] = query.group(:affiliate).to_a
       end
 
       def leads_count_by_affiliates(leads)
