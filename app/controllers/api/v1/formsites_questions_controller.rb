@@ -23,7 +23,7 @@ class Api::V1::FormsitesQuestionsController < ApplicationController
     end
 
     def set_formsite_user
-      @formsite_user = FormsiteUser.find_by(ip: request.env['REMOTE_ADDR'], formsite_id: @formsite.id)
+      @formsite_user = FormsiteUser.find_by!(ip: request.env['REMOTE_ADDR'], formsite_id: @formsite.id)
     rescue ActiveRecord::RecordNotFound => e
       render json: {message: e.message}
     end
