@@ -4,12 +4,12 @@
       <% t.input :position %>
       <% t.input :text %>
       <% t.input :_destroy, :as => :boolean, :required => false, :label => 'Remove' %>
+      <% t.input :flow, :as => :select, :collection => Question.flows.keys, :include_blank => false %>
+      <% t.input :input_type, :as => :select, :collection => Question.input_types.keys, :include_blank => false %>
       <% t.has_many :answers do |a| %>
         <% a.input :text %>
         <% a.input :redirect_url %>
         
-        <% a.input :flow, :as => :select, :collection => Answer.flows.keys, :include_blank => false %>
-        <% a.input :input_type, :as => :select, :collection => Answer.input_types.keys, :include_blank => false %>
       <% end %>
     <% end %>
 <% end %>
