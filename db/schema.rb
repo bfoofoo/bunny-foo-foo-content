@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180906133727) do
+ActiveRecord::Schema.define(version: 20180906153530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -353,7 +353,6 @@ ActiveRecord::Schema.define(version: 20180906133727) do
     t.datetime "updated_at",                         null: false
     t.integer  "formsite_id"
     t.integer  "position"
-    t.string   "input_type",  default: "default"
     t.string   "flow",        default: "horizontal"
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
   end
