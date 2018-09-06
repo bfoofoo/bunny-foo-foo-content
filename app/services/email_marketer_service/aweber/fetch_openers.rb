@@ -16,6 +16,10 @@ module EmailMarketerService
           openers = []
           subscribers = page&.entries&.values.to_a
           subscribers.each do |subscriber|
+            if subscriber.subscribed_at.to_date >= @since
+              openers << subscriber if subscriber.tags.include?('openers')
+              break
+            end
             subscriber.activity.each_page do |activity|
               values = activity&.entries&.values.to_a
               finds = values.select { |a| a.event_time.to_date >= @date && a.type == 'open' }
@@ -48,7 +52,7 @@ module EmailMarketerService
       end
 
       def subscribers_for_list
-        aweber_list.subscribers
+        aweber_list.subscribers.search('sort_order' => 'desc')
       end
     end
   end
