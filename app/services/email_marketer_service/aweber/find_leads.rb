@@ -52,7 +52,8 @@ module EmailMarketerService
           email: user.email,
           affiliate: subscriber.custom_fields['Affiliate'],
           status: event.type,
-          user_id: user.id
+          user_id: user.id,
+          date: event.event_time.to_date
         }
       end
 

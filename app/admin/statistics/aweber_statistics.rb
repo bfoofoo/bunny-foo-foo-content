@@ -5,7 +5,7 @@ ActiveAdmin.register_page "Aweber Statistics" do
     before_action :initialize_data, only: :index
 
     def initialize_data
-      @stats_service = Statistics::EmailMarketers::Aweber.new
+      @stats_service = Statistics::EmailMarketers::Aweber.new(params)
     end
   end
 

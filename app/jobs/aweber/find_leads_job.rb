@@ -3,7 +3,9 @@ module Aweber
     include SuckerPunch::Job
 
     def perform
-      EmailMarketerService::Aweber::FindLeads.new.call
+      ActiveRecord::Base.connection_pool.with_connection do
+        EmailMarketerService::Aweber::FindLeads.new.call
+      end
     end
   end
 end
