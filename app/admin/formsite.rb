@@ -181,8 +181,8 @@ ActiveAdmin.register Formsite do
         f.actions
       end
       tab 'ADS AND TRACKER' do
-        AD_POSITIONS = ['tracker']
-        AD_TYPES = ['text/javascript']
+        AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
+        AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
 
         f.inputs 'Ads' do
           f.has_many :ads, allow_destroy: true, new_record: true do |ff|
