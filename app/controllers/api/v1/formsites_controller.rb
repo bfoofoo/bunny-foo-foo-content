@@ -26,7 +26,7 @@ class Api::V1::FormsitesController < ApiController
     Formsite::AddNewUserToAweberUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
     Formsite::AddNewUserToMaropostUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
 
-    render json: {user: formsite_interactor.user, is_verified: formsite_interactor.formsite_user}
+    render json: formsite_interactor.api_response
   end
 
   def setup
