@@ -2,11 +2,12 @@ module FormsiteInteractor
   class AddUser
     include Interactor
 
-    delegate :formsite, :params, :request, :user, :to => :context
+    delegate :formsite, :params, :request, :user, :formsite_user, :to => :context
 
     def call
       create_user
       create_formsite_user
+      context.api_response = {user: user, is_verified: formsite_user.is_verified}
     end
 
     def rollback
