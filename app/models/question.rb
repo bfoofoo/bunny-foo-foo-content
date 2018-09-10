@@ -10,7 +10,7 @@ class Question < ApplicationRecord
 
   validates :text, presence: true
 
-  as_enum :flow, [:vertical, :horizontal, :grid, :default, :date, :select], source: :flow, map: :string
+  as_enum :flow, [:vertical, :horizontal, :grid, :date, :select, :number], source: :flow, map: :string
   
   scope :order_by_id, -> () { order(id: :asc) }
   scope :order_by_position, -> (position=:asc) { order(position: position) }
