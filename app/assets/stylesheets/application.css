@@ -36,3 +36,19 @@
 .suppression span {
   display: block;
 }
+
+.suppression-form-box {
+  border: 2px solid gray;
+  border-radius: 5px;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+  height: 50%;
+  max-width: 500px;
+}
+
+.suppression-form-box div {
+  margin-top: 10px;
+  text-align: center;
+}

@@ -7,25 +7,27 @@
 <% end %>
 
 <%= form_tag(download_suppression_lists_path, method: :get) do -%>
-  <div>
-    <span>Enter Token</span>
-    <%= text_field_tag 'token' %>
-  </div>
-  <div>
-    <span>Start date</span>
-    <%= date_field_tag 'start_date' %>
-  </div>
-  <div>
-    <span>End date</span>
-    <%= date_field_tag 'end_date' %>
+
+  <div class="suppression-form-box">
+    <div>
+      <span>Enter Token</span>
+      <%= text_field_tag 'token' %>
+    </div>
+    <div>
+      <span>Start date</span>
+      <%= date_field_tag 'start_date' %>
+    </div>
+    <div>
+      <span>End date</span>
+      <%= date_field_tag 'end_date' %>
+    </div>
+
+    <div>
+      <span>List</span>
+      <%= select_tag "list", options_for_select(SuppresionList.list_uniq_file_lists, SuppresionList.list_uniq_file_lists.first) %>
+    </div>
+    <br/>
+    <div><%= submit_tag 'Download' %></div>
   </div>
 
-  <div>
-    <span>List</span>
-    <%= select_tag "list", options_for_select(SuppresionList.list_uniq_file_lists, SuppresionList.list_uniq_file_lists.first) %>
-  </div>
-
-  <br/>
-
-  <div><%= submit_tag 'Download' %></div>
 <% end -%>
