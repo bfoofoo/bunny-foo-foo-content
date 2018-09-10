@@ -2,10 +2,11 @@ module EmailMarketerService
   module Aweber
     class FindLeads
       EVENT_TYPES = %w(open click).freeze
-      DEFAULT_DATE = Date.new(2018, 8, 30) # Date since when statistic collectiong began
+      DEFAULT_DATE = Date.new(2018, 8, 30) # Date since when statistic collection began
 
       def initialize(since: nil)
         @auth_services = {}
+        @subscribers = {}
         @accounts = {}
         @since = since ? since : last_lead_date
         @openers = []
@@ -24,20 +25,17 @@ module EmailMarketerService
       def collect_leads
         leads = []
         users.each do |user|
-          next if user.leads.to_a.any? { |lead| lead.status.in?(EVENT_TYPES) }
-
           begin
             subscriber = subscribers_for(user.aweber_list).search('email' => user.email)&.entries&.values&.first
             next if subscriber.nil? || !subscriber.custom_fields['Affiliate']
             subscriber.activity.each_page do |activity|
               values = activity&.entries&.values.to_a
-              click = values.detect { |a| a.event_time.to_date >= @since && a.type = 'click' }
-              open = values.detect { |a| a.event_time.to_date >= @since && a.type = 'open' }
+              events = values.select { |a| a.event_time.to_date >= @since && a.type.in?(EVENT_TYPES) }
 
-              [click, open].compact.each do |event|
+              events.each do |event|
                 leads << build_lead(user, subscriber, event)
               end
-              break if click || open || (values.present? && values.last.event_time.to_date < @since)
+              break if (values.present? && values.last.event_time.to_date < @since)
             end
           rescue AWeber::ServiceUnavailableError, AWeber::UnknownRequestError => e
             puts "Aweber failed due to error: #{e.to_s}"
@@ -47,18 +45,23 @@ module EmailMarketerService
       end
 
       def build_lead(user, subscriber, event)
+        campaign = event.campaign
+        return if user.leads.any? { |l| l.type == event.type && l.date == campaign&.sent_at && l.details['campaign_id'] == campaign&.id }
         {
           source_id: user.aweber_list.id,
           email: user.email,
           affiliate: subscriber.custom_fields['Affiliate'],
           status: event.type,
           user_id: user.id,
-          date: event.event_time.to_date
+          date: campaign&.sent_at,
+          details: {
+            campaign_id: campaign&.id
+          }
         }
       end
 
       def subscribers_for(list)
-        auth_service_for(list).aweber.account.lists[list.list_id].subscribers
+        @subscribers[list.list_id] ||= auth_service_for(list).aweber.account.lists[list.list_id].subscribers
       end
 
       def account_for(list)

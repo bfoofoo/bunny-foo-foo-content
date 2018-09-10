@@ -315,6 +315,7 @@ ActiveRecord::Schema.define(version: 20180906153530) do
     t.integer  "user_id"
     t.string   "status"
     t.string   "affiliate"
+    t.date     "date"
     t.index ["user_id"], name: "index_leads_on_user_id", using: :btree
   end
 
