@@ -1,11 +1,9 @@
 module Statistics
   module EmailMarketers
     class AweberGraphStats < BaseStats
-      attr_reader :aweber_list_id, :start_date, :end_date
-
       def initialize(params = {})
-        @start_date = params[:start_date]
-        @end_date = params[:end_date]
+        @start_date = Date.parse(params[:start_date]) rescue nil
+        @end_date = Date.parse(params[:end_date]) rescue nil
         @aweber_list_id = params[:aweber_list_id]
         @leads_by_types = {}
       end
@@ -53,8 +51,8 @@ module Statistics
             .where.not(affiliate: nil)
 
         query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
-        query = query.where('formsite_users.created_at > ?', start_date) if start_date
-        query = query.where('formsite_users.created_at < ?', end_date) if end_date
+        query = query.where('formsite_users.created_at > ?', start_date.beginning_of_day) if start_date
+        query = query.where('formsite_users.created_at < ?', end_date.end_of_day) if end_date
 
         grouped_leads = query.group(:affiliate).to_a
         types_of_leads.each do |type|
@@ -77,8 +75,8 @@ module Statistics
             .where(status: type)
 
         query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
-        query = query.where('leads.date > ?', start_date) if start_date
-        query = query.where('leads.date < ?', end_date) if end_date
+        query = query.where('leads.event_at > ?', start_date.beginning_of_day) if start_date
+        query = query.where('leads.event_at < ?', end_date.end_of_day) if end_date
         @leads_by_types[type] = query.group(:affiliate).to_a
       end
 
