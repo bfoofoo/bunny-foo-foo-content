@@ -1,11 +1,11 @@
-ActiveAdmin.register_page "Aweber Statistics" do
+ActiveAdmin.register_page "Aweber Graph Stats" do
   menu parent: "Statistics"
 
   controller do
     before_action :initialize_data, only: :index
 
     def initialize_data
-      @stats_service = Statistics::EmailMarketers::Aweber.new(params)
+      @stats_service = Statistics::EmailMarketers::AweberGraphStats.new(params)
     end
   end
 

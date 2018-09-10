@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/fixtheclouds/AWeber-API-Ruby-Library.git
-  revision: 42e0c8e7ea1a2e2e60b72da7db10d2a20dab4deb
+  revision: e850c279f1b0c9c8a8b76b7b64a49ba0a0974c83
   specs:
     aweber (1.6.1)
       json
@@ -555,4 +555,4 @@ RUBY VERSION
    ruby 2.4.1p111
 
 BUNDLED WITH
-   1.16.3
+   1.16.4
