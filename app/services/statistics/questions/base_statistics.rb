@@ -98,7 +98,7 @@ module Statistics
         hash.each do |question_id, question_answer_hash|
           question_answer_hash.each do |answer_text, s_counter_hash|
             if s_counter_hash.is_a? Integer
-              response[answer_text].<< s_counter_hash
+              response[answer_text] << s_counter_hash
             else
               response[answer_text].concat s_counter_hash.map {|key, value| value}
             end
