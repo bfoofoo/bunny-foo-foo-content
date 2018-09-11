@@ -7,7 +7,7 @@ module FormsiteInteractor
     def call
       create_user
       create_formsite_user
-      context.api_response = {user: user, is_verified: formsite_user.is_verified}
+      context.api_response = {user: user, is_verified: formsite_user.is_verified, formsite_user: formsite_user}
     end
 
     def rollback
