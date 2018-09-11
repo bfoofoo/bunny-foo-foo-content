@@ -10,8 +10,9 @@ class Formsite
 
     def perform
       return false if !formsite_user.is_verified || user.blank?
+      params = { affiliate: formsite_user.affiliate }
       formsite.maropost_lists.each do |list|
-        EmailMarketerService::Maropost::AddContactsToList.new(list: list).add(user)
+        EmailMarketerService::Maropost::AddContactsToList.new(list: list, params: params).add(user)
       end
     end
   end
