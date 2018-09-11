@@ -38,7 +38,9 @@ module EmailMarketerService
               events = values.select { |a| a.event_time.to_date >= @since && a.type.in?(EVENT_TYPES) }
 
               events.each do |event|
-                Leads::Aweber.find_or_create_by(build_lead(user, subscriber, event))
+                Leads::Aweber.find_or_create_by(build_lead(user, subscriber, event)) do |lead|
+                  lead.details = { campaign_id: event.campaign&.id }
+                end
               end
               break if (values.present? && values.last.event_time.to_date < @since)
             end
@@ -57,10 +59,7 @@ module EmailMarketerService
           affiliate: affiliate,
           status: event.type,
           user_id: user.id,
-          event_at: campaign&.sent_at,
-          details: {
-            campaign_id: campaign&.id
-          }
+          event_at: campaign&.sent_at
         }
       end
 
