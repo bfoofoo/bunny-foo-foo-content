@@ -3,7 +3,7 @@ ActiveAdmin.register Formsite do
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :first_redirect_url, :final_redirect_url,
                 :favicon_image, :logo_image, :background,
-                :is_thankyou, :is_checkboxes, :form_box_title_text,
+                :is_thankyou, :is_checkboxes, :is_phone_number, :form_box_title_text,
                 :left_side_content, :right_side_content,
                 :first_question_code_snippet, :head_code_snippet,
                 :s1_description, :s2_description, :s3_description, :s4_description, :s5_description, :affiliate_description, :ad_client,
@@ -41,6 +41,7 @@ ActiveAdmin.register Formsite do
     column :name
     column :is_thankyou
     column :is_checkboxes
+    column :is_phone_number
     column :droplet_ip
     column "Total users" do |formsite|
       link_to "#{formsite.formsite_users.count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
@@ -80,6 +81,7 @@ ActiveAdmin.register Formsite do
       row :name
       row :is_thankyou
       row :is_checkboxes
+      row :is_phone_number
       row :favicon_image do |formsite|
         image_tag formsite.favicon_image.url unless formsite.favicon_image.url.nil?
       end
@@ -142,6 +144,7 @@ ActiveAdmin.register Formsite do
           f.input :name
           f.input :is_thankyou
           f.input :is_checkboxes
+          f.input :is_phone_number
           f.input :favicon_image
           f.input :logo_image
           f.input :background

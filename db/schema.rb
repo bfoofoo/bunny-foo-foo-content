@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180910112819) do
+ActiveRecord::Schema.define(version: 20180911124209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -274,8 +274,8 @@ ActiveRecord::Schema.define(version: 20180910112819) do
     t.integer  "droplet_id"
     t.string   "droplet_ip"
     t.string   "zone_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.string   "repo_url"
     t.string   "ad_client"
     t.string   "ad_sidebar_id"
@@ -300,6 +300,7 @@ ActiveRecord::Schema.define(version: 20180910112819) do
     t.string   "s5_description"
     t.string   "form_box_title_text"
     t.string   "affiliate_description"
+    t.boolean  "is_phone_number",             default: false
   end
 
   create_table "leads", force: :cascade do |t|
