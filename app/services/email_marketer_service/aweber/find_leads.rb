@@ -46,14 +46,14 @@ module EmailMarketerService
 
       def build_lead(user, subscriber, event)
         campaign = event.campaign
-        return if user.leads.any? { |l| l.type == event.type && l.date == campaign&.sent_at && l.details['campaign_id'] == campaign&.id }
+        return if user.leads.any? { |l| l.type == event.type && l.event_at == campaign&.sent_at && l.details['campaign_id'] == campaign&.id }
         {
           source_id: user.aweber_list.id,
           email: user.email,
           affiliate: subscriber.custom_fields['Affiliate'],
           status: event.type,
           user_id: user.id,
-          date: campaign&.sent_at,
+          event_at: campaign&.sent_at,
           details: {
             campaign_id: campaign&.id
           }
