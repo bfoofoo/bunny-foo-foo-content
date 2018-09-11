@@ -5,7 +5,7 @@
       <tr>
         <th></th>
         <% by_date.each do |hour, _| %>
-          <th colspan="<%= table_data[:types].count %>"><%= hour %></th>
+          <th colspan="<%= table_data[:types].count %>"><%= hour.in_time_zone.strftime('%l %P').strip %></th>
         <% end %>
       </tr>
       <tr>
@@ -20,10 +20,14 @@
     <tbody>
       <% table_data[:affiliates].each do |a| %>
         <tr>
-          <td>A<%= a %></td>
+          <td class="border-right">A<%= a %></td>
           <% by_date.each do |_, by_hour| %>
-            <% table_data[:types].each do |type| %>
-              <td><%= by_hour.dig(a, type) || 0 %></td>
+            <% table_data[:types].each_with_index do |type, index| %>
+              <% if type == 'total' %>
+                <td><%= table_data[:types].sum { |t| by_hour.dig(a, t) || 0 } %></td>
+              <% else %>
+                <td <%= 'class=border-right' if index == (table_data[:types].size - 1) %>><%= by_hour.dig(a, type) || 0 %></td>
+              <% end %>
             <% end %>
           <% end %>
         </tr>
