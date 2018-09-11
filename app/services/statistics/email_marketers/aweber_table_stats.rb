@@ -1,6 +1,8 @@
 module Statistics
   module EmailMarketers
     class AweberTableStats < BaseStats
+      HOURS_PER_CELL = 3
+
       def initialize(params = {})
         @start_date = Date.parse(params[:start_date]) rescue nil || Date.today.at_beginning_of_month
         @end_date = Date.parse(params[:end_date]) rescue nil || Date.today.at_end_of_month
@@ -41,7 +43,10 @@ module Statistics
       # Group leads 4 levels deep (1 - day, 2 - hour, 3 - affiliate, 4 - status (event type))
       def deep_group_leads(leads, date_field, status)
         leads.group_by { |l| l.send(date_field).to_date }.each_with_object({}) do |(k, v), h|
-          h[k] = v.sort_by(&date_field).group_by { |l| l.send(date_field).beginning_of_hour }.each_with_object({}) do |(k1, v1), h1|
+          h[k] = v.sort_by(&date_field).group_by do |l|
+            date = l.send(date_field)
+            date.change(hour: date.hour / HOURS_PER_CELL * HOURS_PER_CELL)
+          end.each_with_object({}) do |(k1, v1), h1|
             h1[k1] = v1.group_by(&:affiliate).each_with_object({}) do |(k2, v2), h2|
               h2[k2] = { status => v2.size }
             end
