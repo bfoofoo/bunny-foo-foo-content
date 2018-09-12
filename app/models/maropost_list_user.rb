@@ -1,0 +1,2 @@
+class MaropostListUser < EmailMarketerListUser
+end
