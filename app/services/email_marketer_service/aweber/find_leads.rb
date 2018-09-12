@@ -38,29 +38,32 @@ module EmailMarketerService
               events = values.select { |a| a.event_time.to_date >= @since && a.type.in?(EVENT_TYPES) }
 
               events.each do |event|
-                Leads::Aweber.find_or_create_by(build_lead(user, subscriber, event)) do |lead|
-                  lead.details = { campaign_id: event.campaign&.id }
+                campaign = event.campaign
+                Leads::Aweber.find_or_create_by(lead_params(user, subscriber, event)) do |lead|
+                  lead.event_at = campaign&.sent_at
+                  lead.email = user.email
                 end
               end
               break if (values.present? && values.last.event_time.to_date < @since)
             end
-          rescue AWeber::ServiceUnavailableError, AWeber::UnknownRequestError => e
+          rescue AWeber::ServiceUnavailableError, AWeber::UnknownRequestError, AWeber::NotFoundError => e
             puts "Aweber failed due to error: #{e.to_s}"
+          rescue AWeber::RateLimitError
+            sleep 60
+            retry
           end
         end
       end
 
-      def build_lead(user, subscriber, event)
-        campaign = event.campaign
+      def lead_params(user, subscriber, event)
         affiliate = subscriber.custom_fields['Affiliate'] || user.formsite_users.first.affiliate
         {
           source_id: user.aweber_list.id,
-          email: user.email,
           affiliate: affiliate,
           status: event.type,
           user_id: user.id,
-          event_at: campaign&.sent_at
-        }
+          campaign_id: event.campaign&.id
+        }.compact
       end
 
       def subscribers_for(list)
