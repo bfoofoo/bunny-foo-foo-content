@@ -45,18 +45,16 @@ module Statistics
 
       def leads_total_list
         query =
-          FormsiteUser
-            .select('COUNT(affiliate), affiliate')
-            .joins(user: :aweber_list)
-            .where.not(affiliate: nil)
+          FormsiteUser.joins(user: :aweber_list).where.not(affiliate: nil)
 
         query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
         query = query.where('formsite_users.created_at > ?', start_date.beginning_of_day) if start_date
         query = query.where('formsite_users.created_at < ?', end_date.end_of_day) if end_date
 
-        grouped_leads = query.group(:affiliate).to_a
+        grouped_leads = query.to_a.group_by(&:affiliate).each_with_object({}) { |(k, v), h| h[k] = v.map(&:email) }
+
         types_of_leads.each do |type|
-          grouped_leads += leads_by_type(type)
+          grouped_leads.deep_merge!(leads_by_type(type)) { |_, v1, v2| (v1 + v2).uniq }
         end
         leads_count_by_affiliates(grouped_leads)
       end
@@ -69,20 +67,17 @@ module Statistics
       def leads_by_type(type)
         return @leads_by_types[type] if @leads_by_types[type]
         query =
-          Leads::Aweber
-            .select('COUNT(affiliate), affiliate')
-            .joins(:source)
-            .where(status: type)
+          Leads::Aweber.joins(:source).where(status: type)
 
         query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
         query = query.where('leads.event_at > ?', start_date.beginning_of_day) if start_date
         query = query.where('leads.event_at < ?', end_date.end_of_day) if end_date
-        @leads_by_types[type] = query.group(:affiliate).to_a
+        @leads_by_types[type] = query.to_a.group_by(&:affiliate).each_with_object({}) { |(k, v), h| h[k] = v.map(&:email) }
       end
 
       def leads_count_by_affiliates(leads)
         all_affiliates.map do |affiliate|
-          group_leads_by_affiliate(leads)[affiliate]
+          leads[affiliate] = leads[affiliate].nil? ? 0 : leads[affiliate].uniq.count
         end
       end
 

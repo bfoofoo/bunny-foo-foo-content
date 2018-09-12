@@ -48,7 +48,7 @@ module Statistics
             date.change(hour: date.hour / HOURS_PER_CELL * HOURS_PER_CELL)
           end.each_with_object({}) do |(k1, v1), h1|
             h1[k1] = v1.group_by(&:affiliate).each_with_object({}) do |(k2, v2), h2|
-              h2[k2] = { status => v2.size }
+              h2[k2] = { status => v2.map(&:email).uniq.size }
             end
           end
         end
