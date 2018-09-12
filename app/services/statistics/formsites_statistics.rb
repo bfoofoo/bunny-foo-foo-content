@@ -7,7 +7,7 @@ module Statistics
       formsites.each do |formsite|
         response[formsite.name] = {
           formsite: formsite,
-          total: filtered_users_by_affiliate(formsite, skip_converted: true).count,
+          total: filtered_users_by_affiliate(formsite, skip_converted: true, skip_duplicated: false).count,
           submitted: filtered_users_by_affiliate(formsite).count,
           total_converted: filtered_users_by_affiliate(formsite).select {|user| user.is_verified}.count,
           failed_impressionwise: filtered_users_by_affiliate(formsite).select {|user| !user.is_impressionwise_test_success}.count,

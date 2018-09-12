@@ -14,7 +14,7 @@
     <%- formsites_statistics.converted_counts_hash.each do |formsite_name, stats| %>
       <tr>
         <td><%= link_to formsite_name, admin_formsite_users_path(q: {formsite_id_eq: stats[:formsite]}) %></td>
-        <td><%= link_to stats[:total], admin_formsite_users_path(formsites_statistics.query_params_hash(stats)) %></td>
+        <td><%= link_to stats[:total], admin_formsite_users_path(formsites_statistics.query_params_hash(stats, {is_duplicate_eq: nil})) %></td>
         <td><%= link_to stats[:submitted], admin_formsite_users_path(formsites_statistics.query_params_hash(stats, {user_id_not_null: true})) %></td>
         <td><%= link_to stats[:total_converted], admin_formsite_users_path(
               formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_verified_eq: true})
