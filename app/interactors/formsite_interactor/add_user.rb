@@ -51,9 +51,8 @@ module FormsiteInteractor
             is_duplicate: is_duplicate,
             affiliate: params[:user][:a]
           }))
+          formsite_user.update(user_id: user.id) if !user.blank?
         end
-
-
       end
 
       def formsite_user_params
