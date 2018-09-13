@@ -29,7 +29,7 @@ module Statistics
         answers_hash = {}
         filtered_questions.each do |question|
           answers = question.answers
-          if type_fields.blank?
+          if total_stats
             answers_hash = fill_answers_hash_total(answers_hash, question, answers)
           else
             type_fields.each do |field|
