@@ -10,7 +10,7 @@ ActiveAdmin.register_page "Jobs Statistics" do
   end
 
   sidebar :help do
-    # render 'filters', stats_service: jobs_statistics
+    render 'filters', stats_service: jobs_statistics
   end
 
   content do

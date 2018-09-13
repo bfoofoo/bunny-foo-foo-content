@@ -22,7 +22,12 @@ module Statistics
     private
 
       def all_formsite_users
-        @all_formsite_users ||= FormsiteUser.where.not(job_key: nil)
+        @all_formsite_users ||= 
+          if !start_date.blank? && !start_date.blank?
+            FormsiteUser.where.not(job_key: nil).between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day)
+          else
+            FormsiteUser.where.not(job_key: nil)
+          end
       end
 
       def total external_id

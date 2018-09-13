@@ -1,11 +1,14 @@
 module Statistics
   class BaseStatistic
-    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id, :s_fields_filter, :a_fields_filter, :converted_filter, :total_stats
+    attr_reader :formsites, :counter_hash, :start_date, :end_date, :formsite_id, :s_fields_filter, :a_fields_filter, :converted_filter, :total_stats, :page, :per
 
     S_FIELDS = ["s1", "s2", "s3", "s4", "s5"]
     AFFILIATE_FIELDS = ["affiliate"]
 
     def initialize(params={})
+      @page = params[:page]
+      @per = params[:per]
+
       @start_date = params[:start_date]
       @end_date = params[:end_date]
 
