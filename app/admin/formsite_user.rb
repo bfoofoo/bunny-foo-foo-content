@@ -1,7 +1,7 @@
 ActiveAdmin.register FormsiteUser do
   menu false
   
-  permit_params :affiliate, :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip, :ip
+  permit_params :affiliate, :job_key,  :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip, :ip
   
   
 
@@ -15,6 +15,8 @@ ActiveAdmin.register FormsiteUser do
 
   filter :affiliate
   filter :affiliate_blank,   :as => :boolean
+
+  filter :job_key
 
   filter :s1
   filter :s1_blank,   :as => :boolean
@@ -42,6 +44,7 @@ ActiveAdmin.register FormsiteUser do
     column :is_impressionwise_test_success
     column :is_duplicate
     column :affiliate
+    column :job_key
     column :s1
     column :s2
     column :s3
@@ -76,6 +79,7 @@ ActiveAdmin.register FormsiteUser do
     column :is_impressionwise_test_success
     column :is_duplicate
     column :affiliate
+    column :job_key
     column :s1
     column :s2
     column :s3
