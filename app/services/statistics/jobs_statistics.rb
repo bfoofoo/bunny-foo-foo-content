@@ -5,7 +5,7 @@ module Statistics
       return @job_counts_hash if !@job_counts_hash.blank? 
       response = {}
       jobs.each do |job|
-        response[job["title"]] = {
+        response[job["external_id"]] = {
           job: job,
           total: total(job["external_id"]),
           submitted: submitted(job["external_id"]),
