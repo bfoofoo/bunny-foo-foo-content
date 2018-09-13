@@ -50,14 +50,15 @@ module FormsiteInteractor
               is_useragent_valid: is_useragent_valid,
               is_impressionwise_test_success: is_impressionwise_test_success,
               is_duplicate: is_duplicate,
-              affiliate: params[:user][:a]
+              affiliate: params[:user][:a],
+              job_key: params[:key]
             }))
           end
         end
       end
 
       def formsite_user_params
-        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :job_key, :birthday, :phone, :zip)
+        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip)
       end
   end
 end
