@@ -56,6 +56,7 @@ Rails.application.routes.draw do
       resources :api_users, only: [:index, :show, :create, :update]
 
       get 'statistics/refresh_aweber', to: 'statistics#refresh_aweber'
+      get 'statistics/refresh_maropost', to: 'statistics#refresh_maropost'
     end
   end
 end

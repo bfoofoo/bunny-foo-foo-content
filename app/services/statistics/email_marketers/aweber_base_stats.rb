@@ -1,6 +1,6 @@
 module Statistics
   module EmailMarketers
-    class BaseStats
+    class AweberBaseStats
       attr_reader :aweber_list_id, :start_date, :end_date
 
       def aweber_list

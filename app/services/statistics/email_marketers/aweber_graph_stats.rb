@@ -1,6 +1,6 @@
 module Statistics
   module EmailMarketers
-    class AweberGraphStats < BaseStats
+    class AweberGraphStats < AweberBaseStats
       def initialize(params = {})
         @start_date = Date.parse(params[:start_date]) rescue nil
         @end_date = Date.parse(params[:end_date]) rescue nil

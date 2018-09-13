@@ -1,12 +1,12 @@
 module Statistics
   module EmailMarketers
-    class AweberTableStats < AweberBaseStats
+    class MaropostTableStats < MaropostBaseStats
       HOURS_PER_CELL = 3
 
       def initialize(params = {})
         @start_date = Date.parse(params[:start_date]) rescue nil || Date.today.at_beginning_of_month
         @end_date = Date.parse(params[:end_date]) rescue nil || Date.today.at_end_of_month
-        @aweber_list_id = params[:aweber_list_id]
+        @maropost_list_id = params[:maropost_list_id]
         @leads_by_types = {}
       end
 
@@ -21,7 +21,7 @@ module Statistics
       private
 
       def total_users
-        FormsiteUser.joins(user: :aweber_list)
+        FormsiteUser.joins(user: :maropost_list)
       end
 
       def group_all_leads
@@ -30,9 +30,9 @@ module Statistics
           @grouped_leads = @grouped_leads.deep_merge(grouped_leads_by_type(type))
         end
 
-        query = FormsiteUser.joins(user: :aweber_list).where.not(affiliate: nil)
+        query = FormsiteUser.joins(user: :maropost_list).where.not(affiliate: nil)
 
-        query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
+        query = query.where(maropost_lists: { id: maropost_list_id }) if maropost_list.present?
         query = query.where('formsite_users.created_at > ?', start_date) if start_date
         query = query.where('formsite_users.created_at < ?', end_date) if end_date
 
@@ -59,7 +59,7 @@ module Statistics
           h[k] = v.sort
         end
       end
-      
+
       def grouped_leads_by_type(type)
         leads = leads_by_type(type)
         deep_group_leads(leads, :event_at, type)
@@ -67,16 +67,16 @@ module Statistics
 
       def leads_by_type(type)
         return @leads_by_types[type] if @leads_by_types[type]
-        query = Leads::Aweber.joins(:source).where.not(affiliate: nil).where(status: type)
+        query = Leads::Maropost.joins(:source).where.not(affiliate: nil).where(status: type)
 
-        query = query.where(aweber_lists: { id: aweber_list_id }) if aweber_list.present?
+        query = query.where(maropost_lists: { id: maropost_list_id }) if maropost_list.present?
         query = query.where('leads.event_at > ?', start_date.beginning_of_day) if start_date
         query = query.where('leads.event_at < ?', end_date.end_of_day) if end_date
         @leads_by_types[type] = query.to_a
       end
 
       def all_affiliates
-        (FormsiteUser.pluck(:affiliate).uniq + Leads::Aweber.pluck(:affiliate).uniq).compact.uniq
+        (FormsiteUser.pluck(:affiliate).uniq + Leads::Maropost.pluck(:affiliate).uniq).compact.uniq
       end
 
       def affiliate_name(affiliate)
@@ -91,7 +91,7 @@ module Statistics
       end
 
       def types_of_leads
-        @types_of_leads ||= Leads::Aweber.pluck(:status).uniq
+        @types_of_leads ||= Leads::Maropost.pluck(:status).uniq
       end
     end
   end

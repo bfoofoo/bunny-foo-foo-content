@@ -84,7 +84,7 @@ module EmailMarketerService
       end
 
       def last_lead_date
-        Leads::Aweber.maximum(:created_at)&.to_date || DEFAULT_DATE
+        Leads::Aweber.maximum(:event_at)&.to_date || DEFAULT_DATE
       end
     end
   end
