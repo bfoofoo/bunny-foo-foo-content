@@ -43,6 +43,7 @@ module FormsiteInteractor
 
       def create_formsite_user
         context.formsite_user = formsite.formsite_users.find_or_create_by(ip: request.env['REMOTE_ADDR']).tap do |formsite_user|
+          formsite_user.job_key = params[:user][:key]
           if formsite_user.user.blank?
             formsite_user.update_attributes(formsite_user_params.merge({
               user_id: formsite_user.user_id.blank? ? (user.blank? ? nil : user.id) : formsite_user.user_id,
@@ -51,7 +52,7 @@ module FormsiteInteractor
               is_impressionwise_test_success: is_impressionwise_test_success,
               is_duplicate: is_duplicate,
               affiliate: params[:user][:a],
-              job_key: params[:key]
+              job_key: params[:user][:key]
             }))
           end
         end
