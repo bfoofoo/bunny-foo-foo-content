@@ -1,7 +1,7 @@
-module Statistics
+module Mixins
   module EmailMarketers
-    class MaropostBaseStats
-      attr_reader :maropost_list_id, :start_date, :end_date
+    module MaropostLists
+      attr_reader :maropost_list_id
 
       def maropost_list
         return @maropost_list if !@maropost_list.blank?

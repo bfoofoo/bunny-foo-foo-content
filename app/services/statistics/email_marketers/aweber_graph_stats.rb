@@ -1,6 +1,8 @@
 module Statistics
   module EmailMarketers
-    class AweberGraphStats < AweberBaseStats
+    class AweberGraphStats < BaseGraphStats
+      include Mixins::EmailMarketers::AweberLists
+
       def initialize(params = {})
         @start_date = Date.parse(params[:start_date]) rescue nil
         @end_date = Date.parse(params[:end_date]) rescue nil

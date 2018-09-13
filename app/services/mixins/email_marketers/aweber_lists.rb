@@ -1,7 +1,7 @@
-module Statistics
+module Mixins
   module EmailMarketers
-    class AweberBaseStats
-      attr_reader :aweber_list_id, :start_date, :end_date
+    module AweberLists
+      attr_reader :aweber_list_id
 
       def aweber_list
         return @aweber_list if !@aweber_list.blank?
