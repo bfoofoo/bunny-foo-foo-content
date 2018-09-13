@@ -44,7 +44,7 @@ module EmailMarketerService
 
       def event_campaign_sent_at(event)
         campaign = client.campaigns[event['campaign_id']]
-        campaign['sent_at']
+        campaign['sent_at'] || campaign['created_at']
       rescue MaropostApi::Errors
         puts "Maropost failed to fetch campaign #{event['campaign_id']} due to error: #{e.to_s}"
         nil
