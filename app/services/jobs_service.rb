@@ -3,7 +3,7 @@ class JobsService
   attr_reader :page, :per
 
   API_PATH="http://142.93.246.163/api/v1"
-  DEFAULT_PER_PAGE=50
+  DEFAULT_PER_PAGE=100
 
   def initialize(page: 1, per: DEFAULT_PER_PAGE)
     @page = page
