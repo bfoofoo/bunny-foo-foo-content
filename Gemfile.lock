@@ -512,6 +512,7 @@ DEPENDENCIES
   formtastic (~> 3.0)
   guard-livereload (~> 2.5)
   highcharts-rails
+  httparty
   interactor (~> 3.0)
   jbuilder (~> 2.5)
   jquery-rails
