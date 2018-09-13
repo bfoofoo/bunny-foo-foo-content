@@ -66,7 +66,7 @@ module Statistics
 
       def leads_total_list
         query =
-          FormsiteUser.joins(user: list_element_name).where.not(affiliate: nil)
+          FormsiteUser.joins(user: list_element_name)
 
         query = query.where(list_table_name => { id: list_id }) if list.present?
         query = query.where('formsite_users.created_at > ?', start_date.beginning_of_day) if start_date
