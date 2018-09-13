@@ -55,7 +55,7 @@ module Statistics
           @grouped_leads = @grouped_leads.deep_merge(grouped_leads_by_type(type))
         end
 
-        query = FormsiteUser.joins(user: list_element_name).where.not(affiliate: nil)
+        query = FormsiteUser.joins(user: list_element_name)
 
         query = query.where(list_table_name => { id: list_id }) if list.present?
         query = query.where('formsite_users.created_at > ?', start_date) if start_date
@@ -92,7 +92,7 @@ module Statistics
 
       def leads_by_type(type)
         return @leads_by_types[type] if @leads_by_types[type]
-        query = lead_class.joins(:source).where.not(affiliate: nil).where(status: type)
+        query = lead_class.joins(:source).where(status: type)
         table_name = list_class.table_name.to_sym
 
         query = query.where(table_name => { id: list_id }) if list.present?
@@ -102,11 +102,7 @@ module Statistics
       end
 
       def all_affiliates
-        (FormsiteUser.pluck(:affiliate).uniq + lead_class.pluck(:affiliate).uniq).compact.uniq
-      end
-
-      def affiliate_name(affiliate)
-        "A#{affiliate}"
+        (FormsiteUser.pluck(:affiliate).uniq + lead_class.pluck(:affiliate).uniq + [nil]).uniq
       end
 
       def all_types

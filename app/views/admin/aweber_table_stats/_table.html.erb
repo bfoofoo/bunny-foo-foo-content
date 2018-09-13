@@ -20,7 +20,9 @@
     <tbody>
       <% table_data[:affiliates].each do |a| %>
         <tr>
-          <td class="border-right">A<%= a %></td>
+          <td class="border-right">
+            <%= a ? "A=#{a}" : 'No affiliate' %>
+          </td>
           <% by_date.each do |_, by_hour| %>
             <% table_data[:types].each_with_index do |type, index| %>
               <% if type == 'total' %>

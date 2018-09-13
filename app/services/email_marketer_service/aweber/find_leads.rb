@@ -24,15 +24,13 @@ module EmailMarketerService
             .added_to_aweber
             .joins(:formsite_users)
             .includes(:aweber_list, :leads, :formsite_users)
-            .where.not(formsite_users: { affiliate: nil })
       end
 
       def collect_leads
         users.each do |user|
           begin
             subscriber = subscribers_for(user.aweber_list).search('email' => user.email)&.entries&.values&.first
-            affiliate = subscriber&.custom_fields&.[]('Affiliate') || user.formsite_users.first.affiliate
-            next if subscriber.nil? || !affiliate
+            next if subscriber.nil?
             subscriber.activity.each_page do |activity|
               values = activity&.entries&.values.to_a
               events = values.select { |a| a.event_time.to_date >= @since && a.type.in?(EVENT_TYPES) }

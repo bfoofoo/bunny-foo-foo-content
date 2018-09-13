@@ -56,7 +56,6 @@ module EmailMarketerService
             .added_to_maropost
             .joins(:formsite_users)
             .includes(:maropost_list, :leads, :formsite_users)
-            .where.not(formsite_users: { affiliate: nil })
       end
 
       def account_for(list)

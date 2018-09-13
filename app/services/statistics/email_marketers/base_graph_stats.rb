@@ -109,11 +109,11 @@ module Statistics
       end
 
       def all_affiliates
-        (FormsiteUser.pluck(:affiliate).uniq + lead_class.pluck(:affiliate).uniq).compact.uniq
+        (FormsiteUser.pluck(:affiliate).uniq + lead_class.pluck(:affiliate).uniq + [nil]).uniq
       end
 
       def affiliate_name(affiliate)
-        "A#{affiliate}"
+        affiliate.nil? ? 'No affiliate' : "A=#{affiliate}"
       end
 
       def all_types
