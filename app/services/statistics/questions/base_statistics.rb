@@ -86,7 +86,7 @@ module Statistics
       def filtered_formsite_user_answers(answer)
         if !start_date.blank? && !end_date.blank?
           answer.formsite_user_answers.select { |user_answer|
-            user_answer.created_at >= start_date && user_answer.created_at <= end_date
+            user_answer.created_at >= start_date.to_date.beginning_of_day && user_answer.created_at <= end_date.to_date.end_of_day
           }
         else
           answer.formsite_user_answers
