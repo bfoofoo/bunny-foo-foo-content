@@ -1,0 +1,10 @@
+<%- if chart_data[:categories].blank? %>
+  <h2>There are no leads for selected filters.</h2>
+<% else %>
+  <div
+    class="nested-categories-highchart"
+    data-series="<%=chart_data[:series].to_json%>"
+    data-categories="<%=chart_data[:categories].to_json%>"
+    data-y-title="Leads Count"
+  ></div>
+<% end %>

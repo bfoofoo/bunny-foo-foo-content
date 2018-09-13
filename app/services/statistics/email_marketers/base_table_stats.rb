@@ -38,11 +38,15 @@ module Statistics
       end
 
       def list_table_name
+        list_class.table_name.to_sym
+      end
+
+      def list_element_name
         list_class.model_name.element.to_sym
       end
 
       def total_users
-        FormsiteUser.joins(user: list_table_name)
+        FormsiteUser.joins(user: list_element_name)
       end
 
       def group_all_leads
@@ -51,9 +55,9 @@ module Statistics
           @grouped_leads = @grouped_leads.deep_merge(grouped_leads_by_type(type))
         end
 
-        query = FormsiteUser.joins(user: list_table_name).where.not(affiliate: nil)
+        query = FormsiteUser.joins(user: list_element_name).where.not(affiliate: nil)
 
-        query = query.where(aweber_lists: { id: list_id }) if list.present?
+        query = query.where(list_table_name => { id: list_id }) if list.present?
         query = query.where('formsite_users.created_at > ?', start_date) if start_date
         query = query.where('formsite_users.created_at < ?', end_date) if end_date
 

@@ -75,7 +75,7 @@ module EmailMarketerService
       end
 
       def lead_params(user, event, event_type)
-        affiliate = user.formsite_users.first.affiliate || contact_by_email(user.email)&.[]('affiliate')
+        affiliate = contact_by_email(user.email)&.[]('affiliate') || user.formsite_users.first.affiliate
         {
           source_id: user.maropost_list.id,
           affiliate: affiliate,

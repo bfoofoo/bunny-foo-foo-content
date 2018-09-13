@@ -1,0 +1,23 @@
+<div class="panel_contents">
+  <%= form_tag(admin_maropost_graph_stats_path, method: "get", class: "filter_form") do %>
+    <div class="filter_form_field">
+      <%= label_tag(:maropost_list_id, "Maropost List") %>
+      <%= select_tag "maropost_list_id", options_from_collection_for_select(MaropostList.includes(:maropost_account).all, "id", "full_name", params[:maropost_list_id] || stats_service.maropost_list.try(:id)), include_blank: false %>
+    </div>
+
+    <div class="filter_form_field">
+      <%= label_tag(:start_date, "Start Date") %>
+      <%= date_field_tag(:start_date, params[:start_date]) %>
+    </div>
+
+    <div class="filter_form_field">
+      <%= label_tag(:end_date, "End Date") %>
+      <%= date_field_tag(:end_date, params[:end_date]) %>
+    </div>
+
+    <div class="buttons">
+      <input type="submit" name="commit" value="Filter">
+      <a class="clear_filters_btn" href="<%= admin_maropost_graph_stats_path({ maropost_list_id: params[:maropost_list_id] }) %>">Clear Filters</a>
+    </div>
+  <% end %>
+</div>
