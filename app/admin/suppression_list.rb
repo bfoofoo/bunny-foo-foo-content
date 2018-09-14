@@ -1,4 +1,4 @@
-ActiveAdmin.register SuppresionList do
+ActiveAdmin.register SuppressionList do
   permit_params :file
 
 

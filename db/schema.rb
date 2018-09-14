@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180913211052) do
+ActiveRecord::Schema.define(version: 20180914133928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -361,11 +361,12 @@ ActiveRecord::Schema.define(version: 20180913211052) do
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
   end
 
-  create_table "suppresion_lists", force: :cascade do |t|
+  create_table "suppression_lists", force: :cascade do |t|
     t.string   "file"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.string   "file_name"
+    t.boolean  "autoremove_from_esp", default: false, null: false
   end
 
   create_table "users", force: :cascade do |t|
