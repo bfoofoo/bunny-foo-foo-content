@@ -10,9 +10,21 @@ class JobsService
     @per = per
   end
 
-  def actual_links
-    self.class.get(API_PATH + "/jobs/actual-db", pagination_query)["data"]
+  def actual_links_request
+    @actual_links_request ||= self.class.get(API_PATH + "/jobs/actual-db", pagination_query)
   end
+
+  def jobs
+    actual_links_request["data"]
+  end 
+
+  def jobs_page_count
+    actual_links_request["total_pages"]
+  end 
+
+  def total_jobs_count
+    jobs_page_count.to_i * DEFAULT_PER_PAGE
+  end 
 
   private 
     def pagination_query

@@ -21,8 +21,11 @@ module Statistics
     
     def jobs  
       return @jobs if !@jobs.blank?
-      jobs = JobsService.new(page: page).actual_links
-      @jobs = Kaminari.paginate_array(jobs, total_count: 10000).page(page).per(JobsService::DEFAULT_PER_PAGE)
+      job_service = JobsService.new(page: page)
+      @jobs = Kaminari
+                .paginate_array(job_service.jobs, total_count: job_service.total_jobs_count)
+                .page(page)
+                .per(JobsService::DEFAULT_PER_PAGE)
     end
     private
     
