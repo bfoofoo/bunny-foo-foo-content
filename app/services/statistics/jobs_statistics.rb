@@ -18,9 +18,14 @@ module Statistics
       @job_counts_hash = response
       return @job_counts_hash
     end
-  
+    
+    def jobs  
+      return @jobs if !@jobs.blank?
+      jobs = JobsService.new(page: page).actual_links
+      @jobs = Kaminari.paginate_array(jobs, total_count: 10000).page(page).per(JobsService::DEFAULT_PER_PAGE)
+    end
     private
-
+    
       def all_formsite_users
         @all_formsite_users ||= 
           if !start_date.blank? && !start_date.blank?
@@ -74,9 +79,6 @@ module Statistics
         @users_grouped_by_job_key ||= all_formsite_users.group_by {|user| user["job_key"] }
       end
 
-      def jobs
-        @jobs ||= JobsService.new().actual_links
-      end
   end
 end
 
