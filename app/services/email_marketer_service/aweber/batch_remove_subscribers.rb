@@ -1,11 +1,12 @@
 module EmailMarketerService
   module Aweber
     class BatchRemoveSubscribers
-      attr_reader :emails
+      attr_reader :emails, :removed_emails
 
       def initialize(emails = [])
         @auth_services = {}
         @emails = emails
+        @removed_emails = []
       end
 
       def call
@@ -22,6 +23,7 @@ module EmailMarketerService
         subscribers.each do |subscriber|
           subscriber.delete
         end
+        @removed_emails << email
       rescue AWeber::ServiceUnavailableError, AWeber::UnknownRequestError, AWeber::NotFoundError => e
         puts "Aweber failed due to error: #{e.to_s}"
       rescue AWeber::RateLimitError

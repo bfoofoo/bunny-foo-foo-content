@@ -29,5 +29,5 @@ every 1.day do
 end
 
 every 1.day do
-  rake "supression_lists:autoremove"
+  rake "suppression_lists:autoremove_from_esp"
 end

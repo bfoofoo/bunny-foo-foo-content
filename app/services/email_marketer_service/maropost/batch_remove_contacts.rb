@@ -1,11 +1,12 @@
 module EmailMarketerService
   module Maropost
     class BatchRemoveContacts
-      attr_reader :emails
+      attr_reader :emails, :removed_emails
 
       def initialize(emails = [])
         @maropost_clients = {}
         @emails = emails
+        @removed_emails = []
       end
 
       def call
@@ -18,6 +19,7 @@ module EmailMarketerService
 
       def delete_contact(account, email)
         client_for(account).contacts.delete_all(params: { 'contact[email]' => email })
+        @removed_emails << email
       rescue MaropostApi::Errors => e
         puts "Maropost contact deletion failed due to error: #{e.to_s}"
       end
