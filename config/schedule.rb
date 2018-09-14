@@ -27,3 +27,7 @@ end
 every 1.day do
   rake_verbose "aweber:transfer_to_maropost"
 end
+
+every 1.day do
+  rake "supression_lists:autoremove"
+end
