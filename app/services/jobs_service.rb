@@ -11,7 +11,7 @@ class JobsService
   end
 
   def actual_links
-    self.class.get(API_PATH + "/jobs/actual-links", pagination_query)["data"]
+    self.class.get(API_PATH + "/jobs/actual-db", pagination_query)["data"]
   end
 
   private 
