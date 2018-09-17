@@ -2,5 +2,5 @@
 <%- if table_data[:cells].empty? %>
   <h2>There is no data for selected filters.</h2>
 <% else %>
-  <%= render 'table', table_data: table_data %>
+  <%= render 'partials/esp_stats_table', table_data: table_data, list: list %>
 <% end %>

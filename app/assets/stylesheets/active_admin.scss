@@ -134,6 +134,10 @@ td.border-right:not(:last-child) {
   };
 }
 
+td.non-empty {
+  font-weight: bold;
+}
+
 //.activeadmin-wysihtml5-modal {
 //  input[name="url"],
 //  input[name="text"],

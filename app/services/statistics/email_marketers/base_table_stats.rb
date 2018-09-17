@@ -15,7 +15,8 @@ module Statistics
         {
           cells: group_all_leads,
           affiliates: all_affiliates,
-          types: all_types
+          types: all_types,
+          max_value: max_value
         }
       end
 
@@ -99,6 +100,20 @@ module Statistics
         query = query.where('leads.event_at > ?', start_date.beginning_of_day) if start_date
         query = query.where('leads.event_at < ?', end_date.end_of_day) if end_date
         @leads_by_types[type] = query.to_a
+      end
+
+      # get maximum value to be found in any table cell
+      def max_value
+        value = 0
+        @grouped_leads.each do |_, v|
+          v.each do |_, v1| # by day
+            v1.each do |_, v2| # by hour
+              sum = all_types.sum { |t| v2.dig(t) || 0 }
+              value = sum if sum > value
+            end
+          end
+        end
+        value
       end
 
       def all_affiliates
