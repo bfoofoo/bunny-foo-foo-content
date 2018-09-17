@@ -1,10 +1,10 @@
 module Aweber
-  class FindLeadsJob
+  class FetchStatsJob
     include SuckerPunch::Job
 
     def perform
       ActiveRecord::Base.connection_pool.with_connection do
-        EmailMarketerService::Aweber::FindLeads.new.call
+        EmailMarketerService::Aweber::RetrieveBroadcastStats.new.call
       end
     end
   end

@@ -3,12 +3,11 @@ module Statistics
     class BaseTableStats
       attr_reader :start_date, :end_date
 
-      HOURS_PER_CELL = 3
-
       def initialize(params = {})
         @start_date = Date.parse(params[:start_date]) rescue nil || Date.today.at_beginning_of_month
         @end_date = Date.parse(params[:end_date]) rescue nil || Date.today.at_end_of_month
         @leads_by_types = {}
+        @campaigns = {}
       end
 
       def data
@@ -21,14 +20,6 @@ module Statistics
       end
 
       private
-
-      def list
-        raise NotImplementedError
-      end
-
-      def list_id
-        raise NotImplementedError
-      end
 
       def lead_class
         raise NotImplementedError
@@ -46,36 +37,67 @@ module Statistics
         list_class.model_name.element.to_sym
       end
 
-      def total_users
-        FormsiteUser.joins(user: list_element_name)
+      def all_dates
+        (start_date..end_date).to_a
       end
 
       def group_all_leads
-        @grouped_leads = {}
+        @grouped_leads = build_grouped_leads
+        build_campaign_data
+        fill_empty_days
         types_of_leads.each do |type|
           @grouped_leads = @grouped_leads.deep_merge(grouped_leads_by_type(type))
         end
-
-        query = FormsiteUser.joins(user: list_element_name)
-
-        query = query.where(list_table_name => { id: list_id }) if list.present?
-        query = query.where('formsite_users.created_at > ?', start_date) if start_date
-        query = query.where('formsite_users.created_at < ?', end_date) if end_date
-
-        @grouped_leads.deep_merge!(deep_group_leads(query.to_a, :created_at, 'total'))
         grouped_leads_sorted
       end
 
       # Group leads 4 levels deep (1 - day, 2 - hour, 3 - affiliate, 4 - status (event type))
-      def deep_group_leads(leads, date_field, status)
-        leads.group_by { |l| l.send(date_field).to_date }.each_with_object({}) do |(k, v), h|
-          h[k] = v.sort_by(&date_field).group_by do |l|
-            date = l.send(date_field)
-            date.change(hour: date.hour / HOURS_PER_CELL * HOURS_PER_CELL)
-          end.each_with_object({}) do |(k1, v1), h1|
-            h1[k1] = v1.group_by(&:affiliate).each_with_object({}) do |(k2, v2), h2|
-              h2[k2] = { status => v2.map(&:email).uniq.size }
-            end
+      def deep_group_leads(leads, status)
+        leads_by_campaign = leads.group_by(&:campaign_id)
+        @grouped_leads.each_with_object({}) do |(k, v), h| # iterate dates
+          h[k] = v.each_with_object({}) do |(k1, v1), h1| # iterate time
+            campaign_id = campaign_id_by_time(k1)
+            next unless leads_by_campaign[campaign_id]
+            leads_by_affiliate = leads_by_campaign[campaign_id].group_by(&:affiliate)
+            h1[k1] = {
+              'affiliates' =>
+                leads_by_affiliate.each_with_object({}) do |(k2, v2), h2|
+                  h2[k2] = { status => v2.map(&:email).uniq.size }
+                end
+            }
+          end
+        end
+      end
+
+      def build_grouped_leads
+        array = all_dates.map do |date|
+          [date, {}]
+        end
+        array.to_h
+      end
+
+      def build_campaign_data
+        campaigns.where('sent_at BETWEEN ? AND ?', start_date.beginning_of_day, end_date.end_of_day).each do |campaign|
+          date = campaign.sent_at.to_date
+          @grouped_leads[date][campaign.sent_at] = {
+            'subject' => campaign.subject,
+            'affiliates' => {},
+            'id' => campaign.campaign_id,
+            'total' => {
+              'sent' => campaign.stats['sent'],
+              'click' => campaign.stats['clicks'],
+              'open' => campaign.stats['opens']
+            }
+          }
+        end
+      end
+
+      def fill_empty_days
+        @grouped_leads.each do |date, by_date|
+          if by_date.empty?
+            @grouped_leads[date] = {
+              date.beginning_of_day => {}
+            }
           end
         end
       end
@@ -88,15 +110,13 @@ module Statistics
 
       def grouped_leads_by_type(type)
         leads = leads_by_type(type)
-        deep_group_leads(leads, :event_at, type)
+        deep_group_leads(leads, type)
       end
 
       def leads_by_type(type)
         return @leads_by_types[type] if @leads_by_types[type]
         query = lead_class.joins(:source).where(status: type)
-        table_name = list_class.table_name.to_sym
 
-        query = query.where(table_name => { id: list_id }) if list.present?
         query = query.where('leads.event_at > ?', start_date.beginning_of_day) if start_date
         query = query.where('leads.event_at < ?', end_date.end_of_day) if end_date
         @leads_by_types[type] = query.to_a
@@ -105,30 +125,42 @@ module Statistics
       # get maximum value to be found in any table cell
       def max_value
         value = 0
-        @grouped_leads.each do |_, v|
-          v.each do |_, v1| # by day
-            v1.each do |_, v2| # by hour
-              sum = all_types.sum { |t| v2.dig(t) || 0 }
-              value = sum if sum > value
-            end
+        @grouped_leads.each do |_, v| # iterate dates
+          v.each do |h, v1| # iterate hours
+            next if v1.empty?
+            sum = v1.dig('total', 'sent')
+            value = sum if sum > value
           end
         end
         value
       end
 
       def all_affiliates
-        (FormsiteUser.pluck(:affiliate).uniq + lead_class.pluck(:affiliate).uniq + [nil]).uniq
+        @all_affiliates ||= (FormsiteUser.pluck(:affiliate).uniq + lead_class.pluck(:affiliate).uniq).uniq.compact
       end
 
       def all_types
         [
-          'total',
+          'sent',
           *types_of_leads
         ]
       end
 
       def types_of_leads
-        @types_of_leads ||= lead_class.pluck(:status).uniq
+        %w(open click)
+      end
+
+      def campaign_sent_at(id)
+        @campaigns[id]&.sent_at ||= campaigns.find_by(id: id).sent_at
+      end
+
+      def campaign_id_by_time(time)
+        return @campaigns[time] if @campaigns[time]
+        @campaigns[time] = campaigns.find_by(sent_at: time)&.id
+      end
+
+      def campaigns
+        raise NotImplementedError
       end
     end
   end

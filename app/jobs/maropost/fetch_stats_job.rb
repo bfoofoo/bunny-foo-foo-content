@@ -1,10 +1,10 @@
 module Maropost
-  class FindLeadsJob
+  class FetchStatsJobs
     include SuckerPunch::Job
 
     def perform
       ActiveRecord::Base.connection_pool.with_connection do
-        EmailMarketerService::Maropost::FindLeads.new.call
+        EmailMarketerService::Maropost::RetrieveBroadcastStats.new.call
       end
     end
   end

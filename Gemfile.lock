@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/fixtheclouds/AWeber-API-Ruby-Library.git
-  revision: a75c92fe77cb9163af94a69f6359162c8ff812c7
+  revision: ea81ac5d94d9579babbc7aa7dad5875c5bd833c8
   specs:
     aweber (1.6.1)
       json
@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: git://github.com/fixtheclouds/maropost_api.git
-  revision: e53cb6fc816e9e86426c11974ac432b7e323c5ae
+  revision: ddd4aa336284d21abbd056d886bb1deb90e28107
   specs:
     maropost_api (0.5.0)
       hashie

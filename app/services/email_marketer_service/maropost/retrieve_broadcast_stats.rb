@@ -1,9 +1,10 @@
 module EmailMarketerService
   module Maropost
-    class FindLeads
+    class RetrieveBroadcastStats
       attr_reader :client
 
       EVENT_TYPES = %w(open click).freeze
+      DEFAULT_DATE = Date.new(2018, 8, 1)
 
       def initialize(since: nil)
         @auth_services = {}
@@ -11,10 +12,39 @@ module EmailMarketerService
         @accounts = {}
         @contacts = {}
         @clients = {}
-        @since = since
+        @since = since || last_campaign_date
       end
 
       def call
+        collect_campaigns
+        collect_leads
+      end
+
+      private
+
+      def collect_campaigns
+        MaropostList.all.includes(:maropost_account).each do |list|
+          @client = client_for(list.account)
+          campaigns = client.campaigns.all.select { |c| c.status == 'sent' }
+          campaigns.each { |campaign| find_or_create_campaign(campaign) }
+        end
+      end
+
+      def find_or_create_campaign(campaign)
+        EmailMarketerCampaign.find_or_initialize_by(origin: 'Maropost', campaign_id: campaign['id']) do |c|
+          c.subject = campaign['subject']
+          full_campaign = client.campaigns[campaign['id']]
+          c.stats = {
+            'sent' => full_campaign['sent'],
+            'opens' => full_campaign['unique_opens'],
+            'clicks' => full_campaign['unique_clicks']
+          }
+          c.sent_at = campaign['sent_at'] || campaign['send_at'] || campaign['created_at']
+          c.list_ids = full_campaign['lists'].map { |l| l['id'] }
+        end.save
+      end
+
+      def collect_leads
         users.each do |user|
           @client = client_for(account_for(user.maropost_list))
 
@@ -29,13 +59,11 @@ module EmailMarketerService
         end
       end
 
-      private
-
       def events_by_type(event_type, user)
         method = event_type.pluralize
         client
           .reports
-          .send(method, maropost_report_params.merge('email' => user.email))
+          .send(method, maropost_report_params.merge('email' => user.email.downcase))
           .uniq { |o| o['campaign_id'] }
       rescue MaropostApi::Errors => e
         puts "Maropost reports fetch failed due to error: #{e.to_s}"
@@ -87,14 +115,13 @@ module EmailMarketerService
       def maropost_report_params
         {
           'unique' => 'true',
-          'from' => @since&.to_date&.to_s
+          'from' => @since&.to_date&.to_s,
+          'to' => Date.today
         }.compact
       end
 
-      # Currently not used
-      # might be helpful to select only fresh leads
-      def last_lead_date
-        Leads::Maropost.maximum(:event_at)&.to_date
+      def last_campaign_date
+        EmailMarketerCampaign.where(origin: 'Maropost').last&.sent_at || DEFAULT_DATE
       end
     end
   end

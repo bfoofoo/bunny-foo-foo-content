@@ -18,6 +18,6 @@ ActiveAdmin.register_page "Maropost Table Stats" do
   end
 
   content do
-    render 'stats', table_data: stats_service.data, list: stats_service.maropost_list
+    render 'stats', table_data: stats_service.data
   end
 end

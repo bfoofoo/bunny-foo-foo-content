@@ -39,7 +39,7 @@ module Statistics
       end
 
       def total_users
-        FormsiteUser.joins(user: list_element_name)
+        FormsiteUser.joins(user: list_element_name).includes(:user)
       end
 
       def categories
@@ -65,8 +65,7 @@ module Statistics
       end
 
       def leads_total_list
-        query =
-          FormsiteUser.joins(user: list_element_name)
+        query = total_users
 
         query = query.where(list_table_name => { id: list_id }) if list.present?
         query = query.where('formsite_users.created_at > ?', start_date.beginning_of_day) if start_date

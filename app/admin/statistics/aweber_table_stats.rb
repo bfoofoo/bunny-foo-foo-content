@@ -18,6 +18,6 @@ ActiveAdmin.register_page "Aweber Table Stats" do
   end
 
   content do
-    render 'stats', table_data: stats_service.data, list: stats_service.aweber_list
+    render 'stats', table_data: stats_service.data
   end
 end
