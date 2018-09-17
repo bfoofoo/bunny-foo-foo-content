@@ -11,7 +11,7 @@ module EmailMarketerService
         @accounts = {}
         @contacts = {}
         @clients = {}
-        @since = since ? since : last_lead_date
+        @since = since
       end
 
       def call
@@ -91,6 +91,8 @@ module EmailMarketerService
         }.compact
       end
 
+      # Currently not used
+      # might be helpful to select only fresh leads
       def last_lead_date
         Leads::Maropost.maximum(:event_at)&.to_date
       end
