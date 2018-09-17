@@ -1,8 +1,8 @@
-class SuppresionList < ApplicationRecord
+class SuppressionList < ApplicationRecord
 
   FILE_NAME_DELIMITER = "---"
   
-  mount_uploader :file, SuppresionListUploader
+  mount_uploader :file, SuppressionListUploader
 
   scope :between_dates, -> (start_date, end_date) { 
     where("created_at >= ? AND created_at <= ?", start_date, end_date)
@@ -17,7 +17,7 @@ class SuppresionList < ApplicationRecord
   end
 
   def self.list_uniq_file_lists
-    SuppresionList.all.pluck(:file_name).map {|file_name| 
+    SuppressionList.all.pluck(:file_name).map {|file_name|
       file_name.split(FILE_NAME_DELIMITER)
     }.select {|names| names.count > 1 }.map {|name| name.first}
   end
