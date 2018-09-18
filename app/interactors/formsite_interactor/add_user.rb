@@ -1,6 +1,7 @@
 module FormsiteInteractor
   class AddUser
     include Interactor
+    OPENPOSITION_ID=35
 
     delegate :formsite, :params, :request, :user, :formsite_user, :to => :context
 
@@ -42,20 +43,44 @@ module FormsiteInteractor
       end
 
       def create_formsite_user
-        context.formsite_user = formsite.formsite_users.find_or_create_by(ip: request.env['REMOTE_ADDR']).tap do |formsite_user|
-          formsite_user.job_key = params[:user][:key]
-          if formsite_user.user.blank?
-            formsite_user.update_attributes(formsite_user_params.merge({
-              user_id: formsite_user.user_id.blank? ? (user.blank? ? nil : user.id) : formsite_user.user_id,
-              is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
-              is_useragent_valid: is_useragent_valid,
-              is_impressionwise_test_success: is_impressionwise_test_success,
-              is_duplicate: is_duplicate,
-              affiliate: params[:user][:a],
-              job_key: params[:user][:key]
-            }))
+        if formsite && formsite.id == OPENPOSITION_ID && !user.blank?
+          handle_openposition_formsite()
+        else
+          context.formsite_user = formsite.formsite_users.find_or_create_by(ip: request.env['REMOTE_ADDR']).tap do |formsite_user|
+            formsite_user.job_key = params[:user][:key]
+            if formsite_user.user.blank?
+              attributes = formsite_user_params
+                .merge(formsite_user_dynamic_params)
+                .merge({
+                  user_id: formsite_user.user_id.blank? ? (user.blank? ? nil : user.id) : formsite_user.user_id
+                })
+
+              formsite_user.update_attributes(attributes)
+            end
           end
         end
+      end
+
+      def handle_openposition_formsite
+        attributes = formsite_user_params
+                .merge(formsite_user_dynamic_params)
+                .merge({
+                  ip: request.env['REMOTE_ADDR'],
+                  user_id: user.id
+                })
+
+        context.formsite_user = formsite.formsite_users.create(attributes)
+      end
+
+      def formsite_user_dynamic_params
+        {
+          is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
+          is_useragent_valid: is_useragent_valid,
+          is_impressionwise_test_success: is_impressionwise_test_success,
+          is_duplicate: is_duplicate,
+          affiliate: params[:user][:a],
+          job_key: params[:user][:key]
+        }
       end
 
       def formsite_user_params
