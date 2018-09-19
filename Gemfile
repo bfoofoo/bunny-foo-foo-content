@@ -22,6 +22,7 @@ gem 'activerecord-import'
 gem 'rubyzip'
 gem 'simple_enum'
 gem 'httparty'
+gem 'acts_as_paranoid', '~> 0.6.0'
 
 
 # APIS

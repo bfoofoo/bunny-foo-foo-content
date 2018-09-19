@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  acts_as_paranoid
+  
   has_many :formsite_users
   has_many :formsites, through: :formsite_users
   has_many :formsite_user_answers

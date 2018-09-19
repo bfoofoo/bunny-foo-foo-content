@@ -1,4 +1,6 @@
 class FormsiteUser < ApplicationRecord
+  acts_as_paranoid
+  
   belongs_to :formsite
   belongs_to :user, optional: true
 

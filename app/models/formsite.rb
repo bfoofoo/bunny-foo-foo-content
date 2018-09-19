@@ -1,5 +1,6 @@
 class Formsite < ApplicationRecord
-
+  acts_as_paranoid
+  
   has_and_belongs_to_many :categories
   has_many :formsite_users, dependent: :restrict_with_error
   has_many :users, :through => :formsite_users do

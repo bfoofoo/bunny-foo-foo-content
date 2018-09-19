@@ -1,7 +1,8 @@
 module FormsiteInteractor
   class AddUser
     include Interactor
-    OPENPOSITION_ID=35
+    # FORMSITE_NAME="openposition.us"
+    FORMSITE_NAME="theresourcefinder.info"
 
     delegate :formsite, :params, :request, :user, :formsite_user, :to => :context
 
@@ -43,7 +44,7 @@ module FormsiteInteractor
       end
 
       def create_formsite_user
-        if formsite && formsite.id == OPENPOSITION_ID && !user.blank?
+        if formsite && formsite.name == FORMSITE_NAME && !user.blank?
           handle_openposition_formsite()
         else
           context.formsite_user = formsite.formsite_users.find_or_create_by(ip: request.env['REMOTE_ADDR']).tap do |formsite_user|
@@ -69,7 +70,13 @@ module FormsiteInteractor
                   user_id: user.id
                 })
 
-        context.formsite_user = formsite.formsite_users.create(attributes)
+        formsite_user = formsite.formsite_users.find_by(ip: request.env['REMOTE_ADDR'], user_id: nil)
+
+        if formsite_user.persisted?
+          formsite_user.update(attributes)
+        else
+          context.formsite_user = formsite.formsite_users.create(attributes)
+        end
       end
 
       def formsite_user_dynamic_params
