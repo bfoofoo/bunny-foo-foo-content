@@ -24,12 +24,6 @@ end
 
 namespace :rails do
   desc "Run the console on a remote server."
-  task :console do
-    on roles(:app) do |h|
-      execute_interactively "RAILS_ENV=#{fetch(:rails_env)} bundle exec rails console", h.user
-    end
-  end
-
   task :logs do
     on roles(:app) do |h|
       execute_interactively "tail -f #{fetch(:deploy_to)}/current/log/#{fetch(:rails_env)}.log", h.user
