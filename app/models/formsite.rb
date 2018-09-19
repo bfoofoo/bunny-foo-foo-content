@@ -1,7 +1,7 @@
 class Formsite < ApplicationRecord
 
   has_and_belongs_to_many :categories
-  has_many :formsite_users, dependent: :destroy
+  has_many :formsite_users, dependent: :restrict_with_error
   has_many :users, :through => :formsite_users do
     def verified
       where("formsite_users.is_verified= ?", true)
