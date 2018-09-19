@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180914133928) do
+ActiveRecord::Schema.define(version: 20180919080749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -361,6 +361,14 @@ ActiveRecord::Schema.define(version: 20180914133928) do
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
   end
 
+  create_table "suppression_email_marketer_lists", force: :cascade do |t|
+    t.integer "suppression_list_id", null: false
+    t.string  "removable_type",      null: false
+    t.integer "removable_id",        null: false
+    t.index ["removable_type", "removable_id"], name: "index_suppression_lists_on_removable", using: :btree
+    t.index ["suppression_list_id"], name: "index_suppression_lists_on_esp_lists_suppression_list_id", using: :btree
+  end
+
   create_table "suppression_lists", force: :cascade do |t|
     t.string   "file"
     t.datetime "created_at",                          null: false
@@ -418,6 +426,7 @@ ActiveRecord::Schema.define(version: 20180914133928) do
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
+  add_foreign_key "suppression_email_marketer_lists", "suppression_lists"
   add_foreign_key "website_ads", "ads"
   add_foreign_key "website_ads", "websites"
 end

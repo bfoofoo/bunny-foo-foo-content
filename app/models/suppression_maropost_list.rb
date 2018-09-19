@@ -1,0 +1,2 @@
+class SuppressionMaropostList < SuppressionEmailMarketerList
+end

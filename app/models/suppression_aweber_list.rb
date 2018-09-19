@@ -1,0 +1,2 @@
+class SuppressionAweberList < SuppressionEmailMarketerList
+end
