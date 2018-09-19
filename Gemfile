@@ -23,6 +23,7 @@ gem 'rubyzip'
 gem 'simple_enum'
 gem 'httparty'
 gem 'acts_as_paranoid', '~> 0.6.0'
+gem 'capistrano-rails-console', require: false
 
 
 # APIS
