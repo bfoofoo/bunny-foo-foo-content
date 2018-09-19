@@ -20,14 +20,5 @@ module BffAdmin
     config.autoload_paths << Rails.root.join('app', 'use_cases')
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
     config.i18n.default_locale = :en
-
-    config.log_tags = [
-      :request_id,
-      ->(req) {
-        session_key = (Rails.application.config.session_options || {})[:key]
-        session_data = req.cookie_jar.encrypted[session_key] || {}
-        "user_email: #{session_data["user_email"]} user_ip: #{req.env['REMOTE_ADDR']}"
-      }
-    ]
   end
 end
