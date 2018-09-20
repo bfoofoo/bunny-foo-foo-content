@@ -1,8 +1,7 @@
 module FormsiteInteractor
   class AddUser
     include Interactor
-    # FORMSITE_NAME="openposition.us"
-    FORMSITE_NAME="theresourcefinder.info"
+    FORMSITE_NAME="openposition.us"
 
     delegate :formsite, :params, :request, :user, :formsite_user, :to => :context
 
@@ -70,9 +69,13 @@ module FormsiteInteractor
                   user_id: user.id
                 })
 
-        formsite_user = formsite.formsite_users.find_by(ip: request.env['REMOTE_ADDR'], user_id: nil)
+        if !params[:user][:key].blank?
+          formsite_user = formsite.formsite_users.find_by(ip: request.env['REMOTE_ADDR'], job_key: params[:user][:key])
+        else
+          formsite_user = formsite.formsite_users.find_by(ip: request.env['REMOTE_ADDR'], user_id: nil)
+        end
 
-        if formsite_user.persisted?
+        if formsite_user && formsite_user.persisted?
           formsite_user.update(attributes)
         else
           context.formsite_user = formsite.formsite_users.create(attributes)
