@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: git://github.com/fixtheclouds/maropost_api.git
-  revision: ddd4aa336284d21abbd056d886bb1deb90e28107
+  revision: 2cc7217634cad5c79c0c5f9e90cdef18273107ad
   specs:
     maropost_api (0.5.0)
       hashie

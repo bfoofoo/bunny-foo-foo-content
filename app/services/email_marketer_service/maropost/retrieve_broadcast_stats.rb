@@ -28,6 +28,8 @@ module EmailMarketerService
           campaigns = client.campaigns.all.select { |c| c.status == 'sent' }
           campaigns.each { |campaign| find_or_create_campaign(campaign) }
         end
+      rescue MaropostApi::Errors => e
+        puts "Maropost campaigns fetch failed due to error: #{e.to_s}"
       end
 
       def find_or_create_campaign(campaign)

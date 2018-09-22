@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180919193202) do
+ActiveRecord::Schema.define(version: 20180920095809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,8 +144,9 @@ ActiveRecord::Schema.define(version: 20180919193202) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "collect_statistics", default: false, null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -182,6 +183,16 @@ ActiveRecord::Schema.define(version: 20180919193202) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
+  end
+
+  create_table "email_marketer_campaigns", force: :cascade do |t|
+    t.integer  "campaign_id"
+    t.integer  "list_ids",    default: [], null: false, array: true
+    t.string   "subject"
+    t.string   "origin"
+    t.string   "source_url"
+    t.jsonb    "stats",       default: {}, null: false
+    t.datetime "sent_at"
   end
 
   create_table "email_marketer_list_users", force: :cascade do |t|
@@ -366,7 +377,7 @@ ActiveRecord::Schema.define(version: 20180919193202) do
   end
 
   create_table "suppression_email_marketer_lists", force: :cascade do |t|
-    t.integer "suppression_list_id", null: false
+    t.integer "suppression_list_id"
     t.string  "removable_type",      null: false
     t.integer "removable_id",        null: false
     t.index ["removable_type", "removable_id"], name: "index_suppression_lists_on_removable", using: :btree
