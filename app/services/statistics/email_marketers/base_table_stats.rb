@@ -51,15 +51,14 @@ module Statistics
         grouped_leads_sorted
       end
 
-      # Group leads 4 levels deep (1 - day, 2 - hour, 3 - affiliate, 4 - status (event type))
+      # Group leads 4 levels deep (1 - day, 2 - campaign, 3 - affiliate, 4 - status (event type))
       def deep_group_leads(leads, status)
         leads_by_campaign = leads.group_by(&:campaign_id)
         @grouped_leads.each_with_object({}) do |(k, v), h| # iterate dates
-          h[k] = v.each_with_object({}) do |(k1, v1), h1| # iterate time
-            campaign_id = campaign_id_by_time(k1)
+          h[k] = v.each_with_object({}) do |(campaign_id, _), h1| # iterate campaigns
             next unless leads_by_campaign[campaign_id]
             leads_by_affiliate = leads_by_campaign[campaign_id].group_by(&:affiliate)
-            h1[k1] = {
+            h1[campaign_id] = {
               'affiliates' =>
                 leads_by_affiliate.each_with_object({}) do |(k2, v2), h2|
                   h2[k2] = { status => v2.map(&:email).uniq.size }
@@ -79,10 +78,10 @@ module Statistics
       def build_campaign_data
         campaigns.where('sent_at BETWEEN ? AND ?', start_date.beginning_of_day, end_date.end_of_day).each do |campaign|
           date = campaign.sent_at.to_date
-          @grouped_leads[date][campaign.sent_at] = {
+          @grouped_leads[date][campaign.campaign_id] = {
             'subject' => campaign.subject,
             'affiliates' => {},
-            'id' => campaign.campaign_id,
+            'sent_at' => campaign.sent_at,
             'total' => {
               'sent' => campaign.stats['sent'],
               'click' => campaign.stats['clicks'],
@@ -96,7 +95,7 @@ module Statistics
         @grouped_leads.each do |date, by_date|
           if by_date.empty?
             @grouped_leads[date] = {
-              date.beginning_of_day => {}
+              nil => { 'sent_at' => date.beginning_of_day }
             }
           end
         end
@@ -126,10 +125,10 @@ module Statistics
       def max_value
         value = 0
         @grouped_leads.each do |_, v| # iterate dates
-          v.each do |h, v1| # iterate hours
+          v.each do |_, v1| # iterate campaigns
             next if v1.empty?
             sum = v1.dig('total', 'sent')
-            value = sum if sum > value
+            value = sum if sum.to_i > value
           end
         end
         value
