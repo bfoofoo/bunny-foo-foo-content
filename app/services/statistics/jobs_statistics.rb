@@ -59,7 +59,7 @@ module Statistics
       def failed_impressionwise external_id
         users = grouped_users_without_duplicates[external_id.to_s]
         return 0 if users.blank?
-        users.select {|user| !user.is_impressionwise_test_success}.count
+        users.select {|user| !user.is_impressionwise_test_success && !user.user_id.blank?}.count
       end
 
       def failed_useragent external_id
