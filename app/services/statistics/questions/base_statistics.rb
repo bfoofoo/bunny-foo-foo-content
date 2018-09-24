@@ -5,6 +5,12 @@ module Statistics
         categories: [],
         series: []
       }
+
+      def initialize(params={})
+        super
+        @start_date = params[:start_date] || Date.yesterday
+        @end_date = params[:end_date] || Date.yesterday
+      end
   
       def total_chart_statistics(hash)
         hash[:categories] = categories
