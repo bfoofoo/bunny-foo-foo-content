@@ -23,7 +23,7 @@
       <th></th>
       <% by_date.each do %>
         <% table_data[:types].each do |type| %>
-          <th><%= type %></th>
+          <th><%= t("esp_stats_table.#{type}") %></th>
         <% end %>
       <% end %>
     </tr>

@@ -42,7 +42,7 @@ module EmailMarketerService
             'clicks' => full_campaign['unique_clicks']
           }
           c.sent_at = campaign['sent_at'] || campaign['send_at'] || campaign['created_at']
-          c.list_ids = full_campaign['lists'].map { |l| l['id'] }
+          c.list_ids = full_campaign['lists'].map(&:id)
         end.save
       end
 

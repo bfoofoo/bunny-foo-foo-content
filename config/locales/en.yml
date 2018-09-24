@@ -21,3 +21,8 @@
 
 en:
   hello: "Hello world"
+  esp_stats_table:
+    click: clicked
+    open: opened
+    sent_message: sent
+    sent: sent

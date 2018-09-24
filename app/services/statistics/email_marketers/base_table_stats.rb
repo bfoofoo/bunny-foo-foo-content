@@ -83,7 +83,7 @@ module Statistics
             'affiliates' => {},
             'sent_at' => campaign.sent_at,
             'total' => {
-              'sent' => campaign.stats['sent'],
+              'sent_message' => campaign.stats['sent'],
               'click' => campaign.stats['clicks'],
               'open' => campaign.stats['opens']
             }
@@ -127,7 +127,7 @@ module Statistics
         @grouped_leads.each do |_, v| # iterate dates
           v.each do |_, v1| # iterate campaigns
             next if v1.empty?
-            sum = v1.dig('total', 'sent')
+            sum = v1.dig('total', 'sent_message')
             value = sum if sum.to_i > value
           end
         end
@@ -139,14 +139,11 @@ module Statistics
       end
 
       def all_types
-        [
-          'sent',
-          *types_of_leads
-        ]
+        types_of_leads
       end
 
       def types_of_leads
-        %w(open click)
+        %w(sent_message open click)
       end
 
       def campaign_sent_at(id)
