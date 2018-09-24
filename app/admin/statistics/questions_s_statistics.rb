@@ -1,5 +1,5 @@
-ActiveAdmin.register_page "Questions Statistics" do
-  menu parent: "Statistics"
+ActiveAdmin.register_page "Questions Subaffiliate Statistics" do
+  menu false
 
   controller do
     before_action :initialize_data, only: :index
