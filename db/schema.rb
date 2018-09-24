@@ -146,7 +146,6 @@ ActiveRecord::Schema.define(version: 20180920095809) do
     t.integer  "list_id"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
