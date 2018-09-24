@@ -6,8 +6,17 @@ en:
         other: Leadgen Sites    
       formsite_user: 
         one: Leadgen Site User
-        other: Leadgen Site Users  
-      website: 
+        other: Leadgen Site Users
+      suppression_aweber_list:
+        one: Deletion Aweber List
+        other: Deletion Aweber Lists
+      suppression_list:
+        one: Deletion List
+        other: Deletion Lists
+      suppression_maropost_list:
+        one: Deletion Maropost List
+        other: Deletion Maropost Lists
+      website:
         one: Revenue Site
         other: Revenue Sites
 

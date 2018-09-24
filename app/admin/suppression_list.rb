@@ -36,7 +36,7 @@ ActiveAdmin.register SuppressionList do
   end
 
   form do |f|
-    f.inputs 'Suppression List' do
+    f.inputs 'Deletion List' do
       f.input :file
       f.input :autoremove_from_esp, label: 'Autoremove from ESP'
     end
