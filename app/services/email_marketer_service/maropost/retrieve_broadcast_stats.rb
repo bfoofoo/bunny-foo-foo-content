@@ -17,16 +17,29 @@ module EmailMarketerService
 
       def call
         collect_campaigns
+        collect_delivered_reports
         collect_leads
       end
 
       private
 
       def collect_campaigns
-        MaropostList.all.includes(:maropost_account).each do |list|
-          @client = client_for(list.account)
-          campaigns = client.campaigns.all.select { |c| c.status == 'sent' }
-          campaigns.each { |campaign| find_or_create_campaign(campaign) }
+        maropost_accounts.each do |account|
+          @client = client_for(account)
+          each_campaigns_page do |collection|
+            campaigns = collection.select { |c| c.status == 'sent' }
+            campaigns.each { |campaign| find_or_create_campaign(campaign) }
+          end
+        end
+      end
+
+      def each_campaigns_page
+        @page = 1
+        while true do
+          result = client.campaigns.all(page: @page)
+          break if result.empty?
+          @page += 1
+          yield result
         end
       rescue MaropostApi::Errors => e
         puts "Maropost campaigns fetch failed due to error: #{e.to_s}"
@@ -44,6 +57,42 @@ module EmailMarketerService
           c.sent_at = campaign['sent_at'] || campaign['send_at'] || campaign['created_at']
           c.list_ids = full_campaign['lists'].map(&:id)
         end.save
+      end
+
+      def collect_delivered_reports
+        maropost_accounts.each do |account|
+          @client = client_for(account)
+          EmailMarketerCampaign.from_maropost.each do |campaign|
+            each_delivered_reports_page(campaign.campaign_id) do |collection|
+              emails = collection.map(&:email)
+              (emails & user_emails).each do |email|
+                Leads::Maropost.find_or_create_by(
+                  lead_params(
+                    users_by_email[email],
+                    { 'campaign_id' => campaign.campaign_id },
+                    'sent_message'
+                  )
+                ) do |lead|
+                  lead.email = email
+                  lead.event_at = campaign.sent_at
+                end
+              end
+            end
+          end
+        end
+      end
+
+      def each_delivered_reports_page(campaign_id)
+        @page = 1
+        while true do
+          result = client.campaigns.delivered_report(id: campaign_id, page: @page)
+          break if result.empty?
+          @page += 1
+          yield result
+        end
+      rescue MaropostApi::Errors => e
+        puts "Maropost delivered reports fetch failed due to error: #{e.to_s}"
+        []
       end
 
       def collect_leads
@@ -88,6 +137,14 @@ module EmailMarketerService
             .includes(:maropost_list, :leads, :formsite_users)
       end
 
+      def users_by_email
+        @users_by_email ||= users.index_by(&:email)
+      end
+
+      def user_emails
+        @user_emails ||= users.pluck(:email).uniq
+      end
+
       def account_for(list)
         @accounts[list.list_id] ||= list.account
       end
@@ -120,6 +177,10 @@ module EmailMarketerService
           'from' => @since&.to_date&.to_s,
           'to' => Date.today
         }.compact
+      end
+
+      def maropost_accounts
+        @maropost_accounts ||= MaropostAccount.all
       end
 
       def last_campaign_date
