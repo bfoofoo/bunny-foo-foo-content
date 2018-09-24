@@ -35,7 +35,6 @@ module EmailMarketerService
           collection.each_page do |page|
             campaigns = page.collection.reject { |c| !c['sent_at'] || c['sent_at'].to_date < DEFAULT_DATE }
             campaigns.each { |campaign| find_or_create_campaign(campaign, list) }
-            break if !page.collection.empty? && page.collection.last['sent_at'].to_date < DEFAULT_DATE
           end
         end
       end
@@ -71,16 +70,18 @@ module EmailMarketerService
           begin
             subscriber = auth_service_for(user.aweber_list).aweber.account.find_subscribers('email' => user.email)&.entries&.values&.first
             next if subscriber.nil?
-            subscriber.activity.each_page do |activity|
-              values = activity&.entries&.values.to_a
-              events = values.select { |a| a.event_time.to_date >= @since && a.type.in?(EVENT_TYPES) }
+            catch :no_more_campaigns do
+              subscriber.activity.each_page do |activity|
+                values = activity&.entries&.values.to_a
+                events = values.select { |a| a.type.in?(EVENT_TYPES) && a.event_time && a.event_time.to_date >= @since }
 
-              events.each do |event|
-                campaign = event.campaign
-                break 2 if campaign&.sent_at && campaign&.sent_at&.to_date < @since
-                Leads::Aweber.find_or_create_by(lead_params(user, subscriber, event)) do |lead|
-                  lead.event_at = campaign&.sent_at
-                  lead.email = user.email
+                events.each do |event|
+                  campaign = event.campaign
+                  throw :no_more_campaigns if campaign&.sent_at && campaign&.sent_at&.to_date < @since
+                  Leads::Aweber.find_or_create_by(lead_params(user, subscriber, event)) do |lead|
+                    lead.event_at = campaign&.sent_at
+                    lead.email = user.email
+                  end
                 end
               end
             end

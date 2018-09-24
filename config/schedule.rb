@@ -31,3 +31,11 @@ end
 every 1.day do
   rake "suppression_lists:autoremove_from_esp"
 end
+
+every 2.days do
+  rake "aweber:collect_statistics"
+end
+
+every 2.days do
+  rake "maropost:collect_statistics"
+end

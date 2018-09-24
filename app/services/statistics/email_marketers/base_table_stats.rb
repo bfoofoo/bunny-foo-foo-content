@@ -4,8 +4,8 @@ module Statistics
       attr_reader :start_date, :end_date
 
       def initialize(params = {})
-        @start_date = Date.parse(params[:start_date]) rescue nil || Date.today.at_beginning_of_month
-        @end_date = Date.parse(params[:end_date]) rescue nil || Date.today.at_end_of_month
+        @start_date = Date.parse(params[:start_date]) rescue nil || Date.today.at_beginning_of_week
+        @end_date = Date.parse(params[:end_date]) rescue nil || Date.today.at_end_of_week
         @leads_by_types = {}
         @campaigns = {}
       end

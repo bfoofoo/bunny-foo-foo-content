@@ -9,10 +9,6 @@ ActiveAdmin.register_page "Maropost Table Stats" do
     end
   end
 
-  action_item :refresh do
-    link_to 'Refresh statistics', api_v1_statistics_refresh_maropost_path, class: 'button builder_action', "data-type" => "json", remote: true
-  end
-
   sidebar :help do
     render 'filters', stats_service: stats_service
   end

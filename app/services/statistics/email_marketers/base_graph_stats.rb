@@ -4,8 +4,8 @@ module Statistics
       attr_reader :start_date, :end_date
 
       def initialize(params = {})
-        @start_date = Date.parse(params[:start_date]) rescue nil
-        @end_date = Date.parse(params[:end_date]) rescue nil
+        @start_date = Date.parse(params[:start_date]) rescue nil || Date.today.at_beginning_of_week
+        @end_date = Date.parse(params[:end_date]) rescue nil || Date.today.at_end_of_week
         @leads_by_types = {}
       end
 
@@ -17,14 +17,6 @@ module Statistics
       end
 
       private
-
-      def list
-        raise NotImplementedError
-      end
-
-      def list_id
-        raise NotImplementedError
-      end
 
       def list_element_name
         raise NotImplementedError
@@ -46,17 +38,13 @@ module Statistics
         all_affiliates.map do |affiliate|
           {
             name: affiliate_name(affiliate),
-            categories: [all_types.first]
+            categories: ['total']
           }
         end
       end
 
       def series
-        array = [{
-                   name: 'total',
-                   data: leads_total_list
-                 }]
-        array + types_of_leads.map do |type|
+        types_of_leads.map do |type|
           {
             name: type,
             data: leads_list_by_type(type)
@@ -66,8 +54,6 @@ module Statistics
 
       def leads_total_list
         query = total_users
-
-        query = query.where(list_table_name => { id: list_id }) if list.present?
         query = query.where('formsite_users.created_at > ?', start_date.beginning_of_day) if start_date
         query = query.where('formsite_users.created_at < ?', end_date.end_of_day) if end_date
 
@@ -89,7 +75,6 @@ module Statistics
         query =
           lead_class.joins(:source).where(status: type)
 
-        query = query.where(list_table_name => { id: list_id }) if list.present?
         query = query.where('leads.event_at > ?', start_date.beginning_of_day) if start_date
         query = query.where('leads.event_at < ?', end_date.end_of_day) if end_date
         @leads_by_types[type] = query.to_a.group_by(&:affiliate).each_with_object({}) { |(k, v), h| h[k] = v.map(&:email) }
@@ -116,14 +101,11 @@ module Statistics
       end
 
       def all_types
-        [
-          'total',
-          *types_of_leads
-        ]
+        types_of_leads
       end
 
       def types_of_leads
-        @types_of_leads ||= Leads::Aweber.pluck(:status).uniq
+        %w(sent_message open click)
       end
     end
   end

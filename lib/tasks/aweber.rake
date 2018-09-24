@@ -22,4 +22,8 @@ namespace :aweber do
       Rails.logger.info("[#{Time.current.to_s}] Finished transferring. Subscribers processed: #{service.result[:fetched]}, leads created: #{service.result[:created]}, leads imported: #{service.result[:sent]}.")
     end
   end
+
+  task collect_statistics: :environment do
+    EmailMarketerService::Aweber::RetrieveBroadcastStats.new.call
+  end
 end
