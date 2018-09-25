@@ -13,6 +13,8 @@ ActiveAdmin.register FormsiteUser do
   filter :is_impressionwise_test_success
   filter :is_duplicate
 
+  filter :created_at, :as => :date_range
+
   filter :affiliate
   filter :affiliate_blank,   :as => :boolean
 
