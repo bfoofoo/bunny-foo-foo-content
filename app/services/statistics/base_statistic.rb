@@ -36,6 +36,11 @@ module Statistics
         formsite.formsite_users.not_duplicate.pluck(:affiliate).uniq.compact
       end
     end
+
+    def formsite_users
+      return @formsite_users if !@formsite_users.blank?
+      @formsite_users = formsite.formsite_users.not_duplicate.between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day)
+    end
     
     private 
       def formsite_selected?

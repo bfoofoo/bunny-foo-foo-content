@@ -1,6 +1,7 @@
 module Statistics
   module Questions
     class BaseStatistics < Statistics::BaseStatistic
+      DROP_OFF_KEY="Drop off"
       DEFAULT_CHART_RESPONSE = {
         categories: [],
         series: []
@@ -33,13 +34,13 @@ module Statistics
   
       def series 
         answers_hash = {}
-        filtered_questions.each do |question|
+        filtered_questions.each_with_index do |question, index|
           answers = question.answers
           if total_stats
-            answers_hash = fill_answers_hash_total(answers_hash, question, answers)
+            answers_hash = fill_answers_hash_total(answers_hash, question, answers, index)
           else
             type_fields.each do |field|
-              answers_hash = fill_answers_hash(answers_hash, field, question, answers)
+              answers_hash = fill_answers_hash(answers_hash, field, question, answers, index)
             end
           end
         end
@@ -71,20 +72,22 @@ module Statistics
         "Q#{question.position}"
       end
 
-      def fill_answers_hash_total answers_hash, question, answers
+      def fill_answers_hash_total answers_hash, question, answers, question_index
         answers.each do |answer|
           answer_text = answer.text.downcase
           answers_hash[question_identification(question)] ||= default_answer_hash.deep_dup
           answers_hash[question_identification(question)][answer_text] = answers_count(answer)
+          answers_hash[question_identification(question)][DROP_OFF_KEY] = calculate_drop_off(question_index)
         end
         return answers_hash
       end
   
-      def fill_answers_hash(answers_hash, field, question, answers)
+      def fill_answers_hash(answers_hash, field, question, answers, question_index)
         answers.each do |answer|
           answer_text = answer.text.downcase
           answers_hash[question_identification(question)] ||= default_answer_hash.deep_dup
           answers_hash[question_identification(question)][answer_text][field] = answers_count(answer, field)
+          answers_hash[question_identification(question)][DROP_OFF_KEY] = calculate_drop_off(question_index)
         end
         return answers_hash
       end
@@ -97,6 +100,21 @@ module Statistics
         else
           answer.formsite_user_answers
         end
+      end
+
+      def calculate_drop_off question_index
+        if question_index == 0
+          question = filtered_questions[question_index]
+          submitted_users.count - answers_count_by_question(question)
+        else
+          prev_question = filtered_questions[question_index - 1]
+          question = filtered_questions[question_index]
+          answers_count_by_question(prev_question) - answers_count_by_question(question) 
+        end
+      end
+
+      def answers_count_by_question(question)
+        question.formsite_user_answers.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day).count
       end
   
       def answer_hash_to_flat_list hash
@@ -128,12 +146,17 @@ module Statistics
                   .sort!{ |a, b|  a.id <=> b.id } 
                   .pluck(:text).uniq
                   .map {|text| text.downcase}
+                  .concat([DROP_OFF_KEY])
         return @answer_texts_hash = Hash[ texts.collect { |field| [field, []] } ]
       end
 
       def type_fields_hash
         return @s_fields_hash if !@s_fields_hash.blank?
         @s_fields_hash = Hash[ type_fields.collect { |field| [field, 0] } ]
+      end
+
+      def submitted_users
+        @submitted_users ||= formsite_users.where.not(user_id: nil)
       end
     end
   end
