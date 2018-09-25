@@ -1,9 +1,14 @@
 class ApiUser < ApplicationRecord
   include Swagger::Blocks
   belongs_to :api_client
+
+  has_one :aweber_list_user, class_name: 'AweberListUser', as: :linkable
+  has_one :aweber_list, through: :aweber_list_user, source: :list, source_type: 'AweberList'
   
   validates :email, :first_name, :last_name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  alias_attribute :name, :first_name
 
   scope :verified, -> () { where("is_verified = ?", true) }
 
@@ -146,5 +151,13 @@ class ApiUser < ApplicationRecord
         end
       end
     end
+  end
+
+  def full_name
+    [first_name, last_name].join(' ')
+  end
+
+  def aweber?
+    aweber_list_user.present?
   end
 end
