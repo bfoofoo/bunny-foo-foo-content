@@ -276,6 +276,13 @@ module Deployer
           try_files $uri/index.html $uri.html $uri/ $uri =404;
         }
 
+        location ~ ^/(.well-known/acme-challenge/.*)$ {
+          proxy_pass http://127.0.0.1:9999/$1;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header Host $http_host;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
         ssl on;
         ssl_certificate /etc/letsencrypt/live/#{@config[:name]}/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/#{@config[:name]}/privkey.pem;
@@ -320,6 +327,7 @@ module Deployer
         tries < 10 ? retry : raise(error)
       end
     end
+
   end
 end
 

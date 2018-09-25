@@ -77,6 +77,7 @@ module FormsiteInteractor
 
         if formsite_user && formsite_user.persisted?
           formsite_user.update(attributes)
+          context.formsite_user = formsite_user
         else
           context.formsite_user = formsite.formsite_users.create(attributes)
         end

@@ -28,8 +28,8 @@ module Statistics
       }
 
       if !start_date.blank? && !end_date.blank?
-        response[:q][:created_at_gteq] = start_date.to_datetime.beginning_of_day
-        response[:q][:created_at_lteq] = end_date.to_datetime.beginning_of_day
+        response[:q][:created_at_gteq_datetime] = start_date.to_date.beginning_of_day
+        response[:q][:created_at_lteq_datetime] = end_date.to_date.beginning_of_day
       end
 
       if !a_fields_filter.blank?
@@ -52,7 +52,7 @@ module Statistics
       if @site != site
         @site = site
         @formsite_users = if !start_date.blank? && !end_date.blank?
-          site.formsite_users.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day)
+          site.formsite_users.between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day)
         else
           site.formsite_users
         end

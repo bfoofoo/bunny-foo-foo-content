@@ -114,7 +114,7 @@ module Statistics
       end
 
       def answers_count_by_question(question)
-        question.formsite_user_answers.between_dates(start_date.to_datetime.beginning_of_day, end_date.to_datetime.end_of_day).count
+        question.formsite_user_answers.between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day).select("DISTINCT(formsite_user_id)").count
       end
   
       def answer_hash_to_flat_list hash
@@ -156,7 +156,7 @@ module Statistics
       end
 
       def submitted_users
-        @submitted_users ||= formsite_users.where.not(user_id: nil)
+        @submitted_users ||= formsite_users.where.not(user_id: nil).is_verified
       end
     end
   end

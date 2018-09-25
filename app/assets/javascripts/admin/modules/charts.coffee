@@ -40,6 +40,12 @@ init_nested_categories_charts = (element, options) ->
     plotOptions: {
         series: {
             pointPadding: 0
+        },
+        column: {
+            stacking: options.stacking,
+            dataLabels: {
+                enabled: true
+            }
         }
     }
   })
@@ -63,8 +69,10 @@ $ ->
     topTitle = $(this).data().topTitle
     chartType = $(this).data().chartType
     yTitle = $(this).data().yTitle
+    stacking = $(this).data().stacking
     init_nested_categories_charts(element, {
       series: series,
       categories: categories,
-      yTitle: yTitle
+      yTitle: yTitle,
+      stacking: stacking,
     })
