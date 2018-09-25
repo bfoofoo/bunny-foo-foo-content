@@ -6,9 +6,9 @@ class User < ApplicationRecord
   has_many :formsite_user_answers
   has_many :leads
 
-  has_one :aweber_list_user, class_name: 'AweberListUser'
+  has_one :aweber_list_user, class_name: 'AweberListUser', as: :linkable
   has_one :aweber_list, through: :aweber_list_user, source: :list, source_type: 'AweberList'
-  has_one :maropost_list_user, class_name: 'MaropostListUser'
+  has_one :maropost_list_user, class_name: 'MaropostListUser', as: :linkable
   has_one :maropost_list, through: :maropost_list_user, source: :list, source_type: 'MaropostList'
 
   accepts_nested_attributes_for :formsite_users

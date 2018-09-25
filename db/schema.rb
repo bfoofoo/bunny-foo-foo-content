@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180920095809) do
+ActiveRecord::Schema.define(version: 20180925083130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -197,9 +197,10 @@ ActiveRecord::Schema.define(version: 20180920095809) do
   create_table "email_marketer_list_users", force: :cascade do |t|
     t.string  "list_type"
     t.integer "list_id"
-    t.integer "user_id"
+    t.string  "linkable_type"
+    t.integer "linkable_id"
+    t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
     t.index ["list_type", "list_id"], name: "index_email_marketer_list_users_on_list_type_and_list_id", using: :btree
-    t.index ["user_id"], name: "index_email_marketer_list_users_on_user_id", using: :btree
   end
 
   create_table "email_marketer_mappings", force: :cascade do |t|
@@ -345,12 +346,11 @@ ActiveRecord::Schema.define(version: 20180920095809) do
   end
 
   create_table "maropost_lists", force: :cascade do |t|
-    t.integer  "maropost_account_id",                 null: false
-    t.integer  "list_id",                             null: false
-    t.string   "name",                                null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.boolean  "collect_statistics",  default: false, null: false
+    t.integer  "maropost_account_id", null: false
+    t.integer  "list_id",             null: false
+    t.string   "name",                null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
   end
 
@@ -377,7 +377,7 @@ ActiveRecord::Schema.define(version: 20180920095809) do
   end
 
   create_table "suppression_email_marketer_lists", force: :cascade do |t|
-    t.integer "suppression_list_id", null: false
+    t.integer "suppression_list_id"
     t.string  "removable_type",      null: false
     t.integer "removable_id",        null: false
     t.index ["removable_type", "removable_id"], name: "index_suppression_lists_on_removable", using: :btree
@@ -434,7 +434,6 @@ ActiveRecord::Schema.define(version: 20180920095809) do
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
   add_foreign_key "configs", "websites"
-  add_foreign_key "email_marketer_list_users", "users"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
   add_foreign_key "formsite_maropost_lists", "formsites"
