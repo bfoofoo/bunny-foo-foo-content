@@ -22,6 +22,13 @@ ActiveAdmin.register Formsite do
 
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
+  
+
+  filter :name
+  filter :is_thankyou
+  filter :is_checkboxes
+  filter :is_phone_number
+  filter :droplet_ip
 
   controller do
     before_action :initialize_data, only: :index
