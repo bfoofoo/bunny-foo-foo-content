@@ -8,7 +8,8 @@ namespace :users do
         .where(added_to_aweber: true)
     users.map do |u|
       AweberListUser.find_or_create_by({
-        user_id: u.id,
+        linkable_type: 'User',
+        linkable_id: u.id,
         list_type: 'AweberList',
         list_id: u.aweber_list_id
       })

@@ -10,7 +10,7 @@ module EmailMarketerService
 
       def add_subscriber(user)
         begin
-          user_name = user.try(:full_name).blank? ? user.name : user.full_name
+          user_name = user.try(:full_name).blank? ? user.try(:name) : user.full_name
           if is_valid?(user)
             aweber_list.subscribers.create({ "name" => user_name, "email" => user.email, "custom_fields" => { 'Affiliate' => params[:affiliate] } })
             handle_user_record(user)
@@ -28,12 +28,12 @@ module EmailMarketerService
       private
 
       def handle_user_record(user)
-        AweberListUser.find_or_create_by(list: list, user: user) if user.is_a?(ActiveRecord::Base)
+        AweberListUser.find_or_create_by(list: list, linkable: user) if user.is_a?(ActiveRecord::Base)
       end
 
       def is_valid?(user)
         if user.is_a?(ActiveRecord::Base)
-          !user.added_to_aweber || !user.aweber?
+          !user.try(:added_to_aweber) || !user.aweber?
         else
           true
         end
