@@ -156,7 +156,7 @@ module Statistics
       end
 
       def submitted_users
-        @submitted_users ||= formsite_users.where.not(user_id: nil)
+        @submitted_users ||= formsite_users.where.not(user_id: nil).is_verified
       end
     end
   end
