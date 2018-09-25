@@ -10,7 +10,7 @@ module EmailMarketerService
 
       def add_subscriber(user)
         begin
-          user_name = user.try(:full_name).blank? ? user.name : user.full_name
+          user_name = user.try(:full_name).blank? ? user.try(:name) : user.full_name
           if is_valid?(user)
             aweber_list.subscribers.create({ "name" => user_name, "email" => user.email, "custom_fields" => { 'Affiliate' => params[:affiliate] } })
             handle_user_record(user)
