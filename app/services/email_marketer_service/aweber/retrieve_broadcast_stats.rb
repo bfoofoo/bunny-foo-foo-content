@@ -1,6 +1,8 @@
 module EmailMarketerService
   module Aweber
     class RetrieveBroadcastStats
+      attr_reader :result
+
       EVENT_TYPES = %w(open click sent_message).freeze
       DEFAULT_DATE = Date.new(2018, 8, 1) # Date since when statistic collection began
 
@@ -10,11 +12,13 @@ module EmailMarketerService
         @accounts = {}
         @since = since || last_campaign_date
         @openers = []
+        @result = { campaigns: 0, leads: 0 }
       end
 
       def call
         collect_campaigns
         collect_leads
+        result
       end
 
       private
@@ -54,14 +58,13 @@ module EmailMarketerService
         entry = EmailMarketerCampaign.find_or_initialize_by(origin: 'Aweber', campaign_id: campaign['id']) do |c|
           c.subject = campaign['subject']
           c.source_url = campaign['self_link']
-          c.stats = {
-            'sent' => campaign['total_sent'],
-            'opens' => campaign['total_opens'],
-            'clicks' => campaign['total_clicks']
-          }
           c.sent_at = campaign['sent_at']
-        end
-
+        end.update(stats: {
+          'sent' => campaign['total_sent'],
+          'opens' => campaign['total_opens'],
+          'clicks' => campaign['total_clicks']
+        })
+        @result[:campaigns] += 1
         entry.update(list_ids: entry.list_ids.push(list.id)) unless entry.list_ids.include?(list.id)
       end
 
@@ -77,11 +80,12 @@ module EmailMarketerService
 
                 events.each do |event|
                   campaign = event.campaign
-                  throw :no_more_campaigns if campaign&.sent_at && campaign&.sent_at&.to_date < @since
+                  throw :no_more_campaigns if (campaign&.sent_at && campaign&.sent_at&.to_date < @since)
                   Leads::Aweber.find_or_create_by(lead_params(user, subscriber, event)) do |lead|
                     lead.event_at = campaign&.sent_at
                     lead.email = user.email
                   end
+                  @result[:leads] += 1
                 end
               end
             end

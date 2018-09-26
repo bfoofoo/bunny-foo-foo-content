@@ -24,6 +24,8 @@ namespace :aweber do
   end
 
   task collect_statistics: :environment do
-    EmailMarketerService::Aweber::RetrieveBroadcastStats.new.call
+    service = EmailMarketerService::Aweber::RetrieveBroadcastStats.new
+    service.call
+    puts service.result
   end
 end

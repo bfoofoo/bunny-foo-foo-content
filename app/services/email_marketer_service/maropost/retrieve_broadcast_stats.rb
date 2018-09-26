@@ -1,7 +1,7 @@
 module EmailMarketerService
   module Maropost
     class RetrieveBroadcastStats
-      attr_reader :client
+      attr_reader :client, :result
 
       EVENT_TYPES = %w(open click).freeze
       DEFAULT_DATE = Date.new(2018, 8, 1)
@@ -12,7 +12,8 @@ module EmailMarketerService
         @accounts = {}
         @contacts = {}
         @clients = {}
-        @since = since || last_campaign_date
+        @since = since || DEFAULT_DATE
+        @result = { campaigns: 0, leads: 0 }
       end
 
       def call
@@ -46,17 +47,17 @@ module EmailMarketerService
       end
 
       def find_or_create_campaign(campaign)
+        full_campaign = client.campaigns[campaign['id']]
         EmailMarketerCampaign.find_or_initialize_by(origin: 'Maropost', campaign_id: campaign['id']) do |c|
           c.subject = campaign['subject']
-          full_campaign = client.campaigns[campaign['id']]
-          c.stats = {
-            'sent' => full_campaign['sent'],
-            'opens' => full_campaign['unique_opens'],
-            'clicks' => full_campaign['unique_clicks']
-          }
           c.sent_at = campaign['sent_at'] || campaign['send_at'] || campaign['created_at']
           c.list_ids = full_campaign['lists'].map(&:id)
-        end.save
+        end.update(stats: {
+          'sent' => full_campaign['sent'],
+          'opens' => full_campaign['unique_opens'],
+          'clicks' => full_campaign['unique_clicks']
+        })
+        @result[:campaigns] += 1
       end
 
       def collect_delivered_reports
@@ -76,6 +77,8 @@ module EmailMarketerService
                   lead.email = email
                   lead.event_at = campaign.sent_at
                 end
+
+                @result[:leads] += 1
               end
             end
           end
@@ -181,10 +184,6 @@ module EmailMarketerService
 
       def maropost_accounts
         @maropost_accounts ||= MaropostAccount.all
-      end
-
-      def last_campaign_date
-        EmailMarketerCampaign.where(origin: 'Maropost').last&.sent_at || DEFAULT_DATE
       end
     end
   end
