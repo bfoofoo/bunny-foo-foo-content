@@ -11,7 +11,6 @@ module EmailMarketerService
         @subscribers = {}
         @accounts = {}
         @since = since || DEFAULT_DATE
-        @openers = []
         @result = { campaigns: 0, leads: 0 }
       end
 
@@ -37,25 +36,24 @@ module EmailMarketerService
           collection = endpoint.broadcasts('sent')
           next if collection.nil?
 
-          begin
-            catch :no_more_broadcasts do
-              collection.each_page do |page|
-                broadcasts = page&.entries&.values.to_a
-                broadcasts.each do |broadcast|
-                  throw :no_more_broadcasts if broadcast.sent_at.to_date < DEFAULT_DATE
-                  find_or_create_campaign(broadcast, list)
-                end
+          catch :no_more_broadcasts do
+            collection.each_page do |page|
+              broadcasts = page&.entries&.values.to_a
+              broadcasts.each do |broadcast|
+                throw :no_more_broadcasts if broadcast.sent_at.to_date < DEFAULT_DATE
+                find_or_create_campaign(broadcast, list)
+                sleep 0.5
               end
+              sleep 0.5
             end
-          rescue AWeber::RateLimitError
-            sleep 60
-            retry
           end
+          sleep 0.5
         end
       end
 
       def find_or_create_campaign(broadcast, list)
         campaign = broadcast.detailed
+        return unless campaign
         account = account_for(list)
         EmailMarketerCampaign.find_or_initialize_by(origin: 'Aweber', campaign_id: broadcast.id) do |c|
           c.subject = campaign.subject
@@ -64,14 +62,11 @@ module EmailMarketerService
           c.list_ids = campaign.list_ids
           c.account_id = account.account_id
         end.update(stats: {
-          'sent' => campaign.stats['num_emailed'],
-          'opens' => campaign.stats['unique_opens'],
-          'clicks' => campaign.stats['unique_clicks']
+          'sent' => campaign.stats&.[]('num_emailed'),
+          'opens' => campaign.stats&.[]('unique_opens'),
+          'clicks' => campaign.stats&.[]('unique_clicks')
         })
         @result[:campaigns] += 1
-      rescue AWeber::RateLimitError
-        sleep 60
-        retry
       end
 
       def collect_leads
