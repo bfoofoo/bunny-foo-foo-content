@@ -37,14 +37,19 @@ module EmailMarketerService
           collection = endpoint.broadcasts('sent')
           next if collection.nil?
 
-          catch :no_more_broadcasts do
-            collection.each_page do |page|
-              broadcasts = page&.entries&.values.to_a
-              broadcasts.each do |broadcast|
-                throw :no_more_broadcasts if broadcast.sent_at.to_date < DEFAULT_DATE
-                find_or_create_campaign(broadcast, list)
+          begin
+            catch :no_more_broadcasts do
+              collection.each_page do |page|
+                broadcasts = page&.entries&.values.to_a
+                broadcasts.each do |broadcast|
+                  throw :no_more_broadcasts if broadcast.sent_at.to_date < DEFAULT_DATE
+                  find_or_create_campaign(broadcast, list)
+                end
               end
             end
+          rescue AWeber::RateLimitError
+            sleep 60
+            retry
           end
         end
       end
@@ -64,6 +69,9 @@ module EmailMarketerService
           'clicks' => campaign.stats['unique_clicks']
         })
         @result[:campaigns] += 1
+      rescue AWeber::RateLimitError
+        sleep 60
+        retry
       end
 
       def collect_leads
