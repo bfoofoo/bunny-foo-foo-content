@@ -347,11 +347,12 @@ ActiveRecord::Schema.define(version: 20180925083130) do
   end
 
   create_table "maropost_lists", force: :cascade do |t|
-    t.integer  "maropost_account_id", null: false
-    t.integer  "list_id",             null: false
-    t.string   "name",                null: false
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.integer  "maropost_account_id",                 null: false
+    t.integer  "list_id",                             null: false
+    t.string   "name",                                null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "collect_statistics",  default: false, null: false
     t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
   end
 

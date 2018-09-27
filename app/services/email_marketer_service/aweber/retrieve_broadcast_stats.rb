@@ -10,7 +10,7 @@ module EmailMarketerService
         @auth_services = {}
         @subscribers = {}
         @accounts = {}
-        @since = since || last_campaign_date
+        @since = since || DEFAULT_DATE
         @openers = []
         @result = { campaigns: 0, leads: 0 }
       end
@@ -34,38 +34,34 @@ module EmailMarketerService
       def collect_campaigns
         AweberList.all.includes(:aweber_account).each do |list|
           endpoint = auth_service_for(list).aweber.account.lists[list.list_id]
-          collection = search_campaigns(endpoint)
+          collection = endpoint.broadcasts('sent')
           next if collection.nil?
-          collection.each_page do |page|
-            campaigns = page.collection.reject { |c| !c['sent_at'] || c['sent_at'].to_date < DEFAULT_DATE }
-            campaigns.each { |campaign| find_or_create_campaign(campaign, list) }
+
+          catch :no_more_broadcasts do
+            collection.each_page do |page|
+              broadcasts = page&.entries&.values.to_a
+              broadcasts.each do |broadcast|
+                throw :no_more_broadcasts if broadcast.sent_at.to_date < DEFAULT_DATE
+                find_or_create_broadcast(broadcast)
+              end
+            end
           end
         end
       end
 
-      def search_campaigns(endpoint)
-        retries = 0
-        begin
-          endpoint.search_broadcast_campaigns
-        rescue AWeber::UnknownRequestError => e
-          puts e.to_s
-          retries += 1
-          retry if retries < 2
-        end
-      end
-
-      def find_or_create_campaign(campaign, list)
-        entry = EmailMarketerCampaign.find_or_initialize_by(origin: 'Aweber', campaign_id: campaign['id']) do |c|
-          c.subject = campaign['subject']
-          c.source_url = campaign['self_link']
-          c.sent_at = campaign['sent_at']
+      def find_or_create_broadcast(broadcast)
+        campaign = broadcast.detailed
+        EmailMarketerCampaign.find_or_initialize_by(origin: 'Aweber', campaign_id: broadcast.id) do |c|
+          c.subject = campaign.subject
+          c.source_url = campaign.self_link
+          c.sent_at = campaign.sent_at
+          c.list_ids = campaign.list_ids
         end.update(stats: {
-          'sent' => campaign['total_sent'],
-          'opens' => campaign['total_opens'],
-          'clicks' => campaign['total_clicks']
+          'sent' => campaign.stats['num_emailed'],
+          'opens' => campaign.stats['unique_opens'],
+          'clicks' => campaign.stats['unique_clicks']
         })
         @result[:campaigns] += 1
-        entry.update(list_ids: entry.list_ids.push(list.id)) unless entry.list_ids.include?(list.id)
       end
 
       def collect_leads
@@ -120,14 +116,6 @@ module EmailMarketerService
           access_token: account_for(list).access_token,
           secret_token: account_for(list).secret_token,
           )
-      end
-
-      def last_campaign_date
-        EmailMarketerCampaign.where(origin: 'Aweber').last&.sent_at&.to_date|| DEFAULT_DATE
-      end
-
-      def broadcasts_for(list)
-        account_for(list).broadcasts&.entries&.values.to_a
       end
     end
   end
