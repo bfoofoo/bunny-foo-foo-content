@@ -29,7 +29,7 @@ module EmailMarketerService
           @client = client_for(account)
           each_campaigns_page do |collection|
             campaigns = collection.select { |c| c.status == 'sent' }
-            campaigns.each { |campaign| find_or_create_campaign(campaign) }
+            campaigns.each { |campaign| find_or_create_campaign(campaign, account) }
           end
         end
       end
@@ -46,12 +46,13 @@ module EmailMarketerService
         puts "Maropost campaigns fetch failed due to error: #{e.to_s}"
       end
 
-      def find_or_create_campaign(campaign)
+      def find_or_create_campaign(campaign, account)
         full_campaign = client.campaigns[campaign['id']]
         EmailMarketerCampaign.find_or_initialize_by(origin: 'Maropost', campaign_id: campaign['id']) do |c|
           c.subject = campaign['subject']
           c.sent_at = campaign['sent_at'] || campaign['send_at'] || campaign['created_at']
           c.list_ids = full_campaign['lists'].map(&:id)
+          c.account_id = account.account_id
         end.update(stats: {
           'sent' => full_campaign['sent'],
           'opens' => full_campaign['unique_opens'],

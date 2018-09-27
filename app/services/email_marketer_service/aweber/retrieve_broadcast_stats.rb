@@ -42,20 +42,22 @@ module EmailMarketerService
               broadcasts = page&.entries&.values.to_a
               broadcasts.each do |broadcast|
                 throw :no_more_broadcasts if broadcast.sent_at.to_date < DEFAULT_DATE
-                find_or_create_broadcast(broadcast)
+                find_or_create_campaign(broadcast, list)
               end
             end
           end
         end
       end
 
-      def find_or_create_broadcast(broadcast)
+      def find_or_create_campaign(broadcast, list)
         campaign = broadcast.detailed
+        account = account_for(list)
         EmailMarketerCampaign.find_or_initialize_by(origin: 'Aweber', campaign_id: broadcast.id) do |c|
           c.subject = campaign.subject
           c.source_url = campaign.self_link
           c.sent_at = campaign.sent_at
           c.list_ids = campaign.list_ids
+          c.account_id = account.account_id
         end.update(stats: {
           'sent' => campaign.stats['num_emailed'],
           'opens' => campaign.stats['unique_opens'],

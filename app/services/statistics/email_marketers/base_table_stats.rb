@@ -82,6 +82,7 @@ module Statistics
             'subject' => campaign.subject,
             'affiliates' => {},
             'sent_at' => campaign.sent_at,
+            'account_id' => campaign.account_id,
             'total' => {
               'sent_message' => campaign.stats['sent'],
               'click' => campaign.stats['clicks'],
