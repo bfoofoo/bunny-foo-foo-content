@@ -94,11 +94,9 @@ module Statistics
   
       def filtered_formsite_user_answers(answer)
         if !start_date.blank? && !end_date.blank?
-          answer.formsite_user_answers.select { |user_answer|
-            user_answer.created_at >= start_date.to_date.beginning_of_day && user_answer.created_at <= end_date.to_date.end_of_day
-          }
+          answer.formsite_user_answers.includes(:formsite_user).between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day)
         else
-          answer.formsite_user_answers
+          answer.formsite_user_answers.includes(:formsite_user)
         end
       end
 
@@ -114,7 +112,11 @@ module Statistics
       end
 
       def answers_count_by_question(question)
-        question.formsite_user_answers.between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day).select("DISTINCT(formsite_user_id)").count
+        answers = question.formsite_user_answers.includes(:formsite_user).between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day)
+
+        answers = answers.select{|user_answer| !user_answer.formsite_user.blank? && user_answer.formsite_user.is_verified}
+
+        FormsiteUserAnswer.where(id: answers.pluck(:id)).count
       end
   
       def answer_hash_to_flat_list hash
@@ -124,7 +126,8 @@ module Statistics
             if s_counter_hash.is_a? Integer
               response[answer_text] << s_counter_hash
             else
-              response[answer_text].concat s_counter_hash.map {|key, value| value}
+              value = s_counter_hash.blank? ? [0] : s_counter_hash.map {|key, value| value}
+              response[answer_text].concat value
             end
           end
         end
@@ -156,7 +159,7 @@ module Statistics
       end
 
       def submitted_users
-        @submitted_users ||= formsite_users.where.not(user_id: nil)
+        @submitted_users ||= formsite_users.is_verified
       end
     end
   end
