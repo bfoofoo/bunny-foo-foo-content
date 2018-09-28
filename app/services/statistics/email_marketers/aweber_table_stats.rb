@@ -14,10 +14,6 @@ module Statistics
         Leads::Aweber
       end
 
-      def account_class
-        AweberAccount
-      end
-
       def campaigns
         query = EmailMarketerCampaign.from_aweber.sent
         query = query.where(account_id: aweber_account.account_id) if aweber_account

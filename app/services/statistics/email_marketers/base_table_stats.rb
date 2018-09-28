@@ -4,8 +4,8 @@ module Statistics
       attr_reader :start_date, :end_date
 
       def initialize(params = {})
-        @start_date = Date.parse(params[:start_date]) rescue nil || Date.today.at_beginning_of_week
-        @end_date = Date.parse(params[:end_date]) rescue nil || Date.today.at_end_of_week
+        @start_date = Date.parse(params[:start_date]) rescue nil || 1.week.ago.at_beginning_of_week.to_date
+        @end_date = Date.parse(params[:end_date]) rescue nil || 1.week.ago.at_end_of_week.to_date
         @leads_by_types = {}
         @campaigns = {}
       end
@@ -23,18 +23,6 @@ module Statistics
 
       def lead_class
         raise NotImplementedError
-      end
-
-      def account_class
-        raise NotImplementedError
-      end
-
-      def account_table_name
-        account_class.table_name.to_sym
-      end
-
-      def account_element_name
-        account_class.model_name.element.to_sym
       end
 
       def all_dates
@@ -136,7 +124,7 @@ module Statistics
       end
 
       def all_affiliates
-        @all_affiliates ||= (FormsiteUser.pluck(:affiliate).uniq + lead_class.pluck(:affiliate).uniq).uniq.compact
+        @all_affiliates ||= FormsiteUser.distinct(:affiliate).pluck(:affiliate).compact
       end
 
       def all_types

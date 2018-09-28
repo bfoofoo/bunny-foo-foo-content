@@ -7,10 +7,6 @@ module Statistics
         Leads::Maropost
       end
 
-      def account_class
-        MaropostAccount
-      end
-
       def campaigns
         EmailMarketerCampaign.from_maropost.sent
       end

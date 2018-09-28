@@ -3,18 +3,23 @@ module Statistics
     class AweberGraphStats < BaseGraphStats
       include Mixins::EmailMarketers::AweberAccounts
 
+      def initialize(params = {})
+        super
+        @aweber_account_id = params[:aweber_account_id]
+      end
+
       private
-
-      def list_element_name
-        AweberList.model_name.element.to_sym
-      end
-
-      def list_table_name
-        AweberList.table_name.to_sym
-      end
 
       def lead_class
         Leads::Aweber
+      end
+
+      def account_class
+        AweberAccount
+      end
+
+      def account_id
+        aweber_account_id
       end
 
     end
