@@ -1,18 +1,23 @@
 <div class="panel_contents">
   <%= form_tag(admin_aweber_table_stats_path, method: "get", class: "filter_form") do %>
     <div class="filter_form_field">
+      <%= label_tag(:aweber_account_id, "Aweber Account") %>
+      <%= select_tag "aweber_account_id", options_from_collection_for_select(AweberAccount.all, "id", "name", params[:aweber_account_id]), include_blank: true %>
+    </div>
+
+    <div class="filter_form_field">
       <%= label_tag(:start_date, "Start Date") %>
-      <%= date_field_tag(:start_date, params[:start_date] || stats_service.start_date, { discard_day: true }) %>
+      <%= date_field_tag(:start_date, params[:start_date] || stats_service.start_date) %>
     </div>
 
     <div class="filter_form_field">
       <%= label_tag(:end_date, "End Date") %>
-      <%= date_field_tag(:end_date, params[:end_date] || stats_service.end_date, { discard_day: true }) %>
+      <%= date_field_tag(:end_date, params[:end_date] || stats_service.end_date) %>
     </div>
 
     <div class="buttons">
       <input type="submit" name="commit" value="Filter">
-      <a class="clear_filters_btn" href="<%= admin_aweber_table_stats_path({ aweber_list_id: params[:aweber_list_id] }) %>">Clear Filters</a>
+      <a class="clear_filters_btn" href="<%= admin_aweber_table_stats_path %>">Clear Filters</a>
     </div>
   <% end %>
 </div>

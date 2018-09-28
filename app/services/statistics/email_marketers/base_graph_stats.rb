@@ -18,14 +18,6 @@ module Statistics
 
       private
 
-      def list_element_name
-        raise NotImplementedError
-      end
-
-      def list_table_name
-        raise NotImplementedError
-      end
-
       def lead_class
         raise NotImplementedError
       end

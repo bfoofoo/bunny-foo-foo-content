@@ -1,7 +1,7 @@
 module Statistics
   module EmailMarketers
     class AweberGraphStats < BaseGraphStats
-      include Mixins::EmailMarketers::AweberLists
+      include Mixins::EmailMarketers::AweberAccounts
 
       private
 

@@ -1,8 +1,6 @@
 module Statistics
   module EmailMarketers
     class MaropostGraphStats < BaseGraphStats
-      include Mixins::EmailMarketers::MaropostLists
-
       private
 
       def list_element_name

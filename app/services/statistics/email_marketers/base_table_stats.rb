@@ -25,16 +25,16 @@ module Statistics
         raise NotImplementedError
       end
 
-      def list_class
+      def account_class
         raise NotImplementedError
       end
 
-      def list_table_name
-        list_class.table_name.to_sym
+      def account_table_name
+        account_class.table_name.to_sym
       end
 
-      def list_element_name
-        list_class.model_name.element.to_sym
+      def account_element_name
+        account_class.model_name.element.to_sym
       end
 
       def all_dates

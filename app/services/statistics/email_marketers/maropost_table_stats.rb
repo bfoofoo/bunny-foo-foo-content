@@ -1,16 +1,14 @@
 module Statistics
   module EmailMarketers
     class MaropostTableStats < BaseTableStats
-      include Mixins::EmailMarketers::MaropostLists
-
       private
 
       def lead_class
         Leads::Maropost
       end
 
-      def list_class
-        MaropostList
+      def account_class
+        MaropostAccount
       end
 
       def campaigns
