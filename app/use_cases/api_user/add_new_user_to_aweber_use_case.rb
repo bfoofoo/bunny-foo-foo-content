@@ -15,14 +15,15 @@ class ApiUser
     def perform
       return false unless api_user.is_verified
       params = { affiliate: AFFILIATE_MAPPING[api_user.api_client&.name] }.compact
-      EmailMarketerService::Aweber::SubscriptionsService.new(list: list, params: params).add_subscriber(api_user)
+      lists.each do |list|
+        EmailMarketerService::Aweber::SubscriptionsService.new(list: list, params: params).add_subscriber(api_user)
+      end
     end
 
     private
 
-    # TODO this will be managed through admin panel
-    def list
-      AweberList.find_by(name: 'National Consumer Center')
+    def lists
+      ApiClientMapping.where(source: api_user.api_client).to_a.map(&:destination)
     end
   end
 end
