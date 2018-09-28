@@ -22,17 +22,13 @@ module EmailMarketerService
 
       private
 
-      def users
-        @users ||=
-          User
-            .added_to_aweber
-            .joins(:formsite_users)
-            .includes(:aweber_list, :leads, :formsite_users)
+      def all_affiliates
+        FormsiteUser.distinct(:affiliate).pluck(:affiliate).compact
       end
 
       def collect_campaigns
         AweberList.all.includes(:aweber_account).each do |list|
-          endpoint = auth_service_for(list).aweber.account.lists[list.list_id]
+          endpoint = auth_service_for(list.aweber_account).aweber.account.lists[list.list_id]
           collection = endpoint.broadcasts('sent')
           next if collection.nil?
 
@@ -70,56 +66,66 @@ module EmailMarketerService
       end
 
       def collect_leads
-        users.each do |user|
-          begin
-            subscriber = auth_service_for(user.aweber_list).aweber.account.find_subscribers('email' => user.email)&.entries&.values&.first
-            next if subscriber.nil?
-            catch :no_more_campaigns do
-              subscriber.activity.each_page do |activity|
-                values = activity&.entries&.values.to_a
-                events = values.select { |a| a.type.in?(EVENT_TYPES) && a.event_time && a.event_time.to_date >= @since }
-
-                events.each do |event|
-                  campaign = event.campaign
-                  throw :no_more_campaigns if (campaign&.sent_at && campaign&.sent_at&.to_date < @since)
-                  Leads::Aweber.find_or_create_by(lead_params(user, subscriber, event)) do |lead|
-                    lead.event_at = campaign&.sent_at
-                    lead.email = user.email
-                  end
-                  @result[:leads] += 1
-                end
+        all_affiliates.each do |affiliate|
+          aweber_accounts.each do |account|
+            endpoint = auth_service_for(account).aweber.account
+            begin
+              collection = endpoint.find_subscribers('custom_fields' => { 'Affiliate' => affiliate })
+              collection.each_page do |page|
+                process_subscribers(page&.entries&.values.to_a)
               end
+            rescue AWeber::NotFoundError
+              nil
             end
-          rescue AWeber::ServiceUnavailableError, AWeber::UnknownRequestError, AWeber::NotFoundError => e
-            puts "Aweber failed due to error: #{e.to_s}"
-          rescue AWeber::RateLimitError
-            sleep 60
-            retry
           end
         end
       end
 
-      def lead_params(user, subscriber, event)
-        affiliate = subscriber.custom_fields['Affiliate'] || user.formsite_users.first.affiliate
+      def process_subscribers(subscribers)
+        subscribers.each do |subscriber|
+          catch :no_more_campaigns do
+            subscriber.activity.each_page do |activity|
+              values = activity&.entries&.values.to_a
+              events = values.select { |a| a.type.in?(EVENT_TYPES) && a.event_time && a.event_time.to_date >= @since }
+
+              events.each do |event|
+                campaign = event.campaign
+                throw :no_more_campaigns if (campaign&.sent_at && campaign&.sent_at&.to_date < @since)
+                Leads::Aweber.find_or_create_by(lead_params(subscriber, event)) do |lead|
+                  lead.event_at = campaign&.sent_at
+                end
+                @result[:leads] += 1
+              end
+            end
+          end
+        end
+      end
+
+      def lead_params(subscriber, event)
+        affiliate = subscriber.custom_fields['Affiliate']
         {
-          source_id: user.aweber_list.id,
+          source_id: subscriber.list_id,
           affiliate: affiliate,
           status: event.type,
-          user_id: user.id,
+          email: subscriber.email,
           campaign_id: event.campaign&.id
         }.compact
+      end
+
+      def aweber_accounts
+        @aweber_accounts ||= AweberAccount.all
       end
 
       def account_for(list)
         @accounts[list.aweber_account_id] ||= list.aweber_account
       end
 
-      def auth_service_for(list)
-        id = list.list_id
+      def auth_service_for(aweber_account)
+        id = aweber_account.account_id
         return @auth_services[id] if @auth_services[id].present?
         @auth_services[id] = EmailMarketerService::Aweber::AuthService.new(
-          access_token: account_for(list).access_token,
-          secret_token: account_for(list).secret_token,
+          access_token: aweber_account.access_token,
+          secret_token: aweber_account.secret_token,
           )
       end
     end
