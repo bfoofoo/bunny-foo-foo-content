@@ -1,4 +1,6 @@
 ActiveAdmin.register ApiClientMapping do
+  permit_params :source_id, :destination_id, :tag
+
   menu parent: 'Api Clients'
 
   config.filters = false
@@ -6,7 +8,9 @@ ActiveAdmin.register ApiClientMapping do
   index do
     column :id
     column :source
+    column :destination_type
     column :destination
+    column('Affiliate') { |a| a.tag }
     column :created_at
     column :updated_at
 
@@ -21,8 +25,22 @@ ActiveAdmin.register ApiClientMapping do
       f.input :source, as: :select, collection: source_lists
       f.input :destination_type, input_html: { value: 'AweberList' }, as: :hidden
       f.input :destination, as: :select, collection: destination_lists
+      f.input :tag, label: 'Affiliate'
     end
 
     f.actions
+  end
+
+  show do
+    attributes_table do
+      row :source
+      row :destination_type
+      row :destination
+      row('Affiliate') { |a| a.tag }
+      row :created_at
+      row :updated_at
+    end
+
+    active_admin_comments
   end
 end
