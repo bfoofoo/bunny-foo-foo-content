@@ -19,12 +19,15 @@ ActiveAdmin.register ApiClientMapping do
 
   form do |f|
     source_lists = ApiClient.all
-    destination_lists = AweberList.all
+    destinations = %w(Aweber Maropost)
+    aweber_lists = AweberList.all
+    maropost_lists = MaropostList.all
+
     f.inputs 'Email Marketer Mapping' do
       f.input :source_type, input_html: { value: 'ApiClient' }, as: :hidden
       f.input :source, as: :select, collection: source_lists
-      f.input :destination_type, input_html: { value: 'AweberList' }, as: :hidden
-      f.input :destination, as: :select, collection: destination_lists
+      f.input :destination_type, as: :select, collection: destinations
+      f.input :destination, as: :select, collection: aweber_lists
       f.input :tag, label: 'Affiliate'
     end
 

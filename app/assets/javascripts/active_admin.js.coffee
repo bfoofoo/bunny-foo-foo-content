@@ -4,6 +4,7 @@
 #= require active_admin/base
 #= require active_admin/sortable
 #= require active_admin/base
+#= require activeadmin/dynamic_fields
 
 #= require_tree ./admin
 
