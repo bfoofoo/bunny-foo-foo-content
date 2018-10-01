@@ -7,7 +7,6 @@ ActiveAdmin.register FormsiteUser do
 
   filter :created_at
   filter :formsite
-  filter :user
   filter :is_verified
   filter :is_useragent_valid
   filter :is_impressionwise_test_success
