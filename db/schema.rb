@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180927095959) do
+ActiveRecord::Schema.define(version: 20180928133722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -214,6 +214,7 @@ ActiveRecord::Schema.define(version: 20180927095959) do
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
     t.datetime "last_transfer_at"
+    t.string   "tag"
     t.index ["destination_type", "destination_id"], name: "index_email_marketer_mappings_on_source", using: :btree
     t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
   end
@@ -348,11 +349,12 @@ ActiveRecord::Schema.define(version: 20180927095959) do
   end
 
   create_table "maropost_lists", force: :cascade do |t|
-    t.integer  "maropost_account_id", null: false
-    t.integer  "list_id",             null: false
-    t.string   "name",                null: false
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.integer  "maropost_account_id",                 null: false
+    t.integer  "list_id",                             null: false
+    t.string   "name",                                null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "collect_statistics",  default: false, null: false
     t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
   end
 
@@ -379,7 +381,7 @@ ActiveRecord::Schema.define(version: 20180927095959) do
   end
 
   create_table "suppression_email_marketer_lists", force: :cascade do |t|
-    t.integer "suppression_list_id"
+    t.integer "suppression_list_id", null: false
     t.string  "removable_type",      null: false
     t.integer "removable_id",        null: false
     t.index ["removable_type", "removable_id"], name: "index_suppression_lists_on_removable", using: :btree
