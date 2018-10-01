@@ -43,13 +43,10 @@ ActiveAdmin.register AweberAccount do
       row :secret_token
       row :created_at
       panel "Lists" do
-        #table_for aweber_account.aweber_lists do
-        #  column :id
-        #  column 'List ID', :list_id
-        #  column :name
-        #end
-        attributes_table_for
-
+        table_for aweber_account.aweber_lists do
+          column :id
+          column 'List ID', :list_id
+          column :name
         end
       end
     end
