@@ -8,13 +8,17 @@ module FormsiteInteractor
     def call
       create_user
       create_formsite_user
-      context.api_response = {user: user, is_verified: formsite_user.is_verified, formsite_user: formsite_user}
+      context.api_response = {user: user, is_verified: formsite_user&.is_verified, formsite_user: formsite_user}
     end
 
     def rollback
     end
 
     private
+
+      def user_ip
+        request.env['REMOTE_ADDR']
+      end
 
       def formsite_service
         @formsite_service ||= FormsiteService.new()
@@ -35,8 +39,7 @@ module FormsiteInteractor
       end
 
       def is_ip_duplicate?
-        return false if user.blank?
-        !formsite.formsite_users.where(ip: request.env['REMOTE_ADDR']).blank?
+        !formsite.formsite_users.where(ip: user_ip).blank?
       end
 
       def create_user
@@ -51,8 +54,6 @@ module FormsiteInteractor
         if formsite && formsite.name == FORMSITE_NAME && !user.blank?
           handle_openposition_formsite()
         else
-
-
           handle_formsite_user_creation()
         end
       end
@@ -61,19 +62,26 @@ module FormsiteInteractor
         attributes = formsite_user_params
                 .merge(formsite_user_dynamic_params)
                 .merge({
-                  ip: request.env['REMOTE_ADDR']
+                  ip: user_ip
                 })
 
         if user.blank?
-          context.formsite_user = formsite.formsite_users.create(attributes)
+          if !is_ip_duplicate?
+            attributes = attributes.merge({
+              is_duplicate: is_ip_duplicate?
+            })
+            context.formsite_user = formsite.formsite_users.create(attributes)
+          else
+            context.formsite_user = formsite.formsite_users.find_by(ip: user_ip, user_id: nil)
+          end
         else
-          formsite_user = formsite.formsite_users.find_by(ip: request.env['REMOTE_ADDR'], user_id: nil)
+          formsite_user = formsite.formsite_users.find_by(ip: user_ip, user_id: nil)
           attributes = attributes.merge({user_id: user.id})
           if formsite_user && formsite_user.persisted?
-            formsite_user.update(attributes)
+            formsite_user.update(attributes.merge(is_duplicate: false))
             context.formsite_user = formsite_user
           else
-            attributes.merge({
+            attributes = attributes.merge({
               is_duplicate: is_ip_duplicate?
             })
             context.formsite_user = formsite.formsite_users.create(attributes)
@@ -85,14 +93,14 @@ module FormsiteInteractor
         attributes = formsite_user_params
                 .merge(formsite_user_dynamic_params)
                 .merge({
-                  ip: request.env['REMOTE_ADDR'],
+                  ip: user_ip,
                   user_id: user.id
                 })
 
         if !params[:user][:key].blank?
-          formsite_user = formsite.formsite_users.find_by(ip: request.env['REMOTE_ADDR'], job_key: params[:user][:key])
+          formsite_user = formsite.formsite_users.find_by(ip: user_ip, job_key: params[:user][:key])
         else
-          formsite_user = formsite.formsite_users.find_by(ip: request.env['REMOTE_ADDR'], user_id: nil)
+          formsite_user = formsite.formsite_users.find_by(ip: user_ip, user_id: nil)
         end
 
         if formsite_user && formsite_user.persisted?
@@ -108,14 +116,14 @@ module FormsiteInteractor
           is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
           is_useragent_valid: is_useragent_valid,
           is_impressionwise_test_success: is_impressionwise_test_success,
-          is_duplicate: is_duplicate,
+          is_duplicate: is_ip_duplicate?,
           affiliate: params[:user][:a],
           job_key: params[:user][:key]
         }
       end
 
       def formsite_user_params
-        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip)
+        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip, :url)
       end
   end
 end

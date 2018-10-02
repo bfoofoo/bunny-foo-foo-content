@@ -30,7 +30,7 @@ module Deployer
     def change_ssl_settings(options)
       RestClient.patch("https://api.cloudflare.com/client/v4/zones/#{options[:id]}/settings/ssl", {'value' => 'strict'}.to_json, {
           "X-Auth-Key": "a1510d55f0c8e5318d102eb84c6cd1a3198e5",
-          "X-Auth-Email": "mike@bunnyfoofoo.net",
+          "X-Auth-Email": "peter@bunnyfoofoo.net",
           content_type: :json
       })
     end
