@@ -144,9 +144,8 @@ ActiveRecord::Schema.define(version: 20180928133722) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -349,12 +348,11 @@ ActiveRecord::Schema.define(version: 20180928133722) do
   end
 
   create_table "maropost_lists", force: :cascade do |t|
-    t.integer  "maropost_account_id",                 null: false
-    t.integer  "list_id",                             null: false
-    t.string   "name",                                null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.boolean  "collect_statistics",  default: false, null: false
+    t.integer  "maropost_account_id", null: false
+    t.integer  "list_id",             null: false
+    t.string   "name",                null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
   end
 
