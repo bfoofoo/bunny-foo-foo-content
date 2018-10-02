@@ -1,4 +1,6 @@
 class Article < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :category
   belongs_to :website, optional: true
   belongs_to :formsite, optional: true
