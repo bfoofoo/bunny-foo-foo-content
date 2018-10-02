@@ -1,7 +1,9 @@
 class Website < ApplicationRecord
+  acts_as_paranoid
+
   has_and_belongs_to_many :categories
-  has_many :articles, dependent: :destroy
-  has_many :website_ads, dependent: :destroy
+  has_many :articles, dependent: :restrict_with_error
+  has_many :website_ads, dependent: :restrict_with_error
   has_many :ads, :through => :website_ads
 
   has_many :advertisements, -> { advertisements } , :through => :website_ads, source: :ad

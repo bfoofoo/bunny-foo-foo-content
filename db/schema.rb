@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180928133722) do
+ActiveRecord::Schema.define(version: 20181002133839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,7 +112,9 @@ ActiveRecord::Schema.define(version: 20180928133722) do
     t.datetime "updated_at",  null: false
     t.integer  "website_id"
     t.integer  "formsite_id"
+    t.datetime "deleted_at"
     t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
+    t.index ["deleted_at"], name: "index_articles_on_deleted_at", using: :btree
     t.index ["website_id"], name: "index_articles_on_website_id", using: :btree
   end
 
@@ -349,12 +351,11 @@ ActiveRecord::Schema.define(version: 20180928133722) do
   end
 
   create_table "maropost_lists", force: :cascade do |t|
-    t.integer  "maropost_account_id",                 null: false
-    t.integer  "list_id",                             null: false
-    t.string   "name",                                null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.boolean  "collect_statistics",  default: false, null: false
+    t.integer  "maropost_account_id", null: false
+    t.integer  "list_id",             null: false
+    t.string   "name",                null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
   end
 
@@ -431,6 +432,8 @@ ActiveRecord::Schema.define(version: 20180928133722) do
     t.string   "logo_image"
     t.string   "shortname"
     t.string   "text_file"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
   end
 
   add_foreign_key "answers", "questions"
