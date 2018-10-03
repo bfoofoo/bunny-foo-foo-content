@@ -23,7 +23,7 @@ class Formsite
       end
 
       def formsite_users
-        return formsite.formsite_users
+        return formsite.formsite_users.without_test_users
       end
 
       def handle_formsite formsite

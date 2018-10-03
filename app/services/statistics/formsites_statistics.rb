@@ -52,9 +52,9 @@ module Statistics
       if @site != site
         @site = site
         @formsite_users = if !start_date.blank? && !end_date.blank?
-          site.formsite_users.between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day)
+          site.formsite_users.without_test_users.between_dates(start_date.to_date.beginning_of_day, end_date.to_date.end_of_day)
         else
-          site.formsite_users
+          site.formsite_users.without_test_users
         end
       else
         return @formsite_users

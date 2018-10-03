@@ -145,7 +145,7 @@ module Statistics
 
     def formsite_users
       return @formsite_users if !@formsite_users.blank?
-      @formsite_users = formsite.formsite_users.not_duplicate.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
+      @formsite_users = formsite.formsite_users.without_test_users.not_duplicate.between_dates(filter_start_date.beginning_of_day, filter_end_date.end_of_day)
     end
 
     def grouped_users
