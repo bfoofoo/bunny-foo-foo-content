@@ -125,6 +125,9 @@ module Deployer
                 channel.send_data "Y\n"
               elsif data =~ /^\[sudo\] password for /
                 channel.send_data "#{@password}\n"
+              elsif data =~ /Select the appropriate number/
+                Rails.logger.info "select here"
+                channel.send_data "1\n"
               elsif data =~ /too many certificates already issued for exact set of domain/
                 raise "Generate ssl cert failed. Too many certificates already issued for exact set of domain #{@config[:name]}"
               elsif data =~ /error/
@@ -134,7 +137,7 @@ module Deployer
               end
             end
             channel.request_pty
-            channel.exec " source ~/.profile; cd ~/certbot; ./certbot-auto --agree-tos --renew-by-default --standalone --standalone-supported-challenges http-01 --http-01-port 9999 --server https://acme-v01.api.letsencrypt.org/directory certonly -d #{@config[:name]} -d www.#{@config[:name]}"
+            channel.exec "source ~/.profile; sudo ufw allow 'Nginx Full'; sudo ufw delete allow 'Nginx HTTP'; sudo certbot --preferred-challenges http --nginx -d #{@config[:name]} -d www.#{@config[:name]}"
             channel.wait
           end
           channel.wait
@@ -204,6 +207,7 @@ module Deployer
     end
 
     def update_nginx_sites(sites)
+      Rails.logger.info 'update nginx sites start'
       sites_str = "'#{sites}'"
       tries = 0
       result = ''
@@ -231,6 +235,7 @@ module Deployer
     end
 
     def set_beforessl_nginx_site
+      Rails.logger.info 'set before ssl nginx config'
       acme_challenge_server = %Q{server {
         listen 0.0.0.0:80;
         server_name #{@config[:name]} www.#{@config[:name]};
@@ -256,6 +261,7 @@ module Deployer
     end
 
     def set_afterssl_nginx_site
+      Rails.logger.info 'set after ssl nginx config'
       ssl_config = %Q{server {
         listen 443 http2 default_server;
         listen [::]:443 http2 default_server;
@@ -301,6 +307,7 @@ module Deployer
     end
 
     def restart_nginx
+      Rails.logger.info 'restart nginx start'
       result = ''
       tries = 0
       begin
