@@ -13,8 +13,10 @@ class FormsiteUser < ApplicationRecord
     .where.not("#{s_field}" => "")
   }
 
+  scope :jeft_join_users, -> () { joins("LEFT OUTER JOIN users ON formsite_users.user_id = users.id") }
+
   scope :without_test_users, -> () { 
-    joins("LEFT OUTER JOIN users ON formsite_users.user_id = users.id")
+    jeft_join_users
     .where("users.email != ? OR formsite_users.user_id IS NULL", TEST_USER_EMAIL)
    }
 
@@ -29,7 +31,5 @@ class FormsiteUser < ApplicationRecord
   scope :between_dates, -> (start_date, end_date) { 
     where("created_at >= ? AND created_at <= ?", start_date, end_date)
   }
-
-  # default_scope { without_test_users }
 
 end
