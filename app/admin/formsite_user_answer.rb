@@ -9,7 +9,9 @@ ActiveAdmin.register FormsiteUserAnswer do
       link_to answer.formsite.name, admin_formsite_path(answer.formsite)
     end
     column "Formsite User" do |answer|
-      link_to answer.formsite_user.user.email, admin_formsite_user_path(answer.formsite_user)
+      if answer.formsite_user && answer.formsite_user.user
+        link_to answer.formsite_user.user.email, admin_formsite_user_path(answer.formsite_user)
+      end
     end
     actions
   end

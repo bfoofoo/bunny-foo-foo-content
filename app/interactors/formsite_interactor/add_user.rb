@@ -51,11 +51,29 @@ module FormsiteInteractor
       end
 
       def create_formsite_user
-        if formsite && formsite.name == FORMSITE_NAME && !user.blank?
-          handle_openposition_formsite()
+        if !user.blank? && user.email == FormsiteUser::TEST_USER_EMAIL
+          create_test_user()
         else
-          handle_formsite_user_creation()
+          if formsite && formsite.name == FORMSITE_NAME && !user.blank?
+            handle_openposition_formsite()
+          else
+            handle_formsite_user_creation()
+          end
         end
+      end
+
+      def create_test_user
+        attributes = formsite_user_params
+                .merge(formsite_user_dynamic_params)
+                .merge({
+                  is_verified: true,
+                  is_useragent_valid: true,
+                  is_impressionwise_test_success: true,
+                  is_duplicate: false,
+                  ip: user_ip,
+                  user_id: user.id
+                })
+        context.formsite_user = formsite.formsite_users.create(attributes)
       end
 
       def handle_formsite_user_creation
