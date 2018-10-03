@@ -14,4 +14,6 @@ class Question < ApplicationRecord
   
   scope :order_by_id, -> () { order(id: :asc) }
   scope :order_by_position, -> (position=:asc) { order(position: position) }
+
+  default_scope {order_by_position}
 end
