@@ -1,4 +1,6 @@
 class FormsiteUser < ApplicationRecord
+  TEST_USER_EMAIL="bf@test.com"
+  
   acts_as_paranoid
   
   belongs_to :formsite
@@ -10,6 +12,9 @@ class FormsiteUser < ApplicationRecord
     where.not("#{s_field}" => nil)
     .where.not("#{s_field}" => "")
   }
+
+  scope :without_test_users, -> () { includes(:user).where.not(users: {email: TEST_USER_EMAIL}) }
+  scope :only_test_users, -> () { includes(:user).where(users: {email: TEST_USER_EMAIL}) }
 
   scope :is_duplicate, -> () { where(is_duplicate: true) }
   scope :is_verified, -> () { where(is_verified: true) }
