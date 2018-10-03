@@ -29,7 +29,7 @@ class FormsiteUser < ApplicationRecord
   scope :not_verified, -> () { where(is_verified: false) }
 
   scope :between_dates, -> (start_date, end_date) { 
-    where("created_at >= ? AND created_at <= ?", start_date, end_date)
+    where("formsite_users.created_at >= ? AND formsite_users.created_at <= ?", start_date, end_date)
   }
 
 end
