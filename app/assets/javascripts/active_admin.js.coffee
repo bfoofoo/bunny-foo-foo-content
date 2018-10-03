@@ -15,6 +15,7 @@
 #= require highcharts-grouped-categories
 
 $ ->
+  
   $(document).on "ajax:beforeSend", ".builder_action", (event, jqxhr, settings, exception) ->
     $('.builder_action').attr('disabled', true)
     $('.builder_action').addClass('disabled')
