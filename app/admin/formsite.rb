@@ -50,34 +50,6 @@ ActiveAdmin.register Formsite do
     column :is_checkboxes
     column :is_phone_number
     column :droplet_ip
-    column "Total users" do |formsite|
-      link_to "#{formsite.formsite_users.count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&commit=Filter&order=id_desc"
-    end
-    column "Passed useragent users" do |formsite|
-      link_to "#{formsite.formsite_users.where(is_useragent_valid: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_useragent_valid_eq%5D=true&commit=Filter&order=id_desc"
-    end
-    column "Passed impressionwise test users" do |formsite|
-      link_to "#{formsite.formsite_users.where(is_impressionwise_test_success: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_impressionwise_test_success_eq%5D=true&commit=Filter&order=id_desc"
-      end
-    column "Duplicate users" do |formsite|
-      link_to "#{formsite.formsite_users.where(is_duplicate: true).count}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bis_duplicate_eq%5D=true&commit=Filter&order=id_desc"
-    end
-
-    column "S1 users_count" do |formsite|
-      link_to "#{s_couter_use_case.s_users_counters(formsite)["s1"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs1_blank%5D=false&commit=Filter&order=id_desc"
-    end
-    column "S2 users_count" do |formsite|
-      link_to "#{s_couter_use_case.s_users_counters(formsite)["s2"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs2_blank%5D=false&commit=Filter&order=id_desc"
-    end
-    column "S3 users_count" do |formsite|
-      link_to "#{s_couter_use_case.s_users_counters(formsite)["s3"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs3_blank%5D=false&commit=Filter&order=id_desc"
-    end
-    column "S4 users_count" do |formsite|
-      link_to "#{s_couter_use_case.s_users_counters(formsite)["s4"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs4_blank%5D=false&commit=Filter&order=id_desc"
-    end
-    column "S5 users_count" do |formsite|
-      link_to "#{s_couter_use_case.s_users_counters(formsite)["s5"]}", "/admin/formsite_users?utf8=✓&q%5Bformsite_id_eq%5D=#{formsite.id}&q%5Bs5_blank%5D=false&commit=Filter&order=id_desc"
-    end
 
     column :created_at
     actions
