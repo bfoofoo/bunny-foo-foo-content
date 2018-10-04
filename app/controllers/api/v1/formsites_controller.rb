@@ -16,6 +16,11 @@ class Api::V1::FormsitesController < ApiController
     render json: @questions
   end
 
+  def get_formsite_question
+    @question = @formsite.questions.find_by(position: params[:position])
+    render json: @question
+  end
+
   def add_formsite_user
     formsite_interactor = FormsiteInteractor::AddUser.call({
       params: params,
