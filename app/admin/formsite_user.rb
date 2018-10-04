@@ -56,7 +56,6 @@ ActiveAdmin.register FormsiteUser do
     column :birthday
     column :phone
     column :zip
-    column :url
     column "First name" do |formsite_user|
       span formsite_user&.user&.first_name
     end
@@ -89,7 +88,6 @@ ActiveAdmin.register FormsiteUser do
     column :s5
     column :ndm_token
     column :ip
-    column :url
     column "First name" do |formsite_user|
       formsite_user&.user&.first_name
     end

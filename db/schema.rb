@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181002200112) do
+ActiveRecord::Schema.define(version: 20181003165914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -283,7 +283,6 @@ ActiveRecord::Schema.define(version: 20181002200112) do
     t.string   "ip"
     t.string   "job_key"
     t.datetime "deleted_at"
-    t.string   "url"
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
   end
 
