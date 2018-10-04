@@ -18,6 +18,10 @@ module Statistics
         hash[:series] = series 
         return hash
       end
+
+      def table_stats
+        return generate_answers_hash
+      end
   
       def categories
         filtered_questions.map do |question|
@@ -33,17 +37,7 @@ module Statistics
       end
   
       def series 
-        answers_hash = {}
-        filtered_questions.each_with_index do |question, index|
-          answers = question.answers
-          if total_stats
-            answers_hash = fill_answers_hash_total(answers_hash, question, answers, index)
-          else
-            type_fields.each do |field|
-              answers_hash = fill_answers_hash(answers_hash, field, question, answers, index)
-            end
-          end
-        end
+        answers_hash = generate_answers_hash
         return answer_hash_to_flat_list(answers_hash)
       end
   
@@ -58,6 +52,22 @@ module Statistics
       end
   
       private 
+
+      def generate_answers_hash
+        answers_hash = {}
+        filtered_questions.each_with_index do |question, index|
+          answers = question.answers
+          if total_stats
+            answers_hash = fill_answers_hash_total(answers_hash, question, answers, index)
+          else
+            type_fields.each do |field|
+              answers_hash = fill_answers_hash(answers_hash, field, question, answers, index)
+            end
+          end
+        end
+        return answers_hash
+      end
+
       def filtered_questions
         return @filtered_questions if !@filtered_questions.blank?
         @filtered_questions = 
