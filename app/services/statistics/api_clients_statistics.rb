@@ -63,9 +63,9 @@ module Statistics
 
     def formsite_users site
       if !start_date.blank? && !end_date.blank?
-        site.formsite_users.between_dates(start_date, end_date)
+        site.formsite_users.without_test_users.between_dates(start_date, end_date)
       else
-        site.formsite_users
+        site.formsite_users.without_test_users
       end
     end
 
