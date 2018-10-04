@@ -1,5 +1,5 @@
 class Api::V1::FormsitesController < ApiController
-  before_action :set_formsite, only: [:show, :add_formsite_user, :get_formsite_questions, :setup, :build]
+  before_action :set_formsite, only: [:show, :add_formsite_user, :get_formsite_questions, :get_formsite_question, :setup, :build]
   before_action :authenticate, only: [:create, :update]
 
   def index
