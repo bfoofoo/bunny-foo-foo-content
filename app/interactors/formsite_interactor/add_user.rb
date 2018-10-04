@@ -33,7 +33,7 @@ module FormsiteInteractor
         formsite_service.is_impressionwise_test_success(user)
       end
 
-      def is_duplicate
+      def is_email_duplicate
         return false if user.blank?
         !formsite.formsite_users.joins(:user).where("users.email = ?", user.email).blank?
       end
@@ -135,6 +135,7 @@ module FormsiteInteractor
           is_useragent_valid: is_useragent_valid,
           is_impressionwise_test_success: is_impressionwise_test_success,
           is_duplicate: is_ip_duplicate?,
+          is_email_duplicate: is_email_duplicate,
           affiliate: params[:user][:a],
           job_key: params[:user][:key]
         }

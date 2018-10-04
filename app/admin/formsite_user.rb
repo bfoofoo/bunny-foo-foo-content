@@ -44,6 +44,7 @@ ActiveAdmin.register FormsiteUser do
     column :is_useragent_valid
     column :is_impressionwise_test_success
     column :is_duplicate
+    column :is_email_duplicate
     column :affiliate
     column :job_key
     column :s1
