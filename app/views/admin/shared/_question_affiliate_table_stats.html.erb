@@ -1,0 +1,50 @@
+<table class="index_table index">
+    <thead>
+      <tr>
+        <th>Question</th>
+
+        <%- 
+          key = table_stats.keys.first 
+          answers = table_stats[key].keys
+        %>
+
+        <%- answers.each do |answer| %>
+          <th><%= answer %></th>  
+        <% end %>
+
+      </tr>
+    </thead>
+    <tbody>
+        <%- table_stats.each do |question, stats| %> 
+          <tr>
+            <td><%= question %></td>
+            <%- stats.each do |key, value| %>
+              <%- if value.is_a? Integer %>
+                <td><%= value %></td>
+              <% else %>
+                <td>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Affiliate</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <%- value.each do |affiliate, value| %>
+                        <tr>
+                          <td><%= affiliate %></td>
+                          <td><%= value %></td>
+                        </tr>
+                      <%- end %>
+                    </tbody>
+
+                  </table>
+                </td>
+              <% end %>
+            <%- end %>
+          </tr>
+        <% end %>
+    </tbody>
+  </table>

@@ -146,8 +146,9 @@ ActiveRecord::Schema.define(version: 20181003165914) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "collect_statistics", default: false, null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|

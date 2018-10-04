@@ -1,0 +1,44 @@
+<%- available_affiliate_stats =  stats_service.available_affiliate_stats %>
+
+<div class="panel_contents">
+  <%= form_tag(admin_questions_subaffiliate_table_statistics_path, method: "get", class: "filter_form") do %>
+  
+    <div class="filter_form_field">
+      <%= label_tag(:formsite_id, "Form Site") %>
+      <%= select_tag "formsite_id", options_from_collection_for_select(Formsite.all, "id", "name", params[:formsite_id] || stats_service.formsite.try(:id)), include_blank: false %>
+    </div>
+
+    <%- if !available_affiliate_stats.blank? %>
+      <div class="filter_form_field">
+        <%= label_tag(:s_fields_filter, "Affiliate Filters") %>
+        <% available_affiliate_stats.each do |field| %>
+            <%= "A #{field}" %>
+            <%= check_box_tag "a_fields_filter[]", field, params[:a_fields_filter] && params[:a_fields_filter].include?(field) -%>
+          <% end %>
+      </div>
+    <%- end %>
+
+    <div class="filter_form_field">
+      <%= label_tag(:s_fields_filter, "S Filters") %>
+       <% Statistics::Questions::SStatistics::S_FIELDS.each do |field| %>
+          <%- field_selected = params[:s_fields_filter].blank? ? true : params[:s_fields_filter].include?(field) %>
+          <%= field %>
+          <%= check_box_tag "s_fields_filter[]", field, field_selected -%>
+        <% end %>
+    </div>
+
+    <div class="filter_form_field">
+      <%= label_tag(:start_date, "Start Date") %>
+      <%= date_field_tag(:start_date, params[:start_date] || stats_service.start_date) %>
+    </div>
+
+    <div class="filter_form_field">
+      <%= label_tag(:end_date, "End Date") %>
+      <%= date_field_tag(:end_date, params[:end_date] || stats_service.end_date) %>
+    </div>
+    <div class="buttons">
+      <input type="submit" name="commit" value="Filter">
+      <a class="clear_filters_btn" href="<%= admin_questions_subaffiliate_statistics_path %>">Clear Filters</a>
+    </div>
+  <% end %>
+</div>

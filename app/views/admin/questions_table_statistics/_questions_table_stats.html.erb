@@ -1,23 +1,9 @@
-<div class="table_tools">
-  <ul class="scopes table_tools_segmented_control" >
-    <li class="scope all selected">
-      <%= link_to "Total Statistics", admin_questions_statistics_path, class:  "table_tools_button" %>
-    </li>
-
-    <li class="scope all">
-      <%= link_to "Affiliates Statistics", admin_questions_affiliate_statistics_path, class:  "table_tools_button" %>
-    </li>
-
-    <li class="scope all">
-      <%= link_to "Subaffilates Statistics", admin_questions_subaffiliate_statistics_path, class:  "table_tools_button" %>
-    </li>
-  </ul>
-</div>
+<%= render "admin/shared/question_table_tabs", selected: "total" %>
 
 <%- if table_stats.blank? %>
   <h2>There is no questions for selected Leadgen Site.</h2>
 <% else %>
-  <%- binding.pry %>
+
   <table class="index_table index">
     <thead>
       <tr>
@@ -35,37 +21,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <%- %> table_stats
-      </tr>
-
-
-      <%- formsites_statistics.converted_counts_hash.each do |formsite_name, stats| %>
-        <tr>
-          <td><%= link_to formsite_name, admin_formsite_users_path(q: {formsite_id_eq: stats[:formsite]}) %></td>
-          <td><%= link_to stats[:total], admin_formsite_users_path(formsites_statistics.query_params_hash(stats, {is_duplicate_eq: nil})) %></td>
-          <td><%= link_to stats[:submitted], admin_formsite_users_path(formsites_statistics.query_params_hash(stats, {user_id_not_null: true})) %></td>
-          <td><%= link_to stats[:total_converted], admin_formsite_users_path(
-                formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_verified_eq: true})
-              ) %>
-          </td>
-          <td><%= link_to stats[:failed_impressionwise], admin_formsite_users_path(
-                formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_impressionwise_test_success_eq: false})
-              ) %>
-          </td>
-
-          <td><%= link_to stats[:failed_useragent], admin_formsite_users_path(
-                formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_useragent_valid_eq: false})
-              ) %>
-          </td>
-
-          <td><%= link_to stats[:failed_dulpicate], admin_formsite_users_path(
-                formsites_statistics.query_params_hash(stats, {user_id_not_null: true, is_duplicate_eq: true})
-              ) %>
-          </td>
-          
-        </tr>
-      <% end %>
+        <%- table_stats.each do |question, stats| %> 
+          <tr>
+            <td><%= question %></td>
+            <%- stats.each do |key, value| %>
+              <%- if value.is_a?(Hash) %>
+                <td>0</td>
+              <% else %>
+                <td><%= value %></td>
+              <% end %>
+            <%- end %>
+          </tr>
+        <% end %>
     </tbody>
   </table>
 <% end %>
