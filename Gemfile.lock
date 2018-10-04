@@ -166,6 +166,7 @@ GEM
       mime-types (~> 3.0)
     case_transform (0.2)
       activesupport
+    choice (0.2.0)
     chronic (0.10.2)
     cloudflare (3.2.1)
       rest-client (~> 2.0.2)
@@ -371,6 +372,11 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
+    rails-erd (1.5.2)
+      activerecord (>= 3.2)
+      activesupport (>= 3.2)
+      choice (~> 0.2.0)
+      ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
     railties (5.0.6)
@@ -403,6 +409,7 @@ GEM
       netrc (~> 0.8)
     rollbar (2.16.3)
       multi_json
+    ruby-graphviz (1.2.3)
     rubyzip (1.2.2)
     sass (3.5.4)
       sass-listen (~> 4.0.0)
@@ -543,6 +550,7 @@ DEPENDENCIES
   pry-remote
   rack-cors
   rails (~> 5.0.2)
+  rails-erd
   remodal-rails (~> 1.1.1)
   rest-client (~> 2.0, >= 2.0.2)
   rollbar
