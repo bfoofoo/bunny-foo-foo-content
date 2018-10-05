@@ -96,7 +96,7 @@ module FormsiteInteractor
           formsite_user = formsite.formsite_users.find_by(ip: user_ip, user_id: nil)
           attributes = attributes.merge({user_id: user.id})
           if formsite_user && formsite_user.persisted?
-            formsite_user.update(attributes.merge(is_duplicate: false))
+            formsite_user.update(attributes.merge(is_duplicate: false, is_verified: is_useragent_valid && is_impressionwise_test_success))
             context.formsite_user = formsite_user
           else
             attributes = attributes.merge({
