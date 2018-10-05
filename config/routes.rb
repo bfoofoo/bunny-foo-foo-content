@@ -43,7 +43,7 @@ Rails.application.routes.draw do
           get ':id/build', to: 'formsites#build', as: 'build'
 
           get ':id/questions', to: 'formsites#get_formsite_questions'
-          get ':id/questions/:position', to: 'formsites#get_formsite_question'
+          get ':id/questions_by_position/:position', to: 'formsites#get_formsite_question'
 
         end
         resources :questions, only: [:index] do
