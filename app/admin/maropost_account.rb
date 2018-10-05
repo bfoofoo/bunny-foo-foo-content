@@ -1,6 +1,8 @@
 ActiveAdmin.register MaropostAccount do
   permit_params :name, :account_id, :auth_token
 
+  menu false
+
   member_action :refresh_list, method: :post do
     account = MaropostAccount.find(params[:id])
     MaropostInteractor::RefreshAccountLists.call(account_id: account.id)
