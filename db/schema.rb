@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181004173724) do
+ActiveRecord::Schema.define(version: 20181003165914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -265,8 +265,8 @@ ActiveRecord::Schema.define(version: 20181004173724) do
     t.integer  "formsite_id"
     t.integer  "user_id"
     t.boolean  "is_verified"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.boolean  "is_useragent_valid"
     t.boolean  "is_impressionwise_test_success"
     t.boolean  "is_duplicate"
@@ -283,7 +283,6 @@ ActiveRecord::Schema.define(version: 20181004173724) do
     t.string   "ip"
     t.string   "job_key"
     t.datetime "deleted_at"
-    t.boolean  "is_email_duplicate",             default: false
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
   end
 
