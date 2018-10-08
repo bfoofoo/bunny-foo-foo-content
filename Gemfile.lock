@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/fixtheclouds/AWeber-API-Ruby-Library.git
+  remote: git://github.com/bfoofoo/AWeber-API-Ruby-Library.git
   revision: e51aac85de8cbf820cbd827e264fcd561281017d
   specs:
     aweber (1.6.1)
@@ -7,7 +7,7 @@ GIT
       oauth
 
 GIT
-  remote: git://github.com/fixtheclouds/maropost_api.git
+  remote: git://github.com/bfoofoo/maropost_api.git
   revision: 8a3d265c07e648faa62eafb8d7877ab9204f91e9
   specs:
     maropost_api (0.5.0)
