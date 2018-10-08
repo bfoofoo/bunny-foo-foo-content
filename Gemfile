@@ -72,8 +72,8 @@ gem 'devise'
 gem "active_admin-sortable_tree", "~> 1.0.0"
 
 # Email marketing services
-gem 'aweber', github: 'fixtheclouds/AWeber-API-Ruby-Library'
-gem 'maropost_api', github: 'fixtheclouds/maropost_api'
+gem 'aweber', github: 'bfoofoo/AWeber-API-Ruby-Library'
+gem 'maropost_api', github: 'bfoofoo/maropost_api'
 
 # Background jobs
 gem 'sucker_punch'

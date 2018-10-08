@@ -28,8 +28,8 @@ module EmailMarketerService
 
       def collect_campaigns
         AweberList.all.includes(:aweber_account).each do |list|
-          endpoint = auth_service_for(list.aweber_account).aweber.account.lists[list.list_id]
-          collection = endpoint.broadcasts('sent')
+          endpoint = endpoint_for(list)
+          collection = endpoint&.broadcasts('sent')
           next if collection.nil?
 
           catch :no_more_broadcasts do
@@ -45,6 +45,12 @@ module EmailMarketerService
           end
           sleep 0.5
         end
+      end
+
+      def endpoint_for(list)
+        auth_service_for(list.aweber_account).aweber.account.lists[list.list_id]
+      rescue AWeber::NotFoundError
+        nil
       end
 
       def find_or_create_campaign(broadcast, list)
