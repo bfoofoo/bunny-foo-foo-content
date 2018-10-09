@@ -24,18 +24,11 @@ every 1.day do
   rake "aweber:migrate_subscribers"
 end
 
-every 1.day do
-  rake_verbose "aweber:transfer_to_maropost"
-end
 
 every 1.day do
   rake "suppression_lists:autoremove_from_esp"
 end
 
-every 3.days do
+every [:monday, :thursday] do
   rake "aweber:collect_statistics"
-end
-
-every 3.days do
-  rake "maropost:collect_statistics"
 end
