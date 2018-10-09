@@ -33,7 +33,7 @@ module EmailMarketerService
 
       def is_valid?(user)
         if user.is_a?(ActiveRecord::Base)
-          !user.try(:added_to_aweber) || !user.aweber?
+          !AweberListUser.where(list: list, linkable: user).exists?
         else
           true
         end

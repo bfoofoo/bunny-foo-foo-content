@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181004173724) do
+ActiveRecord::Schema.define(version: 20181009135706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,9 +146,8 @@ ActiveRecord::Schema.define(version: 20181004173724) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -199,10 +198,11 @@ ActiveRecord::Schema.define(version: 20181004173724) do
   end
 
   create_table "email_marketer_list_users", force: :cascade do |t|
-    t.string  "list_type"
-    t.integer "list_id"
-    t.string  "linkable_type"
-    t.integer "linkable_id"
+    t.string   "list_type"
+    t.integer  "list_id"
+    t.string   "linkable_type"
+    t.integer  "linkable_id"
+    t.datetime "created_at"
     t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
     t.index ["list_type", "list_id"], name: "index_email_marketer_list_users_on_list_type_and_list_id", using: :btree
   end
@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 20181004173724) do
     t.datetime "updated_at",       null: false
     t.datetime "last_transfer_at"
     t.string   "tag"
+    t.integer  "delay_in_hours"
     t.index ["destination_type", "destination_id"], name: "index_email_marketer_mappings_on_source", using: :btree
     t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
   end
@@ -233,8 +234,9 @@ ActiveRecord::Schema.define(version: 20181004173724) do
   create_table "formsite_aweber_lists", force: :cascade do |t|
     t.integer  "aweber_list_id"
     t.integer  "formsite_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "delay_in_hours", default: 0, null: false
   end
 
   create_table "formsite_maropost_lists", force: :cascade do |t|
@@ -266,8 +268,8 @@ ActiveRecord::Schema.define(version: 20181004173724) do
     t.integer  "formsite_id"
     t.integer  "user_id"
     t.boolean  "is_verified"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.boolean  "is_useragent_valid"
     t.boolean  "is_impressionwise_test_success"
     t.boolean  "is_duplicate"
@@ -284,7 +286,6 @@ ActiveRecord::Schema.define(version: 20181004173724) do
     t.string   "ip"
     t.string   "job_key"
     t.datetime "deleted_at"
-    t.boolean  "is_email_duplicate",             default: false
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
   end
 

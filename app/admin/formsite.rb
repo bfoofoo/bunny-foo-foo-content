@@ -16,8 +16,8 @@ ActiveAdmin.register Formsite do
                 ],
                 ad_ids: [],
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
-
-                formsite_aweber_lists_attributes: [:id, :formsite_id, :aweber_list_id, :_destroy],
+                
+                formsite_aweber_lists_attributes: [:id, :formsite_id, :aweber_list_id, :delay_in_hours, :_destroy],
                 formsite_maropost_lists_attributes: [:id, :formsite_id, :maropost_list_id, :_destroy],
 
                 answer_ids: [],
@@ -103,7 +103,9 @@ ActiveAdmin.register Formsite do
       row :affiliate_description
 
       row "Aweber Lists" do |formsite|
-        formsite.aweber_lists.map(&:full_name).join(",")
+        formsite.formsite_aweber_lists.map do |al|
+          "#{al.aweber_list.full_name} (#{al.delay_in_hours} hour delay)"
+        end.join(',')
       end
 
       row 'Maropost Lists' do |formsite|
@@ -151,6 +153,7 @@ ActiveAdmin.register Formsite do
             f.has_many :formsite_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
               ff.semantic_errors
               ff.input :aweber_list, :label => 'List', :as => :select, :collection => AweberList.all
+              ff.input :delay_in_hours
             end
           end
 
