@@ -2,7 +2,7 @@ class JobsService
   include HTTParty
   attr_reader :page, :per
 
-  API_PATH="http://142.93.246.163/api/v1"
+  API_PATH="http://openposition.us/api/v1"
   DEFAULT_PER_PAGE=50
 
   def initialize(page: 1, per: DEFAULT_PER_PAGE)
