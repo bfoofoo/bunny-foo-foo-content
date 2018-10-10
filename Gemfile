@@ -84,6 +84,7 @@ gem 'swagger-blocks'
 
 gem 'capistrano-dotenv-tasks', require: false
 group :development, :test do
+  gem 'spring'
   gem 'byebug', platform: :mri
   #deploy
   gem 'capistrano', '~> 3.7', '>= 3.7.1'
@@ -91,9 +92,22 @@ group :development, :test do
   gem 'capistrano-rails', '~> 1.2'
   gem 'capistrano-passenger', '~> 0.2.0'
   gem 'capistrano-rbenv', '~> 2.1'
+  gem 'rspec-rails', '~> 3.5'
+
+  gem 'pry-rails'
+  gem 'pry-remote'
+  gem 'pry-nav'
+end
+
+group :test do
+  gem 'factory_bot_rails', '~> 4.0'
+  gem 'shoulda-matchers', '~> 3.1'
+  gem 'faker'
+  gem 'database_cleaner'
 end
 
 group :development do
+  gem 'spring-commands-rspec'
   gem 'rails-erd'
   gem 'guard-livereload', '~> 2.5', require: false
   gem 'web-console', '>= 3.3.0'
@@ -105,9 +119,6 @@ group :development do
   gem 'meta_request'
   gem "better_errors"
   gem "binding_of_caller"
-  gem 'pry-rails'
-  gem 'pry-remote'
-  gem 'pry-nav'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
