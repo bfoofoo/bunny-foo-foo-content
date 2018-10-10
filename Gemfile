@@ -76,6 +76,8 @@ gem 'aweber', github: 'bfoofoo/AWeber-API-Ruby-Library'
 gem 'maropost_api', github: 'bfoofoo/maropost_api'
 
 # Background jobs
+gem 'sidekiq'
+gem 'sidekiq-cron', '~> 1.0', '>= 1.0.4'
 
 gem 'rollbar'
 gem 'swagger-docs'

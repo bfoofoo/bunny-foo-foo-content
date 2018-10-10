@@ -15,4 +15,11 @@ ActiveAdmin.register ApiUser do
   scope :is_duplicate do
     ApiUser.where("is_duplicate = ?", true)
   end
+
+  index do
+    id_column
+    resource_class.content_columns.each { |col| column col.name.to_sym }
+    column :sent_to_aweber?
+    actions
+  end
 end

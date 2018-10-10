@@ -1,0 +1,9 @@
+send_api_users_to_aweber:
+  cron: "0 * * * *"
+  class: "ApiUsers::SendToAweberWorker"
+  queue: default
+
+send_formsite_users_to_aweber:
+  cron: "0 * * * *"
+  class: "FormsiteUsers::SendToAweberWorker"
+  queue: default

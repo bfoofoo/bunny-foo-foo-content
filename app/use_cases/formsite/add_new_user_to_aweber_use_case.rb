@@ -11,9 +11,17 @@ class Formsite
     def perform
       return false if !formsite_user.is_verified || user.blank?
       params = { affiliate: formsite_user.affiliate }.compact
-      formsite.aweber_lists.each do |list|
+      lists.each do |list|
         EmailMarketerService::Aweber::SubscriptionsService.new(list: list, params: params).add_subscriber(user)
       end
+    end
+
+    def lists
+      formsite
+        .formsite_aweber_lists
+        .joins(:aweber_lists)
+        .includes(:aweber_lists)
+        .where(formsite_aweber_lists: { delay_in_hours: 0 })
     end
   
   end

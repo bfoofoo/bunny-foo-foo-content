@@ -2,15 +2,17 @@ class ApiUser < ApplicationRecord
   include Swagger::Blocks
   belongs_to :api_client
 
-  has_one :aweber_list_user, class_name: 'AweberListUser', as: :linkable
-  has_one :aweber_list, through: :aweber_list_user, source: :list, source_type: 'AweberList'
+  has_many :aweber_list_users, class_name: 'AweberListUser', as: :linkable
+  has_many :aweber_lists, through: :aweber_list_users, source: :list, source_type: 'AweberList'
+  has_many :api_client_mappings, through: :api_client
   
   validates :email, :first_name, :last_name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   alias_attribute :name, :first_name
 
-  scope :verified, -> () { where("is_verified = ?", true) }
+  scope :verified, -> { where("is_verified = ?", true) }
+  scope :with_aweber_mappings, -> { joins(:api_client_mappings).includes(:api_client_mappings) }
 
   swagger_schema :ApiUser do
     key :required, [:email, :first_name, :last_name]
@@ -157,7 +159,11 @@ class ApiUser < ApplicationRecord
     [first_name, last_name].join(' ')
   end
 
-  def aweber?
-    aweber_list_user.present?
+  def sent_to_aweber?
+    aweber_list_users.exists?
+  end
+
+  def sent_to_aweber_list?(list)
+    aweber_list_users.where(list: list).exists?
   end
 end

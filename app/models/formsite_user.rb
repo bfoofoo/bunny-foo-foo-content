@@ -6,6 +6,10 @@ class FormsiteUser < ApplicationRecord
   belongs_to :formsite
   belongs_to :user, optional: true
 
+  has_many :aweber_list_users, through: :user
+  has_many :formsite_aweber_lists, through: :formsite
+  has_many :aweber_lists, through: :formsite_aweber_lists
+
   delegate :email, to: :user, allow_nil: true
 
   scope :by_s_filter, -> (s_field) { 

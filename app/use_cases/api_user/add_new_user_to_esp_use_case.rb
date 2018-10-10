@@ -16,7 +16,8 @@ class ApiUser
     private
 
     def mappings
-      ApiClientMapping.where(source: api_user.api_client, destination_type: list_class)
+      ApiClientMapping
+        .where(source: api_user.api_client, destination_type: list_class, delay_in_hours: 0)
     end
 
     def list_class

@@ -6,10 +6,10 @@ class User < ApplicationRecord
   has_many :formsite_user_answers
   has_many :leads
 
-  has_one :aweber_list_user, class_name: 'AweberListUser', as: :linkable
-  has_one :aweber_list, through: :aweber_list_user, source: :list, source_type: 'AweberList'
-  has_one :maropost_list_user, class_name: 'MaropostListUser', as: :linkable
-  has_one :maropost_list, through: :maropost_list_user, source: :list, source_type: 'MaropostList'
+  has_many :aweber_list_users, class_name: 'AweberListUser', as: :linkable
+  has_many :aweber_lists, through: :aweber_list_user, source: :list, source_type: 'AweberList'
+  has_many :maropost_list_users, class_name: 'MaropostListUser', as: :linkable
+  has_many :maropost_lists, through: :maropost_list_user, source: :list, source_type: 'MaropostList'
 
   accepts_nested_attributes_for :formsite_users
   accepts_nested_attributes_for :formsites
@@ -21,11 +21,15 @@ class User < ApplicationRecord
     "#{self.first_name} #{self.last_name}"
   end
 
-  def aweber?
-    aweber_list_user.present?
+  def sent_to_aweber?
+    aweber_list_users.present?
   end
 
-  def maropost?
-    maropost_list_user.present?
+  def sent_to_aweber_list?(list)
+    aweber_list_users.where(list: list).exists?
+  end
+
+  def sent_to_maropost?
+    maropost_list_users.present?
   end
 end
