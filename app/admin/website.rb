@@ -44,8 +44,8 @@ ActiveAdmin.register Website do
       end
 
       form_builder = Admin::FormBuilders::Website.new(f)
-      AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker', 'widgets']
-      AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
+      AD_POSITIONS = %w(adSidebar adTop adMiddle adBottom adAppendedToBody adpushup tracker widgetSidebar widgetTop widgetBottom)
+      AD_TYPES = %w(embed google custom text/javascript autoad)
 
       tab 'ADS' do
         f.inputs 'Ads' do
