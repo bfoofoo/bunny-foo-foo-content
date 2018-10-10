@@ -76,7 +76,6 @@ gem 'aweber', github: 'bfoofoo/AWeber-API-Ruby-Library'
 gem 'maropost_api', github: 'bfoofoo/maropost_api'
 
 # Background jobs
-gem 'sucker_punch'
 
 gem 'rollbar'
 gem 'swagger-docs'
