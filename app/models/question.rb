@@ -18,4 +18,8 @@ class Question < ApplicationRecord
   scope :order_by_position, -> (position=:asc) { order(position: position) }
 
   default_scope {order_by_position}
+
+  def mark_as_last!
+    update!(is_last: true)
+  end
 end

@@ -43,6 +43,8 @@ class Formsite < ApplicationRecord
   mount_uploader :logo_image, CommonUploader
   mount_uploader :background, CommonUploader
 
+  after_save :mark_last_question
+
   def builder_config
     return {
         id: self.id,
@@ -58,5 +60,10 @@ class Formsite < ApplicationRecord
         ad_client: self.ad_client || '',
         type: 'formsite'
     }
+  end
+
+  def mark_last_question
+    return if questions.empty?
+    questions.last.mark_as_last!
   end
 end
