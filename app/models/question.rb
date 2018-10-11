@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
   acts_as_paranoid
+  audited only: [:position, :is_last]
 
   has_many :answers, dependent: :destroy
   has_many :formsite_questions

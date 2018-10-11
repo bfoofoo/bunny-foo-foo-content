@@ -70,6 +70,8 @@ gem 'formtastic', '~> 3.0'
 gem 'devise'
 gem "active_admin-sortable_tree", "~> 1.0.0"
 
+gem "audited", "~> 4.7"
+
 # Email marketing services
 gem 'aweber', github: 'bfoofoo/AWeber-API-Ruby-Library'
 gem 'maropost_api', github: 'bfoofoo/maropost_api'

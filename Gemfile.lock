@@ -113,6 +113,8 @@ GEM
     arbre (1.1.1)
       activesupport (>= 3.0.0)
     arel (7.1.4)
+    audited (4.8.0)
+      activerecord (>= 4.0, < 5.3)
     autoprefixer-rails (7.2.3)
       execjs
     awesome_print (1.8.0)
@@ -546,6 +548,7 @@ DEPENDENCIES
   activeadmin_froala_editor
   activerecord-import
   acts_as_paranoid (~> 0.6.0)
+  audited (~> 4.7)
   autoprefixer-rails
   aweber!
   awesome_print
