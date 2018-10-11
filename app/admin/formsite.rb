@@ -16,7 +16,8 @@ ActiveAdmin.register Formsite do
                 ],
                 ad_ids: [],
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
-                
+
+
                 formsite_aweber_lists_attributes: [:id, :formsite_id, :aweber_list_id, :delay_in_hours, :_destroy],
                 formsite_maropost_lists_attributes: [:id, :formsite_id, :maropost_list_id, :_destroy],
 
