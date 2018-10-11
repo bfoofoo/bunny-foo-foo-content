@@ -8,6 +8,4 @@ class EmailMarketerCampaign < ApplicationRecord
   end
 
   scope :sent, -> { where.not(sent_at: nil) }
-
-  validates :delay_in_hours, numericality: { greater_than_or_equal_to: 0, allow_blank: true }
 end
