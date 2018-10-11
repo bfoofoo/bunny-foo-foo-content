@@ -64,6 +64,7 @@ class Formsite < ApplicationRecord
 
   def mark_last_question
     return if questions.empty?
+    questions.update_all(is_last: false)
     questions.last.mark_as_last!
   end
 end
