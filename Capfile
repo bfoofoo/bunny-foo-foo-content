@@ -11,6 +11,7 @@ require 'capistrano/dotenv/tasks'
 require 'capistrano/passenger'
 require 'capistrano/bundler'
 require 'capistrano/rbenv'
+require 'capistrano/sidekiq'
 set :rbenv_type, :user
 set :rbenv_ruby, '2.4.1'
 set :rbenv_path, '/home/sammy/.rbenv/'
