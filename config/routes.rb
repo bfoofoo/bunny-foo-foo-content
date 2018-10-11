@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   resources :apidocs, only: [:index]
   get '/api' => redirect('/swagger/dist/index.html?url=/apidocs')
 
+  authenticate :admin_user do
+    mount Sidekiq::Web, at: '/sidekiq'
+  end
+
   namespace :callbacks do
     namespace :aweber do
       get "/auth_account", to: "accounts#auth_account"
