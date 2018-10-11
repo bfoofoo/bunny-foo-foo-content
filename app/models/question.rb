@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  acts_as_paranoid
+
   has_many :answers, dependent: :destroy
   has_many :formsite_questions
   has_many :formsite, :through => :formsite_questions

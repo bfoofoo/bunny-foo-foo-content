@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :question, optional: true
   belongs_to :formsite_user, optional: true
 
