@@ -17,7 +17,11 @@ module FormsiteInteractor
     private
 
       def user_ip
-        request.env['REMOTE_ADDR']
+        if !params.dig(:user, :ip).blank?
+          params.dig(:user, :ip)
+        else
+          request.env['REMOTE_ADDR']
+        end
       end
 
       def formsite_service

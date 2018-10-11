@@ -145,6 +145,14 @@ RSpec.describe 'Formsites API', type: :request do
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
         end
 
+        it "getting IP from post params" do
+          post_params = {user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev", ip: "192.168.0.1"}}
+          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          formsite_user = json["formsite_user"]
+
+          expect(formsite_user["ip"]).to eq(post_params[:user][:ip])
+        end
+
         it "creates email duplicate" do
           headers = { "REMOTE_ADDR" => "1.2.3.4" }
 
@@ -154,6 +162,8 @@ RSpec.describe 'Formsites API', type: :request do
 
           # TODO: Check this behaviour
           expect(json["is_verified"]).to eq(true)
+          expect(json["formsite_user"]["ip"]).to eq("1.2.3.4")
+          expect(json["formsite_user"]["is_duplicate"]).to eq(false)
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(true)
         end
