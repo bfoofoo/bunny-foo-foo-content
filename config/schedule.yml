@@ -7,3 +7,19 @@ send_formsite_users_to_aweber:
   cron: "0 * * * *"
   class: "FormsiteUsers::SendToAweberWorker"
   queue: default
+
+aweber_migrate_subscribers:
+  cron: "0 0 * * *"
+  class: "Aweber::MigrateSubscribersWorker"
+  queue: default
+
+aweber_collect_statistics:
+  cron: "0 0 * * 4,5"
+  class: "Aweber::CollectStatisticsWorker"
+  queue: statistics
+
+suppression_lists_autoremove_from_esp:
+  cron: "0 0  * * *"
+  class: "SuppressionLists::AutoremoveFromEspWorker"
+  queue: default
+
