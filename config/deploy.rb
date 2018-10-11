@@ -1,6 +1,5 @@
 require 'capistrano/bundler'
 
-set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
 set :application, "bffadmin"
 set :repo_url, "git@github.com:flywithmemsl/bunny-foo-foo-content.git"
 
