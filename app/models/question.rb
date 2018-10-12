@@ -2,9 +2,11 @@ class Question < ApplicationRecord
   acts_as_paranoid
   audited only: [:position, :is_last]
 
+  belongs_to :formsite
+
   has_many :answers, dependent: :destroy
   has_many :formsite_questions
-  has_many :formsite, :through => :formsite_questions
+  # has_many :formsite, :through => :formsite_questions
 
   has_many :formsite_user_answers
 

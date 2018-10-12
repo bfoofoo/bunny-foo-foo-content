@@ -1,7 +1,6 @@
 module FormsiteInteractor
   class AddUser
     include Interactor
-    FORMSITE_NAME="openposition.us"
 
     delegate :formsite, :params, :request, :user, :formsite_user, :to => :context
 
@@ -58,7 +57,7 @@ module FormsiteInteractor
         if !user.blank? && user.email == FormsiteUser::TEST_USER_EMAIL
           create_test_user()
         else
-          if formsite && formsite.name == FORMSITE_NAME && !user.blank?
+          if formsite && formsite.name == Formsite::OPENPOSITION_NAME && !user.blank?
             handle_openposition_formsite()
           else
             handle_formsite_user_creation()
