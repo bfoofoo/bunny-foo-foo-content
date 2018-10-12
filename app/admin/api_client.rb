@@ -1,6 +1,6 @@
 ActiveAdmin.register ApiClient do
   permit_params :name, :token,
-                api_client_mappings_attributes: [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag]
+                api_client_mappings_attributes: [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy]
 
   action_item :generate_token, :only => :show do
     link_to("Generate API Token", generate_token_admin_api_client_path(id: params[:id]))
