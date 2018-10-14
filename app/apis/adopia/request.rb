@@ -12,8 +12,8 @@ module Adopia
       @api_key = api_key
     end
 
-    def post(path, params={})
-      self.class.post(uri(path), payload(params))
+    def post(path, query, params={})
+      self.class.post(uri(path), payload(params, true))
     end
 
     def get(path, params={})
@@ -41,11 +41,12 @@ module Adopia
       "#{API_ENDPOINT}#{path}"
     end
 
-    def payload(params)
-      {
-        headers: { 'Content-Type' => 'application/json' },
-        query: default_query_params.merge(params).to_query
-      }
+    def payload(params, json = false)
+      payload = { headers: { 'Content-Type' => 'application/json' } }
+      if json
+        return payload.merge(body: default_query_params.merge(params).to_json)
+      end
+      payload.merge(query: default_query_params.merge(params).to_query)
     end
   end
 end

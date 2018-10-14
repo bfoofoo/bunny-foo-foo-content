@@ -1,6 +1,6 @@
 module Adopia
   module Errors
-    class InternalServerError
+    class InternalServerError < StandardError
     end
   end
 end

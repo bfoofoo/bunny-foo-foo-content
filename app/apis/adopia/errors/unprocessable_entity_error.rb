@@ -1,6 +1,6 @@
 module Adopia
   module Errors
-    class UnprocessableEntityError
+    class UnprocessableEntityError < StandardError
     end
   end
 end

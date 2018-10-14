@@ -1,6 +1,6 @@
 module Adopia
   module Errors
-    class UnauthorizedError
+    class UnauthorizedError < StandardError
     end
   end
 end
