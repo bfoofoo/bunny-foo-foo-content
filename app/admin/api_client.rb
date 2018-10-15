@@ -1,6 +1,7 @@
 ActiveAdmin.register ApiClient do
   permit_params :name, :token,
-                api_client_mappings_attributes: [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy]
+                api_client_aweber_lists_attributes: [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy],
+                api_client_adopia_lists_attributes: [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy]
 
   action_item :generate_token, :only => :show do
     link_to("Generate API Token", generate_token_admin_api_client_path(id: params[:id]))
@@ -27,7 +28,14 @@ ActiveAdmin.register ApiClient do
       end
 
       row 'Aweber Lists' do |api_client|
-        api_client.api_client_mappings.map do |acm|
+        api_client.api_client_mappings.by_type('AweberList').map do |acm|
+          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
+        end.join(', ')
+      end
+
+
+      row 'Adopia Lists' do |api_client|
+        api_client.api_client_mappings.by_type('AdopiaList').map do |acm|
           "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
         end.join(', ')
       end
@@ -43,10 +51,20 @@ ActiveAdmin.register ApiClient do
     end
 
     f.inputs 'Aweber Lists' do
-      f.has_many :api_client_mappings, allow_destroy: true, new_record: true, heading: false do |ff|
+      f.has_many :api_client_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
         ff.semantic_errors
         ff.input :destination_type, input_html: { hidden: true, value: 'AweberList' }
-        ff.input :destination_id, :label => 'List', :as => :select, :collection => AweberList.all
+        ff.input :destination_id, :label => 'List', :as => :select, collection: AweberList.includes(:aweber_account).all
+        ff.input :tag, label: 'Affiliate'
+        ff.input :delay_in_hours
+      end
+    end
+
+    f.inputs 'Adopia Lists' do
+      f.has_many :api_client_adopia_lists, allow_destroy: true, new_record: true, heading: false do |ff|
+        ff.semantic_errors
+        ff.input :destination_type, input_html: { hidden: true, value: 'AdopiaList' }
+        ff.input :destination_id, :label => 'List', :as => :select, collection: AdopiaList.includes(:adopia_account).all
         ff.input :tag, label: 'Affiliate'
         ff.input :delay_in_hours
       end
