@@ -10,7 +10,11 @@ class FormsiteUser < ApplicationRecord
   has_many :formsite_aweber_lists, through: :formsite
   has_many :aweber_lists, through: :formsite_aweber_lists
 
-  delegate :email, to: :user, allow_nil: true
+  has_many :adopia_list_users, through: :user
+  has_many :formsite_adopia_lists, through: :formsite
+  has_many :adopia_lists, through: :formsite_adopia_lists
+
+  delegate :email, :sent_to_aweber?, :sent_to_adopia?, to: :user, allow_nil: true
 
   scope :by_s_filter, -> (s_field) { 
     where.not("#{s_field}" => nil)
@@ -35,5 +39,4 @@ class FormsiteUser < ApplicationRecord
   scope :between_dates, -> (start_date, end_date) { 
     where("formsite_users.created_at >= ? AND formsite_users.created_at <= ?", start_date, end_date)
   }
-
 end

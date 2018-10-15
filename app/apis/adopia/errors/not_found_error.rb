@@ -1,6 +1,6 @@
 module Adopia
   module Errors
-    class NotFoundError < StandardError
+    class NotFoundError < Error
     end
   end
 end

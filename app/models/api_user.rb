@@ -4,6 +4,8 @@ class ApiUser < ApplicationRecord
 
   has_many :aweber_list_users, class_name: 'AweberListUser', as: :linkable
   has_many :aweber_lists, through: :aweber_list_users, source: :list, source_type: 'AweberList'
+  has_many :adopia_list_users, class_name: 'AdopiaListUser', as: :linkable
+  has_many :adopia_lists, through: :adopia_list_users, source: :list, source_type: 'AdopiaList'
   has_many :api_client_aweber_lists, through: :api_client, class_name: 'ApiClientMappings::Aweber'
   has_many :api_client_adopia_lists, through: :api_client, class_name: 'ApiClientMappings::Adopia'
 
@@ -13,7 +15,9 @@ class ApiUser < ApplicationRecord
   alias_attribute :name, :first_name
 
   scope :verified, -> { where("is_verified = ?", true) }
-  scope :with_aweber_mappings, -> { joins(:api_client_aweber_lists).includes(:api_client_aweber_lists) }
+  { aweber: :api_client_aweber_lists, adopia: :api_client_adopia_lists }.each do |provider, klass|
+    scope :"with_#{provider}_mappings", -> { joins(klass).includes(klass) }
+  end
 
   swagger_schema :ApiUser do
     key :required, [:email, :first_name, :last_name]
@@ -166,5 +170,13 @@ class ApiUser < ApplicationRecord
 
   def sent_to_aweber_list?(list)
     aweber_list_users.where(list: list).exists?
+    end
+
+  def sent_to_adopia?
+    adopia_list_users.exists?
+  end
+
+  def sent_to_adopia_list?(list)
+    adopia_list_users.where(list: list).exists?
   end
 end

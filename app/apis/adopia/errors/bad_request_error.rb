@@ -1,6 +1,6 @@
 module Adopia
   module Errors
-    class BadRequestError < StandardError
+    class BadRequestError < Error
     end
   end
 end
