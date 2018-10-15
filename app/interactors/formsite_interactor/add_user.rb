@@ -133,8 +133,10 @@ module FormsiteInteractor
       end
 
       def formsite_user_dynamic_params
+        is_verified = is_useragent_valid && is_impressionwise_test_success && !is_ip_duplicate?
+        is_verified = is_verified && !params[:user][:first_name].blank? && !params[:user][:last_name].blank?
         {
-          is_verified: is_useragent_valid && is_impressionwise_test_success && !is_ip_duplicate?,
+          is_verified: is_verified,
           is_useragent_valid: is_useragent_valid,
           is_impressionwise_test_success: is_impressionwise_test_success,
           is_duplicate: is_ip_duplicate?,
