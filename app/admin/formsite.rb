@@ -17,9 +17,8 @@ ActiveAdmin.register Formsite do
                 ad_ids: [],
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
 
-
-                formsite_aweber_lists_attributes: [:id, :formsite_id, :aweber_list_id, :delay_in_hours, :_destroy],
-                formsite_maropost_lists_attributes: [:id, :formsite_id, :maropost_list_id, :_destroy],
+                formsite_aweber_lists_attributes: [:id, :destination_id, :destination_type, :delay_in_hours, :_destroy],
+                formsite_adopia_lists_attributes: [:id, :destination_id, :destination_type, :delay_in_hours, :_destroy],
 
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
@@ -103,14 +102,16 @@ ActiveAdmin.register Formsite do
       row :s5_description
       row :affiliate_description
 
-      row "Aweber Lists" do |formsite|
-        formsite.formsite_aweber_lists.map do |al|
-          "#{al.aweber_list.full_name} (#{al.delay_in_hours} hour delay)"
+      row 'Aweber Lists' do |formsite|
+        formsite.formsite_aweber_lists.map do |fal|
+          "#{fal.aweber_list.full_name} (#{fal.delay_in_hours} hour delay)"
         end.join(',')
       end
 
-      row 'Maropost Lists' do |formsite|
-        formsite.maropost_lists.map(&:full_name).join(',')
+      row 'Adopia Lists' do |formsite|
+        formsite.formsite_adopia_lists.map do |fal|
+          "#{fal.adopia_list.full_name} (#{fal.delay_in_hours} hour delay)"
+        end.join(',')
       end
 
     end
@@ -153,15 +154,18 @@ ActiveAdmin.register Formsite do
           f.inputs 'Aweber Lists' do
             f.has_many :formsite_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
               ff.semantic_errors
-              ff.input :aweber_list, :label => 'List', :as => :select, :collection => AweberList.all
+              ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AweberList' }
+              ff.input :destination_id, :label => 'List', :as => :select, collection: AweberList.includes(:aweber_account).all
               ff.input :delay_in_hours
             end
           end
 
-          f.inputs 'Maropost Lists' do
-            f.has_many :formsite_maropost_lists, allow_destroy: true, new_record: true, heading: false do |ff|
+          f.inputs 'Adopia Lists' do
+            f.has_many :formsite_adopia_lists, allow_destroy: true, new_record: true, heading: false do |ff|
               ff.semantic_errors
-              ff.input :maropost_list, label: 'List', as: :select, collection: MaropostList.all
+              ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AdopiaList' }
+              ff.input :destination_id, :label => 'List', :as => :select, collection: AdopiaList.includes(:adopia_account).all
+              ff.input :delay_in_hours
             end
           end
         end

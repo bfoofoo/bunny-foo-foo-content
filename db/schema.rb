@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181012135318) do
+ActiveRecord::Schema.define(version: 20181015093948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,22 @@ ActiveRecord::Schema.define(version: 20181012135318) do
     t.datetime "updated_at",                          null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
+  end
+
+  create_table "adopia_accounts", force: :cascade do |t|
+    t.string   "name"
+    t.string   "api_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "adopia_lists", force: :cascade do |t|
+    t.integer  "adopia_account_id", null: false
+    t.integer  "list_id",           null: false
+    t.string   "name"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["adopia_account_id"], name: "index_adopia_lists_on_adopia_account_id", using: :btree
   end
 
   create_table "ads", force: :cascade do |t|
@@ -170,9 +186,8 @@ ActiveRecord::Schema.define(version: 20181012135318) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -262,13 +277,6 @@ ActiveRecord::Schema.define(version: 20181012135318) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.integer  "delay_in_hours", default: 0, null: false
-  end
-
-  create_table "formsite_maropost_lists", force: :cascade do |t|
-    t.integer "maropost_list_id", null: false
-    t.integer "formsite_id",      null: false
-    t.index ["formsite_id"], name: "index_formsite_maropost_lists_on_formsite_id", using: :btree
-    t.index ["maropost_list_id"], name: "index_formsite_maropost_lists_on_maropost_list_id", using: :btree
   end
 
   create_table "formsite_questions", force: :cascade do |t|
@@ -467,6 +475,7 @@ ActiveRecord::Schema.define(version: 20181012135318) do
     t.index ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
   end
 
+  add_foreign_key "adopia_lists", "adopia_accounts"
   add_foreign_key "answers", "questions"
   add_foreign_key "api_users", "api_clients"
   add_foreign_key "articles", "categories"
@@ -474,8 +483,6 @@ ActiveRecord::Schema.define(version: 20181012135318) do
   add_foreign_key "configs", "websites"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
-  add_foreign_key "formsite_maropost_lists", "formsites"
-  add_foreign_key "formsite_maropost_lists", "maropost_lists"
   add_foreign_key "leads", "users"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "product_cards", "websites"
