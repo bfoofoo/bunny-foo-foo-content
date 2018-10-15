@@ -19,9 +19,7 @@ class Formsite
     def lists
       formsite
         .formsite_aweber_lists
-        .joins(:aweber_list)
-        .includes(:aweber_list)
-        .where(formsite_aweber_lists: { delay_in_hours: 0 })
+        .where(email_marketer_mappings: { delay_in_hours: 0 })
     end
   
   end
