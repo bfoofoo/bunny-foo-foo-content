@@ -20,7 +20,7 @@ module FormsiteUsers
         .includes(:formsite_aweber_lists, :aweber_lists)
         .left_joins(user: :aweber_list_users)
         .where(email_marketer_list_users: { id: nil })
-        .where.not(formsite_aweber_lists: { delay_in_hours: 0 }, users: { id: nil })
+        .where.not(email_marketer_mappings: { delay_in_hours: 0 }, users: { id: nil })
     end
 
     def service_class

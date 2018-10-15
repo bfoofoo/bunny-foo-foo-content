@@ -8,11 +8,11 @@ class FormsiteUser < ApplicationRecord
 
   has_many :aweber_list_users, through: :user
   has_many :formsite_aweber_lists, through: :formsite
-  has_many :aweber_lists, through: :formsite_aweber_lists
+  has_many :aweber_lists, through: :formsite_aweber_lists, source: :destination, source_type: 'AweberList'
 
   has_many :adopia_list_users, through: :user
   has_many :formsite_adopia_lists, through: :formsite
-  has_many :adopia_lists, through: :formsite_adopia_lists
+  has_many :adopia_lists, through: :formsite_adopia_lists, source: :destination, source_type: 'AdopiaList'
 
   delegate :email, :sent_to_aweber?, :sent_to_adopia?, to: :user, allow_nil: true
 

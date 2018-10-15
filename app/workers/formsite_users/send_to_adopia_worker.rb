@@ -20,7 +20,7 @@ module FormsiteUsers
         .includes(:formsite_adopia_lists, :adopia_lists)
         .left_joins(user: :adopia_list_users)
         .where(email_marketer_list_users: { id: nil })
-        .where.not(formsite_adopia_lists: { delay_in_hours: 0 }, users: { id: nil })
+        .where.not(email_marketer_mappings: { delay_in_hours: 0 }, users: { id: nil })
     end
 
     def service_class

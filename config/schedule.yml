@@ -8,6 +8,16 @@ send_formsite_users_to_aweber:
   class: "FormsiteUsers::SendToAweberWorker"
   queue: default
 
+send_api_users_to_adopia:
+  cron: "0 * * * *"
+  class: "ApiUsers::SendToAdopiaWorker"
+  queue: default
+
+send_formsite_users_to_adopia:
+  cron: "0 * * * *"
+  class: "FormsiteUsers::SendToAdopiaWorker"
+  queue: default
+
 aweber_migrate_subscribers:
   cron: "0 0 * * *"
   class: "Aweber::MigrateSubscribersWorker"
