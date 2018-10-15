@@ -4,15 +4,16 @@ class ApiUser < ApplicationRecord
 
   has_many :aweber_list_users, class_name: 'AweberListUser', as: :linkable
   has_many :aweber_lists, through: :aweber_list_users, source: :list, source_type: 'AweberList'
-  has_many :api_client_mappings, through: :api_client
-  
+  has_many :api_client_aweber_lists, through: :api_client, class_name: 'ApiClientMappings::Aweber'
+  has_many :api_client_adopia_lists, through: :api_client, class_name: 'ApiClientMappings::Adopia'
+
   validates :email, :first_name, :last_name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   alias_attribute :name, :first_name
 
   scope :verified, -> { where("is_verified = ?", true) }
-  scope :with_aweber_mappings, -> { joins(:api_client_mappings).includes(:api_client_mappings) }
+  scope :with_aweber_mappings, -> { joins(:api_client_aweber_lists).includes(:api_client_aweber_lists) }
 
   swagger_schema :ApiUser do
     key :required, [:email, :first_name, :last_name]

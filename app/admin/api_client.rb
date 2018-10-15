@@ -28,14 +28,14 @@ ActiveAdmin.register ApiClient do
       end
 
       row 'Aweber Lists' do |api_client|
-        api_client.api_client_mappings.by_type('AweberList').map do |acm|
+        api_client.api_client_aweber_lists.map do |acm|
           "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
         end.join(', ')
       end
 
 
       row 'Adopia Lists' do |api_client|
-        api_client.api_client_mappings.by_type('AdopiaList').map do |acm|
+        api_client.api_client_adopia_lists.map do |acm|
           "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
         end.join(', ')
       end
@@ -53,7 +53,7 @@ ActiveAdmin.register ApiClient do
     f.inputs 'Aweber Lists' do
       f.has_many :api_client_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
         ff.semantic_errors
-        ff.input :destination_type, input_html: { hidden: true, value: 'AweberList' }
+        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AweberList' }
         ff.input :destination_id, :label => 'List', :as => :select, collection: AweberList.includes(:aweber_account).all
         ff.input :tag, label: 'Affiliate'
         ff.input :delay_in_hours
@@ -63,7 +63,7 @@ ActiveAdmin.register ApiClient do
     f.inputs 'Adopia Lists' do
       f.has_many :api_client_adopia_lists, allow_destroy: true, new_record: true, heading: false do |ff|
         ff.semantic_errors
-        ff.input :destination_type, input_html: { hidden: true, value: 'AdopiaList' }
+        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AdopiaList' }
         ff.input :destination_id, :label => 'List', :as => :select, collection: AdopiaList.includes(:adopia_account).all
         ff.input :tag, label: 'Affiliate'
         ff.input :delay_in_hours

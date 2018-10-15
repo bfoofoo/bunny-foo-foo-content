@@ -1,4 +1,4 @@
-module ApiClientMappings
+module FormsiteMappings
   class Aweber < Base
     alias_attribute :aweber_list, :destination
 

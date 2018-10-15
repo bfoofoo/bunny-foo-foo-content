@@ -1,4 +1,4 @@
-module ApiClientMappings
+module FormsiteMappings
   class Adopia < Base
     alias_attribute :adopia_list, :destination
 
