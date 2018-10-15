@@ -16,6 +16,12 @@ RSpec.describe 'Formsites API', type: :request do
         it_behaves_like "Add formsite user success request"
 
         it "creates not verified formsite_user with user" do
+          post_params = {user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev"}}
+          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          expect(json["formsite_user"]["is_verified"]).to eq(false)
+        end
+
+        it "creates not verified formsite_user with empty name" do
           expect(json["is_verified"]).to eq(false)
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
