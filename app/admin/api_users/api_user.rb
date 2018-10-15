@@ -20,6 +20,19 @@ ActiveAdmin.register ApiUser do
     id_column
     resource_class.content_columns.each { |col| column col.name.to_sym }
     column :sent_to_aweber?
+    column :sent_to_adopia?
     actions
+  end
+
+  show do
+    attributes_table do
+      default_attribute_table_rows.each do |field|
+        row field
+      end
+
+      row :sent_to_aweber?
+      row :sent_to_adopia?
+    end
+    active_admin_comments
   end
 end

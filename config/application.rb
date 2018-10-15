@@ -14,10 +14,10 @@ module BffAdmin
 
     config.time_zone = 'Central Time (US & Canada)'
     config.active_record.default_timezone = :local
-
     config.middleware.use Rack::Deflater
     config.assets.paths << "#{Rails.root}/app/assets/videos"
     config.autoload_paths << Rails.root.join('app', 'use_cases')
+    config.autoload_paths << Rails.root.join('app', 'apis')
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
     config.i18n.default_locale = :en
   end

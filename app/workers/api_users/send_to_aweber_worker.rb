@@ -4,7 +4,7 @@ module ApiUsers
 
     def perform
       api_users.each do |api_user|
-        api_user.api_client_mappings.each do |mapping|
+        api_user.api_client_aweber_lists.each do |mapping|
           next unless mapping.should_send_now?(api_user.created_at) || api_user.sent_to_aweber_list?(mapping.destination)
           params = { affiliate: mapping.tag }.compact
           service_class.new(list: mapping.destination, params: params).add_subscriber(api_user)

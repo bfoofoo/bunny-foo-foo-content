@@ -1,5 +1,5 @@
 class Formsite
-  class AddNewUserToMaropostUseCase
+  class AddNewUserToAdopiaUseCase
     attr_reader :formsite, :user, :formsite_user
 
     def initialize(formsite, user, formsite_user)
@@ -11,8 +11,8 @@ class Formsite
     def perform
       return false if !formsite_user.is_verified || user.blank?
       params = { affiliate: formsite_user.affiliate }
-      formsite.maropost_lists.each do |list|
-        EmailMarketerService::Maropost::AddContactsToList.new(list: list, params: params).add(user)
+      formsite.adopia_lists.each do |list|
+        EmailMarketerService::Adopia::SubscriptionsService.new(list: list, params: params).add_contact(user)
       end
     end
   end

@@ -63,6 +63,8 @@ ActiveAdmin.register FormsiteUser do
     column "Last name" do |formsite_user|
       span formsite_user&.user&.last_name
     end
+    column :sent_to_aweber?
+    column :sent_to_adopia?
     actions
   end
 

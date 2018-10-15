@@ -1,13 +1,13 @@
 module FormsiteUsers
-  class SendToAweberWorker
+  class SendToAdopiaWorker
     include Sidekiq::Worker
 
     def perform
       formsite_users.each do |formsite_user|
-        formsite_user.formsite_aweber_lists.each do |mapping|
+        formsite_user.formsite_adopia_lists.each do |mapping|
           next unless mapping.should_send_now?(formsite_user.created_at)
           params = { affiliate: formsite_user.affiliate }.compact
-          service_class.new(list: mapping.aweber_list, params: params).add_subscriber(formsite_user)
+          service_class.new(list: mapping.adopia_list, params: params).add_contact(formsite_user)
         end
       end
     end
@@ -16,15 +16,15 @@ module FormsiteUsers
 
     def formsite_users
       FormsiteUser
-        .joins(:formsite_aweber_lists)
-        .includes(:formsite_aweber_lists, :aweber_lists)
-        .left_joins(user: :aweber_list_users)
+        .joins(:formsite_adopia_lists)
+        .includes(:formsite_adopia_lists, :adopia_lists)
+        .left_joins(user: :adopia_list_users)
         .where(email_marketer_list_users: { id: nil })
         .where.not(email_marketer_mappings: { delay_in_hours: 0 }, users: { id: nil })
     end
 
     def service_class
-      EmailMarketerService::Aweber::SubscriptionsService
+      EmailMarketerService::Adopia::SubscriptionsService
     end
   end
 end
