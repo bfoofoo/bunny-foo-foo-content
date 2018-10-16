@@ -66,6 +66,7 @@ class Api::V1::ApiUsersController < ApiController
     if @api_user.save
       ApiUser::AddNewUserToAweberUseCase.new(@api_user).perform
       ApiUser::AddNewUserToAdopiaUseCase.new(@api_user).perform
+      ApiUser::AddNewUserToEliteUseCase.new(@api_user).perform
       render json: {message: 'success'}, status: 200
     else
       render json: @api_user.errors, status: :unprocessable_entity

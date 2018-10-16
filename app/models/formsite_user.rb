@@ -14,7 +14,11 @@ class FormsiteUser < ApplicationRecord
   has_many :formsite_adopia_lists, through: :formsite
   has_many :adopia_lists, through: :formsite_adopia_lists, source: :destination, source_type: 'AdopiaList'
 
-  delegate :email, :sent_to_aweber?, :sent_to_adopia?, to: :user, allow_nil: true
+  has_many :elite_group_users, through: :user
+  has_many :formsite_elite_groups, through: :formsite
+  has_many :elite_groups, through: :formsite_elite_groups, source: :destination, source_type: 'EliteGroup'
+
+  delegate :email, :sent_to_aweber?, :sent_to_adopia?, :sent_to_elite?, to: :user, allow_nil: true
 
   scope :by_s_filter, -> (s_field) { 
     where.not("#{s_field}" => nil)

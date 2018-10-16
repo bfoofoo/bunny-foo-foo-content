@@ -28,12 +28,12 @@ module EmailMarketerService
       private
 
       def handle_user_record(user)
-        AweberListUser.find_or_create_by(list: list, linkable: user) if user.is_a?(ActiveRecord::Base)
+        EspListUsers::Aweber.find_or_create_by(list: list, linkable: user) if user.is_a?(ActiveRecord::Base)
       end
 
       def is_valid?(user)
         if user.is_a?(ActiveRecord::Base)
-          !AweberListUser.where(list: list, linkable: user).exists?
+          !EspListUsers::Aweber.where(list: list, linkable: user).exists?
         else
           true
         end

@@ -21,6 +21,7 @@ ActiveAdmin.register ApiUser do
     resource_class.content_columns.each { |col| column col.name.to_sym }
     column :sent_to_aweber?
     column :sent_to_adopia?
+    column :sent_to_elite?
     actions
   end
 
@@ -32,6 +33,7 @@ ActiveAdmin.register ApiUser do
 
       row :sent_to_aweber?
       row :sent_to_adopia?
+      row :sent_to_elite?
     end
     active_admin_comments
   end

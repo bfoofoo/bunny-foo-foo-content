@@ -2,8 +2,6 @@ ActiveAdmin.register FormsiteUser do
   menu false
   
   permit_params :affiliate, :job_key,  :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip, :ip
-  
-  
 
   filter :created_at
   filter :formsite
@@ -65,6 +63,7 @@ ActiveAdmin.register FormsiteUser do
     end
     column :sent_to_aweber?
     column :sent_to_adopia?
+    column :sent_to_elite?
     actions
   end
 

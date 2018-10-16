@@ -18,6 +18,16 @@ send_formsite_users_to_adopia:
   class: "FormsiteUsers::SendToAdopiaWorker"
   queue: default
 
+send_api_users_to_elite:
+  cron: "0 * * * *"
+  class: "ApiUsers::SendToEliteWorker"
+  queue: default
+
+send_formsite_users_to_elite:
+  cron: "0 * * * *"
+  class: "FormsiteUsers::SendToEliteWorker"
+  queue: default
+
 aweber_migrate_subscribers:
   cron: "0 0 * * *"
   class: "Aweber::MigrateSubscribersWorker"

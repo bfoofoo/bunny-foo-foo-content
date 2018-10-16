@@ -1,7 +1,7 @@
 class EliteAccount < ApplicationRecord
   has_many :elite_groups, dependent: :destroy
 
-  validates :api_key, uniqueness: true
+  validates :api_key, presence: true, uniqueness: true
 
   alias_attribute :groups, :elite_groups
   alias_attribute :lists, :elite_groups

@@ -5,6 +5,5 @@ module ApiClientMappings
     default_scope -> { where(source_type: 'ApiClient') }
 
     validates :tag, presence: true
-    validates :destination_id, uniqueness: { scope: :source_id }
   end
 end

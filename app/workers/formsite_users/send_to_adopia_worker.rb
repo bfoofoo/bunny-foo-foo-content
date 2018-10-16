@@ -1,30 +1,24 @@
 module FormsiteUsers
-  class SendToAdopiaWorker
-    include Sidekiq::Worker
-
+  class SendToAdopiaWorker < SendToEspWorker
     def perform
-      formsite_users.each do |formsite_user|
-        formsite_user.formsite_adopia_lists.each do |mapping|
-          next unless mapping.should_send_now?(formsite_user.created_at)
-          params = { affiliate: formsite_user.affiliate }.compact
-          service_class.new(list: mapping.adopia_list, params: params).add_contact(formsite_user)
-        end
+      super do
+        EmailMarketerService::Adopia::SubscriptionsService
+          .new(list: mapping.adopia_list, params: params)
+          .add_contact(formsite_user)
       end
     end
 
     private
 
     def formsite_users
-      FormsiteUser
+      super
         .joins(:formsite_adopia_lists)
         .includes(:formsite_adopia_lists, :adopia_lists)
         .left_joins(user: :adopia_list_users)
-        .where(email_marketer_list_users: { id: nil })
-        .where.not(email_marketer_mappings: { delay_in_hours: 0 }, users: { id: nil })
     end
 
-    def service_class
-      EmailMarketerService::Adopia::SubscriptionsService
+    def list_method
+      :formsite_adopia_lists
     end
   end
 end

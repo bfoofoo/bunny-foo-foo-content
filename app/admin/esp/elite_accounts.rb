@@ -11,6 +11,18 @@ ActiveAdmin.register EliteAccount do
     redirect_to admin_elite_account_path(account)
   end
 
+  index do
+    column :id
+    column :sender
+    column :api_key
+    column "Groups count" do |account|
+      account.elite_groups.count
+    end
+
+    column :created_at
+    actions
+  end
+
   show do
     attributes_table do
       row :id

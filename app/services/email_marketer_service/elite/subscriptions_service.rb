@@ -10,14 +10,20 @@ module EmailMarketerService
 
       def add_contact(user)
         begin
-          user_name = user.try(:full_name).blank? ? user.try(:name) : user.full_name
           if is_valid?(user)
-            client.add_list_contact(group.list_id, {
-              contact_email: user.email,
-              is_double_opt_in: 0,
-              contact_name: user_name,
-              **params
-            })
+            client.contact.create_contacts(
+              {
+                'GroupsToAddToIds' => [group.group_id]
+              },
+              [
+                {
+                  'EmailAddress' => user.email,
+                  'Affiliate' => params[:affiliate],
+                  'FirstName' => user.try(:first_name),
+                  'LastName' => user.try(:last_name)
+                }
+              ]
+            )
             handle_user_record(user)
           end
         rescue ::Elite::Errors::Error => e
@@ -28,12 +34,12 @@ module EmailMarketerService
       private
 
       def handle_user_record(user)
-        EliteListUser.find_or_create_by(group: group, linkable: user) if user.is_a?(ActiveRecord::Base)
+        EspListUsers::Elite.find_or_create_by(list: group, linkable: user) if user.is_a?(ActiveRecord::Base)
       end
 
       def is_valid?(user)
         if user.is_a?(ActiveRecord::Base)
-          !EliteListUser.where(group: group, linkable: user).exists?
+          !EspListUsers::Elite.where(list: group, linkable: user).exists?
         else
           true
         end
@@ -44,7 +50,7 @@ module EmailMarketerService
       end
 
       def account
-        @account ||= group.elite_account
+        @account ||= group.account
       end
     end
   end
