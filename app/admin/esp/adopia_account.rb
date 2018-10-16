@@ -1,4 +1,6 @@
 ActiveAdmin.register AdopiaAccount do
+  menu parent: 'ESP'
+
   config.filters = false
 
   permit_params :api_key, :name

@@ -1,5 +1,5 @@
 ActiveAdmin.register AweberRule do
-  menu parent: "Aweber Accounts"
+  menu parent: 'ESP'
 
   permit_params :list_to_id, :list_from_id, :time
 

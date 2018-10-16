@@ -1,4 +1,8 @@
 ActiveAdmin.register AweberAccount do
+  menu parent: 'ESP'
+
+  config.filters = false
+
   actions :all, except: [:new]
   permit_params :name, :account_id, :access_token, :secret_token
 

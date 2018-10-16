@@ -1,7 +1,9 @@
 ActiveAdmin.register MaropostAccount do
-  permit_params :name, :account_id, :auth_token
+  menu parent: 'ESP'
 
-  menu false
+  config.filters = false
+
+  permit_params :name, :account_id, :auth_token
 
   member_action :refresh_list, method: :post do
     account = MaropostAccount.find(params[:id])
