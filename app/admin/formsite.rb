@@ -1,4 +1,5 @@
 ActiveAdmin.register Formsite do
+  esp_mapping_attributes = [:id, :destination_id, :destination_type, :delay_in_hours, :_destroy]
   permit_params :name, :description, :url, :aweber_list_id, 
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :first_redirect_url, :final_redirect_url,
@@ -17,8 +18,9 @@ ActiveAdmin.register Formsite do
                 ad_ids: [],
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
 
-                formsite_aweber_lists_attributes: [:id, :destination_id, :destination_type, :delay_in_hours, :_destroy],
-                formsite_adopia_lists_attributes: [:id, :destination_id, :destination_type, :delay_in_hours, :_destroy],
+                formsite_aweber_lists_attributes: esp_mapping_attributes,
+                formsite_adopia_lists_attributes: esp_mapping_attributes,
+                formsite_elite_groups_attributes: esp_mapping_attributes,
 
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
@@ -114,6 +116,13 @@ ActiveAdmin.register Formsite do
         end.join(',')
       end
 
+
+      row 'Elite Groups' do |formsite|
+        formsite.formsite_elite_groups.map do |fal|
+          "#{fal.elite_group.full_name} (#{fal.delay_in_hours} hour delay)"
+        end.join(',')
+      end
+
     end
     active_admin_comments
   end
@@ -155,7 +164,7 @@ ActiveAdmin.register Formsite do
             f.has_many :formsite_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
               ff.semantic_errors
               ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AweberList' }
-              ff.input :destination_id, :label => 'List', :as => :select, collection: AweberList.includes(:aweber_account).all
+              ff.input :destination_id, label: 'List', as: :select, collection: AweberList.includes(:aweber_account).all
               ff.input :delay_in_hours
             end
           end
@@ -164,7 +173,17 @@ ActiveAdmin.register Formsite do
             f.has_many :formsite_adopia_lists, allow_destroy: true, new_record: true, heading: false do |ff|
               ff.semantic_errors
               ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AdopiaList' }
-              ff.input :destination_id, :label => 'List', :as => :select, collection: AdopiaList.includes(:adopia_account).all
+              ff.input :destination_id, label: 'List', as: :select, collection: AdopiaList.includes(:adopia_account).all
+              ff.input :delay_in_hours
+            end
+          end
+
+
+          f.inputs 'Elite Groups' do
+            f.has_many :formsite_elite_groups, allow_destroy: true, new_record: true, heading: false do |ff|
+              ff.semantic_errors
+              ff.input :destination_type, label: false, input_html: { hidden: true, value: 'EliteGroup' }
+              ff.input :destination_id, label: 'Group', as: :select, collection: EliteGroup.includes(:elite_account).all
               ff.input :delay_in_hours
             end
           end

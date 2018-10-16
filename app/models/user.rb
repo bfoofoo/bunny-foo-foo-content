@@ -8,7 +8,7 @@ class User < ApplicationRecord
 
   has_many :aweber_list_users, class_name: 'AweberListUser', as: :linkable
   has_many :aweber_lists, through: :aweber_list_user, source: :list, source_type: 'AweberList'
-  has_many :adopia_list_users, class_name: 'AdopiaListUser', as: :linkable
+  has_many :adopia_list_users, class_name: 'EspListUsers::Adopia', as: :linkable
   has_many :adopia_lists, through: :adopia_list_user, source: :list, source_type: 'AdopiaList'
 
   accepts_nested_attributes_for :formsite_users

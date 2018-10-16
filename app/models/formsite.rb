@@ -1,5 +1,5 @@
 class Formsite < ApplicationRecord
-  OPENPOSITION_NAME="openposition.us"
+  OPENPOSITION_NAME = "openposition.us"
   acts_as_paranoid
   
   has_and_belongs_to_many :categories
@@ -21,6 +21,8 @@ class Formsite < ApplicationRecord
   has_many :aweber_lists, through: :formsite_aweber_lists, source: :destination, source_type: 'AweberList'
   has_many :formsite_adopia_lists, as: :source, class_name: 'FormsiteMappings::Adopia'
   has_many :adopia_lists, through: :formsite_adopia_lists, source: :destination, source_type: 'AdopiaList'
+  has_many :formsite_elite_groups, as: :source, class_name: 'FormsiteMappings::Elite'
+  has_many :elite_groups, through: :formsite_elite_groups, source: :destination, source_type: 'EliteGroup'
 
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, through: :formsite_ads
@@ -30,6 +32,8 @@ class Formsite < ApplicationRecord
   accepts_nested_attributes_for :aweber_lists, allow_destroy: true
   accepts_nested_attributes_for :formsite_adopia_lists, allow_destroy: true
   accepts_nested_attributes_for :adopia_lists, allow_destroy: true
+  accepts_nested_attributes_for :formsite_elite_groups, allow_destroy: true
+  accepts_nested_attributes_for :elite_groups, allow_destroy: true
 
   accepts_nested_attributes_for :formsite_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true

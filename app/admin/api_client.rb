@@ -1,7 +1,9 @@
 ActiveAdmin.register ApiClient do
+  esp_mapping_attributes = [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy]
   permit_params :name, :token,
-                api_client_aweber_lists_attributes: [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy],
-                api_client_adopia_lists_attributes: [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy]
+                api_client_aweber_lists_attributes: esp_mapping_attributes,
+                api_client_adopia_lists_attributes: esp_mapping_attributes,
+                api_client_elite_groups_attributes: esp_mapping_attributes
 
   action_item :generate_token, :only => :show do
     link_to("Generate API Token", generate_token_admin_api_client_path(id: params[:id]))
@@ -39,6 +41,12 @@ ActiveAdmin.register ApiClient do
           "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
         end.join(', ')
       end
+
+      row 'Elite Groups' do |api_client|
+        api_client.api_client_elite_groups.map do |acm|
+          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
+        end.join(', ')
+      end
     end
 
     active_admin_comments
@@ -65,6 +73,16 @@ ActiveAdmin.register ApiClient do
         ff.semantic_errors
         ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AdopiaList' }
         ff.input :destination_id, :label => 'List', :as => :select, collection: AdopiaList.includes(:adopia_account).all
+        ff.input :tag, label: 'Affiliate'
+        ff.input :delay_in_hours
+      end
+    end
+
+    f.inputs 'Elite Groups' do
+      f.has_many :api_client_elite_groups, allow_destroy: true, new_record: true, heading: false do |ff|
+        ff.semantic_errors
+        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'EliteGroup' }
+        ff.input :destination_id, :label => 'Group', :as => :select, collection: EliteGroup.includes(:elite_account).all
         ff.input :tag, label: 'Affiliate'
         ff.input :delay_in_hours
       end
