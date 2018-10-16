@@ -24,7 +24,7 @@ aweber_migrate_subscribers:
   queue: default
 
 aweber_collect_statistics:
-  cron: "0 0 * * 4,5"
+  cron: "0 0 * * 1,4"
   class: "Aweber::CollectStatisticsWorker"
   queue: statistics
 
