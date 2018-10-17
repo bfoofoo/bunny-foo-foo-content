@@ -1,7 +1,7 @@
 module FormsiteUsers
   class SendToEliteWorker < SendToEspWorker
     def perform
-      super do
+      super do |params, mapping, formsite_user|
         EmailMarketerService::Elite::SubscriptionsService
           .new(group: mapping.elite_group, params: params)
           .add_contact(formsite_user)

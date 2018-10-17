@@ -1,13 +1,5 @@
 class Formsite
-  class AddNewUserToAdopiaUseCase
-    attr_reader :formsite, :user, :formsite_user
-
-    def initialize(formsite, user, formsite_user)
-      @user = user
-      @formsite = formsite
-      @formsite_user = formsite_user
-    end
-
+  class AddNewUserToAdopiaUseCase < AddNewUserToEspUseCase
     def perform
       return false if !formsite_user.is_verified || user.blank?
       params = { affiliate: formsite_user.affiliate }
@@ -16,10 +8,8 @@ class Formsite
       end
     end
 
-    def lists
-      formsite
-        .formsite_adopia_lists
-        .where(email_marketer_mappings: { delay_in_hours: 0 })
+    def list_class
+      :formsite_adopia_lists
     end
   end
 end

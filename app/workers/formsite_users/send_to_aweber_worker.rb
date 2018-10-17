@@ -1,7 +1,7 @@
 module FormsiteUsers
   class SendToAweberWorker < SendToEspWorker
     def perform
-      super do
+      super do |params, mapping, formsite_user|
         EmailMarketerService::Aweber::SubscriptionsService
           .new(list: mapping.aweber_list, params: params)
           .add_subscriber(formsite_user)
