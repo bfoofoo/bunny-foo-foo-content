@@ -137,7 +137,7 @@ module Deployer
               end
             end
             channel.request_pty
-            channel.exec "source ~/.profile; sudo ufw allow 'Nginx Full'; sudo ufw delete allow 'Nginx HTTP'; sudo certbot --preferred-challenges http --nginx -d #{@config[:name]} -d www.#{@config[:name]}"
+            channel.exec "source ~/.profile; sudo ufw allow ssh; sudo ufw allow 'Nginx Full'; sudo certbot --preferred-challenges http --nginx -d #{@config[:name]} -d www.#{@config[:name]}"
             channel.wait
           end
           channel.wait
