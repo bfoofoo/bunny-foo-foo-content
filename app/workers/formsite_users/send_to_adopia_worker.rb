@@ -4,7 +4,7 @@ module FormsiteUsers
       super do |params, mapping, formsite_user|
         EmailMarketerService::Adopia::SubscriptionsService
           .new(list: mapping.adopia_list, params: params)
-          .add_contact(formsite_user)
+          .add_contact(formsite_user.user)
       end
     end
 

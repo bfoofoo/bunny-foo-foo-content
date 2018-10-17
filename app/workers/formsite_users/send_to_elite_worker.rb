@@ -4,7 +4,7 @@ module FormsiteUsers
       super do |params, mapping, formsite_user|
         EmailMarketerService::Elite::SubscriptionsService
           .new(group: mapping.elite_group, params: params)
-          .add_contact(formsite_user)
+          .add_contact(formsite_user.user)
       end
     end
 

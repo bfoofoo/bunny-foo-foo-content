@@ -4,7 +4,7 @@ module FormsiteUsers
       super do |params, mapping, formsite_user|
         EmailMarketerService::Aweber::SubscriptionsService
           .new(list: mapping.aweber_list, params: params)
-          .add_subscriber(formsite_user)
+          .add_subscriber(formsite_user.user)
       end
     end
 
