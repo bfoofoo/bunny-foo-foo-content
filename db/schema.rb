@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181016103604) do
+ActiveRecord::Schema.define(version: 20181017115755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -186,9 +186,8 @@ ActiveRecord::Schema.define(version: 20181016103604) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -412,6 +411,23 @@ ActiveRecord::Schema.define(version: 20181016103604) do
     t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
   end
 
+  create_table "ongage_accounts", force: :cascade do |t|
+    t.string   "account_id", null: false
+    t.string   "username",   null: false
+    t.string   "password",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ongage_lists", force: :cascade do |t|
+    t.integer  "list_id",           null: false
+    t.integer  "ongage_account_id", null: false
+    t.string   "name"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["ongage_account_id"], name: "index_ongage_lists_on_ongage_account_id", using: :btree
+  end
+
   create_table "product_cards", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
@@ -503,6 +519,7 @@ ActiveRecord::Schema.define(version: 20181016103604) do
   add_foreign_key "formsite_ads", "formsites"
   add_foreign_key "leads", "users"
   add_foreign_key "maropost_lists", "maropost_accounts"
+  add_foreign_key "ongage_lists", "ongage_accounts"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
   add_foreign_key "suppression_email_marketer_lists", "suppression_lists"
