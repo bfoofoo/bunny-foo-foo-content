@@ -1,18 +1,13 @@
-ActiveAdmin.register User do
-  menu false
-  permit_params :first_name, :last_name, :email
+ActiveAdmin.register User, as: "Unsubscribed Users" do
+  actions :index
 
-  scope :verified, :default => true do |users|
-    formsites = FormsiteUser.where("is_verified = ?", true)
-    users = formsites.map(&:user)
-    User.where(id: users.map(&:id))
+  config.filters = false
+
+  controller do
+    def scoped_collection
+      User.unsubscribed
+    end
   end
-
-  scope :unsubscribed do |users|
-    User.where(unsubscribed: true)
-  end
-
-  scope :all
 
   index do |user|
     selectable_column
@@ -22,21 +17,5 @@ ActiveAdmin.register User do
     column :first_name
     column :last_name
     column :email
-
-    column "Forms" do |user|
-      span user.formsites.map(&:name)
-    end
-    actions
-  end
-
-
-  form do |f|
-    f.inputs 'User' do
-      f.input :first_name
-      f.input :last_name
-      f.input :email
-      # TODO add formsites
-    end
-    f.actions
   end
 end
