@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018111336) do
+ActiveRecord::Schema.define(version: 20181018131711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 20181018111336) do
     t.string   "phone1"
     t.string   "job"
     t.index ["api_client_id"], name: "index_api_users_on_api_client_id", using: :btree
+    t.index ["email"], name: "index_api_users_on_email", using: :btree
   end
 
   create_table "articles", force: :cascade do |t|
@@ -186,8 +187,9 @@ ActiveRecord::Schema.define(version: 20181018111336) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "collect_statistics", default: false, null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -374,6 +376,46 @@ ActiveRecord::Schema.define(version: 20181018111336) do
     t.boolean  "is_phone_number",             default: false
     t.datetime "deleted_at"
     t.index ["deleted_at"], name: "index_formsites_on_deleted_at", using: :btree
+  end
+
+  create_table "leadgen_ref_sites", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "url"
+    t.integer  "droplet_id"
+    t.string   "droplet_ip"
+    t.string   "zone_id"
+    t.string   "repo_url"
+    t.string   "favicon_image"
+    t.string   "logo_image"
+    t.string   "shortname"
+    t.string   "text_file"
+    t.datetime "deleted_at"
+    t.string   "ad_client"
+    t.string   "ad_sidebar_id"
+    t.string   "ad_top_id"
+    t.string   "ad_middle_id"
+    t.string   "ad_bottom_id"
+    t.string   "first_redirect_url"
+    t.string   "final_redirect_url"
+    t.boolean  "is_thankyou"
+    t.string   "background"
+    t.text     "left_side_content"
+    t.text     "first_question_code_snippet"
+    t.text     "head_code_snippet"
+    t.boolean  "is_checkboxes"
+    t.string   "right_side_content"
+    t.string   "s1_description"
+    t.string   "s2_description"
+    t.string   "s3_description"
+    t.string   "s4_description"
+    t.string   "s5_description"
+    t.string   "form_box_title_text"
+    t.string   "affiliate_description"
+    t.boolean  "is_phone_number"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.index ["deleted_at"], name: "index_leadgen_ref_sites_on_deleted_at", using: :btree
   end
 
   create_table "leads", force: :cascade do |t|

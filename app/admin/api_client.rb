@@ -24,6 +24,8 @@ ActiveAdmin.register ApiClient do
     redirect_to :back
   end
 
+  filter :id
+
   show do
     attributes_table do
       default_attribute_table_rows.each do |field|
