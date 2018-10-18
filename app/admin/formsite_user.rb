@@ -64,6 +64,7 @@ ActiveAdmin.register FormsiteUser do
     column :sent_to_aweber?
     column :sent_to_adopia?
     column :sent_to_elite?
+    column :sent_to_ongage?
     actions
   end
 

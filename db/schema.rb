@@ -412,11 +412,11 @@ ActiveRecord::Schema.define(version: 20181017115755) do
   end
 
   create_table "ongage_accounts", force: :cascade do |t|
-    t.string   "account_id", null: false
-    t.string   "username",   null: false
-    t.string   "password",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "username",     null: false
+    t.string   "password",     null: false
+    t.string   "account_code", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "ongage_lists", force: :cascade do |t|

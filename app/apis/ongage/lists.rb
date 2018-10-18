@@ -1,12 +1,14 @@
 module Ongage
-  class Lists
-    def initialize(auth_headers)
-      @request = Request.new(auth_headers, 'lists')
+  class Lists < Resource
+    def all(params = {})
+      response = @request.get(nil, params)
+      Response.new(response).parse
     end
 
-    def all
-      response = @request.get(nil)
-      Response.new(response).parse
+    private
+
+    def base_path
+      'lists'
     end
   end
 end

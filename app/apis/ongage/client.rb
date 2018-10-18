@@ -13,5 +13,9 @@ module Ongage
     def lists
       @lists ||= Lists.new(auth_headers)
     end
+
+    def contacts
+      @contacts ||= Contacts.new(auth_headers)
+    end
   end
 end

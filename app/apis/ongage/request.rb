@@ -2,7 +2,7 @@ module Ongage
   class Request
     include HTTParty
 
-    attr_reader :api_key, :base_path
+    attr_reader :base_path, :auth_headers
 
     API_ENDPOINT = 'https://api.ongage.net/api'.freeze
 
@@ -18,9 +18,7 @@ module Ongage
     end
 
     def get(path, params={})
-      p uri(path)
-      p payload(params)
-      self.class.get(uri(path), payload(params))
+      self.class.get([uri(path), params.to_query].join('?'), payload)
     end
 
     def put(path, params={})
@@ -41,11 +39,11 @@ module Ongage
       ].compact.join('/')
     end
 
-    def payload(params)
+    def payload(params = {})
       {
         headers: {
           'Content-Type' => 'application/json',
-        }.merge(@auth_headers),
+        }.merge(auth_headers),
         body: params.empty? ? nil : params.to_json
       }.compact
     end

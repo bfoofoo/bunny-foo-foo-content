@@ -1,8 +1,8 @@
 class FormsiteUser < ApplicationRecord
   TEST_USER_EMAIL="bf@test.com"
-  
+
   acts_as_paranoid
-  
+
   belongs_to :formsite
   belongs_to :user, optional: true
 
@@ -18,19 +18,24 @@ class FormsiteUser < ApplicationRecord
   has_many :formsite_elite_groups, through: :formsite
   has_many :elite_groups, through: :formsite_elite_groups, source: :destination, source_type: 'EliteGroup'
 
-  delegate :email, :sent_to_aweber?, :sent_to_adopia?, :sent_to_elite?, to: :user, allow_nil: true
+  has_many :ongage_list_users, through: :user
+  has_many :formsite_ongage_lists, through: :formsite
+  has_many :ongage_lists, through: :formsite_ongage_lists, source: :destination, source_type: 'OngageList'
 
-  scope :by_s_filter, -> (s_field) { 
+  delegate :email, :sent_to_aweber?, :sent_to_adopia?, :sent_to_elite?, :sent_to_ongage?,
+           to: :user, allow_nil: true
+
+  scope :by_s_filter, -> (s_field) {
     where.not("#{s_field}" => nil)
-    .where.not("#{s_field}" => "")
+      .where.not("#{s_field}" => "")
   }
 
   scope :jeft_join_users, -> () { joins("LEFT OUTER JOIN users ON formsite_users.user_id = users.id") }
 
-  scope :without_test_users, -> () { 
+  scope :without_test_users, -> () {
     jeft_join_users
-    .where("users.email != ? OR formsite_users.user_id IS NULL", TEST_USER_EMAIL)
-   }
+      .where("users.email != ? OR formsite_users.user_id IS NULL", TEST_USER_EMAIL)
+  }
 
   scope :only_test_users, -> () { includes(:user).where(users: {email: TEST_USER_EMAIL}) }
 
@@ -40,7 +45,7 @@ class FormsiteUser < ApplicationRecord
   scope :not_duplicate, -> () { where(is_duplicate: false) }
   scope :not_verified, -> () { where(is_verified: false) }
 
-  scope :between_dates, -> (start_date, end_date) { 
+  scope :between_dates, -> (start_date, end_date) {
     where("formsite_users.created_at >= ? AND formsite_users.created_at <= ?", start_date, end_date)
   }
 end

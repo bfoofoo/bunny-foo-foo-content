@@ -21,6 +21,7 @@ ActiveAdmin.register Formsite do
                 formsite_aweber_lists_attributes: esp_mapping_attributes,
                 formsite_adopia_lists_attributes: esp_mapping_attributes,
                 formsite_elite_groups_attributes: esp_mapping_attributes,
+                formsite_ongage_lists_attributes: esp_mapping_attributes,
 
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
@@ -116,10 +117,15 @@ ActiveAdmin.register Formsite do
         end.join(',')
       end
 
-
       row 'Elite Groups' do |formsite|
         formsite.formsite_elite_groups.map do |fal|
           "#{fal.elite_group.full_name} (#{fal.delay_in_hours} hour delay)"
+        end.join(',')
+      end
+
+      row 'Ongage Lists' do |formsite|
+        formsite.formsite_ongage_lists.map do |fal|
+          "#{fal.ongage_list.full_name} (#{fal.delay_in_hours} hour delay)"
         end.join(',')
       end
 
@@ -178,12 +184,20 @@ ActiveAdmin.register Formsite do
             end
           end
 
-
           f.inputs 'Elite Groups' do
             f.has_many :formsite_elite_groups, allow_destroy: true, new_record: true, heading: false do |ff|
               ff.semantic_errors
               ff.input :destination_type, label: false, input_html: { hidden: true, value: 'EliteGroup' }
               ff.input :destination_id, label: 'Group', as: :select, collection: EliteGroup.includes(:elite_account).all
+              ff.input :delay_in_hours
+            end
+          end
+
+          f.inputs 'Ongage Lists' do
+            f.has_many :formsite_ongage_lists, allow_destroy: true, new_record: true, heading: false do |ff|
+              ff.semantic_errors
+              ff.input :destination_type, label: false, input_html: { hidden: true, value: 'OngageList' }
+              ff.input :destination_id, label: 'List', as: :select, collection: OngageList.includes(:ongage_account).all
               ff.input :delay_in_hours
             end
           end

@@ -3,7 +3,8 @@ ActiveAdmin.register ApiClient do
   permit_params :name, :token,
                 api_client_aweber_lists_attributes: esp_mapping_attributes,
                 api_client_adopia_lists_attributes: esp_mapping_attributes,
-                api_client_elite_groups_attributes: esp_mapping_attributes
+                api_client_elite_groups_attributes: esp_mapping_attributes,
+                api_client_ongage_lists_attributes: esp_mapping_attributes
 
   action_item :generate_token, :only => :show do
     link_to("Generate API Token", generate_token_admin_api_client_path(id: params[:id]))
@@ -47,6 +48,12 @@ ActiveAdmin.register ApiClient do
           "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
         end.join(', ')
       end
+
+      row 'Ongage Lists' do |api_client|
+        api_client.api_client_ongage_lists.map do |acm|
+          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
+        end.join(', ')
+      end
     end
 
     active_admin_comments
@@ -83,6 +90,16 @@ ActiveAdmin.register ApiClient do
         ff.semantic_errors
         ff.input :destination_type, label: false, input_html: { hidden: true, value: 'EliteGroup' }
         ff.input :destination_id, :label => 'Group', :as => :select, collection: EliteGroup.includes(:elite_account).all
+        ff.input :tag, label: 'Affiliate'
+        ff.input :delay_in_hours
+      end
+    end
+
+    f.inputs 'Ongage Lists' do
+      f.has_many :api_client_ongage_lists, allow_destroy: true, new_record: true, heading: false do |ff|
+        ff.semantic_errors
+        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'OngageList' }
+        ff.input :destination_id, label: 'List', as: :select, collection: OngageList.includes(:ongage_account).all
         ff.input :tag, label: 'Affiliate'
         ff.input :delay_in_hours
       end

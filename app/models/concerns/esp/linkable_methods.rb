@@ -9,16 +9,20 @@ module Esp
       has_many :adopia_lists, through: :adopia_list_users, source: :list, source_type: 'AdopiaList'
       has_many :elite_group_users, class_name: 'EspListUsers::Elite', as: :linkable
       has_many :elite_groups, through: :elite_group_users, source: :list, source_type: 'EliteGroup'
+      has_many :ongage_list_users, class_name: 'EspListUsers::Ongage', as: :linkable
+      has_many :ongage_lists, through: :ongage_list_users, source: :list, source_type: 'OngageList'
 
       scope :added_to_aweber, -> { joins(:aweber_lists).distinct }
       scope :added_to_adopia, -> { joins(:adopia_lists).distinct }
       scope :added_to_elite, -> { joins(:elite_groups).distinct }
+      scope :added_to_ongage, -> { joins(:elite_groups).distinct }
     end
 
     ESP_LIST_TYPES = {
       aweber: :aweber_list,
       adopia: :adopia_list,
-      elite: :elite_group
+      elite: :elite_group,
+      ongage: :ongage_list
     }.freeze
 
     ESP_LIST_TYPES.each do |provider, type|
