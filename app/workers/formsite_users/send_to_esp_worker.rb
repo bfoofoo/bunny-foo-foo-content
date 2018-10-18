@@ -16,6 +16,7 @@ module FormsiteUsers
 
     def formsite_users
       FormsiteUser
+        .is_verified
         .where(email_marketer_list_users: { id: nil })
         .where.not(email_marketer_mappings: { delay_in_hours: 0 }, users: { id: nil })
     end
