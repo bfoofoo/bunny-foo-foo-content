@@ -8,6 +8,10 @@ ActiveAdmin.register User do
     User.where(id: users.map(&:id))
   end
 
+  scope :unsubscribed do |users|
+    User.where(unsubscribed: true)
+  end
+
   scope :all
 
   index do |user|

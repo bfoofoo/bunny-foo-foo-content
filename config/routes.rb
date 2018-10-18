@@ -43,6 +43,7 @@ Rails.application.routes.draw do
       resources :formsites, only: [:index, :show] do
         collection do
           post ':id/add_user', to: 'formsites#add_formsite_user', as: 'add_user'
+          post ':id/unsubscribe_user', to: 'formsites#unsubscribe_user', as: 'unsubscribe_user'
           get ':id/setup', to: 'formsites#setup', as: 'setup'
           get ':id/build', to: 'formsites#build', as: 'build'
 
