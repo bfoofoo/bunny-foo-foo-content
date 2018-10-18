@@ -38,6 +38,11 @@ class Api::V1::FormsitesController < ApiController
     render json: formsite_interactor.api_response
   end
 
+  def unsubscribe_user
+    user = User.find_by(email: params[:email])
+    user.update(unsubscribed: true) if user.present?
+  end
+
   def setup
     config = @formsite.builder_config
     context = BuildersInteractor::SetupBuild.call({config: config})
