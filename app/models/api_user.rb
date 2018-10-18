@@ -5,13 +5,15 @@ class ApiUser < ApplicationRecord
   ESP_MAPPING_TYPES = {
     aweber: :api_client_aweber_lists,
     adopia: :api_client_adopia_lists,
-    elite: :api_client_elite_groups
+    elite: :api_client_elite_groups,
+    ongage: :api_client_ongage_lists
   }.freeze
 
   belongs_to :api_client
   has_many :api_client_aweber_lists, through: :api_client, class_name: 'ApiClientMappings::Aweber'
   has_many :api_client_adopia_lists, through: :api_client, class_name: 'ApiClientMappings::Adopia'
   has_many :api_client_elite_groups, through: :api_client, class_name: 'ApiClientMappings::Elite'
+  has_many :api_client_ongage_lists, through: :api_client, class_name: 'ApiClientMappings::Ongage'
 
   validates :email, :first_name, :last_name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }

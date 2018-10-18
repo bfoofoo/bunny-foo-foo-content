@@ -23,6 +23,8 @@ class Formsite < ApplicationRecord
   has_many :adopia_lists, through: :formsite_adopia_lists, source: :destination, source_type: 'AdopiaList'
   has_many :formsite_elite_groups, as: :source, class_name: 'FormsiteMappings::Elite'
   has_many :elite_groups, through: :formsite_elite_groups, source: :destination, source_type: 'EliteGroup'
+  has_many :formsite_ongage_lists, as: :source, class_name: 'FormsiteMappings::Ongage'
+  has_many :ongage_lists, through: :formsite_ongage_lists, source: :destination, source_type: 'OngageList'
 
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, through: :formsite_ads
@@ -34,6 +36,8 @@ class Formsite < ApplicationRecord
   accepts_nested_attributes_for :adopia_lists, allow_destroy: true
   accepts_nested_attributes_for :formsite_elite_groups, allow_destroy: true
   accepts_nested_attributes_for :elite_groups, allow_destroy: true
+  accepts_nested_attributes_for :formsite_ongage_lists, allow_destroy: true
+  accepts_nested_attributes_for :ongage_lists, allow_destroy: true
 
   accepts_nested_attributes_for :formsite_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true
