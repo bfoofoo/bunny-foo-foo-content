@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018131711) do
+ActiveRecord::Schema.define(version: 20181018222954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,13 +127,15 @@ ActiveRecord::Schema.define(version: 20181018131711) do
     t.integer  "category_id"
     t.string   "slug"
     t.string   "cover_image"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "website_id"
     t.integer  "formsite_id"
     t.datetime "deleted_at"
+    t.integer  "leadgen_ref_site_id"
     t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
     t.index ["deleted_at"], name: "index_articles_on_deleted_at", using: :btree
+    t.index ["leadgen_ref_site_id"], name: "index_articles_on_leadgen_ref_site_id", using: :btree
     t.index ["website_id"], name: "index_articles_on_website_id", using: :btree
   end
 
@@ -211,6 +213,13 @@ ActiveRecord::Schema.define(version: 20181018131711) do
   create_table "categories_formsites", force: :cascade do |t|
     t.integer "formsite_id"
     t.integer "category_id"
+  end
+
+  create_table "categories_leadgen_ref_sites", force: :cascade do |t|
+    t.integer "leadgen_ref_site_id"
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_categories_leadgen_ref_sites_on_category_id", using: :btree
+    t.index ["leadgen_ref_site_id"], name: "index_categories_leadgen_ref_sites_on_leadgen_ref_site_id", using: :btree
   end
 
   create_table "categories_websites", id: false, force: :cascade do |t|
@@ -378,6 +387,15 @@ ActiveRecord::Schema.define(version: 20181018131711) do
     t.index ["deleted_at"], name: "index_formsites_on_deleted_at", using: :btree
   end
 
+  create_table "leadgen_ref_site_ads", force: :cascade do |t|
+    t.integer  "leadgen_ref_site_id"
+    t.integer  "ad_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["ad_id"], name: "index_leadgen_ref_site_ads_on_ad_id", using: :btree
+    t.index ["leadgen_ref_site_id"], name: "index_leadgen_ref_site_ads_on_leadgen_ref_site_id", using: :btree
+  end
+
   create_table "leadgen_ref_sites", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -519,6 +537,7 @@ ActiveRecord::Schema.define(version: 20181018131711) do
     t.datetime "updated_at",                      null: false
     t.boolean  "added_to_aweber", default: false
     t.datetime "deleted_at"
+    t.boolean  "unsubscribed",    default: false, null: false
     t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   end
 
@@ -555,10 +574,14 @@ ActiveRecord::Schema.define(version: 20181018131711) do
   add_foreign_key "api_users", "api_clients"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
+  add_foreign_key "categories_leadgen_ref_sites", "categories"
+  add_foreign_key "categories_leadgen_ref_sites", "leadgen_ref_sites"
   add_foreign_key "configs", "websites"
   add_foreign_key "elite_groups", "elite_accounts"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
+  add_foreign_key "leadgen_ref_site_ads", "ads"
+  add_foreign_key "leadgen_ref_site_ads", "leadgen_ref_sites"
   add_foreign_key "leads", "users"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "ongage_lists", "ongage_accounts"

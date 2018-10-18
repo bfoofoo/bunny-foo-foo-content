@@ -1,5 +1,5 @@
 ActiveAdmin.register Article do
-  permit_params :name, :slug, :content, :short , :cover_image, :website_id, :category_id, :formsite_id
+  permit_params :name, :slug, :content, :short , :cover_image, :website_id, :category_id, :formsite_id, :leadgen_ref_site_id
 
   before_create do |article|
     ["alt", "alignment", "scale", "width", "_wysihtml5_mode", "commit"].map{|i| params.delete(i)}
@@ -31,6 +31,9 @@ ActiveAdmin.register Article do
       f.input :cover_image
       f.input :website_id, :label => 'Website', :as => :select, :collection => Website.all.map{|u| ["#{u.name}", u.id]}
       f.input :formsite_id, :label => 'Leadgen Site', :as => :select, :collection => Formsite.all.map{|u| ["#{u.name}", u.id]}
+
+      f.input :leadgen_ref_site_id, :label => 'Leadgen Ref Site', :as => :select, :collection => LeadgenRefSite.all.map{|u| ["#{u.name}", u.id]}
+
       f.input :category_id, :label => 'Category', :as => :select, :collection => Category.all.map{|u| ["#{u.name}", u.id]}
       f.actions
     end
