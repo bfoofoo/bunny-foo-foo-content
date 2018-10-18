@@ -40,7 +40,12 @@ class Api::V1::FormsitesController < ApiController
 
   def unsubscribe_user
     user = User.find_by(email: params[:email])
-    user.update(unsubscribed: true) if user.present?
+    if user.present?
+      user.update(unsubscribed: true) if user.present?
+      render json: {message: 'success'}
+    else
+      render json: {message: 'user not found'}
+    end
   end
 
   def setup
