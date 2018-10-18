@@ -68,7 +68,7 @@ class Api::V1::ApiUsersController < ApiController
       ApiUser::AddNewUserToAdopiaUseCase.new(@api_user).perform
       ApiUser::AddNewUserToEliteUseCase.new(@api_user).perform
       ApiUser::AddNewUserToOngageUseCase.new(@api_user).perform
-      render json: {message: 'success'}, status: 200
+      render json: {message: 'success', user: @api_user}, status: 200
     else
       render json: @api_user.errors, status: :unprocessable_entity
     end
