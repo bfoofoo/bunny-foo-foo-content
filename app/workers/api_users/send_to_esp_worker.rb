@@ -15,7 +15,7 @@ module ApiUsers
     private
 
     def api_users
-      ApiUser.where.not(email_marketer_mappings: { delay_in_hours: 0 })
+      ApiUser.verified.where.not(email_marketer_mappings: { delay_in_hours: 0 })
     end
 
     def list_method
