@@ -1,13 +1,10 @@
-ActiveAdmin.register User, as: "Unsubscribed Users" do
+ActiveAdmin.register User do
   actions :index
 
   config.filters = false
 
-  controller do
-    def scoped_collection
-      User.unsubscribed
-    end
-  end
+  scope :all, default: true
+  scope :unsubscribed
 
   index do |user|
     selectable_column
