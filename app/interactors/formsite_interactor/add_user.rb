@@ -111,8 +111,8 @@ module FormsiteInteractor
       end
 
       def handle_openposition_formsite
-        is_verified = is_useragent_valid && is_impressionwise_test_success && !is_ip_duplicate?
-        is_verified = is_verified && !params[:user][:first_name].blank? && !params[:user][:last_name]
+        is_verified = is_useragent_valid && is_impressionwise_test_success
+        is_verified = is_verified && !params[:user][:first_name].blank? && !params[:user][:last_name].blank?
 
         attributes = formsite_user_params
                 .merge(formsite_user_dynamic_params)
