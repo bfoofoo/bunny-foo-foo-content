@@ -1,6 +1,6 @@
 module FormsiteMappings
   class Elite < Base
-    alias_attribute :elite_group, :destination
+    belongs_to :elite_group, foreign_key: :destination_id
 
     default_scope -> { by_type('EliteGroup') }
   end

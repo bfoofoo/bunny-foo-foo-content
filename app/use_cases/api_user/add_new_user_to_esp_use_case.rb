@@ -9,6 +9,7 @@ class ApiUser
     def perform
       return false unless api_user.is_verified
       mappings.each do |mapping|
+        next if mapping.domain && !api_user.email =~ /@#{Regexp.quote(mapping.domain)}\.\w+$/
         yield(mapping)
       end
     end

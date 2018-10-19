@@ -1,6 +1,6 @@
 module FormsiteMappings
   class Base < EmailMarketerMapping
-    alias_attribute :formsite, :source
+    belongs_to :formsite, foreign_key: :source_id
 
     default_scope -> { where(source_type: 'Formsite') }
 

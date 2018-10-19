@@ -10,11 +10,11 @@ module ApiUsers
 
     private
 
-    def api_users
-      super.with_adopia_mappings
+    def mapping_class
+      FormsiteMappings::Adopia
     end
 
-    def list_method
+    def list_to_user_association
       :api_client_adopia_lists
     end
   end

@@ -48,4 +48,6 @@ class FormsiteUser < ApplicationRecord
   scope :between_dates, -> (start_date, end_date) {
     where("formsite_users.created_at >= ? AND formsite_users.created_at <= ?", start_date, end_date)
   }
+
+  scope :by_email_domain, ->(domain) { joins(:user).where('users.email ~* ?', '@' + domain + '\.\w+$') }
 end

@@ -1,6 +1,6 @@
 module FormsiteMappings
   class Ongage < Base
-    alias_attribute :ongage_list, :destination
+    belongs_to :ongage_list, foreign_key: :destination_id
 
     default_scope -> { by_type('OngageList') }
   end

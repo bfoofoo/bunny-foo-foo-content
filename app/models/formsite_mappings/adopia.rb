@@ -1,6 +1,6 @@
 module FormsiteMappings
   class Adopia < Base
-    alias_attribute :adopia_list, :destination
+    belongs_to :adopia_list, foreign_key: :destination_id
 
     default_scope -> { by_type('AdopiaList') }
   end

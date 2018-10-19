@@ -1,14 +1,12 @@
 class Formsite
   class AddNewUserToAweberUseCase < AddNewUserToEspUseCase
     def perform
-      return false if !formsite_user.is_verified || user.blank?
-      params = { affiliate: formsite_user.affiliate }.compact
-      lists.each do |list|
-        EmailMarketerService::Aweber::SubscriptionsService.new(list: list.aweber_list, params: params).add_subscriber(user)
+      super do |mapping, user, params|
+        EmailMarketerService::Aweber::SubscriptionsService.new(list: mapping.aweber_list, params: params).add_subscriber(user)
       end
     end
 
-    def list_class
+    def mapping_association
       :formsite_aweber_lists
     end
   end

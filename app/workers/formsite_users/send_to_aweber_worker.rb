@@ -10,15 +10,12 @@ module FormsiteUsers
 
     private
 
-    def formsite_users
-      super
-        .joins(:formsite_aweber_lists)
-        .includes(:formsite_aweber_lists, :aweber_lists)
-        .left_joins(user: :aweber_list_users)
+    def mapping_class
+      FormsiteMappings::Aweber
     end
 
-    def list_method
-      :formsite_aweber_lists
+    def list_to_user_association
+      :aweber_list_users
     end
   end
 end

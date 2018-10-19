@@ -1,14 +1,12 @@
 class Formsite
   class AddNewUserToOngageUseCase < AddNewUserToEspUseCase
     def perform
-      return false if !formsite_user.is_verified || user.blank?
-      params = { affiliate: formsite_user.affiliate }
-      lists.each do |list|
-        EmailMarketerService::Ongage::SubscriptionsService.new(list: list.ongage_list, params: params).add_contact(user)
+      super do |mapping, user, params|
+        EmailMarketerService::Ongage::SubscriptionsService.new(list: mapping.ongage_list, params: params).add_contact(user)
       end
     end
 
-    def list_class
+    def mapping_association
       :formsite_ongage_lists
     end
   end

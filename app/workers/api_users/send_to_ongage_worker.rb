@@ -10,11 +10,11 @@ module ApiUsers
 
     private
 
-    def api_users
-      super.with_ongage_mappings
+    def mapping_class
+      FormsiteMappings::Ongage
     end
 
-    def list_method
+    def list_to_user_association
       :api_client_ongage_lists
     end
   end

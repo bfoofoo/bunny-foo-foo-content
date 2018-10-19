@@ -25,6 +25,8 @@ class ApiUser < ApplicationRecord
     scope :"with_#{provider}_mappings", -> { joins(klass).includes(klass) }
   end
 
+  scope :by_email_domain, ->(domain) { where('api_users.email ~* ?', '@' + domain + '\.\w+$') }
+
   swagger_schema :ApiUser do
     key :required, [:email, :first_name, :last_name]
     property :id do

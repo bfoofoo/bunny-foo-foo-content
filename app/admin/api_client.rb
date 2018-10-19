@@ -1,5 +1,5 @@
 ActiveAdmin.register ApiClient do
-  esp_mapping_attributes = [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy]
+  esp_mapping_attributes = [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :domain, :_destroy]
   permit_params :name, :token,
                 api_client_aweber_lists_attributes: esp_mapping_attributes,
                 api_client_adopia_lists_attributes: esp_mapping_attributes,
@@ -67,45 +67,10 @@ ActiveAdmin.register ApiClient do
       f.input :name
     end
 
-    f.inputs 'Aweber Lists' do
-      f.has_many :api_client_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
-        ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AweberList' }
-        ff.input :destination_id, :label => 'List', :as => :select, collection: AweberList.includes(:aweber_account).all
-        ff.input :tag, label: 'Affiliate'
-        ff.input :delay_in_hours
-      end
-    end
-
-    f.inputs 'Adopia Lists' do
-      f.has_many :api_client_adopia_lists, allow_destroy: true, new_record: true, heading: false do |ff|
-        ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AdopiaList' }
-        ff.input :destination_id, :label => 'List', :as => :select, collection: AdopiaList.includes(:adopia_account).all
-        ff.input :tag, label: 'Affiliate'
-        ff.input :delay_in_hours
-      end
-    end
-
-    f.inputs 'Elite Groups' do
-      f.has_many :api_client_elite_groups, allow_destroy: true, new_record: true, heading: false do |ff|
-        ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'EliteGroup' }
-        ff.input :destination_id, :label => 'Group', :as => :select, collection: EliteGroup.includes(:elite_account).all
-        ff.input :tag, label: 'Affiliate'
-        ff.input :delay_in_hours
-      end
-    end
-
-    f.inputs 'Ongage Lists' do
-      f.has_many :api_client_ongage_lists, allow_destroy: true, new_record: true, heading: false do |ff|
-        ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'OngageList' }
-        ff.input :destination_id, label: 'List', as: :select, collection: OngageList.includes(:ongage_account).all
-        ff.input :tag, label: 'Affiliate'
-        ff.input :delay_in_hours
-      end
-    end
+    render partial: 'esp_mapping_form', locals: { f: f, klass: 'AweberList', account: :aweber_account, relation: :api_client_aweber_lists }
+    render partial: 'esp_mapping_form', locals: { f: f, klass: 'AdopiaList', account: :adopia_account, relation: :api_client_adopia_lists }
+    render partial: 'esp_mapping_form', locals: { f: f, klass: 'EliteGroup', account: :elite_account, relation: :api_client_elite_groups }
+    render partial: 'esp_mapping_form', locals: { f: f, klass: 'OngageList', account: :ongage_account, relation: :api_client_ongage_lists }
 
     f.actions
   end

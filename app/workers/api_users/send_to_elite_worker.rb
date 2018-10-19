@@ -10,11 +10,11 @@ module ApiUsers
 
     private
 
-    def api_users
-      super.with_elite_mappings
+    def mapping_class
+      FormsiteMappings::Elite
     end
 
-    def list_method
+    def list_to_user_association
       :api_client_elite_groups
     end
   end
