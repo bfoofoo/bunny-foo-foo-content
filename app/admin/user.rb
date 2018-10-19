@@ -1,18 +1,10 @@
 ActiveAdmin.register User do
-  menu false
-  permit_params :first_name, :last_name, :email
+  actions :index
 
-  scope :verified, :default => true do |users|
-    formsites = FormsiteUser.where("is_verified = ?", true)
-    users = formsites.map(&:user)
-    User.where(id: users.map(&:id))
-  end
+  config.filters = false
 
-  scope :unsubscribed do |users|
-    User.where(unsubscribed: true)
-  end
-
-  scope :all
+  scope :all, default: true
+  scope :unsubscribed
 
   index do |user|
     selectable_column
@@ -22,21 +14,5 @@ ActiveAdmin.register User do
     column :first_name
     column :last_name
     column :email
-
-    column "Forms" do |user|
-      span user.formsites.map(&:name)
-    end
-    actions
-  end
-
-
-  form do |f|
-    f.inputs 'User' do
-      f.input :first_name
-      f.input :last_name
-      f.input :email
-      # TODO add formsites
-    end
-    f.actions
   end
 end
