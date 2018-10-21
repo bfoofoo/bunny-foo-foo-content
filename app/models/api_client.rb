@@ -1,5 +1,7 @@
 class ApiClient < ApplicationRecord
   has_many :api_users
+  has_many :esp_rules, as: :source, class_name: 'EspRules::ApiClient'
+=begin
   has_many :api_client_mappings, as: :source, class_name: 'ApiClientMappings::Base'
   has_many :api_client_aweber_lists, as: :source, class_name: 'ApiClientMappings::Aweber'
   has_many :api_client_adopia_lists, as: :source, class_name: 'ApiClientMappings::Adopia'
@@ -14,4 +16,7 @@ class ApiClient < ApplicationRecord
   accepts_nested_attributes_for :api_client_adopia_lists, allow_destroy: true
   accepts_nested_attributes_for :api_client_elite_groups, allow_destroy: true
   accepts_nested_attributes_for :api_client_ongage_lists, allow_destroy: true
+=end
+
+  accepts_nested_attributes_for :esp_rules, allow_destroy: true
 end

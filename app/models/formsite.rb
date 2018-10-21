@@ -15,8 +15,10 @@ class Formsite < ApplicationRecord
   end
   
   has_many :questions, dependent: :destroy
-
   has_many :articles, dependent: :destroy
+  has_many :esp_rules, as: :source, class_name: 'EspRules::Formsite'
+
+=begin
   has_many :formsite_aweber_lists, as: :source, class_name: 'FormsiteMappings::Aweber'
   has_many :aweber_lists, through: :formsite_aweber_lists, source: :destination, source_type: 'AweberList'
   has_many :formsite_adopia_lists, as: :source, class_name: 'FormsiteMappings::Adopia'
@@ -25,11 +27,15 @@ class Formsite < ApplicationRecord
   has_many :elite_groups, through: :formsite_elite_groups, source: :destination, source_type: 'EliteGroup'
   has_many :formsite_ongage_lists, as: :source, class_name: 'FormsiteMappings::Ongage'
   has_many :ongage_lists, through: :formsite_ongage_lists, source: :destination, source_type: 'OngageList'
+=end
 
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, through: :formsite_ads
 
   accepts_nested_attributes_for :categories, allow_destroy: true
+  accepts_nested_attributes_for :esp_rules, allow_destroy: true
+
+=begin
   accepts_nested_attributes_for :formsite_aweber_lists, allow_destroy: true
   accepts_nested_attributes_for :aweber_lists, allow_destroy: true
   accepts_nested_attributes_for :formsite_adopia_lists, allow_destroy: true
@@ -38,6 +44,7 @@ class Formsite < ApplicationRecord
   accepts_nested_attributes_for :elite_groups, allow_destroy: true
   accepts_nested_attributes_for :formsite_ongage_lists, allow_destroy: true
   accepts_nested_attributes_for :ongage_lists, allow_destroy: true
+=end
 
   accepts_nested_attributes_for :formsite_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true

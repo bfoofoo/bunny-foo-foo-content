@@ -1,10 +1,10 @@
 ActiveAdmin.register ApiClient do
-  esp_mapping_attributes = [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :domain, :_destroy]
   permit_params :name, :token,
-                api_client_aweber_lists_attributes: esp_mapping_attributes,
-                api_client_adopia_lists_attributes: esp_mapping_attributes,
-                api_client_elite_groups_attributes: esp_mapping_attributes,
-                api_client_ongage_lists_attributes: esp_mapping_attributes
+                esp_rules_attributes: [
+                  :id, :delay_in_hours, :domain, :affiliate, :_destroy, esp_rules_lists_attributes: [
+                    :list_id, :list_type, :_destroy
+                  ]
+                ]
 
   action_item :generate_token, :only => :show do
     link_to("Generate API Token", generate_token_admin_api_client_path(id: params[:id]))
@@ -32,30 +32,6 @@ ActiveAdmin.register ApiClient do
         row field
       end
 
-      row 'Aweber Lists' do |api_client|
-        api_client.api_client_aweber_lists.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
-      end
-
-
-      row 'Adopia Lists' do |api_client|
-        api_client.api_client_adopia_lists.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
-      end
-
-      row 'Elite Groups' do |api_client|
-        api_client.api_client_elite_groups.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
-      end
-
-      row 'Ongage Lists' do |api_client|
-        api_client.api_client_ongage_lists.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
-      end
     end
 
     active_admin_comments
@@ -67,10 +43,18 @@ ActiveAdmin.register ApiClient do
       f.input :name
     end
 
-    render partial: 'esp_mapping_form', locals: { f: f, klass: 'AweberList', account: :aweber_account, relation: :api_client_aweber_lists }
-    render partial: 'esp_mapping_form', locals: { f: f, klass: 'AdopiaList', account: :adopia_account, relation: :api_client_adopia_lists }
-    render partial: 'esp_mapping_form', locals: { f: f, klass: 'EliteGroup', account: :elite_account, relation: :api_client_elite_groups }
-    render partial: 'esp_mapping_form', locals: { f: f, klass: 'OngageList', account: :ongage_account, relation: :api_client_ongage_lists }
+    f.inputs 'ESP rules' do
+      f.has_many :esp_rules, allow_destroy: true, new_record: true, heading: false do |ff|
+        ff.semantic_errors
+        ff.input :delay_in_hours
+        ff.input :domain
+        ff.input :affiliate
+
+        ff.has_many :esp_rules_lists, allow_destroy: true, new_record: true, heading: false do |fff|
+          fff.semantic_errors
+        end
+      end
+    end
 
     f.actions
   end
