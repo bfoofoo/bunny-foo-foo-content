@@ -3,9 +3,10 @@ module EmailMarketerService
     class SubscriptionService
       attr_reader :group, :params
 
-      def initialize(group, params: nil)
+      def initialize(group, params: nil, esp_rule: nil)
         @group = group
         @params = params
+        @esp_rule = esp_rule
       end
 
       def add_contact(user)
@@ -34,12 +35,12 @@ module EmailMarketerService
       private
 
       def handle_user_record(user)
-        EspListUsers::Elite.find_or_create_by(list: group, linkable: user) if user.is_a?(ActiveRecord::Base)
+        ExportedLead.find_or_create_by(list: group, linkable: user).update(esp_rule: @esp_rule) if user.is_a?(ActiveRecord::Base)
       end
 
       def is_valid?(user)
         if user.is_a?(ActiveRecord::Base)
-          !EspListUsers::Elite.where(list: group, linkable: user).exists?
+          !ExportedLead.where(list: group, linkable: user).exists?
         else
           true
         end

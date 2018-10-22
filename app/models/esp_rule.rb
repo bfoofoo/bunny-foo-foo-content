@@ -13,4 +13,8 @@ class EspRule < ApplicationRecord
 
   validates :delay_in_hours, numericality: { greater_than_or_equal_to: 0 }
   validates :esp_rules_lists, presence: true
+
+  def split?
+    esp_rules_lists.count > 1
+  end
 end

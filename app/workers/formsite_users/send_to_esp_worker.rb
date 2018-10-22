@@ -18,7 +18,7 @@ module FormsiteUsers
             next unless rule.should_send_now?(formsite_user.created_at)
             params = { affiliate: formsite_user.affiliate }.compact
             list = rule.esp_rules_lists[index]
-            subscription_service_for(list.list_type).new(list, params: params).send(ESP_METHOD_MAPPING[list.list_type])
+            subscription_service_for(list.list_type).new(list, params: params).send(ESP_METHOD_MAPPING[list.list_type], formsite_user)
           end
         end
       end

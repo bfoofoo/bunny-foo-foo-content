@@ -18,7 +18,7 @@ module ApiUsers
             next unless rule.should_send_now?(api_user.created_at)
             params = { affiliate: api_user.affiliate }.compact
             list = rule.esp_rules_lists[index]
-            subscription_service_for(list.list_type).new(list, params: params).send(ESP_METHOD_MAPPING[list.list_type])
+            subscription_service_for(list.list_type).new(list, params: params).send(ESP_METHOD_MAPPING[list.list_type], api_user)
           end
         end
       end

@@ -3,9 +3,10 @@ module EmailMarketerService
     class SubscriptionService
       attr_reader :list, :params
 
-      def initialize(list, params: nil)
+      def initialize(list, params: nil, esp_rule: nil)
         @list = list
         @params = params
+        @esp_rule = esp_rule
       end
 
       def add_contact(user)
@@ -27,12 +28,14 @@ module EmailMarketerService
       private
 
       def handle_user_record(user)
-        EspListUsers::Ongage.find_or_create_by(list: list, linkable: user) if user.is_a?(ActiveRecord::Base)
+        if user.is_a?(ActiveRecord::Base)
+          ExportedLeads.find_or_create_by(list: list, linkable: user).update(esp_rule: @esp_rule)
+        end
       end
 
       def is_valid?(user)
         if user.is_a?(ActiveRecord::Base)
-          !EspListUsers::Ongage.where(list: list, linkable: user).exists?
+          !ExportedLead.where(list: list, linkable: user).exists?
         else
           true
         end
