@@ -1,5 +1,5 @@
 ActiveAdmin.register Category do
-  permit_params :name, :description, :slug, website_ids: [], formsite_ids: []
+  permit_params :name, :description, :slug, website_ids: [], formsite_ids: [], leadgen_ref_site_ids: []
 
 
   form do |f|
@@ -9,6 +9,7 @@ ActiveAdmin.register Category do
       f.input :slug
       f.input :websites, :as => :select, :input_html => {:multiple => true}
       f.input :formsites, :as => :select, :input_html => {:multiple => true}
+      f.input :leadgen_ref_sites, :as => :select, :input_html => {:multiple => true}
     end
     f.actions
   end

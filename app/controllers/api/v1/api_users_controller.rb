@@ -47,33 +47,9 @@ class Api::V1::ApiUsersController < ApiController
   end
 
   def create
-    formsite_service = FormsiteService.new
+    response = ApiUser::CreateApiUserUseCase.new(params, request.user_agent, @api_client).perform
 
-    is_useragent_valid = formsite_service.is_useragent_valid(request.user_agent)
-    is_impressionwise_test_success = formsite_service.is_impressionwise_test_success(api_user_params)
-    is_duplicate = ApiUser.where("email = ?", api_user_params[:email]).exists?
-
-    @api_user = ApiUser.new(
-        api_user_params.merge(
-            api_client_id: @api_client.id,
-            is_verified: is_useragent_valid && is_impressionwise_test_success && !is_duplicate,
-            is_useragent_valid: is_useragent_valid,
-            is_impressionwise_test_success: is_impressionwise_test_success,
-            is_duplicate: is_duplicate
-        )
-    )
-
-    if @api_user.save
-      ApiUser::AddNewUserToAweberUseCase.new(@api_user).perform
-      ApiUser::AddNewUserToAdopiaUseCase.new(@api_user).perform
-      ApiUser::AddNewUserToEliteUseCase.new(@api_user).perform
-      ApiUser::AddNewUserToOngageUseCase.new(@api_user).perform
-      render json: {message: 'success'}, status: 200
-    else
-      render json: @api_user.errors, status: :unprocessable_entity
-    end
-  rescue => e
-    render json: {message: e.message}, status: 500
+    render json: response, status: response[:status]
   end
 
   private
