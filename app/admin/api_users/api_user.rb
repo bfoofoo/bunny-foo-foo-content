@@ -16,6 +16,8 @@ ActiveAdmin.register ApiUser do
     ApiUser.where("is_duplicate = ?", true)
   end
 
+  filter :id
+
   index do
     id_column
     resource_class.content_columns.each { |col| column col.name.to_sym }
