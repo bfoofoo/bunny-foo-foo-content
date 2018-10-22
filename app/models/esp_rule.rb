@@ -1,6 +1,13 @@
 class EspRule < ApplicationRecord
-  belongs_to :source
-  has_many :esp_rules_lists
+  LIST_TYPES_MAPPING = {
+    'Adopia' => 'AdopiaList',
+    'Aweber' => 'AweberList',
+    'Elite' => 'EliteGroup',
+    'Ongage' => 'OngageList'
+  }.freeze
+
+  belongs_to :source, polymorphic: true
+  has_many :esp_rules_lists, dependent: :destroy
 
   accepts_nested_attributes_for :esp_rules_lists, allow_destroy: true
 

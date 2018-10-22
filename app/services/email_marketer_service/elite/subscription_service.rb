@@ -1,9 +1,9 @@
 module EmailMarketerService
   module Elite
-    class SubscriptionsService
+    class SubscriptionService
       attr_reader :group, :params
 
-      def initialize(group: nil, params: nil)
+      def initialize(group, params: nil)
         @group = group
         @params = params
       end

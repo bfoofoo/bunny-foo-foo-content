@@ -5,22 +5,8 @@ class FormsiteUser < ApplicationRecord
 
   belongs_to :formsite
   belongs_to :user, optional: true
-
-  has_many :aweber_list_users, through: :user
-  has_many :formsite_aweber_lists, through: :formsite
-  has_many :aweber_lists, through: :formsite_aweber_lists, source: :destination, source_type: 'AweberList'
-
-  has_many :adopia_list_users, through: :user
-  has_many :formsite_adopia_lists, through: :formsite
-  has_many :adopia_lists, through: :formsite_adopia_lists, source: :destination, source_type: 'AdopiaList'
-
-  has_many :elite_group_users, through: :user
-  has_many :formsite_elite_groups, through: :formsite
-  has_many :elite_groups, through: :formsite_elite_groups, source: :destination, source_type: 'EliteGroup'
-
-  has_many :ongage_list_users, through: :user
-  has_many :formsite_ongage_lists, through: :formsite
-  has_many :ongage_lists, through: :formsite_ongage_lists, source: :destination, source_type: 'OngageList'
+  has_many :esp_rules, through: :user
+  has_many :esp_rules_lists, through: :esp_rules
 
   delegate :email, :sent_to_aweber?, :sent_to_adopia?, :sent_to_elite?, :sent_to_ongage?,
            to: :user, allow_nil: true

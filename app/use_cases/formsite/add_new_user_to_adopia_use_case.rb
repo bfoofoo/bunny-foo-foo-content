@@ -2,7 +2,7 @@ class Formsite
   class AddNewUserToAdopiaUseCase < AddNewUserToEspUseCase
     def perform
       super do |mapping, user, params|
-        EmailMarketerService::Adopia::SubscriptionsService.new(list: mapping.adopia_list, params: params).add_contact(user)
+        EmailMarketerService::Adopia::SubscriptionService.new(mapping.adopia_list, params: params).add_contact(user)
       end
     end
 

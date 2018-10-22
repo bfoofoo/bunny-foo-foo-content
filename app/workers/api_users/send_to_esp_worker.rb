@@ -2,37 +2,44 @@ module ApiUsers
   class SendToEspWorker
     include Sidekiq::Worker
 
+    ESP_METHOD_MAPPING = {
+      'AweberList' => :add_subscriber,
+      'AdopiaList' => :add_contact,
+      'EliteGroup' => :add_contact,
+      'OngageList' => :add_contact
+    }.freeze
+
     def perform
-      mappings.each do |mapping|
-        api_users = available_api_users(mapping.api_client.api_users)
-        api_users = api_users.by_email_domain(mapping.domain) if mapping.domain
-        api_users.each do |api_user|
-          next unless mapping.should_send_now?(api_user.created_at)
-          params = { affiliate: api_user.affiliate }.compact
-          yield(params, mapping, api_user) if block_given?
+      rules.each do |rule|
+        api_users = available_api_users_for(rule)
+        api_users = api_users.by_email_domain(rule.domain) if rule.domain
+        api_users.each_slice(rule.esp_rules_lists.count) do |slice|
+          slice.each_with_index do |api_user, index|
+            next unless rule.should_send_now?(api_user.created_at)
+            params = { affiliate: api_user.affiliate }.compact
+            list = rule.esp_rules_lists[index]
+            subscription_service_for(list.list_type).new(list, params: params).send(ESP_METHOD_MAPPING[list.list_type])
+          end
         end
       end
     end
 
     private
 
-    def mappings
-      mapping_class.includes(api_client: :api_users).where.not(delay_in_hours: 0)
+    def rules
+      EspRules::ApiClient.includes(source: :api_users).where.not(delay_in_hours: 0)
     end
 
-    def mapping_class
-      FormsiteMappings::Base
+    def available_api_users_for(rule)
+      rule.api_client.api_users.verified.left_joins(:exported_leads).where(exported_leads: { id: nil })
     end
 
-    def list_to_user_association
-      raise NotImplementedError
+    def subscription_service_for(list_type)
+      ['EmailMarketerService', provider_for(list_type), 'SubscriptionService'].join('::').constantize
     end
 
-    def available_api_users(api_users)
-      api_users
-        .verified
-        .left_joins(list_to_user_association)
-        .where(email_marketer_list_users: { id: nil })
+    def provider_for(list_type)
+      list_type.split(/(?=[A-Z])/).first
     end
   end
 end

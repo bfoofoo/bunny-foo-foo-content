@@ -3,7 +3,7 @@ class ApiUser
     def perform
       super do |mapping|
         params = { affiliate: mapping.tag }.compact
-        EmailMarketerService::Elite::SubscriptionsService
+        EmailMarketerService::Elite::SubscriptionService
           .new(group: mapping.destination, params: params)
           .add_contact(api_user)
       end

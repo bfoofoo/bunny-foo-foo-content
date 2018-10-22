@@ -10,10 +10,9 @@ class ApiUser < ApplicationRecord
   }.freeze
 
   belongs_to :api_client
-  has_many :api_client_aweber_lists, through: :api_client, class_name: 'ApiClientMappings::Aweber'
-  has_many :api_client_adopia_lists, through: :api_client, class_name: 'ApiClientMappings::Adopia'
-  has_many :api_client_elite_groups, through: :api_client, class_name: 'ApiClientMappings::Elite'
-  has_many :api_client_ongage_lists, through: :api_client, class_name: 'ApiClientMappings::Ongage'
+  has_many :esp_rules, through: :api_client, class_name: 'EspRules::ApiClient'
+  has_many :esp_rules_lists, through: :esp_rules
+  has_many :exported_leads, as: :linkable
 
   validates :email, :first_name, :last_name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }

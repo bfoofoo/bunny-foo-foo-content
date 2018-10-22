@@ -1,5 +1,5 @@
 module EspRules
   class ApiClient < EspRule
-    belongs_to :api_client
+    alias_attribute :api_client, :source
   end
 end

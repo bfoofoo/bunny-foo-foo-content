@@ -1,9 +1,9 @@
 module EmailMarketerService
   module Aweber
-    class SubscriptionsService
+    class SubscriptionService
       attr_reader :list, :params
 
-      def initialize(list: nil, params: nil)
+      def initialize(list, params: nil)
         @list = list
         @params = params
       end
