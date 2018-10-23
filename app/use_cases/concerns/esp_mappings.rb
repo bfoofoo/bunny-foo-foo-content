@@ -1,4 +1,4 @@
-module UseCases
+module Concerns
   module EspMappings
     extend ActiveSupport::Concern
 
@@ -19,7 +19,19 @@ module UseCases
     end
 
     def send_user(list, rule, params)
-      subscription_service_for(list.list_type).new(list, params, rule).send(ESP_METHOD_MAPPING[list.list_type], user)
+      return if user.sent_to_list?(list)
+      subscription_service_for(list.model_name.name).new(list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[list.model_name.name], user)
+    end
+
+    def send_user_to_next_list(lists, rule, params)
+      last_list = ExportedLead.where(esp_rule: rule)&.last&.list
+      if !last_list || last_list == lists.last
+        next_list = lists.first
+      else
+        index = lists.find_index { |l| l == last_list }
+        next_list = lists[index + 1]
+      end
+      send_user(next_list, rule, params)
     end
   end
 end

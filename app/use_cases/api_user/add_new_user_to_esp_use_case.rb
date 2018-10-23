@@ -1,8 +1,9 @@
 class ApiUser
   class AddNewUserToEspUseCase
-    include UseCases::EspMappings
+    include Concerns::EspMappings
 
     attr_reader :api_user
+    alias_attribute :user, :api_user
 
     def initialize(api_user)
       @api_user = api_user
@@ -11,11 +12,12 @@ class ApiUser
     def perform
       return false unless api_user.is_verified
       rules.each do |rule|
-        next if rule.domain && !api_user.email =~ /@#{Regexp.quote(rule.domain)}\.\w+$/
+        next if rule.domain.present? && !(api_user.email =~ /@#{Regexp.quote(rule.domain)}\.\w+$/)
         params = { affiliate: rule.affiliate }.compact
-        send_user(rule.esp_rules_lists.first, rule, params) unless rule.split?
-        rule.esp_rules_lists.each do |list|
-          send_user(list, rule, params)
+        if rule.split?
+          send_user_to_next_list(rule.esp_rules_lists.map(&:list), rule, params)
+        else
+          send_user(rule.esp_rules_lists.first.list, rule, params)
         end
       end
     end
@@ -23,8 +25,7 @@ class ApiUser
     private
 
     def rules
-      EspRules::ApiClient
-        .where(source: api_user.api_client, delay_in_hours: 0)
+      EspRules::ApiClient.where(source: api_user.api_client, delay_in_hours: 0)
     end
   end
 end

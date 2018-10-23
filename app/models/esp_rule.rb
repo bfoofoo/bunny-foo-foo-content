@@ -8,6 +8,7 @@ class EspRule < ApplicationRecord
 
   belongs_to :source, polymorphic: true
   has_many :esp_rules_lists, dependent: :destroy
+  has_many :exported_leads, dependent: :nullify
 
   accepts_nested_attributes_for :esp_rules_lists, allow_destroy: true
 
@@ -16,5 +17,9 @@ class EspRule < ApplicationRecord
 
   def split?
     esp_rules_lists.count > 1
+  end
+
+  def should_send_now?(datetime)
+    datetime.beginning_of_hour == Time.zone.now.beginning_of_hour - delay_in_hours.hours
   end
 end

@@ -1,6 +1,6 @@
 class Formsite
   class AddNewUserToEspUseCase
-    include UseCases::EspMappings
+    include Concerns::EspMappings
 
     attr_reader :formsite, :user, :formsite_user
 
@@ -14,10 +14,11 @@ class Formsite
     def perform
       return false if !formsite_user.is_verified || user.blank?
       rules.each do |rule|
-        next if rule.domain && !formsite_user.email =~ /@#{Regexp.quote(rule.domain)}\.\w+$/
-        send_user(rule.esp_rules_lists.first, rule, @params) unless rule.split?
-        rule.esp_rules_lists.each do |list|
-          send_user(list, rule, @params)
+        next if rule.domain.present? && !(formsite_user.email =~ /@#{Regexp.quote(rule.domain)}\.\w+$/)
+        if rule.split?
+          send_user_to_next_list(rule.esp_rules_lists.map(&:list), rule, @params)
+        else
+          send_user(rule.esp_rules_lists.first.list, rule, @params)
         end
       end
     end

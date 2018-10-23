@@ -29,10 +29,7 @@ class Api::V1::FormsitesController < ApiController
     })
 
     if formsite_interactor.api_response[:is_verified]
-      Formsite::AddNewUserToAweberUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
-      Formsite::AddNewUserToAdopiaUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
-      Formsite::AddNewUserToEliteUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
-      Formsite::AddNewUserToOngageUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
+      Formsite::AddNewUserToEspUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
     end
 
     render json: formsite_interactor.api_response
