@@ -1,9 +1,9 @@
 ActiveAdmin.register ApiClient do
   permit_params :name, :token, esp_rules_attributes: [
-                  :id, :delay_in_hours, :domain, :affiliate, :_destroy, esp_rules_lists_attributes: [:list_id, :list_type, :_destroy]
+                  :id, :delay_in_hours, :domain, :affiliate, :_destroy, esp_rules_lists_attributes: [:id, :list_id, :list_type, :_destroy]
                 ]
 
-  Struct.new('EspCollection', :name, :lists)
+  Struct.new('EspCollection', :name, :lists) unless defined?(Struct::EspCollection)
   esp_lists = [
     Struct::EspCollection.new('AweberList', AweberList.includes(:aweber_account)),
     Struct::EspCollection.new('AdopiaList', AdopiaList.includes(:adopia_account)),
@@ -31,6 +31,28 @@ ActiveAdmin.register ApiClient do
 
   filter :id
 
+  controller do
+    def create
+      override_params
+      super
+    end
+
+    def update
+      override_params
+      super
+    end
+
+    def override_params
+      params[:api_client][:esp_rules_attributes].each do |_, esp_rule|
+        esp_rule[:esp_rules_lists_attributes].each do |_, list|
+          list_id = list[:list_id]
+          list[:list_id] = list_id.scan(/\d+/)[0].to_i
+          list[:list_type] = list_id.scan(/[a-zA-Z]+/)[0]
+        end
+      end
+    end
+  end
+
   show do
     attributes_table do
       default_attribute_table_rows.each do |field|
@@ -46,7 +68,7 @@ ActiveAdmin.register ApiClient do
 
             l.esp_rules_lists.map do |erl|
               "#{erl.list_type}: #{erl.full_name}"
-            end.join('<br>')
+            end.join(', ')
           end
         end
       end
@@ -70,25 +92,11 @@ ActiveAdmin.register ApiClient do
           fff.semantic_errors
           fff.input :list_id, label: 'ESP list', as: :select,
                     input_html: { class: 'esp-list-selector' },
-                    collection: option_groups_from_collection_for_select(esp_lists, :lists, :name, :id, :full_name, fff.object.list_id)
-          fff.input :list_type, label: false, input_html: { hidden: true, class: 'esp-list-type' }
+                    collection: option_groups_from_collection_for_select(esp_lists, :lists, :name, :id_with_type, :full_name, fff.object&.list&.id_with_type)
         end
       end
     end
 
     f.actions
-
-    script do
-      raw <<~JS
-        $(document).ready(function () {
-          $('.esp-list-selector').change(function () {
-            var listType = $(this).find('option:checked').parent('optgroup').attr("label")
-            var $parent = $(this).parents('fieldset').first();
-            var $idField = $parent.find('.esp-list-type');
-            $idField.val(listType);
-          });
-        });
-      JS
-    end
   end
 end

@@ -9,4 +9,8 @@ class EliteGroup < ApplicationRecord
     return name if account.sender.blank?
     "#{account.sender} - #{name}"
   end
+
+  def id_with_type
+    "#{model_name.name}_#{self.id}"
+  end
 end

@@ -9,4 +9,8 @@ class OngageList < ApplicationRecord
     return name if account.account_code.blank?
     "#{account.account_code} - #{name}"
   end
+
+  def id_with_type
+    "#{model_name.name}_#{self.id}"
+  end
 end

@@ -17,7 +17,7 @@ ActiveAdmin.register Formsite do
                 ad_ids: [],
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
                 esp_rules_attributes: [
-                  :id, :delay_in_hours, :domain, :affiliate, :_destroy, esp_rules_lists_attributes: [:list_id, :list_type, :_destroy]
+                  :id, :delay_in_hours, :domain, :_destroy, esp_rules_lists_attributes: [:id, :list_id, :list_type, :_destroy]
                 ],
                 answer_ids: [],
                 answers_attributes: [:id, :text, :redirect_url, :question_id, :_create, :_destroy, :question]
@@ -29,7 +29,7 @@ ActiveAdmin.register Formsite do
   filter :is_phone_number
   filter :droplet_ip
 
-  Struct.new('EspCollection', :name, :lists)
+  Struct.new('EspCollection', :name, :lists) unless defined?(Struct::EspCollection)
   esp_lists = [
     Struct::EspCollection.new('AweberList', AweberList.includes(:aweber_account)),
     Struct::EspCollection.new('AdopiaList', AdopiaList.includes(:adopia_account)),
@@ -41,13 +41,32 @@ ActiveAdmin.register Formsite do
     before_action :initialize_data, only: :index
 
     def initialize_data
-      @s_couter_use_case = Formsite::STotalCountersUseCase.new()
+      @s_couter_use_case = Formsite::STotalCountersUseCase.new
     end
 
     def scoped_collection
       super.includes :formsite_users
     end
 
+    def create
+      override_params
+      super
+    end
+
+    def update
+      override_params
+      super
+    end
+
+    def override_params
+      params[:formsite][:esp_rules_attributes].each do |_, esp_rule|
+        esp_rule[:esp_rules_lists_attributes].each do |_, list|
+          list_id = list[:list_id]
+          list[:list_id] = list_id.scan(/\d+/)[0].to_i
+          list[:list_type] = list_id.scan(/[a-zA-Z]+/)[0]
+        end
+      end
+    end
   end
 
   index do
@@ -113,12 +132,11 @@ ActiveAdmin.register Formsite do
         table_for formsite.esp_rules do
           column :delay_in_hours
           column :domain
-          column :affiliate
           column 'Lists' do |l|
 
             l.esp_rules_lists.map do |erl|
               "#{erl.list_type}: #{erl.full_name}"
-            end.join('<br>')
+            end.join(', ')
           end
         end
       end
@@ -164,13 +182,12 @@ ActiveAdmin.register Formsite do
             ff.semantic_errors
             ff.input :delay_in_hours
             ff.input :domain
-            ff.input :affiliate
 
             ff.has_many :esp_rules_lists, allow_destroy: true, new_record: true, heading: 'ESP lists' do |fff|
               fff.semantic_errors
               fff.input :list_id, label: 'ESP list', as: :select,
                         input_html: { class: 'esp-list-selector' },
-                        collection: option_groups_from_collection_for_select(esp_lists, :lists, :name, :id, :full_name, fff.object.list_id)
+                        collection: option_groups_from_collection_for_select(esp_lists, :lists, :name, :id_with_type, :full_name, fff.object&.list&.id_with_type)
               fff.input :list_type, label: false, input_html: { hidden: true, class: 'esp-list-type' }
             end
           end
@@ -196,19 +213,6 @@ ActiveAdmin.register Formsite do
           end
         end
         f.actions
-
-        script do
-          raw <<~JS
-            $(document).ready(function () {
-              $('.esp-list-selector').change(function () {
-                var listType = $(this).find('option:checked').parent('optgroup').attr("label")
-                var $parent = $(this).parents('fieldset').first();
-                var $idField = $parent.find('.esp-list-type');
-                $idField.val(listType);
-              });
-            });
-          JS
-        end
       end
     end
 
