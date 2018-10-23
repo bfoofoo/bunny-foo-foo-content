@@ -1,5 +1,5 @@
 ActiveAdmin.register FormsiteUserAnswer do
-
+  filter :id
   index do
     selectable_column
     id_column
