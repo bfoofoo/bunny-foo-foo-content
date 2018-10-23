@@ -1,5 +1,6 @@
 ActiveAdmin.register_page "Summary" do
-  menu parent: "API Users"
+  menu false
+  # menu parent: "API Users"
 
   controller do
     before_action :initialize_data, only: :index
