@@ -1,4 +1,4 @@
-ActiveAdmin.register LeadgenRefSite do
+ActiveAdmin.register LeadgenRevSite do
   permit_params :name, :description, :url,
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :ad_client, :shortname,
@@ -31,7 +31,7 @@ ActiveAdmin.register LeadgenRefSite do
     tabs do
       tab 'SITE SETTINGS' do
         f.object.repo_url = f.object.repo_url.blank? ? 'git@github.com:flywithmemsl/bff-template.git' : f.object.repo_url
-        f.inputs 'LeadgenRefSite' do
+        f.inputs 'LeadgenRevSite' do
 
           f.input :description
           f.input :text_file
