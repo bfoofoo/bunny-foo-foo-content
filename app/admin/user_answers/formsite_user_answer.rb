@@ -1,4 +1,6 @@
 ActiveAdmin.register FormsiteUserAnswer do
+  menu parent: 'User answers'
+
   filter :id
   index do
     selectable_column
