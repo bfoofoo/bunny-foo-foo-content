@@ -43,7 +43,11 @@ ActiveAdmin.register ApiClient do
     end
 
     def override_params
+      unless params.dig(:api_client, :esp_rules_attributes)
+        params[:api_client][:esp_rules_attributes] = {}
+      end
       params[:api_client][:esp_rules_attributes].each do |_, esp_rule|
+        next if esp_rule[:esp_rules_lists_attributes].to_a.empty?
         esp_rule[:esp_rules_lists_attributes].each do |_, list|
           list_id = list[:list_id]
           list[:list_id] = list_id.scan(/\d+/)[0].to_i
