@@ -10,7 +10,7 @@ send_formsite_users_to_esp:
 
 send_leadgen_rev_site_users_to_esp:
   cron: "0 * * * *"
-  class: "FormsiteUsers::SendToEspWorker"
+  class: "LeadgenRevSiteUsers::SendToEspWorker"
   queue: default
 
 aweber_migrate_subscribers:
