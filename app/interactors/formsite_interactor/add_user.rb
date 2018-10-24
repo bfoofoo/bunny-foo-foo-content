@@ -24,7 +24,7 @@ module FormsiteInteractor
       end
 
       def formsite_service
-        @formsite_service ||= FormsiteService.new()
+        @formsite_service ||= FormsiteService.new
       end
 
       def is_useragent_valid

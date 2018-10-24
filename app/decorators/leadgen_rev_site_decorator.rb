@@ -1,4 +1,4 @@
-class LeadgenRefSiteDecorator < Draper::Decorator
+class LeadgenRevSiteDecorator < Draper::Decorator
   delegate_all
 
   def admin_contet_wysiwyg_config

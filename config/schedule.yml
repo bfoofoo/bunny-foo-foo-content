@@ -8,6 +8,11 @@ send_formsite_users_to_esp:
   class: "FormsiteUsers::SendToEspWorker"
   queue: default
 
+send_leadgen_rev_site_users_to_esp:
+  cron: "0 * * * *"
+  class: "FormsiteUsers::SendToEspWorker"
+  queue: default
+
 aweber_migrate_subscribers:
   cron: "0 0 * * *"
   class: "Aweber::MigrateSubscribersWorker"
