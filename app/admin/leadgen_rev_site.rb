@@ -162,6 +162,12 @@ ActiveAdmin.register LeadgenRevSite do
             end
           end
         end
+        f.actions
+      end
+
+      tab 'QUESTIONS' do
+        render "questions"
+        f.actions
       end
 
       tab 'ADS AND TRACKER' do
@@ -178,9 +184,9 @@ ActiveAdmin.register LeadgenRevSite do
             ff.input :innerHTML
           end
         end
+        f.actions
       end
     end
-    f.actions
   end
 
   action_item :setup, :only => :show do

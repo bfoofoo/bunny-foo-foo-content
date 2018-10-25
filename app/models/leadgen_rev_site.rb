@@ -31,6 +31,7 @@ class LeadgenRevSite < ApplicationRecord
   accepts_nested_attributes_for :leadgen_rev_site_users, allow_destroy: true
   accepts_nested_attributes_for :advertisements, allow_destroy: true
   accepts_nested_attributes_for :product_cards, allow_destroy: true
+  accepts_nested_attributes_for :questions, allow_destroy: true
 
   validates :name, presence: true
 

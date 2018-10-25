@@ -18,7 +18,9 @@ class Answer < ApplicationRecord
   before_save :handle_s1_for_openposition
 
   def handle_s1_for_openposition
-    if self.question.formsite.name == Formsite::OPENPOSITION_NAME && self.redirect_url_changed?
+    object = self.question.try(:formsite) || self.question.try(:leadgen_rev_site)
+    return unless object
+    if object.name == object.class::OPENPOSITION_NAME && self.redirect_url_changed?
       url, params = self.redirect_url.split("?")
       parsed_params = Rack::Utils.parse_nested_query(params)
       if parsed_params["s1"] != nil
