@@ -36,6 +36,8 @@ class Formsite < ApplicationRecord
   mount_uploader :logo_image, CommonUploader
   mount_uploader :background, CommonUploader
 
+  validates_associated :esp_rules
+
   after_save :mark_last_question
 
   def builder_config

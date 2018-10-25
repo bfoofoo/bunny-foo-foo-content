@@ -3,4 +3,6 @@ class ApiClient < ApplicationRecord
   has_many :esp_rules, as: :source, class_name: 'EspRules::ApiClient'
 
   accepts_nested_attributes_for :esp_rules, allow_destroy: true
+
+  validates_associated :esp_rules
 end

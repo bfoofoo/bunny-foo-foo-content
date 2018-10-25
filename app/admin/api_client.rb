@@ -47,8 +47,11 @@ ActiveAdmin.register ApiClient do
         params[:api_client][:esp_rules_attributes] = {}
       end
       params[:api_client][:esp_rules_attributes].each do |_, esp_rule|
-        next if esp_rule[:esp_rules_lists_attributes].to_a.empty?
-        esp_rule[:esp_rules_lists_attributes].each do |_, list|
+        next unless esp_rule[:esp_rules_lists_attributes]
+        esp_rule[:esp_rules_lists_attributes].each do |index, list|
+          if list[:list_id].blank?
+            esp_rule[:esp_rules_lists_attributes].delete(index)
+          end
           list_id = list[:list_id]
           list[:list_id] = list_id.scan(/\d+/)[0].to_i
           list[:list_type] = list_id.scan(/[a-zA-Z]+/)[0]
@@ -83,11 +86,12 @@ ActiveAdmin.register ApiClient do
 
   form do |f|
     f.inputs 'Api Client' do
+      f.semantic_errors
       f.input :token
       f.input :name
 
       f.has_many :esp_rules, allow_destroy: true, new_record: true, heading: 'ESP rules' do |ff|
-        ff.semantic_errors
+        ff.semantic_errors *ff.object.errors.keys
         ff.input :delay_in_hours
         ff.input :domain
         ff.input :affiliate

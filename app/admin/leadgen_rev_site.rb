@@ -66,8 +66,11 @@ ActiveAdmin.register LeadgenRevSite do
         params[:leadgen_rev_site][:esp_rules_attributes] = {}
       end
       params[:leadgen_rev_site][:esp_rules_attributes].each do |_, esp_rule|
-        next if esp_rule[:esp_rules_lists_attributes].to_a.empty?
-        esp_rule[:esp_rules_lists_attributes].each do |_, list|
+        next unless esp_rule[:esp_rules_lists_attributes]
+        esp_rule[:esp_rules_lists_attributes].each do |index, list|
+          if list[:list_id].blank?
+            esp_rule[:esp_rules_lists_attributes].delete(index)
+          end
           list_id = list[:list_id]
           list[:list_id] = list_id.scan(/\d+/)[0].to_i
           list[:list_type] = list_id.scan(/[a-zA-Z]+/)[0]

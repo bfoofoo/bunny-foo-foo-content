@@ -34,6 +34,7 @@ class LeadgenRevSite < ApplicationRecord
   accepts_nested_attributes_for :questions, allow_destroy: true
 
   validates :name, presence: true
+  validates_associated :esp_rules
 
   after_save :mark_last_question
 
