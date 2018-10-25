@@ -19,6 +19,10 @@ ActiveAdmin.register Article do
       link_to(article.formsite.name, admin_formsite_path(article.formsite)) if !article.formsite.blank?
     end
 
+    column "Leadgen Rev Site" do |article|
+      link_to(article.leadgen_rev_site.name, admin_leadgen_rev_site_path(article.leadgen_rev_site)) if !article.leadgen_rev_site.blank?
+    end
+
     actions
   end
 
@@ -32,7 +36,7 @@ ActiveAdmin.register Article do
       f.input :website_id, :label => 'Website', :as => :select, :collection => Website.all.map{|u| ["#{u.name}", u.id]}
       f.input :formsite_id, :label => 'Leadgen Site', :as => :select, :collection => Formsite.all.map{|u| ["#{u.name}", u.id]}
 
-      f.input :leadgen_rev_site_id, :label => 'Leadgen Ref Site', :as => :select, :collection => LeadgenRevSite.all.map{|u| ["#{u.name}", u.id]}
+      f.input :leadgen_rev_site_id, :label => 'Leadgen Rev Site', :as => :select, :collection => LeadgenRevSite.all.map{|u| ["#{u.name}", u.id]}
 
       f.input :category_id, :label => 'Category', :as => :select, :collection => Category.all.map{|u| ["#{u.name}", u.id]}
       f.actions

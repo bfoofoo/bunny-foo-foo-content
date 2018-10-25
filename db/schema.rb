@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181024141528) do
+ActiveRecord::Schema.define(version: 20181025115705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,10 +132,10 @@ ActiveRecord::Schema.define(version: 20181024141528) do
     t.integer  "website_id"
     t.integer  "formsite_id"
     t.datetime "deleted_at"
-    t.integer  "leadgen_ref_site_id"
+    t.integer  "leadgen_rev_site_id"
     t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
     t.index ["deleted_at"], name: "index_articles_on_deleted_at", using: :btree
-    t.index ["leadgen_ref_site_id"], name: "index_articles_on_leadgen_ref_site_id", using: :btree
+    t.index ["leadgen_rev_site_id"], name: "index_articles_on_leadgen_rev_site_id", using: :btree
     t.index ["website_id"], name: "index_articles_on_website_id", using: :btree
   end
 
@@ -214,11 +214,11 @@ ActiveRecord::Schema.define(version: 20181024141528) do
     t.integer "category_id"
   end
 
-  create_table "categories_leadgen_ref_sites", force: :cascade do |t|
-    t.integer "leadgen_ref_site_id"
+  create_table "categories_leadgen_rev_sites", force: :cascade do |t|
+    t.integer "leadgen_rev_site_id"
     t.integer "category_id"
-    t.index ["category_id"], name: "index_categories_leadgen_ref_sites_on_category_id", using: :btree
-    t.index ["leadgen_ref_site_id"], name: "index_categories_leadgen_ref_sites_on_leadgen_ref_site_id", using: :btree
+    t.index ["category_id"], name: "index_categories_leadgen_rev_sites_on_category_id", using: :btree
+    t.index ["leadgen_rev_site_id"], name: "index_categories_leadgen_rev_sites_on_leadgen_rev_site_id", using: :btree
   end
 
   create_table "categories_websites", id: false, force: :cascade do |t|
@@ -368,6 +368,8 @@ ActiveRecord::Schema.define(version: 20181024141528) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
   end
 
@@ -409,12 +411,12 @@ ActiveRecord::Schema.define(version: 20181024141528) do
   end
 
   create_table "leadgen_rev_site_ads", force: :cascade do |t|
-    t.integer  "leadgen_ref_site_id"
+    t.integer  "leadgen_rev_site_id"
     t.integer  "ad_id"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.index ["ad_id"], name: "index_leadgen_rev_site_ads_on_ad_id", using: :btree
-    t.index ["leadgen_ref_site_id"], name: "index_leadgen_rev_site_ads_on_leadgen_ref_site_id", using: :btree
+    t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_ads_on_leadgen_rev_site_id", using: :btree
   end
 
   create_table "leadgen_rev_site_user_answers", force: :cascade do |t|
@@ -641,8 +643,8 @@ ActiveRecord::Schema.define(version: 20181024141528) do
   add_foreign_key "api_users", "api_clients"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
-  add_foreign_key "categories_leadgen_ref_sites", "categories"
-  add_foreign_key "categories_leadgen_ref_sites", "leadgen_rev_sites", column: "leadgen_ref_site_id"
+  add_foreign_key "categories_leadgen_rev_sites", "categories"
+  add_foreign_key "categories_leadgen_rev_sites", "leadgen_rev_sites"
   add_foreign_key "configs", "websites"
   add_foreign_key "elite_groups", "elite_accounts"
   add_foreign_key "esp_rules_lists", "esp_rules"
@@ -650,7 +652,7 @@ ActiveRecord::Schema.define(version: 20181024141528) do
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
   add_foreign_key "leadgen_rev_site_ads", "ads"
-  add_foreign_key "leadgen_rev_site_ads", "leadgen_rev_sites", column: "leadgen_ref_site_id"
+  add_foreign_key "leadgen_rev_site_ads", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_user_answers", "answers"
   add_foreign_key "leadgen_rev_site_user_answers", "leadgen_rev_site_users"
   add_foreign_key "leadgen_rev_site_user_answers", "leadgen_rev_sites"
