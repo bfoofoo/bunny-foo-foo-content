@@ -11,10 +11,18 @@ module ApiUsers
           is_impressionwise_test_success: is_impressionwise_test_success,
           is_verified: is_verified
         })
+
+        if is_verified
+          send_to_esp(api_user) 
+        end
       end
     end
 
     private
+
+    def send_to_esp(user)
+      ApiUser::AddNewUserToEspUseCase.new(user).perform
+    end
 
     def api_users(ids)
       @api_users ||= ApiUser.where(id: ids)
