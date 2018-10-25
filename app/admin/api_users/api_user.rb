@@ -2,19 +2,28 @@ ActiveAdmin.register ApiUser do
   # menu parent: "API Users"
   permit_params :email, :first_name, :last_name, :is_verified, :is_useragent_valid, :is_impressionwise_test_success, :is_duplicate, :s1, :s2, :s3, :s4, :s5, :website, :api_client_id, :ip, :captured, :lead_id, :zip, :state, :phone1, :job
 
-  scope :all, :default => true
-  scope :verified do
-    ApiUser.where("is_verified = ?", true)
+  scope :all, default: true do |scope|
+    scope.includes(:exported_leads)
   end
-  scope :is_useragent_valid do
-    ApiUser.where("is_useragent_valid = ?", true)
+  scope :verified do |scope|
+    scope.where("is_verified = ?", true)
   end
-  scope :is_impressionwise_test_success do
-    ApiUser.where("is_impressionwise_test_success = ?", true)
+  scope :is_useragent_valid do |scope|
+    scope.where("is_useragent_valid = ?", true)
   end
-  scope :is_duplicate do
-    ApiUser.where("is_duplicate = ?", true)
+  scope :is_impressionwise_test_success do |scope|
+    scope.where("is_impressionwise_test_success = ?", true)
   end
+  scope :is_duplicate do |scope|
+    scope.where("is_duplicate = ?", true)
+  end
+
+  filter :is_verified
+  filter :is_useragent_valid
+  filter :is_impressionwise_test_success
+  filter :is_duplicate
+  filter :website
+  filter :api_client
 
   filter :id
 

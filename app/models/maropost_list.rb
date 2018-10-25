@@ -10,4 +10,8 @@ class MaropostList < ApplicationRecord
     return name if maropost_account.name.blank?
     "#{maropost_account.name} - #{name}"
   end
+
+  def id_with_type
+    "#{model_name.name}_#{self.id}"
+  end
 end

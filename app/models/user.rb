@@ -7,6 +7,8 @@ class User < ApplicationRecord
   has_many :formsites, through: :formsite_users
   has_many :formsite_user_answers
   has_many :leads
+  has_many :esp_rules, as: :source, class_name: 'EspRules::Formsite'
+  has_many :esp_rules_lists, through: :esp_rules
 
   accepts_nested_attributes_for :formsite_users
   accepts_nested_attributes_for :formsites

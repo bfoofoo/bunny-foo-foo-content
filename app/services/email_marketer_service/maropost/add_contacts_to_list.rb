@@ -37,7 +37,7 @@ module EmailMarketerService
       end
 
       def handle_user(user)
-        EspListUsers::Maropost.find_or_create_by(list: list, linkable: user)
+        ExportedLead.find_or_create_by(list: list, linkable: user)
       end
     end
   end

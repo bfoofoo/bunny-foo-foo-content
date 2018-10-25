@@ -7,4 +7,8 @@ class AdopiaList < ApplicationRecord
     return name if adopia_account.name.blank?
     "#{adopia_account.name} - #{name}"
   end
+
+  def id_with_type
+    "#{model_name.name}_#{self.id}"
+  end
 end

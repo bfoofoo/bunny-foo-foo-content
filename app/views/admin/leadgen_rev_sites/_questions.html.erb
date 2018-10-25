@@ -1,0 +1,14 @@
+<%= semantic_form_for [:admin, @leadgen_rev_site], builder: ActiveAdmin::FormBuilder do |f| %>
+
+    <% f.has_many :questions do |t| %>
+      <% t.input :position %>
+      <% t.input :text %>
+      <% t.input :_destroy, :as => :boolean, :required => false, :label => 'Remove' %>
+      <% t.input :flow, :as => :select, :collection => Question.flows.keys, :include_blank => false %>
+      <% t.has_many :answers do |a| %>
+        <% a.input :text %>
+        <% a.input :redirect_url %>
+        
+      <% end %>
+    <% end %>
+<% end %>

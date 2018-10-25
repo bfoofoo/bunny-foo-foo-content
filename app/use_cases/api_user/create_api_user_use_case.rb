@@ -68,10 +68,7 @@ class ApiUser
     end
 
     def send_to_esp(user)
-      ApiUser::AddNewUserToAweberUseCase.new(user).perform
-      ApiUser::AddNewUserToAdopiaUseCase.new(user).perform
-      ApiUser::AddNewUserToEliteUseCase.new(user).perform
-      ApiUser::AddNewUserToOngageUseCase.new(user).perform
+      ApiUser::AddNewUserToEspUseCase.new(user).perform
     end
 
     def api_user_params(user_params)

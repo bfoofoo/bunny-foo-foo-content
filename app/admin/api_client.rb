@@ -1,10 +1,15 @@
 ActiveAdmin.register ApiClient do
-  esp_mapping_attributes = [:id, :source, :destination_id, :destination_type, :delay_in_hours, :tag, :_destroy]
-  permit_params :name, :token,
-                api_client_aweber_lists_attributes: esp_mapping_attributes,
-                api_client_adopia_lists_attributes: esp_mapping_attributes,
-                api_client_elite_groups_attributes: esp_mapping_attributes,
-                api_client_ongage_lists_attributes: esp_mapping_attributes
+  permit_params :name, :token, esp_rules_attributes: [
+                  :id, :delay_in_hours, :domain, :affiliate, :_destroy, esp_rules_lists_attributes: [:id, :list_id, :list_type, :_destroy]
+                ]
+
+  Struct.new('EspCollection', :name, :lists) unless defined?(Struct::EspCollection)
+  esp_lists = [
+    Struct::EspCollection.new('AweberList', AweberList.includes(:aweber_account)),
+    Struct::EspCollection.new('AdopiaList', AdopiaList.includes(:adopia_account)),
+    Struct::EspCollection.new('EliteGroup', EliteGroup.includes(:elite_account)),
+    Struct::EspCollection.new('OngageList', OngageList.includes(:ongage_account)),
+  ].freeze
 
   action_item :generate_token, :only => :show do
     link_to("Generate API Token", generate_token_admin_api_client_path(id: params[:id]))
@@ -26,35 +31,50 @@ ActiveAdmin.register ApiClient do
 
   filter :id
 
+  controller do
+    def create
+      override_params
+      super
+    end
+
+    def update
+      override_params
+      super
+    end
+
+    def override_params
+      unless params.dig(:api_client, :esp_rules_attributes)
+        params[:api_client][:esp_rules_attributes] = {}
+      end
+      params[:api_client][:esp_rules_attributes].each do |_, esp_rule|
+        next if esp_rule[:esp_rules_lists_attributes].to_a.empty?
+        esp_rule[:esp_rules_lists_attributes].each do |_, list|
+          list_id = list[:list_id]
+          list[:list_id] = list_id.scan(/\d+/)[0].to_i
+          list[:list_type] = list_id.scan(/[a-zA-Z]+/)[0]
+        end
+      end
+    end
+  end
+
   show do
     attributes_table do
       default_attribute_table_rows.each do |field|
         row field
       end
 
-      row 'Aweber Lists' do |api_client|
-        api_client.api_client_aweber_lists.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
-      end
+      panel 'ESP rules' do
+        table_for api_client.esp_rules do
+          column :delay_in_hours
+          column :domain
+          column :affiliate
+          column 'Lists' do |l|
 
-
-      row 'Adopia Lists' do |api_client|
-        api_client.api_client_adopia_lists.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
-      end
-
-      row 'Elite Groups' do |api_client|
-        api_client.api_client_elite_groups.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
-      end
-
-      row 'Ongage Lists' do |api_client|
-        api_client.api_client_ongage_lists.map do |acm|
-          "#{acm.destination.name} (#{acm.delay_in_hours} hour delay, a: #{acm.tag})"
-        end.join(', ')
+            l.esp_rules_lists.map do |erl|
+              "#{erl.list_type}: #{erl.full_name}"
+            end.join(', ')
+          end
+        end
       end
     end
 
@@ -65,45 +85,19 @@ ActiveAdmin.register ApiClient do
     f.inputs 'Api Client' do
       f.input :token
       f.input :name
-    end
 
-    f.inputs 'Aweber Lists' do
-      f.has_many :api_client_aweber_lists, allow_destroy: true, new_record: true, heading: false do |ff|
+      f.has_many :esp_rules, allow_destroy: true, new_record: true, heading: 'ESP rules' do |ff|
         ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AweberList' }
-        ff.input :destination_id, :label => 'List', :as => :select, collection: AweberList.includes(:aweber_account).all
-        ff.input :tag, label: 'Affiliate'
         ff.input :delay_in_hours
-      end
-    end
+        ff.input :domain
+        ff.input :affiliate
 
-    f.inputs 'Adopia Lists' do
-      f.has_many :api_client_adopia_lists, allow_destroy: true, new_record: true, heading: false do |ff|
-        ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'AdopiaList' }
-        ff.input :destination_id, :label => 'List', :as => :select, collection: AdopiaList.includes(:adopia_account).all
-        ff.input :tag, label: 'Affiliate'
-        ff.input :delay_in_hours
-      end
-    end
-
-    f.inputs 'Elite Groups' do
-      f.has_many :api_client_elite_groups, allow_destroy: true, new_record: true, heading: false do |ff|
-        ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'EliteGroup' }
-        ff.input :destination_id, :label => 'Group', :as => :select, collection: EliteGroup.includes(:elite_account).all
-        ff.input :tag, label: 'Affiliate'
-        ff.input :delay_in_hours
-      end
-    end
-
-    f.inputs 'Ongage Lists' do
-      f.has_many :api_client_ongage_lists, allow_destroy: true, new_record: true, heading: false do |ff|
-        ff.semantic_errors
-        ff.input :destination_type, label: false, input_html: { hidden: true, value: 'OngageList' }
-        ff.input :destination_id, label: 'List', as: :select, collection: OngageList.includes(:ongage_account).all
-        ff.input :tag, label: 'Affiliate'
-        ff.input :delay_in_hours
+        ff.has_many :esp_rules_lists, allow_destroy: true, new_record: true, heading: 'ESP lists' do |fff|
+          fff.semantic_errors
+          fff.input :list_id, label: 'ESP list', as: :select,
+                    input_html: { class: 'esp-list-selector' },
+                    collection: option_groups_from_collection_for_select(esp_lists, :lists, :name, :id_with_type, :full_name, fff.object&.list&.id_with_type)
+        end
       end
     end
 

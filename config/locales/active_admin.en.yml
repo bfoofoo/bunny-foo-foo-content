@@ -1,6 +1,12 @@
 en:
   activerecord:
     models:
+      esp_rule:
+        one: ESP rule
+        other: ESP rules
+      esp_rules_list:
+        one: ESP list
+        other: ESP lists
       formsite: 
         one: Leadgen Site
         other: Leadgen Sites    

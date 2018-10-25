@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181018222954) do
+ActiveRecord::Schema.define(version: 20181024141528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,9 +189,8 @@ ActiveRecord::Schema.define(version: 20181018222954) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -264,16 +263,6 @@ ActiveRecord::Schema.define(version: 20181018222954) do
     t.integer  "account_id"
   end
 
-  create_table "email_marketer_list_users", force: :cascade do |t|
-    t.string   "list_type"
-    t.integer  "list_id"
-    t.string   "linkable_type"
-    t.integer  "linkable_id"
-    t.datetime "created_at"
-    t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
-    t.index ["list_type", "list_id"], name: "index_email_marketer_list_users_on_list_type_and_list_id", using: :btree
-  end
-
   create_table "email_marketer_mappings", force: :cascade do |t|
     t.string   "source_type"
     t.integer  "source_id"
@@ -285,8 +274,40 @@ ActiveRecord::Schema.define(version: 20181018222954) do
     t.datetime "last_transfer_at"
     t.string   "tag"
     t.integer  "delay_in_hours",   default: 0
+    t.string   "domain"
     t.index ["destination_type", "destination_id"], name: "index_email_marketer_mappings_on_source", using: :btree
     t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
+  end
+
+  create_table "esp_rules", force: :cascade do |t|
+    t.string   "source_type"
+    t.integer  "source_id"
+    t.integer  "delay_in_hours", default: 0, null: false
+    t.string   "domain"
+    t.string   "affiliate"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["source_type", "source_id"], name: "index_esp_rules_on_source_type_and_source_id", using: :btree
+  end
+
+  create_table "esp_rules_lists", force: :cascade do |t|
+    t.integer "esp_rule_id", null: false
+    t.string  "list_type"
+    t.integer "list_id"
+    t.index ["esp_rule_id"], name: "index_esp_rules_lists_on_esp_rule_id", using: :btree
+    t.index ["list_type", "list_id"], name: "index_esp_rules_lists_on_list_type_and_list_id", using: :btree
+  end
+
+  create_table "exported_leads", force: :cascade do |t|
+    t.string   "list_type"
+    t.integer  "list_id"
+    t.string   "linkable_type"
+    t.integer  "linkable_id"
+    t.datetime "created_at"
+    t.integer  "esp_rule_id"
+    t.index ["esp_rule_id"], name: "index_exported_leads_on_esp_rule_id", using: :btree
+    t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
+    t.index ["list_type", "list_id"], name: "index_exported_leads_on_list_type_and_list_id", using: :btree
   end
 
   create_table "formsite_ads", force: :cascade do |t|
@@ -387,16 +408,58 @@ ActiveRecord::Schema.define(version: 20181018222954) do
     t.index ["deleted_at"], name: "index_formsites_on_deleted_at", using: :btree
   end
 
-  create_table "leadgen_ref_site_ads", force: :cascade do |t|
+  create_table "leadgen_rev_site_ads", force: :cascade do |t|
     t.integer  "leadgen_ref_site_id"
     t.integer  "ad_id"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
-    t.index ["ad_id"], name: "index_leadgen_ref_site_ads_on_ad_id", using: :btree
-    t.index ["leadgen_ref_site_id"], name: "index_leadgen_ref_site_ads_on_leadgen_ref_site_id", using: :btree
+    t.index ["ad_id"], name: "index_leadgen_rev_site_ads_on_ad_id", using: :btree
+    t.index ["leadgen_ref_site_id"], name: "index_leadgen_rev_site_ads_on_leadgen_ref_site_id", using: :btree
   end
 
-  create_table "leadgen_ref_sites", force: :cascade do |t|
+  create_table "leadgen_rev_site_user_answers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "leadgen_rev_site_id"
+    t.integer  "question_id"
+    t.integer  "answer_id"
+    t.integer  "leadgen_rev_site_user_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["answer_id"], name: "index_leadgen_rev_site_user_answers_on_answer_id", using: :btree
+    t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_user_answers_on_leadgen_rev_site_id", using: :btree
+    t.index ["leadgen_rev_site_user_id"], name: "index_leadgen_rev_site_user_answers_on_leadgen_rev_site_user_id", using: :btree
+    t.index ["question_id"], name: "index_leadgen_rev_site_user_answers_on_question_id", using: :btree
+    t.index ["user_id"], name: "index_leadgen_rev_site_user_answers_on_user_id", using: :btree
+  end
+
+  create_table "leadgen_rev_site_users", force: :cascade do |t|
+    t.integer  "leadgen_rev_site_id"
+    t.integer  "user_id"
+    t.boolean  "is_verified"
+    t.boolean  "is_useragent_valid"
+    t.boolean  "is_impressionwise_test_success"
+    t.boolean  "is_duplicate"
+    t.string   "s4"
+    t.string   "s5"
+    t.string   "s1"
+    t.string   "s2"
+    t.string   "s3"
+    t.string   "ndm_token"
+    t.string   "affiliate"
+    t.datetime "birthday"
+    t.string   "zip"
+    t.string   "phone"
+    t.string   "ip"
+    t.string   "job_key"
+    t.datetime "deleted_at"
+    t.boolean  "is_email_duplicate",             default: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
+    t.index ["user_id"], name: "index_leadgen_rev_site_users_on_user_id", using: :btree
+  end
+
+  create_table "leadgen_rev_sites", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.string   "url"
@@ -433,7 +496,7 @@ ActiveRecord::Schema.define(version: 20181018222954) do
     t.boolean  "is_phone_number"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.index ["deleted_at"], name: "index_leadgen_ref_sites_on_deleted_at", using: :btree
+    t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
   end
 
   create_table "leads", force: :cascade do |t|
@@ -492,25 +555,29 @@ ActiveRecord::Schema.define(version: 20181018222954) do
     t.string   "title"
     t.string   "description"
     t.string   "image"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "website_id"
     t.string   "url"
     t.float    "rate"
+    t.integer  "leadgen_rev_site_id"
+    t.index ["leadgen_rev_site_id"], name: "index_product_cards_on_leadgen_rev_site_id", using: :btree
     t.index ["website_id"], name: "index_product_cards_on_website_id", using: :btree
   end
 
   create_table "questions", force: :cascade do |t|
     t.text     "text"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "formsite_id"
     t.integer  "position"
-    t.string   "flow",        default: "horizontal"
+    t.string   "flow",                default: "horizontal"
     t.datetime "deleted_at"
-    t.boolean  "is_last",     default: false,        null: false
+    t.boolean  "is_last",             default: false,        null: false
+    t.integer  "leadgen_rev_site_id"
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
+    t.index ["leadgen_rev_site_id"], name: "index_questions_on_leadgen_rev_site_id", using: :btree
   end
 
   create_table "suppression_email_marketer_lists", force: :cascade do |t|
@@ -575,18 +642,29 @@ ActiveRecord::Schema.define(version: 20181018222954) do
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "websites"
   add_foreign_key "categories_leadgen_ref_sites", "categories"
-  add_foreign_key "categories_leadgen_ref_sites", "leadgen_ref_sites"
+  add_foreign_key "categories_leadgen_ref_sites", "leadgen_rev_sites", column: "leadgen_ref_site_id"
   add_foreign_key "configs", "websites"
   add_foreign_key "elite_groups", "elite_accounts"
+  add_foreign_key "esp_rules_lists", "esp_rules"
+  add_foreign_key "exported_leads", "esp_rules"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
-  add_foreign_key "leadgen_ref_site_ads", "ads"
-  add_foreign_key "leadgen_ref_site_ads", "leadgen_ref_sites"
+  add_foreign_key "leadgen_rev_site_ads", "ads"
+  add_foreign_key "leadgen_rev_site_ads", "leadgen_rev_sites", column: "leadgen_ref_site_id"
+  add_foreign_key "leadgen_rev_site_user_answers", "answers"
+  add_foreign_key "leadgen_rev_site_user_answers", "leadgen_rev_site_users"
+  add_foreign_key "leadgen_rev_site_user_answers", "leadgen_rev_sites"
+  add_foreign_key "leadgen_rev_site_user_answers", "questions"
+  add_foreign_key "leadgen_rev_site_user_answers", "users"
+  add_foreign_key "leadgen_rev_site_users", "leadgen_rev_sites"
+  add_foreign_key "leadgen_rev_site_users", "users"
   add_foreign_key "leads", "users"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "ongage_lists", "ongage_accounts"
+  add_foreign_key "product_cards", "leadgen_rev_sites"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
+  add_foreign_key "questions", "leadgen_rev_sites"
   add_foreign_key "suppression_email_marketer_lists", "suppression_lists"
   add_foreign_key "website_ads", "ads"
   add_foreign_key "website_ads", "websites"
