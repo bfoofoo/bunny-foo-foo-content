@@ -60,13 +60,13 @@ Rails.application.routes.draw do
 
       resources :leadgen_rev_sites, only: [:index, :show] do
         collection do
-          post ':id/add_user', to: 'leadgen_rev_sites#add_formsite_user', as: 'add_user'
+          post ':id/add_user', to: 'leadgen_rev_sites#add_leadgen_rev_site_user', as: 'add_user'
           post ':id/unsubscribe_user', to: 'leadgen_rev_sites#unsubscribe_user', as: 'unsubscribe_user'
           get ':id/setup', to: 'leadgen_rev_sites#setup', as: 'setup'
           get ':id/build', to: 'leadgen_rev_sites#build', as: 'build'
 
-          get ':id/questions', to: 'leadgen_rev_sites#get_formsite_questions'
-          get ':id/questions_by_position/:position', to: 'leadgen_rev_sites#get_formsite_question'
+          get ':id/questions', to: 'leadgen_rev_sites#get_leadgen_rev_site_questions'
+          get ':id/questions_by_position/:position', to: 'leadgen_rev_sites#get_leadgen_rev_site_question'
           get ':id/rebuild_old', to: 'leadgen_rev_sites#rebuild_old', as: 'rebuild_old'
           get ':id/config', to: 'leadgen_rev_sites#get_config', as: 'get_config'
           get ':id/categories', to: 'leadgen_rev_sites#get_categories'
