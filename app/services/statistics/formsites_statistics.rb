@@ -1,5 +1,10 @@
 module Statistics
   class FormsitesStatistics < Statistics::BaseStatistic
+    def initialize(params={})
+      super
+      @start_date ||= Time.zone.yesterday
+      @end_date ||= Time.zone.yesterday
+    end
 
     def converted_counts_hash
       return @converted_counts_hash if !@converted_counts_hash.blank? 
