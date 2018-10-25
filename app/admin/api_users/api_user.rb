@@ -1,5 +1,5 @@
 ActiveAdmin.register ApiUser do
-  # menu parent: "API Users"
+  menu parent: "API Users"
   permit_params :email, :first_name, :last_name, :is_verified, :is_useragent_valid, :is_impressionwise_test_success, :is_duplicate, :s1, :s2, :s3, :s4, :s5, :website, :api_client_id, :ip, :captured, :lead_id, :zip, :state, :phone1, :job
 
   scope :all, default: true do |scope|
