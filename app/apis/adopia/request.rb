@@ -12,7 +12,7 @@ module Adopia
       @api_key = api_key
     end
 
-    def post(path, query, params={})
+    def post(path, params={})
       self.class.post(uri(path), payload(params, true))
     end
 

@@ -23,6 +23,27 @@ module Adopia
       end
     end
 
+    #  +list_ids+ - array
+    #  +paras+ must contain:
+    #    :is_double_opt_in => 0 or 1
+    #    :contacts => array of hashes, required elements:
+    #      :contact_email => string
+    #
+    def add_list_contacts(list_ids, params = {})
+      contact_params = params[:contacts].each_with_object({}).with_index do |(value, hash), index|
+        hash[index.to_s.to_sym] = value
+      end
+      request = @request.post(self_path, {
+        list_ids: list_ids.join(','),
+        **params.except(:contacts).merge(Contacts: contact_params)
+      })
+      p request
+      response = Response.new(request).parse
+      if response[:status] == 'error'
+        raise Errors::UnprocessableEntityError.new, response[:message]
+      end
+    end
+
     private
 
     # get camelcase version of (caller) method name
