@@ -1,5 +1,10 @@
 module Statistics
   class FormsitesStatistics < Statistics::BaseStatistic
+    def initialize(params={})
+      super
+      @start_date ||= Time.zone.yesterday
+      @end_date ||= Time.zone.yesterday
+    end
 
     def converted_counts_hash
       return @converted_counts_hash if !@converted_counts_hash.blank? 
@@ -8,7 +13,7 @@ module Statistics
         response[formsite.name] = {
           formsite: formsite,
           total: filtered_users_by_affiliate(formsite, skip_converted: true, skip_duplicated: false).count,
-          submitted: filtered_users_by_affiliate(formsite).count,
+          submitted: filtered_users_by_affiliate(formsite, skip_duplicated: false).count,
           total_converted: filtered_users_by_affiliate(formsite).select {|user| user.is_verified}.count,
           failed_impressionwise: filtered_users_by_affiliate(formsite, skip_converted: false).select {|user| !user.is_impressionwise_test_success}.count,
           failed_useragent: filtered_users_by_affiliate(formsite).select {|user| !user.is_useragent_valid}.count,

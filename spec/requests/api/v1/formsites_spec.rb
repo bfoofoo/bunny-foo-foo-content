@@ -7,6 +7,34 @@ RSpec.describe 'Formsites API', type: :request do
   let!(:openposition) { create(:formsite, name: "openposition.us") }
 
   describe 'formsite users' do
+
+    context "openposition formsite" do
+      context "verified formsite user" do
+        let(:post_params) {{user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev"}}}
+        before { post add_user_api_v1_formsites_path(openposition), params: post_params }
+
+        it_behaves_like "Add formsite user success request"     
+
+        it "creates verified formsite_user with user" do
+          expect(json["is_verified"]).to eq(true)
+          expect(json["formsite_user"]["is_duplicate"]).to eq(false)
+          expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
+        end
+
+        it "creates verified formsite_user with user even with the same ip" do
+          expect(json["is_verified"]).to eq(true)
+          expect(json["formsite_user"]["is_duplicate"]).to eq(false)
+          expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
+
+          post add_user_api_v1_formsites_path(openposition), params: post_params
+
+          expect(json["is_verified"]).to eq(true)
+          expect(json["formsite_user"]["is_duplicate"]).to eq(true)
+          expect(json["formsite_user"]["is_email_duplicate"]).to eq(true)
+        end
+      end
+    end
+
     context "should create formsite user" do
 
       context "not verified formsite_user" do
@@ -16,6 +44,12 @@ RSpec.describe 'Formsites API', type: :request do
         it_behaves_like "Add formsite user success request"
 
         it "creates not verified formsite_user with user" do
+          post_params = {user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev"}}
+          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          expect(json["formsite_user"]["is_verified"]).to eq(false)
+        end
+
+        it "creates not verified formsite_user with empty name" do
           expect(json["is_verified"]).to eq(false)
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
@@ -145,6 +179,14 @@ RSpec.describe 'Formsites API', type: :request do
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
         end
 
+        it "getting IP from post params" do
+          post_params = {user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev", ip: "192.168.0.1"}}
+          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          formsite_user = json["formsite_user"]
+
+          expect(formsite_user["ip"]).to eq(post_params[:user][:ip])
+        end
+
         it "creates email duplicate" do
           headers = { "REMOTE_ADDR" => "1.2.3.4" }
 
@@ -154,6 +196,8 @@ RSpec.describe 'Formsites API', type: :request do
 
           # TODO: Check this behaviour
           expect(json["is_verified"]).to eq(true)
+          expect(json["formsite_user"]["ip"]).to eq("1.2.3.4")
+          expect(json["formsite_user"]["is_duplicate"]).to eq(false)
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(true)
         end

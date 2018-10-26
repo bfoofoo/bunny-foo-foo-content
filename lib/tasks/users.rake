@@ -7,7 +7,7 @@ namespace :users do
         .joins(formsite_users: { formsite: :aweber_lists})
         .where(added_to_aweber: true)
     users.map do |u|
-      AweberListUser.find_or_create_by({
+      EspListUsers::Aweber.find_or_create_by({
         linkable_type: 'User',
         linkable_id: u.id,
         list_type: 'AweberList',

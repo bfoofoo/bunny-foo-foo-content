@@ -1,4 +1,5 @@
 class Formsite < ApplicationRecord
+  OPENPOSITION_NAME = "openposition.us"
   acts_as_paranoid
   
   has_and_belongs_to_many :categories
@@ -14,22 +15,14 @@ class Formsite < ApplicationRecord
   end
   
   has_many :questions, dependent: :destroy
-
   has_many :articles, dependent: :destroy
-  has_many :formsite_aweber_lists, dependent: :destroy
-  has_many :aweber_lists, through: :formsite_aweber_lists
-  has_many :formsite_maropost_lists, dependent: :destroy
-  has_many :maropost_lists, through: :formsite_maropost_lists
+  has_many :esp_rules, as: :source, class_name: 'EspRules::Formsite'
 
   has_many :formsite_ads, dependent: :destroy
-  has_many :ads, :through => :formsite_ads
+  has_many :ads, through: :formsite_ads
 
   accepts_nested_attributes_for :categories, allow_destroy: true
-  accepts_nested_attributes_for :formsite_aweber_lists, allow_destroy: true
-  accepts_nested_attributes_for :aweber_lists, allow_destroy: true
-
-  accepts_nested_attributes_for :formsite_maropost_lists, allow_destroy: true
-  accepts_nested_attributes_for :maropost_lists, allow_destroy: true
+  accepts_nested_attributes_for :esp_rules, allow_destroy: true
 
   accepts_nested_attributes_for :formsite_ads, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true
@@ -42,6 +35,10 @@ class Formsite < ApplicationRecord
   mount_uploader :favicon_image, CommonUploader
   mount_uploader :logo_image, CommonUploader
   mount_uploader :background, CommonUploader
+
+  validates_associated :esp_rules
+
+  after_save :mark_last_question
 
   def builder_config
     return {
@@ -58,5 +55,11 @@ class Formsite < ApplicationRecord
         ad_client: self.ad_client || '',
         type: 'formsite'
     }
+  end
+
+  def mark_last_question
+    return if questions.empty?
+    questions.update_all(is_last: false)
+    questions.last.mark_as_last!
   end
 end

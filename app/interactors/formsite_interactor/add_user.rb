@@ -1,7 +1,6 @@
 module FormsiteInteractor
   class AddUser
     include Interactor
-    FORMSITE_NAME="openposition.us"
 
     delegate :formsite, :params, :request, :user, :formsite_user, :to => :context
 
@@ -17,11 +16,15 @@ module FormsiteInteractor
     private
 
       def user_ip
-        request.env['REMOTE_ADDR']
+        if !params.dig(:user, :ip).blank?
+          params.dig(:user, :ip)
+        else
+          request.env['REMOTE_ADDR']
+        end
       end
 
       def formsite_service
-        @formsite_service ||= FormsiteService.new()
+        @formsite_service ||= FormsiteService.new
       end
 
       def is_useragent_valid
@@ -54,7 +57,7 @@ module FormsiteInteractor
         if !user.blank? && user.email == FormsiteUser::TEST_USER_EMAIL
           create_test_user()
         else
-          if formsite && formsite.name == FORMSITE_NAME && !user.blank?
+          if formsite && formsite.name == Formsite::OPENPOSITION_NAME && !user.blank?
             handle_openposition_formsite()
           else
             handle_formsite_user_creation()
@@ -108,11 +111,15 @@ module FormsiteInteractor
       end
 
       def handle_openposition_formsite
+        is_verified = is_useragent_valid && is_impressionwise_test_success
+        is_verified = is_verified && !params[:user][:first_name].blank? && !params[:user][:last_name].blank?
+
         attributes = formsite_user_params
                 .merge(formsite_user_dynamic_params)
                 .merge({
                   ip: user_ip,
-                  user_id: user.id
+                  user_id: user.id,
+                  is_verified: is_verified
                 })
 
         if !params[:user][:key].blank?
@@ -130,8 +137,10 @@ module FormsiteInteractor
       end
 
       def formsite_user_dynamic_params
+        is_verified = is_useragent_valid && is_impressionwise_test_success && !is_ip_duplicate?
+        is_verified = is_verified && !params[:user][:first_name].blank? && !params[:user][:last_name].blank?
         {
-          is_verified: is_useragent_valid && is_impressionwise_test_success && !is_ip_duplicate?,
+          is_verified: is_verified,
           is_useragent_valid: is_useragent_valid,
           is_impressionwise_test_success: is_impressionwise_test_success,
           is_duplicate: is_ip_duplicate?,

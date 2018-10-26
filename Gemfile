@@ -17,7 +17,6 @@ gem "interactor", "~> 3.0"
 gem 'draper'
 gem 'bower-rails', '~> 0.11.0'
 gem "colorize"
-gem 'whenever', require: false
 gem 'activerecord-import'
 gem 'rubyzip'
 gem 'simple_enum'
@@ -73,12 +72,15 @@ gem 'formtastic', '~> 3.0'
 gem 'devise'
 gem "active_admin-sortable_tree", "~> 1.0.0"
 
+gem "audited", "~> 4.7"
+
 # Email marketing services
 gem 'aweber', github: 'bfoofoo/AWeber-API-Ruby-Library'
 gem 'maropost_api', github: 'bfoofoo/maropost_api'
 
 # Background jobs
-gem 'sucker_punch'
+gem 'sidekiq'
+gem 'sidekiq-cron', '~> 1.0', '>= 1.0.4'
 
 gem 'rollbar'
 gem 'swagger-docs'
@@ -94,6 +96,7 @@ group :development, :test do
   gem 'capistrano-rails', '~> 1.2'
   gem 'capistrano-passenger', '~> 0.2.0'
   gem 'capistrano-rbenv', '~> 2.1'
+  gem 'capistrano-sidekiq'
   gem 'rspec-rails', '~> 3.5'
 
   gem 'pry-rails'

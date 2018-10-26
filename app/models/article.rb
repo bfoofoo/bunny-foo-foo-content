@@ -4,6 +4,7 @@ class Article < ApplicationRecord
   belongs_to :category
   belongs_to :website, optional: true
   belongs_to :formsite, optional: true
+  belongs_to :leadgen_rev_site, optional: true
 
   mount_base64_uploader :cover_image, CommonUploader
 

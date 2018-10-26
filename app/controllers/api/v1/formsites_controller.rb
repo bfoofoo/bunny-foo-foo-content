@@ -29,11 +29,20 @@ class Api::V1::FormsitesController < ApiController
     })
 
     if formsite_interactor.api_response[:is_verified]
-      Formsite::AddNewUserToAweberUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
-      Formsite::AddNewUserToMaropostUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
+      Formsite::AddNewUserToEspUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
     end
 
     render json: formsite_interactor.api_response
+  end
+
+  def unsubscribe_user
+    user = User.find_by(email: params[:email])
+    if user.present?
+      user.update(unsubscribed: true) if user.present?
+      render json: {message: 'success'}
+    else
+      render json: {message: 'user not found'}
+    end
   end
 
   def setup

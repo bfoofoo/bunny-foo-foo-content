@@ -28,12 +28,12 @@
 
     <div class="filter_form_field">
       <%= label_tag(:start_date, "Start Date") %>
-      <%= date_field_tag(:start_date, params[:start_date]) %>
+      <%= date_field_tag(:start_date, params[:start_date] || stats_service.start_date) %>
     </div>
 
     <div class="filter_form_field">
       <%= label_tag(:end_date, "End Date") %>
-      <%= date_field_tag(:end_date, params[:end_date]) %>
+      <%= date_field_tag(:end_date, params[:end_date] || stats_service.end_date) %>
     </div>
 
     <div class="buttons">

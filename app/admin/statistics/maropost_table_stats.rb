@@ -1,5 +1,5 @@
 ActiveAdmin.register_page "Maropost Table Stats" do
-  menu parent: "Statistics"
+  menu false
 
   controller do
     before_action :initialize_data, only: :index

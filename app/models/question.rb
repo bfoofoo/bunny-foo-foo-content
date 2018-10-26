@@ -1,7 +1,13 @@
 class Question < ApplicationRecord
+  acts_as_paranoid
+  audited only: [:position, :is_last]
+
+  belongs_to :formsite, optional: true
+  belongs_to :leadgen_rev_site, optional: true
+
   has_many :answers, dependent: :destroy
   has_many :formsite_questions
-  has_many :formsite, :through => :formsite_questions
+  # has_many :formsite, :through => :formsite_questions
 
   has_many :formsite_user_answers
 
@@ -16,4 +22,8 @@ class Question < ApplicationRecord
   scope :order_by_position, -> (position=:asc) { order(position: position) }
 
   default_scope {order_by_position}
+
+  def mark_as_last!
+    update!(is_last: true)
+  end
 end
