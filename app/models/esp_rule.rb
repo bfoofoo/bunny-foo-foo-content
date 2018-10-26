@@ -3,7 +3,8 @@ class EspRule < ApplicationRecord
     'Adopia' => 'AdopiaList',
     'Aweber' => 'AweberList',
     'Elite' => 'EliteGroup',
-    'Ongage' => 'OngageList'
+    'Ongage' => 'OngageList',
+    'Netatlntic' => 'NetatlnticList'
   }.freeze
 
   belongs_to :source, polymorphic: true
