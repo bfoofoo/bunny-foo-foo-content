@@ -1,6 +1,8 @@
 ActiveAdmin.register LeadgenRevSiteUser do
   menu false
 
+  includes :leadgen_rev_site, :user, :exported_leads
+
   permit_params :affiliate, :job_key,  :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip, :ip
 
   filter :created_at
@@ -61,10 +63,17 @@ ActiveAdmin.register LeadgenRevSiteUser do
     column "Last name" do |leadgen_rev_site_user|
       span leadgen_rev_site_user&.user&.last_name
     end
-    column :sent_to_aweber?
-    column :sent_to_adopia?
-    column :sent_to_elite?
-    column :sent_to_ongage?
+    User::ESP_LIST_TYPES.keys.each do |provider|
+      column :"sent_to_#{provider}?" do |leadgen_rev_site_user|
+        if leadgen_rev_site_user.send(:"local_sent_to_#{provider}?")
+          span 'Yes', class: 'status_tag ok'
+        elsif leadgen_rev_site_user.send(:"sent_to_#{provider}?")
+          span 'Yes', class: 'status_tag errored'
+        elsif leadgen_rev_site_user.user_id
+          span 'No', class: 'status_tag no'
+        end
+      end
+    end
     actions
   end
 

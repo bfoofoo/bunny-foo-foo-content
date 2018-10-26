@@ -1,6 +1,8 @@
 ActiveAdmin.register FormsiteUser do
   menu false
-  
+
+  includes :formsite, :user, :exported_leads
+
   permit_params :affiliate, :job_key,  :s1, :s2, :s3, :s4, :s5, :ndm_token, :birthday, :phone, :zip, :ip
 
   filter :created_at
@@ -19,21 +21,21 @@ ActiveAdmin.register FormsiteUser do
 
   filter :s1
   filter :s1_blank,   :as => :boolean
-  
+
   filter :s2
   filter :s2_blank,   :as => :boolean
-  
+
   filter :s3
   filter :s3_blank,   :as => :boolean
-  
+
   filter :s4
   filter :s4_blank,   :as => :boolean
 
   filter :s5
   filter :s5_blank,   :as => :boolean
 
-  
-  index do |poll|
+
+  index do |fu|
     column :id
     column :created_at
     column :formsite
@@ -61,10 +63,18 @@ ActiveAdmin.register FormsiteUser do
     column "Last name" do |formsite_user|
       span formsite_user&.user&.last_name
     end
-    column :sent_to_aweber?
-    column :sent_to_adopia?
-    column :sent_to_elite?
-    column :sent_to_ongage?
+    User::ESP_LIST_TYPES.keys.each do |provider|
+      column :"sent_to_#{provider}?" do |formsite_user|
+        if formsite_user.send(:"local_sent_to_#{provider}?")
+          span 'Yes', class: 'status_tag ok'
+        elsif formsite_user.send(:"sent_to_#{provider}?")
+          span 'Yes', class: 'status_tag errored'
+        elsif formsite_user.user_id
+          span 'No', class: 'status_tag no'
+        end
+      end
+    end
+
     actions
   end
 
