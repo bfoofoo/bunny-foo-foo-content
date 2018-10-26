@@ -12,6 +12,7 @@ class ApiUser
     def perform
       return false unless api_user.is_verified
       rules.each do |rule|
+        next if rule.esp_rules_lists.blank?
         next if rule.domain.present? && !(api_user.email =~ /@#{Regexp.quote(rule.domain)}\.\w+$/)
         params = { affiliate: rule.affiliate }.compact
         if rule.split?
