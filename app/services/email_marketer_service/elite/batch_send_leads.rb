@@ -1,13 +1,14 @@
 module EmailMarketerService
-  module Adopia
+  module Elite
     class BatchSendLeads
-      attr_reader :emails
+      attr_reader :emails, :processed_emails
 
       BATCH_SIZE = 50.freeze
 
       def initialize(emails)
         @clients = {}
         @emails = emails
+        @processed_emails = []
       end
 
       def call
@@ -25,6 +26,7 @@ module EmailMarketerService
                   }
                 end
               )
+              @processed_emails.concat(emails)
               sleep 1 # avoid api abusing
             rescue ::Elite::Errors::Error => e
               puts "Elite adding subscriber error - #{e}".red

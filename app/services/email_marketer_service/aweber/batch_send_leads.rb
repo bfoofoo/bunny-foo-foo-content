@@ -1,12 +1,13 @@
 module EmailMarketerService
-  module Adopia
+  module Aweber
     class BatchSendLeads
-      attr_reader :emails
+      attr_reader :emails, :processed_emails
 
       def initialize(emails)
         @auth_services = {}
         @endpoints = {}
         @emails = emails
+        @processed_emails = []
       end
 
       def call
@@ -18,6 +19,7 @@ module EmailMarketerService
                 endpoint = endpoint_for(client, list)&.subscribers
                 next unless endpoint
                 endpoint.create("email" => email)
+                @processed_emails << email
                 sleep 0.6
               rescue AWeber::RateLimitError
                 sleep 60

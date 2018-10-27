@@ -2,24 +2,22 @@ module Esp
   class MassSendLeadsWorker
     include Sidekiq::Worker
 
-    SENDER_CLASSES = %w(
-      EmailMarketerService::Adopia::BatchSendLeads
-      EmailMarketerService::Aweber::BatchSendLeads
-      EmailMarketerService::Elite::BatchSendLeads
-    ).freeze
-
-    def perform
+    def perform(provider = nil)
       emails = []
-      CSV.foreach(file_path, headers: true) { |row| emails << row['Email'] }
-      SENDER_CLASSES.each do |klass|
-        klass.constantize.new(emails).call
-      end
+      CSV.foreach(file_path, headers: true) { |row| emails << row['email'] }
+      service = sender_class(provider).new(emails)
+      service.call
+      puts "#{service.processed_emails} emails processed."
     end
 
     private
 
     def file_path
-      Rails.root.join('tmp', "Leads_#{Date.current}")
+      Rails.root.join('tmp', 'leads', "leads_#{Date.current}.csv")
+    end
+
+    def sender_class(provider)
+      "EmailMarketerService::#{provider}::BatchSendLeads".constantize
     end
   end
 end

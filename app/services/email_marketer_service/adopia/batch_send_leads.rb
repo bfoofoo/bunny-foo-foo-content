@@ -1,7 +1,7 @@
 module EmailMarketerService
   module Adopia
     class BatchSendLeads
-      attr_reader :emails
+      attr_reader :emails, :processed_emails
 
       BATCH_SIZE = 50.freeze
 
@@ -9,6 +9,7 @@ module EmailMarketerService
         @clients = {}
         @emails = emails
         @account = nil
+        @processed_emails = []
       end
 
       def call
@@ -21,6 +22,7 @@ module EmailMarketerService
                   contact_email: email,
                   is_double_opt_in: 0
                 })
+                @processed_emails << email
                 sleep 0.6 # to send maximum 100 per minute
               rescue ::Adopia::Errors::Error => e
                 puts "Adopia adding subscriber error - #{e}".red
