@@ -18,7 +18,7 @@ module EmailMarketerService
             begin
               client.contact.create_contacts(
                 {
-                  'GroupsToAddToIds' => account.elite_groups.pluck(:group_id)
+                  'GroupsToAddToNames' => account.elite_groups.pluck(:name)
                 },
                 slice.map do |email|
                   {
