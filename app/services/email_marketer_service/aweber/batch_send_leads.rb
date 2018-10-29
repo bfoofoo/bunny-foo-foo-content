@@ -13,7 +13,7 @@ module EmailMarketerService
       def call
         accounts.each do |account|
           client = auth_service_for(account)
-          account.lists.each do |list|
+          account.aweber_lists.each do |list|
             emails.each do |email|
               begin
                 endpoint = endpoint_for(client, list)&.subscribers
