@@ -8,7 +8,8 @@ set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rben
 set :rbenv_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 set :linked_files, %w{.env}
 append :linked_files, "config/database.yml", "config/secrets.yml"
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", "public/system", "public/uploads", "public/swagger"
+# TODO remove 'tmp/leads' after all leads are sent
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", "public/system", "public/uploads", "public/swagger", "tmp/leads"
 
 namespace :bower do
   desc 'Install bower'

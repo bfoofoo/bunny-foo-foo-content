@@ -33,7 +33,7 @@ module Elite
       ].compact.join('/')
     end
 
-    def payload(params, json = false)
+    def payload(params)
       {
         headers: { 'Content-Type' => 'application/json' },
         body: default_query_params.merge(params).to_json

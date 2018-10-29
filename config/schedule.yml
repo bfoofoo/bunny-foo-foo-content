@@ -28,3 +28,20 @@ suppression_lists_autoremove_from_esp:
   class: "SuppressionLists::AutoremoveFromEspWorker"
   queue: default
 
+batch_send_leads_to_adopia:
+  cron: "0 0 * * *"
+  class: "Esp::MassSendLeadsWorker"
+  queue: default
+  args: "Adopia"
+
+batch_send_leads_to_aweber:
+  cron: "0 0 * * *"
+  class: "Esp::MassSendLeadsWorker"
+  queue: default
+  args: "Aweber"
+
+batch_send_leads_to_elite:
+  cron: "0 0 * * *"
+  class: "Esp::MassSendLeadsWorker"
+  queue: default
+  args: "Elite"

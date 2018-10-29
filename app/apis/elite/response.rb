@@ -9,13 +9,13 @@ module Elite
     def parse
       case response.code
       when 400
-        raise Errors::BadRequestError.new, body['ErrorMessages'].join(','), caller
+        raise Errors::BadRequestError.new
       when 401
         raise Errors::UnauthorizedError.new
       when 404
         raise Errors::NotFoundError.new
       when 500
-        raise Errors::InternalServerError.new, body['ErrorMessages'].join(','), caller
+        raise Errors::InternalServerError.new
       end
 
       if (body['ResultMessage'] == 'error')

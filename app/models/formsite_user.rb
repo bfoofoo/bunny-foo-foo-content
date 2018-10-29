@@ -5,7 +5,7 @@ class FormsiteUser < ApplicationRecord
 
   belongs_to :formsite
   belongs_to :user, optional: true
-  has_many :esp_rules, through: :user
+  has_many :esp_rules, through: :formsite
   has_many :esp_rules_lists, through: :esp_rules
 
   delegate :email, :sent_to_aweber?, :sent_to_adopia?, :sent_to_elite?, :sent_to_ongage?,
