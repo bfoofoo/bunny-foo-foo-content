@@ -4,3 +4,4 @@ max_retries: 2
   - api_users_refresh
   - default
   - statistics
+  - leads

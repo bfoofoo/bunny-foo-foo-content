@@ -16,7 +16,6 @@ module EmailMarketerService
         accounts.each do |account|
           client = client_for(account)
           account.lists.each do |list|
-            p list
             emails.each do |email|
               begin
                 client.add_list_contact(list.list_id, {
@@ -24,7 +23,6 @@ module EmailMarketerService
                   is_double_opt_in: 0
                 })
                 @processed_emails << email
-                p "sent #{email}"
                 sleep 0.6 # to send maximum 100 per minute
               rescue ::Adopia::Errors::Error => e
                 puts "Adopia adding subscriber error - #{e}".red

@@ -31,7 +31,7 @@ suppression_lists_autoremove_from_esp:
 batch_send_leads_to_adopia_0:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: resource
@@ -39,7 +39,7 @@ batch_send_leads_to_adopia_0:
 batch_send_leads_to_adopia_1:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: applyforjobsdirect
@@ -47,7 +47,7 @@ batch_send_leads_to_adopia_1:
 batch_send_leads_to_adopia_2:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: findlocaljobsdirect
@@ -55,7 +55,7 @@ batch_send_leads_to_adopia_2:
 batch_send_leads_to_adopia_3:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: localjobsearchdirect
@@ -63,7 +63,7 @@ batch_send_leads_to_adopia_3:
 batch_send_leads_to_adopia_4:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: resourceassistancenews
@@ -71,7 +71,7 @@ batch_send_leads_to_adopia_4:
 batch_send_leads_to_adopia_5:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: resourcedepotupdates
@@ -79,7 +79,7 @@ batch_send_leads_to_adopia_5:
 batch_send_leads_to_adopia_6:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: findthelocaljobs
@@ -87,7 +87,7 @@ batch_send_leads_to_adopia_6:
 batch_send_leads_to_adopia_7:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: jobsinmyareadirect
@@ -95,7 +95,7 @@ batch_send_leads_to_adopia_7:
 batch_send_leads_to_adopia_8:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: findhousingbenefits
@@ -103,7 +103,7 @@ batch_send_leads_to_adopia_8:
 batch_send_leads_to_adopia_9:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Adopia
     account: findfamilysupport
@@ -111,7 +111,7 @@ batch_send_leads_to_adopia_9:
 batch_send_leads_to_aweber_0:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1058151
@@ -119,7 +119,7 @@ batch_send_leads_to_aweber_0:
 batch_send_leads_to_aweber_1:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1076451
@@ -127,7 +127,7 @@ batch_send_leads_to_aweber_1:
 batch_send_leads_to_aweber_2:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1096361
@@ -135,7 +135,7 @@ batch_send_leads_to_aweber_2:
 batch_send_leads_to_aweber_3:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1110034
@@ -143,7 +143,7 @@ batch_send_leads_to_aweber_3:
 batch_send_leads_to_aweber_4:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1110136
@@ -151,7 +151,7 @@ batch_send_leads_to_aweber_4:
 batch_send_leads_to_aweber_5:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1214105
@@ -159,7 +159,7 @@ batch_send_leads_to_aweber_5:
 batch_send_leads_to_aweber_6:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1142460
@@ -167,7 +167,7 @@ batch_send_leads_to_aweber_6:
 batch_send_leads_to_aweber_7:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1214108
@@ -175,7 +175,7 @@ batch_send_leads_to_aweber_7:
 batch_send_leads_to_aweber_8:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1246184
@@ -183,7 +183,7 @@ batch_send_leads_to_aweber_8:
 batch_send_leads_to_aweber_9:
   cron: "0 0 * * *"
   class: "Esp::MassSendLeadsWorker"
-  queue: default
+  queue: leads
   args:
     provider: Aweber
     account: 1214111
