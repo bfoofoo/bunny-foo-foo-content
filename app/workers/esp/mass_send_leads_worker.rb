@@ -7,7 +7,7 @@ module Esp
       CSV.foreach(file_path, headers: true) { |row| emails << row['email'] }
       service = sender_class(provider).new(emails)
       service.call
-      puts "#{service.processed_emails} emails processed."
+      puts "#{service.processed_emails.count} emails processed."
     end
 
     private
