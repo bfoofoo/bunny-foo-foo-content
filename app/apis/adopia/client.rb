@@ -37,7 +37,6 @@ module Adopia
         list_ids: list_ids.join(','),
         **params.except(:contacts).merge(Contacts: contact_params)
       })
-      p request
       response = Response.new(request).parse
       if response[:status] == 'error'
         raise Errors::UnprocessableEntityError.new, response[:message]
