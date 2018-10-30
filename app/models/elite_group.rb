@@ -3,8 +3,6 @@ class EliteGroup < ApplicationRecord
 
   alias_attribute :account, :elite_account
 
-  validates :group_id, uniqueness: true
-
   def full_name
     return name if account.sender.blank?
     "#{account.sender} - #{name}"
