@@ -3,10 +3,11 @@ module EmailMarketerService
     class BatchSendLeads
       attr_reader :emails, :processed_emails
 
-      def initialize(emails)
+      def initialize(emails, account_id)
         @auth_services = {}
         @endpoints = {}
         @emails = emails
+        @account_id = account_id
         @processed_emails = []
       end
 
@@ -14,10 +15,10 @@ module EmailMarketerService
         accounts.each do |account|
           client = auth_service_for(account)
           account.aweber_lists.each do |list|
+            endpoint = endpoint_for(client, list)&.subscribers
+            next unless endpoint
             emails.each do |email|
               begin
-                endpoint = endpoint_for(client, list)&.subscribers
-                next unless endpoint
                 endpoint.create("email" => email)
                 @processed_emails << email
                 sleep 0.6
@@ -35,7 +36,9 @@ module EmailMarketerService
       private
 
       def accounts
-        AweberAccount.all.includes(:aweber_lists)
+        query = AweberAccount.all.includes(:aweber_lists)
+        query = query.where(account_id: @account_id) if @account_id
+        query
       end
 
       def auth_service_for(aweber_account)
@@ -48,8 +51,7 @@ module EmailMarketerService
       end
 
       def endpoint_for(client, list)
-        return @endpoints[list.list_id] if defined?(@endpoints[list.list_id])
-        @endpoints[list.list_id] = client.aweber.account.lists[list.list_id]
+        @endpoints[list.list_id] ||= client.aweber.account.lists[list.list_id]
       rescue AWeber::NotFoundError
         nil
       end

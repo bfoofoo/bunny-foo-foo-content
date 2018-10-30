@@ -5,10 +5,10 @@ module EmailMarketerService
 
       BATCH_SIZE = 50.freeze
 
-      def initialize(emails)
+      def initialize(emails, account_name = nil)
         @clients = {}
         @emails = emails
-        @account = nil
+        @account_name = account_name
         @processed_emails = []
       end
 
@@ -16,6 +16,7 @@ module EmailMarketerService
         accounts.each do |account|
           client = client_for(account)
           account.lists.each do |list|
+            p list
             emails.each do |email|
               begin
                 client.add_list_contact(list.list_id, {
@@ -23,6 +24,7 @@ module EmailMarketerService
                   is_double_opt_in: 0
                 })
                 @processed_emails << email
+                p "sent #{email}"
                 sleep 0.6 # to send maximum 100 per minute
               rescue ::Adopia::Errors::Error => e
                 puts "Adopia adding subscriber error - #{e}".red
@@ -35,7 +37,9 @@ module EmailMarketerService
       private
 
       def accounts
-        AdopiaAccount.all.includes(:adopia_lists)
+        query = AdopiaAccount.all.includes(:adopia_lists)
+        query = query.where(name: @account_name) if @account_name
+        query
       end
 
       def client_for(account)
