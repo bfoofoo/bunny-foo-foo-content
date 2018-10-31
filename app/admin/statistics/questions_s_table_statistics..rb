@@ -11,7 +11,7 @@ ActiveAdmin.register_page "Questions Subaffiliate Table Statistics" do
     def index
       respond_to do |format|
         format.html
-        format.csv { send_data @questions_statistics.stats_to_csv, filename: "#{Formsite.find_by(id: params[:formsite_id]).name}_#{params[:start_date]}_#{params[:end_date]}.csv" }
+        format.csv { send_data @questions_statistics.stats_to_csv(affiliate: true), filename: "subaffiliate_#{Formsite.find_by(id: params[:formsite_id]).name}_#{params[:start_date]}_#{params[:end_date]}.csv" }
       end
     end
   end

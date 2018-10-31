@@ -23,8 +23,8 @@ module Statistics
         return generate_answers_hash
       end
 
-      def stats_to_csv
-        return csv_file
+      def stats_to_csv(options = {})
+        return csv_file(options)
       end
   
       def categories
@@ -183,13 +183,34 @@ module Statistics
         @submitted_users ||= formsite_users.is_verified
       end
 
-      def csv_file
+      def csv_file(options = {})
         data = self.table_stats
         columns = data.first.last.keys
         CSV.generate do |csv|
-          csv << ['Question', columns].flatten
-          data.keys.map do |ts|
-            csv << [ts, data[ts].values].flatten
+          if options[:affiliate]
+            csv << ['Question', data.first.last.keys[0...-1].map {|k| k + ' '}.join(' ').split(/\s/).push(""), 'Drop off'].flatten
+            csv << ['',('affiliate value ' * data.first.last.keys[0...-1].count).split,''].flatten
+            data.keys.map do |ts|
+              row = [ts]
+              data[ts].keys[0...-1].map do |s|
+                row << data.dig(ts, s).keys.first
+                row << data.dig(ts, s).values.first
+              end
+              csv << [row, data.dig(ts, "Drop off")].flatten
+              data[ts].except("Drop off").dig(data[ts].keys.first).keys[1..-1].map do |s|
+                row = ['']
+                data[ts].except("Drop off").keys.map do |sk|
+                  row << [s, data.dig(ts, sk, s)]
+                end
+                row << ''
+                csv << row.flatten
+              end
+            end
+          else
+            csv << ['Question', columns].flatten
+            data.keys.map do |ts|
+              csv << [ts, data[ts].values].flatten
+            end
           end
         end
       end
