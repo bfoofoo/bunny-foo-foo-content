@@ -64,25 +64,26 @@ Rails.application.routes.draw do
           post ':id/unsubscribe_user', to: 'leadgen_rev_sites#unsubscribe_user', as: 'unsubscribe_user'
           get ':id/setup', to: 'leadgen_rev_sites#setup', as: 'setup'
           get ':id/build', to: 'leadgen_rev_sites#build', as: 'build'
-
-          get ':id/questions', to: 'leadgen_rev_sites#get_leadgen_rev_site_questions'
-          get ':id/questions_by_position/:position', to: 'leadgen_rev_sites#get_leadgen_rev_site_question'
           get ':id/rebuild_old', to: 'leadgen_rev_sites#rebuild_old', as: 'rebuild_old'
           get ':id/config', to: 'leadgen_rev_sites#get_config', as: 'get_config'
           get ':id/categories', to: 'leadgen_rev_sites#get_categories'
-          get ':id/product_cards', to: 'leadgen_rev_sites#get_product_cards'
-          get ':id/categories/:category_id', to: 'leadgen_rev_sites#get_category_with_articles'
-          get ':id/articles', to: 'leadgen_rev_sites#get_articles'
-          get ':id/product_cards', to: 'leadgen_rev_sites#get_product_cards'
-          get ':id/articles/:article_id', to: 'leadgen_rev_sites#get_category_article'
+
         end
-        resources :questions, only: [:index] do
+        resources :questions, only: [:index, :show] do
           member do
             post "create_answer", to: "leadgen_rev_sites_questions#create_answer"
+            get 'by_position', to: 'leadgen_rev_sites#get_leadgen_rev_site_question'
           end
         end
+        resources :articles, only: [:index, :show]
+        resources :product_cards, only: [:index, :show]
+        resources :categories, only: [] do
+          resources :articles, only: [:index, :show]
+        end
       end
-      resources :categories, only: [:index, :show, :create]
+      resources :categories, only: [:index, :show, :create] do
+        resources :articles, only: [:index, :show]
+      end
       resources :articles, only: [:index, :show, :create]
       resources :api_users, only: [:show, :create, :update]
     end

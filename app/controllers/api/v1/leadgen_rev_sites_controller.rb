@@ -1,10 +1,7 @@
 class Api::V1::LeadgenRevSitesController < ApiController
-  before_action :authenticate, only: [:create, :update]
   before_action :set_leadgen_rev_site, only: [
-    :show, :get_categories, :get_articles, :get_product_cards,
-    :get_category_with_articles, :get_category_article,
-    :setup, :build, :rebuild_old, :get_config,
-    :add_leadgen_rev_site_user, :get_leadgen_rev_site_questions, :get_leadgen_rev_site_question
+    :show, :get_categories, :get_category_with_articles, :get_leadgen_rev_site_question,
+    :setup, :build, :rebuild_old, :get_config, :add_leadgen_rev_site_user
   ]
 
   def index
@@ -24,30 +21,9 @@ class Api::V1::LeadgenRevSitesController < ApiController
     render json: {message: e.message}
   end
 
-  def get_articles
-    @articles = @leadgen_rev_site.articles.order("created_at DESC")
-    render json: @articles
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {message: e.message}
-  end
-
-  def get_product_cards
-    @articles = @leadgen_rev_site.product_cards.order("created_at DESC")
-    render json: @articles
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {message: e.message}
-  end
-
   def get_category_with_articles
     @articles = @leadgen_rev_site.categories.includes([:articles]).find(params[:category_id]).articles.where(leadgen_rev_site_id: @leadgen_rev_site.id).order("created_at DESC")
     render json: @articles
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {message: e.message}
-  end
-
-  def get_category_article
-    @article = @leadgen_rev_site.articles.find(params[:article_id])
-    render json: @article
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end
@@ -80,11 +56,6 @@ class Api::V1::LeadgenRevSitesController < ApiController
         }
 
     render json: {"#{@config[:name].strip}": site_config}
-  end
-
-  def get_leadgen_rev_site_questions
-    @questions = @leadgen_rev_site.questions.order_by_position.includes(:answers)
-    render json: @questions
   end
 
   def get_leadgen_rev_site_question
@@ -156,13 +127,5 @@ class Api::V1::LeadgenRevSitesController < ApiController
     @leadgen_rev_site = LeadgenRevSite.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
     render json: { message: e.message }
-  end
-
-  def paginate_items items
-    if items.is_a?(Array)
-      Kaminari.paginate_array(items).page(params[:page]).per(params[:per])
-    else
-      items.page(params[:page]).per(params[:per])
-    end
   end
 end

@@ -4,6 +4,13 @@ class Api::V1::ArticlesController < ApiController
 
   def index
     @articles = Article.all.order("created_at DESC")
+    if params[:leadgen_rev_site_id] || params[:category_id]
+      query = @articles.where({
+        leadgen_rev_site_id: params[:leadgen_rev_site_id],
+        category_id: params[:category_id]
+      }.compact)
+      return render json: paginate_items(query)
+    end
     render json: @articles
   end
 
@@ -30,6 +37,6 @@ class Api::V1::ArticlesController < ApiController
     end
 
     def article_params
-      params.require(:article).permit(:id, :name, :content, :short, :category_id, :slug, :cover_image, :website_id)
+      params.require(:article).permit(:id, :name, :content, :short, :category_id, :slug, :cover_image, :website_id, :leadgen_rev_site_id)
     end
 end

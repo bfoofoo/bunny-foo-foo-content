@@ -34,4 +34,12 @@ class ApiController < ActionController::API
   def generate_auth_token
     SecureRandom.uuid.gsub(/\-/, '')
   end
+
+  def paginate_items(items)
+    if items.is_a?(Array)
+      Kaminari.paginate_array(items).page(params[:page]).per(params[:per])
+    else
+      items.page(params[:page]).per(params[:per])
+    end
+  end
 end
