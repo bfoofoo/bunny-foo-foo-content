@@ -1,6 +1,7 @@
 class ApiController < ActionController::API
   include ActionController::Serialization
   include ActionController::HttpAuthentication::Token::ControllerMethods
+  include ActionView::Rendering
 
   private
   def authenticate
@@ -39,7 +40,13 @@ class ApiController < ActionController::API
     if items.is_a?(Array)
       Kaminari.paginate_array(items).page(params[:page]).per(params[:per])
     else
-      items.page(params[:page]).per(params[:per])
+      query = items.page(params[:page]).per(params[:per])
+      {
+        collection: query,
+        total_count: query.total_count,
+        total_pages: query.total_pages,
+        current_page: query.current_page
+      }
     end
   end
 end

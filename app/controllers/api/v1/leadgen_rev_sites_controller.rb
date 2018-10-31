@@ -9,10 +9,13 @@ class Api::V1::LeadgenRevSitesController < ApiController
     render json: @sites
   end
 
+  # TODO use jbuilder to build json
   def show
-    render json: @leadgen_rev_site
+    render json: {
+      **@leadgen_rev_site.attributes.deep_symbolize_keys,
+      ads: @leadgen_rev_site.ads
+    }
   end
-
 
   def get_categories
     @categories = @leadgen_rev_site.categories
