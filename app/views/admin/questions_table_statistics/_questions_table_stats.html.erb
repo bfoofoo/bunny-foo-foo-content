@@ -35,5 +35,5 @@
         <% end %>
     </tbody>
   </table>
-  Download <%= link_to "CSV", admin_questions_table_statistics_path(params: params, format: "csv") %>
+  Download <%= link_to "CSV", admin_questions_table_statistics_path(params: params.except(:action, :controller), format: :csv) %>
 <% end %> 

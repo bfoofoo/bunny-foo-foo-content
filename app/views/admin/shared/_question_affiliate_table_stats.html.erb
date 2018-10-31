@@ -48,4 +48,4 @@
         <% end %>
     </tbody>
   </table>
-  Download <%= link_to "CSV", url_for(params: params, format: "csv") %>
+  Download <%= link_to "CSV", url_for(params: params.except(:action, :controller), format: :csv) %>
