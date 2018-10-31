@@ -13,6 +13,8 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :formsite_users
   accepts_nested_attributes_for :formsites
 
+  validates :first_name, :last_name, presence: true
+
   scope :unsubscribed, -> { where(unsubscribed: true) }
 
   def full_name
