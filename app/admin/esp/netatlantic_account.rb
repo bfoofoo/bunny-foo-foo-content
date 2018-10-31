@@ -2,7 +2,7 @@ ActiveAdmin.register NetatlanticAccount do
   menu parent: 'ESP'
 
   config.filters = false
-  permit_params :name, :sender_name, :sender
+  permit_params :name, :sender_name, :sender, :account_name
 
   member_action :refresh_list, method: :post do
     account = NetatlanticAccount.find(params[:id])
@@ -16,6 +16,7 @@ ActiveAdmin.register NetatlanticAccount do
     column :id
     column :sender
     column :sender_name
+    column :account_name
     column "Lists count" do |account|
       account.netatlantic_lists.count
     end
@@ -29,6 +30,7 @@ ActiveAdmin.register NetatlanticAccount do
       row :id
       row :sender
       row :sender_name
+      row :account_name
       panel "Lists" do
         table_for netatlantic_account.netatlantic_lists do
           column :id

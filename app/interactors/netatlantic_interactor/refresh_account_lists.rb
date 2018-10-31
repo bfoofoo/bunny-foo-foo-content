@@ -30,7 +30,7 @@ module NetatlanticInteractor
       end
 
       def lists
-        @lists ||= EmailMarketerService::Netatlantic::FetchLists.new().call()
+        @lists ||= EmailMarketerService::Netatlantic::FetchLists.new(account: account_model).call()
       end
 
   end
