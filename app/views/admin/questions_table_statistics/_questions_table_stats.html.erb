@@ -35,4 +35,5 @@
         <% end %>
     </tbody>
   </table>
-<% end %>
+  Download <%= link_to "CSV", admin_questions_table_statistics_path(params: params, format: "csv") %>
+<% end %> 

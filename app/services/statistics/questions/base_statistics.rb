@@ -22,6 +22,10 @@ module Statistics
       def table_stats
         return generate_answers_hash
       end
+
+      def stats_to_csv
+        return csv_file
+      end
   
       def categories
         filtered_questions.map do |question|
@@ -177,6 +181,17 @@ module Statistics
 
       def submitted_users
         @submitted_users ||= formsite_users.is_verified
+      end
+
+      def csv_file
+        data = self.table_stats
+        columns = data.first.last.keys
+        CSV.generate do |csv|
+          csv << ['Question', columns].flatten
+          data.keys.map do |ts|
+            csv << [ts, data[ts].values].flatten
+          end
+        end
       end
     end
   end

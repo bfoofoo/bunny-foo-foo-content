@@ -3,9 +3,16 @@ ActiveAdmin.register_page "Questions Table Statistics" do
 
   controller do
     before_action :initialize_data, only: :index
-
+    
     def initialize_data
       @questions_statistics = Statistics::Questions::TotalStatistics.new(params)
+    end
+    
+    def index
+      respond_to do |format|
+        format.html
+        format.csv { send_data @questions_statistics.stats_to_csv, filename: "#{Formsite.find_by(id: params[:formsite_id]).name}_#{params[:start_date]}_#{params[:end_date]}.csv" }
+      end
     end
   end
 
