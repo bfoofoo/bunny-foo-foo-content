@@ -12,8 +12,14 @@ class Api::V1::LeadgenRevSitesController < ApiController
   # TODO use jbuilder to build json
   def show
     render json: {
-      **@leadgen_rev_site.attributes.deep_symbolize_keys,
-      ads: @leadgen_rev_site.ads
+      **@leadgen_rev_site.attributes.slice('name', 'short_name', 'favicon_image', 'logo_image', 'background', 'created_at', 'updated_at').deep_symbolize_keys,
+      content: @leadgen_rev_site.attributes.slice('first_question_code_snippet', 'left_side_content', 'right_side_content', 'head_code_snippet'),
+      options: @leadgen_rev_site.attributes.slice('is_thankyou', 'is_phone_number', 'is_checkboxes', 'droplet_id', 'ad_client',
+                                                  'droplet_ip', 'zone_id', 'repo_url', 'first_redirect_url', 'final_redirect_url',
+                                                  's1_description', 's2_description', 's3_description', 's4_description', 's5_description',
+                                                  'form_box_title_text', 'affiliate_description'),
+      ads: @leadgen_rev_site.ads,
+      trackers: @leadgen_rev_site.trackers
     }
   end
 

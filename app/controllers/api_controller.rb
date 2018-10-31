@@ -1,7 +1,6 @@
 class ApiController < ActionController::API
   include ActionController::Serialization
   include ActionController::HttpAuthentication::Token::ControllerMethods
-  include ActionView::Rendering
 
   private
   def authenticate
