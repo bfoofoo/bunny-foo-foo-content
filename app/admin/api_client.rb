@@ -60,6 +60,23 @@ ActiveAdmin.register ApiClient do
     end
   end
 
+  index do
+    selectable_column
+    id_column
+    column :token
+    column :name
+    column "ESP lists" do |api_client|
+      api_client.esp_rules.map do |er|
+        er.esp_rules_lists.map do |erl|
+          "#{erl.list_type}: #{erl.full_name}"
+        end
+      end.join(', ')
+    end
+    column :created_at
+    column :updated_at
+    actions
+  end
+
   show do
     attributes_table do
       default_attribute_table_rows.each do |field|
