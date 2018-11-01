@@ -18,7 +18,8 @@ class Api::V1::LeadgenRevSitesController < ApiController
                                                   'droplet_ip', 'zone_id', 'repo_url', 'first_redirect_url', 'final_redirect_url',
                                                   's1_description', 's2_description', 's3_description', 's4_description', 's5_description',
                                                   'form_box_title_text', 'affiliate_description'),
-      ads: @leadgen_rev_site.ads,
+      ads: @leadgen_rev_site.advertisements,
+      widgets: @leadgen_rev_site.widgets,
       trackers: @leadgen_rev_site.trackers
     }
   end

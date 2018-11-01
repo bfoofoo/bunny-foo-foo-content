@@ -23,6 +23,7 @@ class LeadgenRevSite < ApplicationRecord
   has_many :esp_rules, as: :source, class_name: 'EspRules::LeadgenRevSite'
   has_many :advertisements, -> { advertisements } , through: :leadgen_rev_site_ads, source: :ad
   has_many :trackers, -> { trackers } , through: :leadgen_rev_site_ads, source: :ad
+  has_many :widgets, -> { widgets } , through: :leadgen_rev_site_ads, source: :ad
 
   accepts_nested_attributes_for :categories, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true

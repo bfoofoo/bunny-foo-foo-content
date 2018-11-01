@@ -174,8 +174,8 @@ ActiveAdmin.register LeadgenRevSite do
       end
 
       tab 'ADS AND TRACKER' do
-        AD_POSITIONS = ['adSidebar', 'adTop', 'adMiddle', 'adBottom', 'adAppendedToBody', 'adpushup', 'tracker']
-        AD_TYPES = ['embed', 'google', 'custom', 'text/javascript', 'autoad']
+        AD_POSITIONS = %w(adSidebar adTop adMiddle adBottom adAppendedToBody adpushup tracker widgetSidebar widgetTop widgetBottom)
+        AD_TYPES = %w(embed google custom text/javascript autoad)
 
         f.inputs 'Ads' do
           f.has_many :ads, allow_destroy: true, new_record: true do |ff|
