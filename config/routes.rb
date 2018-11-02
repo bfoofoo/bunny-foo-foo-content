@@ -59,20 +59,19 @@ Rails.application.routes.draw do
         end
 
       resources :leadgen_rev_sites, only: [:index, :show] do
-        collection do
-          post ':id/add_user', to: 'leadgen_rev_sites#add_leadgen_rev_site_user', as: 'add_user'
-          post ':id/unsubscribe_user', to: 'leadgen_rev_sites#unsubscribe_user', as: 'unsubscribe_user'
-          get ':id/setup', to: 'leadgen_rev_sites#setup', as: 'setup'
-          get ':id/build', to: 'leadgen_rev_sites#build', as: 'build'
-          get ':id/rebuild_old', to: 'leadgen_rev_sites#rebuild_old', as: 'rebuild_old'
-          get ':id/config', to: 'leadgen_rev_sites#get_config', as: 'get_config'
-          get ':id/categories', to: 'leadgen_rev_sites#get_categories'
-
+        member do
+          post 'add_user', to: 'leadgen_rev_sites#add_leadgen_rev_site_user', as: 'add_user'
+          post 'unsubscribe_user', to: 'leadgen_rev_sites#unsubscribe_user', as: 'unsubscribe_user'
+          get 'setup', to: 'leadgen_rev_sites#setup', as: 'setup'
+          get 'build', to: 'leadgen_rev_sites#build', as: 'build'
+          get 'rebuild_old', to: 'leadgen_rev_sites#rebuild_old', as: 'rebuild_old'
+          get 'config', to: 'leadgen_rev_sites#get_config', as: 'get_config'
+          get 'categories', to: 'leadgen_rev_sites#get_categories'
+          get 'question_by_position', to: 'leadgen_rev_sites#get_question_by_position'
         end
         resources :questions, only: [:index, :show] do
           member do
             post "create_answer", to: "leadgen_rev_sites_questions#create_answer"
-            get 'by_position', to: 'leadgen_rev_sites#get_leadgen_rev_site_question'
           end
         end
         resources :articles, only: [:index, :show]

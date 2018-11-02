@@ -1,6 +1,6 @@
 class Api::V1::LeadgenRevSitesController < ApiController
   before_action :set_leadgen_rev_site, only: [
-    :show, :get_categories, :get_category_with_articles, :get_leadgen_rev_site_question,
+    :show, :get_categories, :get_category_with_articles, :get_question_by_position,
     :setup, :build, :rebuild_old, :get_config, :add_leadgen_rev_site_user
   ]
 
@@ -26,7 +26,7 @@ class Api::V1::LeadgenRevSitesController < ApiController
 
   def get_categories
     @categories = @leadgen_rev_site.categories
-    render json: @categories
+    render json: paginate_items(@categories)
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end
@@ -68,7 +68,7 @@ class Api::V1::LeadgenRevSitesController < ApiController
     render json: {"#{@config[:name].strip}": site_config}
   end
 
-  def get_leadgen_rev_site_question
+  def get_question_by_position
     @question = @leadgen_rev_site.questions.find_by(position: params[:position])
     render json: @question
   end
