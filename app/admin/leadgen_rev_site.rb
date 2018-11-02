@@ -83,6 +83,13 @@ ActiveAdmin.register LeadgenRevSite do
     column :id
     column :name
     column :description
+    column "ESP lists" do |leadgen_rev_site|
+      leadgen_rev_site.esp_rules.map do |er|
+        er.esp_rules_lists.map do |erl|
+          "#{erl.list_type}: #{erl.full_name}"
+        end
+      end.join(', ')
+    end
     column :droplet_id
     column :droplet_ip
     column :zone_id
