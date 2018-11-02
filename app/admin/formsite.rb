@@ -83,6 +83,13 @@ ActiveAdmin.register Formsite do
     column :is_thankyou
     column :is_checkboxes
     column :is_phone_number
+    column "ESP lists" do |formsite|
+      formsite.esp_rules.map do |er|
+        er.esp_rules_lists.map do |erl|
+          "#{erl.list_type}: #{erl.full_name}"
+        end
+      end.join(', ')
+    end
     column :droplet_ip
 
     column :created_at
