@@ -10,7 +10,9 @@ module Esp
       aweber: 'AweberList',
       adopia: 'AdopiaList',
       elite: 'EliteGroup',
-      ongage: 'OngageList'
+      ongage: 'OngageList',
+      netatlantic: 'NetatlanticList',
+      mailgun: 'MailgunList'
     }.freeze
 
     ESP_LIST_TYPES.each do |provider, type|

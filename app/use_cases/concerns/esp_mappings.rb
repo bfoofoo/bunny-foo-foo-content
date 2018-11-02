@@ -7,7 +7,8 @@ module Concerns
       'AdopiaList' => :add_contact,
       'EliteGroup' => :add_contact,
       'OngageList' => :add_contact,
-      'NetatlanticList' => :add_subscriber
+      'NetatlanticList' => :add_subscriber,
+      'MailgunList' => :add_member
     }.freeze
 
 

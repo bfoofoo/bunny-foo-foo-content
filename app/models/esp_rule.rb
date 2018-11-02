@@ -4,7 +4,8 @@ class EspRule < ApplicationRecord
     'Aweber' => 'AweberList',
     'Elite' => 'EliteGroup',
     'Ongage' => 'OngageList',
-    'Netatlntic' => 'NetatlnticList'
+    'Netatlantic' => 'NetatlanticList',
+    'Mailgun' => 'MailgunList'
   }.freeze
 
   belongs_to :source, polymorphic: true
