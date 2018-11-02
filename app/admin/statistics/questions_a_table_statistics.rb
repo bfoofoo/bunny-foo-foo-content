@@ -7,6 +7,13 @@ ActiveAdmin.register_page "Questions Affiliate Table Statistics" do
     def initialize_data
       @questions_statistics = Statistics::Questions::AStatistics.new(params)
     end
+
+    def index
+      respond_to do |format|
+        format.html
+        format.csv { send_data @questions_statistics.stats_to_csv(affiliate: true), filename: "affiliate_#{@questions_statistics.formsite.name}_#{params[:start_date]}_#{params[:end_date]}.csv" }
+      end
+    end
   end
 
   sidebar :help do
