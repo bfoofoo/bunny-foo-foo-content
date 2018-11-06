@@ -20,7 +20,7 @@ module LeadgenRevSiteUsers
             next unless rule.should_send_now?(leadgen_rev_site_user.created_at)
             params = { affiliate: leadgen_rev_site_user.affiliate }.compact
             esp_list = rule.esp_rules_lists[index]
-            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params).send(ESP_METHOD_MAPPING[esp_list.list_type], leadgen_rev_site_user.user)
+            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[esp_list.list_type], leadgen_rev_site_user.user)
           end
         end
       end
@@ -33,7 +33,8 @@ module LeadgenRevSiteUsers
     end
 
     def available_leadgen_rev_site_users_for(rule)
-      rule.leadgen_rev_site.leadgen_rev_site_users.is_verified.left_joins(user: :exported_leads).where('exported_leads.esp_rule_id <> ? OR exported_leads.id IS NULL', rule.id).distinct
+      rule.leadgen_rev_site.leadgen_rev_site_users.is_verified
+        .where('leadgen_rev_site_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
     end
 
     def subscription_service_for(list_type)
