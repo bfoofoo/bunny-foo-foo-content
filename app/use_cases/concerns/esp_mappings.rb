@@ -8,7 +8,8 @@ module Concerns
       'EliteGroup' => :add_contact,
       'OngageList' => :add_contact,
       'NetatlanticList' => :add_subscriber,
-      'MailgunList' => :add_member
+      'MailgunList' => :add_member,
+      'OnepointList' => :add_contact
     }.freeze
 
 

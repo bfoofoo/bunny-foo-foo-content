@@ -12,7 +12,8 @@ module Esp
       elite: 'EliteGroup',
       ongage: 'OngageList',
       netatlantic: 'NetatlanticList',
-      mailgun: 'MailgunList'
+      mailgun: 'MailgunList',
+      onepoint: 'OnepointList'
     }.freeze
 
     ESP_LIST_TYPES.each do |provider, type|

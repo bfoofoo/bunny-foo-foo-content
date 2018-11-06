@@ -36,7 +36,8 @@ ActiveAdmin.register Formsite do
     Struct::EspCollection.new('EliteGroup', EliteGroup.includes(:elite_account)),
     Struct::EspCollection.new('OngageList', OngageList.includes(:ongage_account)),
     Struct::EspCollection.new('NetatlanticList', NetatlanticList.includes(:netatlantic_account)),
-    Struct::EspCollection.new('MailgunList', MailgunList.includes(:mailgun_account))
+    Struct::EspCollection.new('MailgunList', MailgunList.includes(:mailgun_account)),
+    Struct::EspCollection.new('OnepointList', OnepointList.includes(:onepoint_account))
   ].freeze
 
   controller do

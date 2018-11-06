@@ -13,6 +13,12 @@ en:
       formsite_user: 
         one: Leadgen Site User
         other: Leadgen Site Users
+      onepoint_account:
+        one: 1PointMail Account
+        other: 1PointMail Accounts
+      onepoint_list:
+        one: 1PointMail List
+        other: 1PointMail Lists
       suppression_aweber_list:
         one: Deletion Aweber List
         other: Deletion Aweber Lists

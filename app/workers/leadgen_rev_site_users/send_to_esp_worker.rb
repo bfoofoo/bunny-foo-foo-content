@@ -1,15 +1,7 @@
 module LeadgenRevSiteUsers
   class SendToEspWorker
     include Sidekiq::Worker
-
-    ESP_METHOD_MAPPING = {
-      'AweberList' => :add_subscriber,
-      'AdopiaList' => :add_contact,
-      'EliteGroup' => :add_contact,
-      'OngageList' => :add_contact,
-      'NetatlanticList' => :add_subscriber,
-      'MailgunList' => :add_member
-    }.freeze
+    include Concerns::EspWorker
 
     def perform
       rules.each do |rule|
@@ -35,14 +27,6 @@ module LeadgenRevSiteUsers
     def available_leadgen_rev_site_users_for(rule)
       rule.leadgen_rev_site.leadgen_rev_site_users.is_verified
         .where('leadgen_rev_site_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
-    end
-
-    def subscription_service_for(list_type)
-      ['EmailMarketerService', provider_for(list_type), 'SubscriptionService'].join('::').constantize
-    end
-
-    def provider_for(list_type)
-      list_type.split(/(?=[A-Z])/).first
     end
   end
 end

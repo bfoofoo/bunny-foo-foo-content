@@ -1,13 +1,4 @@
 class EspRule < ApplicationRecord
-  LIST_TYPES_MAPPING = {
-    'Adopia' => 'AdopiaList',
-    'Aweber' => 'AweberList',
-    'Elite' => 'EliteGroup',
-    'Ongage' => 'OngageList',
-    'Netatlantic' => 'NetatlanticList',
-    'Mailgun' => 'MailgunList'
-  }.freeze
-
   belongs_to :source, polymorphic: true
   has_many :esp_rules_lists, dependent: :destroy
   has_many :exported_leads, dependent: :nullify
