@@ -34,6 +34,8 @@ ActiveAdmin.register ApiUser do
     column :sent_to_adopia?
     column :sent_to_elite?
     column :sent_to_ongage?
+    column :sent_to_netatlantic?
+    column :sent_to_mailgun?
     actions
   end
 
@@ -47,6 +49,8 @@ ActiveAdmin.register ApiUser do
       row :sent_to_adopia?
       row :sent_to_elite?
       row :sent_to_ongage?
+      row :sent_to_netatlantic?
+      row :sent_to_mailgun?
     end
     active_admin_comments
   end

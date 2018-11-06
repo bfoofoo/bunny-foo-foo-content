@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181031191443) do
+ActiveRecord::Schema.define(version: 20181106095801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -519,6 +519,22 @@ ActiveRecord::Schema.define(version: 20181031191443) do
     t.index ["user_id"], name: "index_leads_on_user_id", using: :btree
   end
 
+  create_table "mailgun_accounts", force: :cascade do |t|
+    t.string   "api_key",    null: false
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "mailgun_lists", force: :cascade do |t|
+    t.string   "name"
+    t.string   "address"
+    t.integer  "mailgun_account_id", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["mailgun_account_id"], name: "index_mailgun_lists_on_mailgun_account_id", using: :btree
+  end
+
   create_table "maropost_accounts", force: :cascade do |t|
     t.integer  "account_id", null: false
     t.text     "auth_token", null: false
@@ -677,6 +693,7 @@ ActiveRecord::Schema.define(version: 20181031191443) do
   add_foreign_key "leadgen_rev_site_users", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_users", "users"
   add_foreign_key "leads", "users"
+  add_foreign_key "mailgun_lists", "mailgun_accounts"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "ongage_lists", "ongage_accounts"
   add_foreign_key "product_cards", "leadgen_rev_sites"

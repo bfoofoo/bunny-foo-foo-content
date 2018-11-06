@@ -6,7 +6,9 @@ module ApiUsers
       'AweberList' => :add_subscriber,
       'AdopiaList' => :add_contact,
       'EliteGroup' => :add_contact,
-      'OngageList' => :add_contact
+      'OngageList' => :add_contact,
+      'NetatlanticList' => :add_subscriber,
+      'MailgunList' => :add_member
     }.freeze
 
     def perform
@@ -18,7 +20,7 @@ module ApiUsers
           slice.each_with_index do |api_user, index|
             next unless rule.should_send_now?(api_user.created_at)
             esp_list = rule.esp_rules_lists[index]
-            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params).send(ESP_METHOD_MAPPING[esp_list.list_type], api_user)
+            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[esp_list.list_type], api_user)
           end
         end
       end
@@ -31,7 +33,7 @@ module ApiUsers
     end
 
     def available_api_users_for(rule)
-      rule.api_client.api_users.verified.left_joins(:exported_leads).where('exported_leads.esp_rule_id <> ? OR exported_leads.id IS NULL', rule.id).distinct
+      rule.api_client.api_users.verified.where('api_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
     end
 
     def subscription_service_for(list_type)
