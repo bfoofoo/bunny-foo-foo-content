@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181106095801) do
+ActiveRecord::Schema.define(version: 20181106173835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,8 +189,9 @@ ActiveRecord::Schema.define(version: 20181106095801) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "collect_statistics", default: false, null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -368,8 +369,11 @@ ActiveRecord::Schema.define(version: 20181106095801) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
-    t.date     "date_of_birth"
-    t.string   "zip_code"
+    t.string   "external_link"
+    t.string   "company"
+    t.string   "abstract"
+    t.string   "title"
+    t.string   "data_key"
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
   end
 

@@ -116,6 +116,7 @@ module FormsiteInteractor
 
         attributes = formsite_user_params
                 .merge(formsite_user_dynamic_params)
+                .merge(job_formsite_user_params)
                 .merge({
                   ip: user_ip,
                   user_id: user.id,
@@ -152,6 +153,10 @@ module FormsiteInteractor
 
       def formsite_user_params
         params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip)
+      end
+
+      def job_formsite_user_params
+        params.require(:user).permit(:external_link, :company, :abstract, :title, :data_key)
       end
   end
 end
