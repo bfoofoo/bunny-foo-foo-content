@@ -1,10 +1,7 @@
 class Api::V1::LeadgenRevSitesController < ApiController
-  before_action :authenticate, only: [:create, :update]
   before_action :set_leadgen_rev_site, only: [
-    :show, :get_categories, :get_articles, :get_product_cards,
-    :get_category_with_articles, :get_category_article,
-    :setup, :build, :rebuild_old, :get_config,
-    :add_leadgen_rev_site_user, :get_leadgen_rev_site_questions, :get_leadgen_rev_site_question
+    :show, :get_categories, :get_category_with_articles, :get_question_by_position,
+    :setup, :build, :rebuild_old, :get_config, :add_leadgen_rev_site_user
   ]
 
   def index
@@ -12,28 +9,24 @@ class Api::V1::LeadgenRevSitesController < ApiController
     render json: @sites
   end
 
+  # TODO use jbuilder to build json
   def show
-    render json: @leadgen_rev_site
+    render json: {
+      **@leadgen_rev_site.attributes.slice('name', 'short_name', 'favicon_image', 'logo_image', 'background', 'created_at', 'updated_at').deep_symbolize_keys,
+      content: @leadgen_rev_site.attributes.slice('first_question_code_snippet', 'left_side_content', 'right_side_content', 'head_code_snippet'),
+      options: @leadgen_rev_site.attributes.slice('is_thankyou', 'is_phone_number', 'is_checkboxes', 'droplet_id', 'ad_client',
+                                                  'droplet_ip', 'zone_id', 'repo_url', 'first_redirect_url', 'final_redirect_url',
+                                                  's1_description', 's2_description', 's3_description', 's4_description', 's5_description',
+                                                  'form_box_title_text', 'affiliate_description'),
+      ads: @leadgen_rev_site.advertisements,
+      widgets: @leadgen_rev_site.widgets,
+      trackers: @leadgen_rev_site.trackers
+    }
   end
-
 
   def get_categories
     @categories = @leadgen_rev_site.categories
-    render json: @categories
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {message: e.message}
-  end
-
-  def get_articles
-    @articles = @leadgen_rev_site.articles.order("created_at DESC")
-    render json: @articles
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {message: e.message}
-  end
-
-  def get_product_cards
-    @articles = @leadgen_rev_site.product_cards.order("created_at DESC")
-    render json: @articles
+    render json: paginate_items(@categories)
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end
@@ -41,13 +34,6 @@ class Api::V1::LeadgenRevSitesController < ApiController
   def get_category_with_articles
     @articles = @leadgen_rev_site.categories.includes([:articles]).find(params[:category_id]).articles.where(leadgen_rev_site_id: @leadgen_rev_site.id).order("created_at DESC")
     render json: @articles
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {message: e.message}
-  end
-
-  def get_category_article
-    @article = @leadgen_rev_site.articles.find(params[:article_id])
-    render json: @article
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end
@@ -82,12 +68,7 @@ class Api::V1::LeadgenRevSitesController < ApiController
     render json: {"#{@config[:name].strip}": site_config}
   end
 
-  def get_leadgen_rev_site_questions
-    @questions = @leadgen_rev_site.questions.order_by_position.includes(:answers)
-    render json: @questions
-  end
-
-  def get_leadgen_rev_site_question
+  def get_question_by_position
     @question = @leadgen_rev_site.questions.find_by(position: params[:position])
     render json: @question
   end
@@ -156,13 +137,5 @@ class Api::V1::LeadgenRevSitesController < ApiController
     @leadgen_rev_site = LeadgenRevSite.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
     render json: { message: e.message }
-  end
-
-  def paginate_items items
-    if items.is_a?(Array)
-      Kaminari.paginate_array(items).page(params[:page]).per(params[:per])
-    else
-      items.page(params[:page]).per(params[:per])
-    end
   end
 end
