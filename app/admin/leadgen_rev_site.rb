@@ -2,7 +2,7 @@ ActiveAdmin.register LeadgenRevSite do
   permit_params :name, :description, :url,
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :ad_client, :shortname, :final_redirect_url,
-                :favicon_image, :logo_image, :text_file,
+                :favicon_image, :logo_image, :background, :text_file,
                 :is_thankyou, :is_checkboxes, :is_phone_number, :form_box_title_text,
                 :left_side_content, :right_side_content,
                 :first_question_code_snippet, :head_code_snippet,
