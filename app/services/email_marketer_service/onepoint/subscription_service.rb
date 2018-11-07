@@ -9,7 +9,7 @@ module EmailMarketerService
         @esp_rule = esp_rule
       end
 
-      def add_member(user)
+      def add_contact(user)
         begin
           if is_valid?(user)
             client.contact.create({
@@ -21,7 +21,7 @@ module EmailMarketerService
             })
             handle_user_record(user)
           end
-        rescue ::Onepoint::Error => e
+        rescue ::Onepoint::Errors::Error => e
           handle_user_record(user) if e.message == "email: Subscriber already subscribed."
           puts "Onepoint adding subscriber error - #{e}".red
         end

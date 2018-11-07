@@ -1,5 +1,7 @@
 module Concerns
   module EspWorker
+    extend ActiveSupport::Concern
+
     ESP_METHOD_MAPPING = {
       'AweberList' => :add_subscriber,
       'AdopiaList' => :add_contact,
