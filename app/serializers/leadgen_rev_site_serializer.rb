@@ -2,7 +2,6 @@ class LeadgenRevSiteSerializer < ActiveModel::Serializer
   attributes :id, :name, :shortname, :favicon_image, :logo_image, :background, :created_at, :updated_at, :content, :options
 
   has_many :categories
-  has_many :articles
   has_many :advertisements
   has_many :trackers
   has_many :widgets
