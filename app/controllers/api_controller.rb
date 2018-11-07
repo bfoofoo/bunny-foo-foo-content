@@ -41,7 +41,7 @@ class ApiController < ActionController::API
     else
       query = items.page(params[:page]).per(params[:per])
       {
-        collection: query,
+        collection: ActiveModel::SerializableResource.new(query.to_a),
         total_count: query.total_count,
         total_pages: query.total_pages,
         current_page: query.current_page
