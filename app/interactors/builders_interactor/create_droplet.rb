@@ -12,10 +12,7 @@ module BuildersInteractor
       when 'website'
         droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
         image = '35876901'
-      when 'formsite'
-        droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
-        image = '36375081'
-      when 'leadgen_rev_site'
+      when 'formsite', 'leadgen_rev_site'
         droplet_service = Deployer::DigitaloceanService.new('268a294762b6869a3a5a6f165675642055a81f14a38c9c6647276ae9b1463310')
         image = '40070369'
         size = '1vcpu-2gb'
@@ -48,9 +45,7 @@ module BuildersInteractor
       case context.config[:type]
       when 'website'
         droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
-      when 'formsite'
-        droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
-      when 'leadgen_rev_site'
+      when 'formsite', 'leadgen_rev_site'
         droplet_service = Deployer::DigitaloceanService.new('268a294762b6869a3a5a6f165675642055a81f14a38c9c6647276ae9b1463310')
       end
       droplet_service.delete_droplet({droplet_id: context.droplet[:id]})
