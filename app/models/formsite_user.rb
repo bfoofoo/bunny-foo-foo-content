@@ -4,6 +4,7 @@ class FormsiteUser < ApplicationRecord
   acts_as_paranoid
 
   belongs_to :formsite
+  belongs_to :website
   belongs_to :user, optional: true
   has_many :esp_rules, through: :formsite
   has_many :esp_rules_lists, through: :esp_rules

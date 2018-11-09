@@ -9,6 +9,8 @@ class Website < ApplicationRecord
   has_many :advertisements, -> { advertisements } , :through => :website_ads, source: :ad
   has_many :trackers, -> { trackers } , :through => :website_ads, source: :ad
 
+  has_many :formsite_users, dependent: :restrict_with_error, foreign_key: :website_id
+
   has_many :product_cards, dependent: :destroy
 
   accepts_nested_attributes_for :categories, allow_destroy: true

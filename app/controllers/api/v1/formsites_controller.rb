@@ -68,7 +68,11 @@ class Api::V1::FormsitesController < ApiController
   private
 
   def set_formsite
-    @formsite = Formsite.find(params[:id])
+    if params.dig(:user, :site_type) == "revenue"
+      @formsite = Website.find(params[:id])
+    else
+      @formsite = Formsite.find(params[:id])
+    end
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end
