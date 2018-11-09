@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181106173835) do
+ActiveRecord::Schema.define(version: 20181109125335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -350,8 +350,8 @@ ActiveRecord::Schema.define(version: 20181106173835) do
     t.integer  "formsite_id"
     t.integer  "user_id"
     t.boolean  "is_verified"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
     t.boolean  "is_useragent_valid"
     t.boolean  "is_impressionwise_test_success"
     t.boolean  "is_duplicate"
@@ -374,6 +374,7 @@ ActiveRecord::Schema.define(version: 20181106173835) do
     t.string   "abstract"
     t.string   "title"
     t.string   "data_key"
+    t.string   "site_type",                      default: "leadgen"
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
   end
 
@@ -572,6 +573,22 @@ ActiveRecord::Schema.define(version: 20181106173835) do
     t.integer  "netatlantic_account_id"
   end
 
+  create_table "onepoint_accounts", force: :cascade do |t|
+    t.string   "username",   null: false
+    t.string   "api_key",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "onepoint_lists", force: :cascade do |t|
+    t.integer  "onepoint_account_id", null: false
+    t.integer  "list_id",             null: false
+    t.string   "name"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["onepoint_account_id"], name: "index_onepoint_lists_on_onepoint_account_id", using: :btree
+  end
+
   create_table "ongage_accounts", force: :cascade do |t|
     t.string   "username",     null: false
     t.string   "password",     null: false
@@ -699,6 +716,7 @@ ActiveRecord::Schema.define(version: 20181106173835) do
   add_foreign_key "leads", "users"
   add_foreign_key "mailgun_lists", "mailgun_accounts"
   add_foreign_key "maropost_lists", "maropost_accounts"
+  add_foreign_key "onepoint_lists", "onepoint_accounts"
   add_foreign_key "ongage_lists", "ongage_accounts"
   add_foreign_key "product_cards", "leadgen_rev_sites"
   add_foreign_key "product_cards", "websites"
