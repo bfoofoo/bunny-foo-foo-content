@@ -78,6 +78,7 @@ gem "audited", "~> 4.7"
 # Email marketing services
 gem 'aweber', github: 'bfoofoo/AWeber-API-Ruby-Library'
 gem 'maropost_api', github: 'bfoofoo/maropost_api'
+gem 'simple_spark', github: 'bfoofoo/simple_spark'
 
 # Background jobs
 gem 'sidekiq'

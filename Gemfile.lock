@@ -15,6 +15,14 @@ GIT
       httparty
 
 GIT
+  remote: git://github.com/bfoofoo/simple_spark.git
+  revision: 10f346ca971febd84de14b2e8476be7bfd25c328
+  specs:
+    simple_spark (1.0.7)
+      excon (>= 0.16.0, < 1.0)
+      json (>= 1.7.7, < 3.0)
+
+GIT
   remote: git://github.com/stefanoverna/activeadmin-dragonfly.git
   revision: 611164ff0255c66a3e555b5d46dd99f0eff1f115
   specs:
@@ -232,6 +240,7 @@ GEM
     et-orbi (1.1.6)
       tzinfo
     eventmachine (1.2.5)
+    excon (0.62.0)
     execjs (2.7.0)
     factory_bot (4.11.1)
       activesupport (>= 3.0.0)
@@ -640,6 +649,7 @@ DEPENDENCIES
   sidekiq
   sidekiq-cron (~> 1.0, >= 1.0.4)
   simple_enum
+  simple_spark!
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
@@ -656,4 +666,4 @@ RUBY VERSION
    ruby 2.4.1p111
 
 BUNDLED WITH
-   1.16.4
+   1.17.1
