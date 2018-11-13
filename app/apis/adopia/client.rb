@@ -35,7 +35,8 @@ module Adopia
       end
       request = @request.post(self_path, {
         list_ids: list_ids.join(','),
-        **params.except(:contacts).merge(Contacts: contact_params)
+        contact: contact_params,
+        **params.except(:contacts)
       })
       response = Response.new(request).parse
       if response[:status] == 'error'

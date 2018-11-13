@@ -32,8 +32,8 @@ module Adopia
 
     def default_query_params
       {
-        response_type: 'json',
-        api_key: api_key
+          response_type: 'json',
+          api_key: api_key
       }
     end
 
@@ -42,11 +42,8 @@ module Adopia
     end
 
     def payload(params, json = false)
-      payload = { headers: { 'Content-Type' => 'application/json' } }
-      if json
-        return payload.merge(body: default_query_params.merge(params).to_json)
-      end
-      payload.merge(query: default_query_params.merge(params).to_query)
+      return { body: default_query_params.merge(params) } if json
+      { query: default_query_params.merge(params).to_query }
     end
   end
 end
