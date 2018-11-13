@@ -5,11 +5,11 @@ module EmailMarketerService
 
       BATCH_SIZE = 50.freeze
 
-      def initialize(data, account_name = nil, list_name = nil)
+      def initialize(data, account_name = nil, list_names = [])
         @clients = {}
         @data = data
         @account_name = account_name
-        @list_name = list_name
+        @list_names = list_names
         @processed_emails = []
       end
 
@@ -50,8 +50,9 @@ module EmailMarketerService
       end
 
       def selected_list_ids(account)
-        return account.lists.pluck(:list_id) unless @list_name
-        [account.lists.find_by(name: @list_name)&.list_id]
+        lists = account.lists
+        lists = lists.where(name: @list_names) unless @list_names.empty?
+        lists.pluck(:list_id)
       end
     end
   end
