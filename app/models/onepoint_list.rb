@@ -1,11 +1,13 @@
 class OnepointList < ApplicationRecord
+  include Esp::ListMethods
+
   belongs_to :onepoint_account
 
-  def full_name
-    return "#{onepoint_account.username} - #{name}"
-  end
+  alias_attribute :account, :onepoint_account
 
-  def id_with_type
-    "#{model_name.name}_#{self.id}"
+  private
+
+  def account_display_name
+    account.username
   end
 end

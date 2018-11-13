@@ -10,6 +10,7 @@ module Concerns
       'NetatlanticList' => :add_subscriber,
       'MailgunList' => :add_member,
       'OnepointList' => :add_contact,
+      'SparkpostList' => :add_recipient
     }.freeze
 
     def subscription_service_for(list_type)

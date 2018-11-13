@@ -14,7 +14,7 @@ module Esp
     private
 
     def account_display_name
-      raise NotImplementedError
+      account.name
     end
   end
 end

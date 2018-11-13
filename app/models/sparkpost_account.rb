@@ -1,5 +1,5 @@
 class SparkpostAccount < ApplicationRecord
-  has_many :spartkpost_lists
+  has_many :sparkpost_lists
 
   validates :api_key, presence: true
   validates :api_key, :account_id, uniqueness: true

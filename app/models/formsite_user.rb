@@ -11,7 +11,7 @@ class FormsiteUser < ApplicationRecord
   has_many :exported_leads, through: :user
 
   delegate :email, :sent_to_aweber?, :sent_to_adopia?, :sent_to_elite?, :sent_to_ongage?,
-           :sent_to_netatlantic?, :sent_to_mailgun?, :sent_to_onepoint?,
+           :sent_to_netatlantic?, :sent_to_mailgun?, :sent_to_onepoint?, :sent_to_sparkpost?,
            to: :user, allow_nil: true
 
   scope :by_s_filter, -> (s_field) {

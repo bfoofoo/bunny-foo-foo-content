@@ -1,11 +1,13 @@
 class NetatlanticList < ApplicationRecord
+  include Esp::ListMethods
+
   belongs_to :netatlantic_account
 
-  def full_name
-    return "#{netatlantic_account.account_name} - #{name}"
-  end
+  alias_attribute :account, :netatlantic_account
 
-  def id_with_type
-    "#{model_name.name}_#{self.id}"
+  private
+
+  def account_display_name
+    account.account_name
   end
 end

@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: git://github.com/bfoofoo/simple_spark.git
-  revision: 10f346ca971febd84de14b2e8476be7bfd25c328
+  revision: cb31f3b6db83440f43ce81aacb27383d53cc0857
   specs:
     simple_spark (1.0.7)
       excon (>= 0.16.0, < 1.0)

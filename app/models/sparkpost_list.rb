@@ -1,4 +1,4 @@
-class SpartkpostList
+class SparkpostList < ApplicationRecord
   include Esp::ListMethods
 
   belongs_to :sparkpost_account

@@ -37,6 +37,7 @@ ActiveAdmin.register ApiUser do
     column :sent_to_netatlantic?
     column :sent_to_mailgun?
     column :sent_to_onepoint?
+    column :sent_to_sparkpost?
     actions
   end
 
@@ -53,6 +54,7 @@ ActiveAdmin.register ApiUser do
       row :sent_to_netatlantic?
       row :sent_to_mailgun?
       row :sent_to_onepoint?
+      row :sent_to_sparkpost?
     end
     active_admin_comments
   end

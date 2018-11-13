@@ -13,7 +13,8 @@ module Esp
       ongage: 'OngageList',
       netatlantic: 'NetatlanticList',
       mailgun: 'MailgunList',
-      onepoint: 'OnepointList'
+      onepoint: 'OnepointList',
+      sparkpost: 'SparkpostList'
     }.freeze
 
     ESP_LIST_TYPES.each do |provider, type|
