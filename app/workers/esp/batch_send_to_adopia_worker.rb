@@ -1,0 +1,2 @@
+class BatchSendToAdopiaWorker
+end

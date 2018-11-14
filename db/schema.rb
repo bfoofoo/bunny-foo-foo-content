@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181109161025) do
+ActiveRecord::Schema.define(version: 20181114104632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -608,6 +608,17 @@ ActiveRecord::Schema.define(version: 20181109161025) do
     t.index ["ongage_account_id"], name: "index_ongage_lists_on_ongage_account_id", using: :btree
   end
 
+  create_table "pending_leads", force: :cascade do |t|
+    t.string   "source_type"
+    t.integer  "source_id"
+    t.string   "email"
+    t.string   "full_name"
+    t.string   "destination_name"
+    t.datetime "created_at"
+    t.datetime "sent_at"
+    t.index ["source_type", "source_id"], name: "index_pending_leads_on_source_type_and_source_id", using: :btree
+  end
+
   create_table "product_cards", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
@@ -635,6 +646,23 @@ ActiveRecord::Schema.define(version: 20181109161025) do
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_questions_on_leadgen_rev_site_id", using: :btree
+  end
+
+  create_table "sparkpost_accounts", force: :cascade do |t|
+    t.integer  "account_id"
+    t.string   "username"
+    t.string   "api_key",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sparkpost_lists", force: :cascade do |t|
+    t.integer  "sparkpost_account_id", null: false
+    t.string   "list_id",              null: false
+    t.string   "name"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.index ["sparkpost_account_id"], name: "index_sparkpost_lists_on_sparkpost_account_id", using: :btree
   end
 
   create_table "suppression_email_marketer_lists", force: :cascade do |t|
@@ -724,6 +752,7 @@ ActiveRecord::Schema.define(version: 20181109161025) do
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
   add_foreign_key "questions", "leadgen_rev_sites"
+  add_foreign_key "sparkpost_lists", "sparkpost_accounts"
   add_foreign_key "suppression_email_marketer_lists", "suppression_lists"
   add_foreign_key "website_ads", "ads"
   add_foreign_key "website_ads", "websites"
