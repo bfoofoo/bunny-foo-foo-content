@@ -15,7 +15,7 @@ module EmailMarketerService
         accounts.each do |account|
           client = client_for(account)
           account.lists.each do |list|
-            emails.each do |email|
+            data.each do |email|
               begin
                 client.add_list_contact(list.list_id, {
                     contact_email: email,
