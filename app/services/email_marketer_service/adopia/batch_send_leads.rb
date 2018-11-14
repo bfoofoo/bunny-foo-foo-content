@@ -3,8 +3,6 @@ module EmailMarketerService
     class BatchSendLeads
       attr_reader :data, :processed_emails
 
-      BATCH_SIZE = 50.freeze
-
       def initialize(data, account_name = nil, list_names = [])
         @clients = {}
         @data = data
@@ -16,16 +14,17 @@ module EmailMarketerService
       def call
         accounts.each do |account|
           client = client_for(account)
-          data.each_slice(BATCH_SIZE) do |slice|
-            begin
-              client.add_list_contacts(selected_list_ids(account), {
-                  contacts: build_contacts(slice),
-                  is_double_opt_in: 0
-              })
-              @processed_emails << slice
-              sleep 0.6 # to send maximum 100 per minute
-            rescue ::Adopia::Errors::Error => e
-              puts "Adopia adding subscriber error - #{e}".red
+          account.lists.each do |list|
+            emails.each do |email|
+              begin
+                client.add_list_contact(list.list_id, {
+                    contact_email: email,
+                    is_double_opt_in: 0
+                })
+                @processed_emails << email
+              rescue ::Adopia::Errors::Error => e
+                puts "Adopia adding subscriber error - #{e}".red
+              end
             end
           end
         end
