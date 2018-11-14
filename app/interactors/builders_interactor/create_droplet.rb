@@ -37,10 +37,13 @@ module BuildersInteractor
     end
 
     def save_droplet
-      if context.config[:type] == 'website'
+      case context.config[:type]
+      when 'website'
         Website.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
-      else
+      when 'formsite'
         Formsite.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
+      when 'leadgen_rev_site'
+        LeadgenRevSite.update(context.config[:website_id], droplet_id: context.droplet[:id], droplet_ip: context.droplet.networks[:v4][0][:ip_address])
       end
     end
 
