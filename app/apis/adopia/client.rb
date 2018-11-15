@@ -44,6 +44,14 @@ module Adopia
       end
     end
 
+    def delete_list_contact(list_id, email)
+      request = @request.get(self_path, { list_id: list_id, contact_email: email })
+      response = Response.new(request).parse
+      if response[:status] == 'error'
+        raise Errors::UnprocessableEntityError.new, response[:message]
+      end
+    end
+
     private
 
     # get camelcase version of (caller) method name
