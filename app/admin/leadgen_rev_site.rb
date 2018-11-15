@@ -205,7 +205,7 @@ ActiveAdmin.register LeadgenRevSite do
 
   action_item :setup, :only => :show do
     link_to setup_api_v1_leadgen_rev_site_path(leadgen_rev_site), class: 'button builder_action', "data-type" => "json", remote: true do
-      '<span>Setup Formsite</span> <span class="loader">
+      '<span>Setup Leadgen Rev Site</span> <span class="loader">
             <svg height="10px" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1">
               <path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#ffffff">
                 <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur=".5s" fill="freeze" repeatCount="indefinite"></animateTransform>
@@ -217,7 +217,7 @@ ActiveAdmin.register LeadgenRevSite do
 
   action_item :rebuild, :only => :show do
     link_to build_api_v1_leadgen_rev_site_path(leadgen_rev_site), class: 'button builder_action', "data-type" => "json", remote: true do
-      '<span>Rebuild Formsite</span> <span class="loader">
+      '<span>Rebuild Leadgen Rev Site</span> <span class="loader">
             <svg height="10px" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1">
               <path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#ffffff">
                 <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur=".5s" fill="freeze" repeatCount="indefinite"></animateTransform>

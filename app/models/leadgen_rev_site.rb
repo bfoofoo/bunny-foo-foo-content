@@ -51,7 +51,7 @@ class LeadgenRevSite < ApplicationRecord
   end
 
   def builder_config
-    return {
+    {
       id: self.id,
       name: self.name,
       description: self.description || '',
