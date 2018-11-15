@@ -3,7 +3,7 @@ module EmailMarketerService
     class SubscriptionService
       attr_reader :list, :params
 
-      def initialize(list, params: nil, esp_rule: nil)
+      def initialize(list, params: {}, esp_rule: nil)
         @list = list
         @params = params
         @esp_rule = esp_rule
@@ -12,8 +12,8 @@ module EmailMarketerService
       def add_recipient(user)
         begin
           if is_valid?(user)
-            client.recipient_lists.update(list.list_id, recipients: existing_recipients_for(list.list_id).concat([build_recipient(user)]))
-            handle_user_record(user)
+            response = client.recipient_lists.update(list.list_id, recipients: existing_recipients_for(list.list_id).concat([build_recipient(user)]))
+            handle_user_record(user) if response['total_rejected_recipients'] == 0
           end
         rescue SimpleSpark::Exceptions::Error => e
           puts "Sparkpost adding subscriber error - #{e}".red
@@ -36,9 +36,10 @@ module EmailMarketerService
 
       def existing_recipients_for(list_id)
         list = client.recipient_lists.retrieve(list_id, true)
-        list['recipients'].to_a
-      rescue
-        []
+        recipients = list['recipients'].to_a
+        recipients.map do |r|
+          r.except('return_path')
+        end
       end
 
       def client
@@ -57,7 +58,9 @@ module EmailMarketerService
                 email: user.email,
                 name: user_name
             },
-            tags: [params[:affiliate]]
+            metadata: {
+                affiliate: params[:affiliate]
+            }
         }
       end
     end
