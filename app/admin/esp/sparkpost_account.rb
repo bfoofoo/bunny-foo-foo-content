@@ -3,7 +3,7 @@ ActiveAdmin.register SparkpostAccount do
 
   config.filters = false
 
-  permit_params :api_key, :username
+  permit_params :api_key, :username, :account_id
 
   member_action :refresh_lists, method: :post do
     account = SparkpostAccount.find(params[:id])
@@ -13,6 +13,7 @@ ActiveAdmin.register SparkpostAccount do
 
   index do
     column :id
+    column :account_id
     column :username
     column :api_key
     column 'Lists count' do |account|
@@ -26,6 +27,7 @@ ActiveAdmin.register SparkpostAccount do
   show do
     attributes_table do
       row :id
+      row :account_id
       row :username
       row :api_key
       panel 'Lists' do
