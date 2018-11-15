@@ -34,18 +34,22 @@ module BuildersInteractor
 
     def save_zone(zone)
       puts "SAVE ZONE"
-      if context.config[:type] == 'website'
+      case context.config[:type]
+      when 'website'
         Website.update(context.config[:website_id], zone_id: zone.result[:id])
-      else
+      when 'formsite'
         Formsite.update(context.config[:website_id], zone_id: zone.result[:id])
+      else
+        LeadgenRevSite.update(context.config[:website_id], zone_id: zone.result[:id])
       end
     end
 
     def rollback
-      if context.config[:type] == 'website'
+      case context.config[:type]
+      when 'website'
         droplet_service = Deployer::DigitaloceanService.new('5dcf0ee555c762983947d203009857a81dddf9811bfe7007b6bb7287069d948f')
-      elsif context.config[:type] == 'formsite'
-        droplet_service = Deployer::DigitaloceanService.new('e354525de2bd3d834d48693171aba6bcd87cdf945f5aef95ab9652c4c9c4b445')
+      when 'formsite', 'leadgen_rev_site'
+        droplet_service = Deployer::DigitaloceanService.new('268a294762b6869a3a5a6f165675642055a81f14a38c9c6647276ae9b1463310')
       end
       droplet_service.delete_droplet({droplet_id: context.droplet[:id]})
     end
