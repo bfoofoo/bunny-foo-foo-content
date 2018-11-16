@@ -1,0 +1,81 @@
+<div class="tabs">
+  <ul role="tablist">
+    <li><%= link_to 'Api Clients', '#api-clients' %></li>
+    <li><%= link_to 'Leadgen Sites', '#leadgen' %></li>
+    <li><%= link_to 'Leadgen Rev Sites', '#leadgen-rev' %></li>
+  </ul>
+  <div class="tab-content">
+    <div id="api-clients">
+      <div>
+        <table class="index_table index">
+          <thead>
+            <tr>
+              <th>ESP</th>
+              <th>Account</th>
+              <th>List</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%- table_stats[:api_clients].each do |ac| %>
+            <tr>
+              <td><%= ac[:esp] %></td>
+              <td><%= ac[:account] %></td>
+              <td><%= ac[:list] %></td>
+              <td><%= ac[:name] %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="leadgen">
+      <div>
+        <table class="index_table index">
+          <thead>
+            <tr>
+              <th>ESP</th>
+              <th>Account</th>
+              <th>List</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%- table_stats[:leadgen].each do |ac| %>
+            <tr>
+              <td><%= ac[:esp] %></td>
+              <td><%= ac[:account] %></td>
+              <td><%= ac[:list] %></td>
+              <td><%= ac[:name] %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="leadgen-rev">
+      <div>
+        <table class="index_table index">
+          <thead>
+            <tr>
+              <th>ESP</th>
+              <th>Account</th>
+              <th>List</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%- table_stats[:leadgen_rev].each do |ac| %>
+            <tr>
+              <td><%= ac[:esp] %></td>
+              <td><%= ac[:account] %></td>
+              <td><%= ac[:list] %></td>
+              <td><%= ac[:name] %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
