@@ -1,38 +1,41 @@
 module EmailMarketerService
   module Netatlantic
     class BatchSendLeads < BaseService
-      attr_reader :emails, :processed_emails
+      attr_reader :data, :processed_emails
 
-      BATCH_SIZE = 300.freeze
+      BATCH_SIZE = 50.freeze
 
-      def initialize(emails, account_name = nil)
-        @emails = emails
-        @account_name = account_name
+      def initialize(data, *list_names)
+        @data = data
+        @list_names = list_names
         @processed_emails = []
       end
 
       def call
-        accounts.each do |account|
-          account.netatlantic_lists.each do |list|
-            emails.each_slice(BATCH_SIZE) do |slice|
-              add_members(slice, account, list)
-              @processed_emails << slice
-            end
+        selected_lists.each do |list|
+          data.each_slice(BATCH_SIZE) do |slice|
+            add_members(slice, list)
+            @processed_emails.concat(slice)
           end
         end
       end
 
       private
 
-      def accounts
-        query = NetatlanticAccount.all.includes(:netatlantic_lists)
-        query = query.where(account_name: @account_name) if @account_name
-        query
+      def selected_lists
+        return NetatlanticList.where(name: @list_names) unless @list_names.empty?
+        NetatlanticList.all
       end
 
-      def add_members(emails, account, list)
-        members = emails.map { |email| { 'EmailAddress' => email, 'FullName' => '' } }
-        HTTParty.post("#{API_PATH}/create_members.php", body: { members: members, account: account.account_name, list: list.name }.compact)
+      def add_members(data, list)
+        members = data.map do |item|
+          if item.is_a?(Hash)
+            { 'EmailAddress' => item[:email], 'FullName' => item[:full_name] }
+          else
+            { 'EmailAddress' => item, 'FullName' => '' }
+          end
+        end
+        HTTParty.post("#{API_PATH}/create_members.php", body: { members: members, account: list.account.account_name, list: list.name }.compact)
       end
     end
   end
