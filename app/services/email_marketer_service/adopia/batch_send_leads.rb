@@ -14,10 +14,10 @@ module EmailMarketerService
       def call
         accounts.each do |account|
           client = client_for(account)
-          selected_list_ids(account).each do |list|
+          selected_list_ids(account).each do |list_id|
             data.each do |email|
               begin
-                client.add_list_contact(list.list_id, {
+                client.add_list_contact(list_id, {
                     contact_email: email,
                     is_double_opt_in: 0
                 })

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181114104632) do
+ActiveRecord::Schema.define(version: 20181116122747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -616,6 +616,8 @@ ActiveRecord::Schema.define(version: 20181114104632) do
     t.string   "destination_name"
     t.datetime "created_at"
     t.datetime "sent_at"
+    t.integer  "user_id"
+    t.string   "destination_type"
     t.index ["source_type", "source_id"], name: "index_pending_leads_on_source_type_and_source_id", using: :btree
   end
 
