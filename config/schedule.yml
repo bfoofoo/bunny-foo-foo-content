@@ -39,6 +39,6 @@ batch_send_to_netatlantic:
   queue: leads
 
 batch_send_to_netatlantic:
-  cron: "0 * * * *"
+  cron: "*/30 * * * *"
   class: "Esp::BatchSendToAdopiaCasapiWorker"
   queue: leads
