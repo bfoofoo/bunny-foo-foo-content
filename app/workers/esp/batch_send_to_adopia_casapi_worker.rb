@@ -10,7 +10,6 @@ module Esp
       selected_leads = available_leads.where(destination_name: "resourcedepotupdates").limit(BATCH_SIZE).to_a
       mappings.each do |list_name, value|
         leads_to_send = selected_leads.select { |l|  is_impressionwise_test_success(l.email)}
-        leads_to_send = selected_leads
         next if leads_to_send.empty?
         send_data(leads_to_send, value["account_name"], list_name)
         mark_as_sent(leads_to_send)
