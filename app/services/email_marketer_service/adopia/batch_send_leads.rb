@@ -15,13 +15,13 @@ module EmailMarketerService
         accounts.each do |account|
           client = client_for(account)
           selected_list_ids(account).each do |list_id|
-            data.each do |email|
+            data.each do |item|
               begin
                 client.add_list_contact(list_id, {
-                    contact_email: email,
-                    is_double_opt_in: 0
+                    is_double_opt_in: 0,
+                    **build_contact(item)
                 })
-                @processed_emails << email
+                @processed_emails << item
               rescue ::Adopia::Errors::Error => e
                 puts "Adopia adding subscriber error - #{e}".red
               end
@@ -42,10 +42,8 @@ module EmailMarketerService
         @clients[account.id] ||= ::Adopia::Client.new(account.api_key)
       end
 
-      def build_contacts(slice)
-        slice.map do |item|
-          item.is_a?(Hash) ? item : { contact_email: item }
-        end
+      def build_contact(item)
+        item.is_a?(Hash) ? item : { contact_email: item }
       end
 
       def selected_list_ids(account)

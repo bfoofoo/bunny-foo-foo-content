@@ -38,7 +38,10 @@ module Esp
 
     def send_data(leads_to_send, account_name, list_name)
       data = leads_to_send.to_a.map do |lead|
-        lead.email
+        {
+          contact_email: lead.email,
+          Origin: 'OldDump'
+        }
       end
       EmailMarketerService::Adopia::BatchSendLeads.new(data, account_name, list_name).call
     end
