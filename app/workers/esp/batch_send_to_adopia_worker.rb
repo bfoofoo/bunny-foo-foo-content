@@ -7,9 +7,11 @@ module Esp
     def perform
       return if available_leads.empty?
       lists.each_with_index do |list, index|
-        result = send_data(chunked_leads[index], list.adopia_account.name, list.name)
-        mark_as_sent(chunked_leads[index])
-        logger.info("Sent #{leads_to_send.count} to '#{list_name}', successfully sent: #{result.processed_emails.count}")
+        return unless chunked_leads[index]
+        leads = chunked_leads[index].compact
+        result = send_data(leads, list.adopia_account.name, list.name)
+        mark_as_sent(leads)
+        logger.info("Sent #{leads.count} to '#{list.name}', successfully sent: #{result.processed_emails.count}")
       end
     end
 
@@ -24,15 +26,15 @@ module Esp
     end
 
     def leads_to_send
-      available_leads.limit(batch_size).to_a
+      @leads_to_send ||= available_leads.limit(batch_size).to_a
     end
 
     def chunked_leads
-      leads_to_send.in_groups_of(per_list)
+      @chunked_leads ||= leads_to_send.in_groups_of(per_list)
     end
 
-    def send_data(leads_to_send, account_name, list_name)
-      data = leads_to_send.to_a.map do |lead|
+    def send_data(leads, account_name, list_name)
+      data = leads.to_a.map do |lead|
         {
           contact_email: lead.email,
           contact_name: lead.full_name,
@@ -50,20 +52,16 @@ module Esp
     end
 
     def available_leads
-      old_dump_leads.order('id DESC').not_sent_to_adopia
-    end
-
-    def old_dump_leads
-      PendingLead.with_valid_referrers
+      PendingLead.with_valid_referrers.order('id DESC').not_sent_to_adopia
     end
 
     # Round a number of leads to send to fit lists count
     def batch_size
-      (TARGET_BATCH_SIZE.to_f / lists.count).ceil * lists.count
+      @batch_size ||= (TARGET_BATCH_SIZE.to_f / lists.count).ceil * lists.count
     end
 
     def per_list
-      batch_size / list.count
+      @per_list ||= batch_size / lists.count
     end
   end
 end
