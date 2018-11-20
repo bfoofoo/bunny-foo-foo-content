@@ -50,15 +50,11 @@ module Esp
     end
 
     def available_leads
-      old_dump_leads.order('RAND()').not_sent_to_adopia
+      old_dump_leads.order('id DESC').not_sent_to_adopia
     end
 
     def old_dump_leads
-      PendingLead.where(referrer: valid_referrers)
-    end
-
-    def valid_referrers
-      PendingLead.group_by(:referrer).having('COUNT(*) > 1000').pluck(:referrer)
+      PendingLead.with_valid_referrers
     end
 
     # Round a number of leads to send to fit lists count
