@@ -2,6 +2,7 @@ class Website < ApplicationRecord
   acts_as_paranoid
 
   has_and_belongs_to_many :categories
+  has_many :questions, dependent: :destroy
   has_many :articles, dependent: :restrict_with_error
   has_many :website_ads, dependent: :restrict_with_error
   has_many :ads, :through => :website_ads
@@ -19,6 +20,9 @@ class Website < ApplicationRecord
   accepts_nested_attributes_for :trackers, allow_destroy: true
   accepts_nested_attributes_for :advertisements, allow_destroy: true
   accepts_nested_attributes_for :product_cards, allow_destroy: true
+  accepts_nested_attributes_for :questions, allow_destroy: true
+
+  after_save :mark_last_question
 
 
   validates :name, presence: true
@@ -45,5 +49,11 @@ class Website < ApplicationRecord
       ads: self.ads,
       type: 'website'
     }
+  end
+
+  def mark_last_question
+    return if questions.empty?
+    questions.update_all(is_last: false)
+    questions.last.mark_as_last!
   end
 end
