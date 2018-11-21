@@ -2,7 +2,7 @@ ActiveAdmin.register Website do
   permit_params :name, :description, :url,
                 :droplet_id, :droplet_ip, :zone_id,
                 :repo_url, :ad_client, :shortname,
-                :favicon_image, :logo_image, :text_file,
+                :favicon_image, :logo_image, :text_file, :show_popup, :popup_delay, popup_iframe_urls: [],
                 product_card_ids: [],
                 product_cards_attributes: [:id, :title, :description, :image, :rate, :website_id, :_create, :_destroy],
                 ad_ids: [],
@@ -10,6 +10,10 @@ ActiveAdmin.register Website do
                 ads_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
                 trackers_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy],
                 advertisements_attributes: [:id, :variety, :position, :widget, :google_id, :innerHTML, :_create, :_destroy]
+
+  before_save do |website|
+    website.popup_iframe_urls.reject!(&:blank?)
+  end
 
   index do
     column :id
@@ -67,6 +71,14 @@ ActiveAdmin.register Website do
             positions: AD_POSITIONS & ["tracker"],
             types: AD_TYPES - ['google']
           )
+        end
+      end
+
+      tab 'Popup' do
+        f.inputs "Popups" do
+          f.input :show_popup
+          f.input :popup_delay
+          f.input :popup_iframe_urls, as: :array
         end
       end
     end

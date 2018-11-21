@@ -7,6 +7,7 @@ ActiveAdmin.register LeadgenRevSite do
                 :left_side_content, :right_side_content,
                 :first_question_code_snippet, :head_code_snippet,
                 :s1_description, :s2_description, :s3_description, :s4_description, :s5_description, :affiliate_description, :ad_client,
+                :show_popup, :popup_delay, popup_iframe_urls: [],
                 question_ids: [],
                 questions_attributes: [
                   :id, :text, :flow, :position, :_update, :_create, :_destroy,
@@ -197,6 +198,15 @@ ActiveAdmin.register LeadgenRevSite do
             ff.input :google_id, :label => 'Google ID'
             ff.input :innerHTML
           end
+        end
+        f.actions
+      end
+
+      tab 'POPUP' do
+        f.inputs "Popups" do
+          f.input :show_popup
+          f.input :popup_delay
+          f.input :popup_iframe_urls, as: :array
         end
         f.actions
       end

@@ -16,7 +16,7 @@ class LeadgenRevSiteSerializer < ActiveModel::Serializer
     %i(
        is_thankyou is_phone_number is_checkboxes droplet_id ad_client first_redirect_url
        final_redirect_url s1_description s2_description s3_description s4_description s5_description
-       form_box_title_text affiliate_description
+       form_box_title_text affiliate_description show_popup popup_delay popup_iframe_urls
       ).each_with_object({}) do |attr, memo|
       memo[attr] = object.send(attr)
     end

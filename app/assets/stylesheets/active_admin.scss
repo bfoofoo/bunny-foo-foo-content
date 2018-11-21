@@ -154,3 +154,23 @@ td.non-empty {
 //    display: none !important;
 //  }
 //}
+
+.input-group--array {
+  .input-group--array__item {
+    input {
+      width: 60%;
+
+      + button {
+        float: right;
+      }
+    }
+  }
+  .input-group--array__item + .input-group--array__item{
+    padding-left: 20%;
+    margin-top: 15px;
+
+    input {
+      width: 75%;
+    }
+  }
+}

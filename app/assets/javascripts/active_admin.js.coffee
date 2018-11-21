@@ -13,6 +13,7 @@
 #= require activeadmin/froala_editor/froala_editor.pkgd.min
 #= require activeadmin/froala_editor_input
 #= require highcharts-grouped-categories
+#= require admin/array_input
 
 $ ->
 
