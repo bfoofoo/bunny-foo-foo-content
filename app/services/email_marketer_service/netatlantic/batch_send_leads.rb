@@ -35,7 +35,7 @@ module EmailMarketerService
             { 'EmailAddress' => item, 'FullName' => '' }
           end
         end
-        HTTParty.post("#{API_PATH}/create_members.php", body: { members: members, account: list.account.account_name, list: list.name }.compact)
+        HTTParty.post("#{API_PATH}/create_members.php", body: { members: members.to_json, account: list.account.account_name, list: list.name }.compact)
       end
     end
   end
