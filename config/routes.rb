@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
-  devise_for :admin_users, ActiveAdmin::Devise.config
-  # ActiveAdmin.routes(self)
+  devise_for :admin_users
 
-  # root :to => redirect('/admin')
   resources :apidocs, only: [:index]
   get '/api' => redirect('/swagger/dist/index.html?url=/apidocs')
 

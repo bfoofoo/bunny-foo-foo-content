@@ -59,20 +59,8 @@ gem 'carrierwave'
 gem 'carrierwave-base64'
 gem 'mini_magick'
 gem "awesome_print", require: "ap"
-
-# ACTIVE ADMIN
-gem "highcharts-rails"
-gem 'activeadmin', '~> 1.0.0'
-gem 'activeadmin-dragonfly', github: 'stefanoverna/activeadmin-dragonfly'
-gem 'activeadmin-wysihtml5', github: 'stefanoverna/activeadmin-wysihtml5'
-gem 'activeadmin_froala_editor'
-gem 'metamagic'
-gem 'active_admin_theme'
-
-gem 'formtastic', '~> 3.0'
 gem 'devise'
-gem "active_admin-sortable_tree", "~> 1.0.0"
-
+gem 'formtastic', '~> 3.0'
 gem "audited", "~> 4.7"
 
 # Email marketing services
