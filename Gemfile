@@ -5,7 +5,6 @@ ruby "2.4.1"
 #   "https://github.com/#{repo_name}.git"
 # end
 
-
 gem 'rails', '~> 5.0.2'
 gem 'pg'
 gem 'active_model_serializers', '~> 0.10.0'
@@ -26,40 +25,30 @@ gem 'savon', '~> 2.12.0'
 gem 'rubyntlm'
 gem 'mailgun-ruby', '~> 1.1', '>= 1.1.11'
 
-
 # APIS
 gem 'cloudflare'
 gem 'droplet_kit'
 
-# gem 'puma', '~> 3.0'
 gem 'sass-rails', '~> 5.0'
-# gem 'uglifier', '>= 1.3.0'
-# gem 'uglifier', '>= 1.3.0', require: 'uglifier'
 gem 'uglifier', '~> 2.6.1'
 gem 'coffee-rails', '~> 4.2'
 gem 'normalize-rails', '~> 4.1.1'
-gem 'sweetalert-rails'
 gem 'yaml_db'
 gem 'kaminari'
-gem "jquery-slick-rails"
 gem 'autoprefixer-rails'
-gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem "flutie"
 gem 'rest-client', '~> 2.0', '>= 2.0.2'
-# gem 'redis', '~> 3.0'
-# gem 'bcrypt', '~> 3.1.7'
 gem 'json'
 gem 'bigdecimal'
-gem 'remodal-rails', '~> 1.1.1'
+
 #IMAGES
 gem 'carrierwave'
 gem 'carrierwave-base64'
 gem 'mini_magick'
 gem "awesome_print", require: "ap"
 gem 'devise'
-gem 'formtastic', '~> 3.0'
 gem "audited", "~> 4.7"
 
 # Email marketing services
