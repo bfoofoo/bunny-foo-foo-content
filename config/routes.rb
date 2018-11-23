@@ -14,12 +14,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :suppression_lists, only: [:index] do
-    collection do
-      get '/download', to: 'suppression_lists#download'
-    end
-  end
-
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
 
