@@ -18,29 +18,29 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       resources :websites, only: [:index, :show] do
-        collection do
-          get ':id/setup', to: 'websites#setup', as: 'setup'
-          get ':id/build', to: 'websites#build', as: 'build'
-          get ':id/rebuild_old', to: 'websites#rebuild_old', as: 'rebuild_old'
-          get ':id/config', to: 'websites#get_config', as: 'get_config'
-          get ':id/categories', to: 'websites#get_categories'
-          get ':id/product_cards', to: 'websites#get_product_cards'
-          get ':id/categories/:category_id', to: 'websites#get_category_with_articles'
-          get ':id/articles', to: 'websites#get_articles'
-          get ':id/product_cards', to: 'websites#get_product_cards'
-          get ':id/articles/:article_id', to: 'websites#get_category_article'
+        member do
+          get 'setup'
+          get 'build'
+          get 'rebuild_old'
+          get 'config', to: 'websites#get_config', as: 'get_config'
+          get 'categories', to: 'websites#get_categories'
+          get 'product_cards', to: 'websites#get_product_cards'
+          get 'categories/:category_id', to: 'websites#get_category_with_articles'
+          get 'articles', to: 'websites#get_articles'
+          get 'product_cards', to: 'websites#get_product_cards'
+          get 'articles/:article_id', to: 'websites#get_category_article'
         end
       end
 
       resources :formsites, only: [:index, :show] do
-        collection do
-          post ':id/add_user', to: 'formsites#add_formsite_user', as: 'add_user'
-          post ':id/unsubscribe_user', to: 'formsites#unsubscribe_user', as: 'unsubscribe_user'
-          get ':id/setup', to: 'formsites#setup', as: 'setup'
-          get ':id/build', to: 'formsites#build', as: 'build'
+        member do
+          post 'add_user', to: 'formsites#add_formsite_user', as: 'add_user'
+          post 'unsubscribe_user'
+          get 'setup'
+          get 'build'
 
-          get ':id/questions', to: 'formsites#get_formsite_questions'
-          get ':id/questions_by_position/:position', to: 'formsites#get_formsite_question'
+          get 'questions', to: 'formsites#get_formsite_questions'
+          get 'questions_by_position/:position', to: 'formsites#get_formsite_question'
 
         end
         resources :questions, only: [:index] do
@@ -53,10 +53,10 @@ Rails.application.routes.draw do
       resources :leadgen_rev_sites, only: [:index, :show] do
         member do
           post 'add_user', to: 'leadgen_rev_sites#add_leadgen_rev_site_user', as: 'add_user'
-          post 'unsubscribe_user', to: 'leadgen_rev_sites#unsubscribe_user', as: 'unsubscribe_user'
-          get 'setup', to: 'leadgen_rev_sites#setup', as: 'setup'
-          get 'build', to: 'leadgen_rev_sites#build', as: 'build'
-          get 'rebuild_old', to: 'leadgen_rev_sites#rebuild_old', as: 'rebuild_old'
+          post 'unsubscribe_user'
+          get 'setup'
+          get 'build'
+          get 'rebuild_old'
           get 'config', to: 'leadgen_rev_sites#get_config', as: 'get_config'
           get 'categories', to: 'leadgen_rev_sites#get_categories'
           get 'question_by_position', to: 'leadgen_rev_sites#get_question_by_position'

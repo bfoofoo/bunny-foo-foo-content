@@ -11,7 +11,7 @@ RSpec.describe 'Formsites API', type: :request do
     context "openposition formsite" do
       context "verified formsite user" do
         let(:post_params) {{user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev"}}}
-        before { post add_user_api_v1_formsites_path(openposition), params: post_params }
+        before { post add_user_api_v1_formsite_path(openposition), params: post_params }
 
         it_behaves_like "Add formsite user success request"     
 
@@ -26,7 +26,7 @@ RSpec.describe 'Formsites API', type: :request do
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
 
-          post add_user_api_v1_formsites_path(openposition), params: post_params
+          post add_user_api_v1_formsite_path(openposition), params: post_params
 
           expect(json["is_verified"]).to eq(true)
           expect(json["formsite_user"]["is_duplicate"]).to eq(true)
@@ -39,13 +39,13 @@ RSpec.describe 'Formsites API', type: :request do
 
       context "not verified formsite_user" do
         let(:post_params) {{user: {email: "test@test.test", first_name: "test", last_name: "test"}}}
-        before { post add_user_api_v1_formsites_path(formsite1), params: post_params }
+        before { post add_user_api_v1_formsite_path(formsite1), params: post_params }
 
         it_behaves_like "Add formsite user success request"
 
         it "creates not verified formsite_user with user" do
           post_params = {user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
           expect(json["formsite_user"]["is_verified"]).to eq(false)
         end
 
@@ -59,7 +59,7 @@ RSpec.describe 'Formsites API', type: :request do
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
 
           post_params = {user: {email: "test1@test.test", first_name: "test1", last_name: "test1"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
 
           expect(json["formsite_user"]["is_duplicate"]).to eq(true)
           expect(json["formsite_user"]["is_email_duplicate"]).to eq(false)
@@ -68,7 +68,7 @@ RSpec.describe 'Formsites API', type: :request do
         it "creates email duplicate" do
           headers = { "REMOTE_ADDR" => "1.2.3.4" }
           post_params = {user: {email: "test@test.test", first_name: "test", last_name: "test"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params, headers: headers
+          post add_user_api_v1_formsite_path(formsite1), params: post_params, headers: headers
 
           expect(json["is_verified"]).to eq(false)
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
@@ -76,7 +76,7 @@ RSpec.describe 'Formsites API', type: :request do
         end
 
         it "not creates duplicates for different formsites" do
-          post add_user_api_v1_formsites_path(formsite2), params: post_params
+          post add_user_api_v1_formsite_path(formsite2), params: post_params
 
           expect(json["is_verified"]).to eq(false)
           expect(json["formsite_user"]["is_duplicate"]).to eq(false)
@@ -92,7 +92,7 @@ RSpec.describe 'Formsites API', type: :request do
             s1: "s1", s2: "s2", s3: "s3", s4: "s4", s5: "s5",
             key: "key", phone: "phone", zip: "zip", birthday: "2018-10-09T15:47:15.000-05:00"
           }}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
           formsite_user = json["formsite_user"]
 
           expect(json["user"]["email"]).to eq(post_params[:user][:email])
@@ -115,7 +115,7 @@ RSpec.describe 'Formsites API', type: :request do
       context "empty formsite user" do
         it "creates empty formsite user" do
           post_params = {"user":{"first_name":"","last_name":"","email":"","ndm_token":"taTcWeU0TRSwbZYSgIpGn3ny","a":"openposition"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
 
           expect(json["user"]).to eq(nil)
           expect(json["is_verified"]).to eq(false)
@@ -128,11 +128,11 @@ RSpec.describe 'Formsites API', type: :request do
 
         it "do not create empty user with the same IP" do
           post_params = {"user":{"first_name":"","last_name":"","email":"","ndm_token":"taTcWeU0TRSwbZYSgIpGn3ny","a":"openposition"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
           
           formsite_user = json["formsite_user"]
           
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
           
           formsite_user1 = json["formsite_user"]
 
@@ -142,7 +142,7 @@ RSpec.describe 'Formsites API', type: :request do
         it "creates empty formsite user with affiliates" do
           post_params = {"user":{"first_name":"","last_name":"","email":"","ndm_token":"taTcWeU0TRSwbZYSgIpGn3ny","a":"openposition", "s1": "s1", "s2": "s2", "s3": "s3", "s4": "s4", "s5": "s5", "key": "job_key"}}
           
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
 
           formsite_user = json["formsite_user"]
 
@@ -158,7 +158,7 @@ RSpec.describe 'Formsites API', type: :request do
 
       context "verified formsite user" do
         let(:post_params) {{user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev"}}}
-        before { post add_user_api_v1_formsites_path(formsite1), params: post_params }
+        before { post add_user_api_v1_formsite_path(formsite1), params: post_params }
 
         it_behaves_like "Add formsite user success request"     
 
@@ -171,7 +171,7 @@ RSpec.describe 'Formsites API', type: :request do
         it "creates ip duplicate" do
           formsite_user = json["formsite_user"]
           post_params = {user: {email: "denissalaev1@gmail.com", first_name: "Denis", last_name: "Salaev"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
           formsite_user1 = json["formsite_user"]
 
           expect(json["is_verified"]).to eq(false)
@@ -181,7 +181,7 @@ RSpec.describe 'Formsites API', type: :request do
 
         it "getting IP from post params" do
           post_params = {user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev", ip: "192.168.0.1"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
           formsite_user = json["formsite_user"]
 
           expect(formsite_user["ip"]).to eq(post_params[:user][:ip])
@@ -191,7 +191,7 @@ RSpec.describe 'Formsites API', type: :request do
           headers = { "REMOTE_ADDR" => "1.2.3.4" }
 
           formsite_user = json["formsite_user"]
-          post add_user_api_v1_formsites_path(formsite1), params: post_params, headers: headers
+          post add_user_api_v1_formsite_path(formsite1), params: post_params, headers: headers
           formsite_user1 = json["formsite_user"]
 
           # TODO: Check this behaviour
@@ -206,17 +206,17 @@ RSpec.describe 'Formsites API', type: :request do
       context "empty user" do
         it "fill empty user by IP" do
           post_params = {"user":{"first_name":"","last_name":"","email":"","ndm_token":"taTcWeU0TRSwbZYSgIpGn3ny","a":"openposition", "s1": "s1", "s2": "s2", "s3": "s3", "s4": "s4", "s5": "s5", "key": "job_key"}}
-          post add_user_api_v1_formsites_path(formsite1), params: post_params
+          post add_user_api_v1_formsite_path(formsite1), params: post_params
           formsite_user = json["formsite_user"]
 
           filled_params = {user: {email: "denissalaev@gmail.com", first_name: "Denis", last_name: "Salaev"}}
-          post add_user_api_v1_formsites_path(formsite1), params: filled_params
+          post add_user_api_v1_formsite_path(formsite1), params: filled_params
           formsite_user1 = json["formsite_user"]
 
           expect(formsite_user["id"]).to eq(formsite_user1["id"])
 
           filled_params = {user: {email: "denissalaev1@gmail.com", first_name: "Denis", last_name: "Salaev"}}
-          post add_user_api_v1_formsites_path(formsite1), params: filled_params
+          post add_user_api_v1_formsite_path(formsite1), params: filled_params
           formsite_user2 = json["formsite_user"]
           expect(formsite_user["id"]).not_to eq(formsite_user2["id"])
         end
