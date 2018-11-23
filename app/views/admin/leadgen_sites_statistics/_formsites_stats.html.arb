@@ -1,2 +1,0 @@
-# render 'formsites', chart_data: chart_data
-render 'formsites_table', formsites_statistics: formsites_statistics
