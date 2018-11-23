@@ -1,5 +1,4 @@
 class LeadgenRevSite < ApplicationRecord
-  OPENPOSITION_NAME = "openposition.us"
   acts_as_paranoid
 
   has_and_belongs_to_many :categories

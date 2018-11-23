@@ -57,11 +57,7 @@ module LeadgenRevSiteInteractor
         if !user.blank? && user.email == LeadgenRevSiteUser::TEST_USER_EMAIL
           create_test_user
         else
-          if leadgen_rev_site && leadgen_rev_site.name == LeadgenRevSite::OPENPOSITION_NAME && !user.blank?
-            handle_openposition_leadgen_rev_site
-          else
-            handle_leadgen_rev_site_user_creation
-          end
+          handle_leadgen_rev_site_user_creation
         end
       end
 
@@ -107,32 +103,6 @@ module LeadgenRevSiteInteractor
             })
             context.leadgen_rev_site_user = leadgen_rev_site.leadgen_rev_site_users.create(attributes)
           end
-        end
-      end
-
-      def handle_openposition_leadgen_rev_site
-        is_verified = is_useragent_valid && is_impressionwise_test_success
-        is_verified = is_verified && !params[:user][:first_name].blank? && !params[:user][:last_name].blank?
-
-        attributes = leadgen_rev_site_user_params
-                .merge(leadgen_rev_site_user_dynamic_params)
-                .merge({
-                  ip: user_ip,
-                  user_id: user.id,
-                  is_verified: is_verified
-                })
-
-        if !params[:user][:key].blank?
-          leadgen_rev_site_user = leadgen_rev_site.leadgen_rev_site_users.find_by(ip: user_ip, job_key: params[:user][:key])
-        else
-          leadgen_rev_site_user = leadgen_rev_site.leadgen_rev_site_users.find_by(ip: user_ip, user_id: nil)
-        end
-
-        if leadgen_rev_site_user && leadgen_rev_site_user.persisted?
-          leadgen_rev_site_user.update(attributes)
-          context.leadgen_rev_site_user = leadgen_rev_site_user
-        else
-          context.leadgen_rev_site_user = leadgen_rev_site.leadgen_rev_site_users.create(attributes)
         end
       end
 
