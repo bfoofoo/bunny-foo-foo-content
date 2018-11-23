@@ -11,17 +11,6 @@ append :linked_files, "config/database.yml", "config/secrets.yml"
 # TODO remove 'tmp/leads' after all leads are sent
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", "public/system", "public/uploads", "public/swagger", "tmp/leads"
 
-namespace :bower do
-  desc 'Install bower'
-  task :install do
-    on roles(:web) do
-      within release_path do
-        execute :rake, 'bower:install CI=true'
-      end
-    end
-  end
-end
-
 namespace :rails do
   desc "Run the console on a remote server."
   task :logs do
@@ -36,5 +25,3 @@ namespace :rails do
     exec cmd
   end
 end
-
-before 'deploy:compile_assets', 'bower:install'
