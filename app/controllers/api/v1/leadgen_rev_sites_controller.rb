@@ -70,10 +70,10 @@ class Api::V1::LeadgenRevSitesController < ApiController
     })
 
     if leadgen_rev_site_interactor.api_response[:is_verified]
-      leadgen_rev_site::AddNewUserToEspUseCase.new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user).perform
+      LeadgenRevSite::AddNewUserToEspUseCase.new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user).perform
     end
 
-    render json: leadgen_rev_site_interactor.api_response
+    render json: @leadgen_rev_site_interactor.api_response
   end
 
   def unsubscribe_user
