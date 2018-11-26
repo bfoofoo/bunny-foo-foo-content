@@ -8,7 +8,9 @@ module Esp
       return if available_leads.empty?
       selected_leads = available_leads.where(destination_name: all_api_clients + all_formsites).limit(BATCH_SIZE).to_a
       mappings.each do |list_name, value|
-        leads_to_send = selected_leads.select { |l| l.destination_name.in?(value['api_clients'].to_a + value['formsites'].to_a) }
+        leads_to_send = selected_leads
+                          .select { |l| l.destination_name.in?(value['api_clients'].to_a + value['formsites'].to_a) }
+                          .select { |l| is_impressionwise_test_success(l.email) }
         next if leads_to_send.empty?
         send_data(leads_to_send, list_name)
         save_to_exported(leads_to_send, list_name)
@@ -52,6 +54,14 @@ module Esp
 
     def all_formsites
       mappings.map { |_, v| v['formsites'] }.flatten.compact
+    end
+
+    def formsite_service
+      @formsite_service ||= FormsiteService.new
+    end
+
+    def is_impressionwise_test_success(email)
+      formsite_service.is_impressionwise_test_success({email: email})
     end
 
     def send_data(leads_to_send, list_name)

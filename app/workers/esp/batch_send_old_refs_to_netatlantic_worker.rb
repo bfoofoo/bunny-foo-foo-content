@@ -7,16 +7,25 @@ module Esp
     def perform
       return if available_leads.empty?
       mappings.each do |referrer, list_name|
-        leads = referrer_leads(referrer)
-        result = send_data(leads, list_name)
+        leads = referrer_leads(referrer).select { |l| is_impressionwise_test_success(l.email) }
+        send_data(leads, list_name)
         mark_as_sent(leads)
         logger.info("Sent #{leads.count} to '#{list_name}', successfully sent: #{leads.count}")
       end
     end
 
     private
-    def referrer_leads referrer
-      return leads_to_send.where(referrer: referrer)
+
+    def referrer_leads(referrer)
+      leads_to_send.where(referrer: referrer)
+    end
+
+    def formsite_service
+      @formsite_service ||= FormsiteService.new
+    end
+
+    def is_impressionwise_test_success(email)
+      formsite_service.is_impressionwise_test_success({email: email})
     end
 
     def mappings
