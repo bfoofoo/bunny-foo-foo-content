@@ -2,7 +2,7 @@ module Esp
   class BatchSendToAdopiaWorker
     include Sidekiq::Worker
 
-    TARGET_BATCH_SIZE = 2000.freeze
+    TARGET_BATCH_SIZE = 15000.freeze
 
     def perform
       return if available_leads.empty?
