@@ -3,18 +3,17 @@ module EmailMarketerService
     class SendMessage
       attr_reader :account
 
-      def initialize(list:, mail:, account:)
+      def initialize(list:, mail:)
         @list = list
         @mail = mail
-        @account = account
       end
 
       def call
         params = {
-          from: "#{@mail[:author].downcase}@#{domain}",
+          from: "#{@mail.author.downcase}@#{domain}",
           to: @list.address,
-          subject: @mail[:subject],
-          html: @mail[:html]
+          subject: @mail.subject,
+          html: @mail.body
         }
         client.post("/#{domain}/messages", params)
       end
@@ -27,7 +26,7 @@ module EmailMarketerService
 
       def client
         return @client if defined?(@client)
-        @client = ::Mailgun::Client.new(account.api_key)
+        @client = ::Mailgun::Client.new(@list.account.api_key)
       end
     end
   end
