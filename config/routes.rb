@@ -18,8 +18,11 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       resources :websites, only: [:index, :show] do
-<<<<<<< HEAD
         member do
+          post 'add_user', to: 'websites#add_formsite_user', as: 'add_user'
+          post 'unsubscribe_user', to: 'websites#unsubscribe_user', as: 'unsubscribe_user'
+          get 'questions', to: 'websites#get_website_questions'
+          get 'questions_by_position/:position', to: 'websites#get_website_question'
           get 'setup'
           get 'build'
           get 'rebuild_old'
@@ -30,23 +33,6 @@ Rails.application.routes.draw do
           get 'articles', to: 'websites#get_articles'
           get 'product_cards', to: 'websites#get_product_cards'
           get 'articles/:article_id', to: 'websites#get_category_article'
-=======
-        collection do
-          post ':id/add_user', to: 'websites#add_formsite_user', as: 'add_user'
-          post ':id/unsubscribe_user', to: 'websites#unsubscribe_user', as: 'unsubscribe_user'
-          get ':id/questions', to: 'websites#get_website_questions'
-          get ':id/questions_by_position/:position', to: 'websites#get_website_question'
-          get ':id/setup', to: 'websites#setup', as: 'setup'
-          get ':id/build', to: 'websites#build', as: 'build'
-          get ':id/rebuild_old', to: 'websites#rebuild_old', as: 'rebuild_old'
-          get ':id/config', to: 'websites#get_config', as: 'get_config'
-          get ':id/categories', to: 'websites#get_categories'
-          get ':id/product_cards', to: 'websites#get_product_cards'
-          get ':id/categories/:category_id', to: 'websites#get_category_with_articles'
-          get ':id/articles', to: 'websites#get_articles'
-          get ':id/product_cards', to: 'websites#get_product_cards'
-          get ':id/articles/:article_id', to: 'websites#get_category_article'
->>>>>>> Add Questions to Websites;
         end
         resources :questions, only: [:index] do
           member do

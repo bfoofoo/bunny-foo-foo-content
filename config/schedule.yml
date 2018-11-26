@@ -13,6 +13,11 @@ send_leadgen_rev_site_users_to_esp:
   class: "LeadgenRevSiteUsers::SendToEspWorker"
   queue: default
 
+send_website_users_to_esp:
+  cron: "0 * * * *"
+  class: "WebsiteUsers::SendToEspWorker"
+  queue: default
+
 aweber_migrate_subscribers:
   cron: "0 0 * * *"
   class: "Aweber::MigrateSubscribersWorker"

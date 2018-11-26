@@ -11,8 +11,18 @@ class Website < ApplicationRecord
   has_many :trackers, -> { trackers } , :through => :website_ads, source: :ad
 
   has_many :formsite_users, dependent: :restrict_with_error, foreign_key: :website_id
+  has_many :users, through: :formsite_users do
+    def verified
+      where("formsite_users.is_verified= ?", true)
+    end
+
+    def unverified
+      where("formsite_users.is_verified= ?", false)
+    end
+  end
 
   has_many :product_cards, dependent: :destroy
+  has_many :esp_rules, as: :source, class_name: 'EspRules::Website'
 
   accepts_nested_attributes_for :categories, allow_destroy: true
   accepts_nested_attributes_for :website_ads, allow_destroy: true
@@ -21,11 +31,15 @@ class Website < ApplicationRecord
   accepts_nested_attributes_for :advertisements, allow_destroy: true
   accepts_nested_attributes_for :product_cards, allow_destroy: true
   accepts_nested_attributes_for :questions, allow_destroy: true
+  accepts_nested_attributes_for :formsite_users, allow_destroy: true
+  accepts_nested_attributes_for :esp_rules, allow_destroy: true
+
 
   after_save :mark_last_question
 
 
   validates :name, presence: true
+  validates_associated :esp_rules
 
   mount_uploader :favicon_image, CommonUploader
   mount_uploader :logo_image, CommonUploader
