@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181121120638) do
+ActiveRecord::Schema.define(version: 20181121163600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,9 +189,8 @@ ActiveRecord::Schema.define(version: 20181121120638) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -545,6 +544,16 @@ ActiveRecord::Schema.define(version: 20181121120638) do
     t.index ["mailgun_account_id"], name: "index_mailgun_lists_on_mailgun_account_id", using: :btree
   end
 
+  create_table "mailgun_templates", force: :cascade do |t|
+    t.integer  "mailgun_list_id"
+    t.string   "author"
+    t.string   "subject"
+    t.text     "body"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["mailgun_list_id"], name: "index_mailgun_templates_on_mailgun_list_id", using: :btree
+  end
+
   create_table "maropost_accounts", force: :cascade do |t|
     t.integer  "account_id", null: false
     t.text     "auth_token", null: false
@@ -760,6 +769,7 @@ ActiveRecord::Schema.define(version: 20181121120638) do
   add_foreign_key "leadgen_rev_site_users", "users"
   add_foreign_key "leads", "users"
   add_foreign_key "mailgun_lists", "mailgun_accounts"
+  add_foreign_key "mailgun_templates", "mailgun_lists"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "onepoint_lists", "onepoint_accounts"
   add_foreign_key "ongage_lists", "ongage_accounts"

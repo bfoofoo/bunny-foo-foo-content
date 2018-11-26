@@ -42,3 +42,8 @@ batch_send_to_netatlantic:
   cron: "*/10 * * * *"
   class: "Esp::BatchSendToNetatlanticWorker"
   queue: leads
+
+send_emails_to_mailgun:
+  cron: "0 10,13 * * *"
+  class: "Esp::SendEmailsToMailgunWorker"
+  queue: default
