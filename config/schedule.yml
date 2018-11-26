@@ -34,7 +34,7 @@ batch_send_to_adopia:
   queue: leads
 
 batch_old_send_to_netatlantic:
-  cron: "0 * * * *"
+  cron: "0 10,15,20 * * *"
   class: "Esp::BatchSendOldRefsToNetatlanticWorker"
   queue: leads
 
