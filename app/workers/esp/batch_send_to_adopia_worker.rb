@@ -8,7 +8,8 @@ module Esp
       return if available_leads.empty?
       lists.each_with_index do |list, index|
         return unless chunked_leads[index]
-        leads = chunked_leads[index].compact
+        leads = chunked_leads[index].compact.select { |l| is_impressionwise_test_success(l.email) }
+        next if leads.empty?
         result = send_data(leads, list.adopia_account.name, list.name)
         mark_as_sent(leads)
         logger.info("Sent #{leads.count} to '#{list.name}', successfully sent: #{result.processed_emails.count}")
@@ -24,6 +25,15 @@ module Esp
     def excluded_accounts
       %w(resource applyforjobsdirect)
     end
+
+    def formsite_service
+      @formsite_service ||= FormsiteService.new
+    end
+
+    def is_impressionwise_test_success(email)
+      formsite_service.is_impressionwise_test_success({email: email})
+    end
+
 
     def leads_to_send
       @leads_to_send ||= available_leads.limit(batch_size).to_a
