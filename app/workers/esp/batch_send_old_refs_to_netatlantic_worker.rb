@@ -17,7 +17,7 @@ module Esp
     private
 
     def referrer_leads(referrer)
-      leads_to_send.where(referrer: referrer)
+      leads_to_send.select { |l| l.referrer == referrer }
     end
 
     def formsite_service
@@ -30,13 +30,29 @@ module Esp
 
     def mappings
       {
-        "resourcedepot.co" => "resourcedepot",
-        "resourcedepot.info" => "resourcedepot",
-        "www.resourcedepot.info" => "resourcedepot",
+        'homeresourcedepot.com' => 'resourcedepot',
+        'myresourcedepot.com' => 'resourcedepot',
+        'resourcedepotapp.com' => 'resourcedepot',
+        'resourcedepotart.com' => 'resourcedepot',
+        'resourcedepot.info' => 'resourcedepot',
+        'resourcedepotstudio.com' => 'resourcedepot',
+        'resourcedepotweb.com' => 'resourcedepot',
+        'resourcedepot.co' => 'resourcedepot',
+        'www.resourcedepot.info' => 'resourcedepot',
         "openposition.co" => "DD daily",
         "openposition.net" => "DD daily",
+        "open-positions.net" => "DD daily",
         "applyforjobs.us" => "typesofaid",
         "applyforlocaljobs.net" => "typesofaid",
+        "apply-for-jobs.com" => "typesofaid",
+        "governmentgrants.info" => "typesofaid",
+        "www.apply-for-jobs.com" => "typesofaid",
+        "www.applyforjobs.us" => "typesofaid",
+        "applyforbenefits.net" => "typesofaid",
+        "applyforgrants.net" => "typesofaid",
+        "grantresources.org" => "typesofaid",
+        "housinggrantinfo.com" => "typesofaid",
+        "findunclaimedmoney.net" => "typesofaid"
       }
     end
 
@@ -45,7 +61,7 @@ module Esp
     end
 
     def leads_to_send
-      @leads_to_send ||= available_leads.limit(TARGET_BATCH_SIZE)
+      @leads_to_send ||= available_leads.limit(TARGET_BATCH_SIZE).to_a
     end
 
     def send_data(leads, list_name)    
@@ -64,7 +80,7 @@ module Esp
     end
 
     def available_leads
-      PendingLead.with_valid_referrers.order('id DESC').not_sent_to_netatlantic
+      PendingLead.where(referrer: mappings.keys).order('id DESC').not_sent_to_netatlantic
     end
   end
 end
