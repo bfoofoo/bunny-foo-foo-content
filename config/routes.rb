@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   resources :apidocs, only: [:index]
   get '/api' => redirect('/swagger/dist/index.html?url=/apidocs')
+  mount HealthMonitor::Engine, at: '/'
 
   authenticate :admin_user do
     mount Sidekiq::Web, at: '/sidekiq'

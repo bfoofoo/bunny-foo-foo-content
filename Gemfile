@@ -42,6 +42,7 @@ gem "flutie"
 gem 'rest-client', '~> 2.0', '>= 2.0.2'
 gem 'json'
 gem 'bigdecimal'
+gem 'health-monitor-rails'
 
 #IMAGES
 gem 'carrierwave'
