@@ -29,12 +29,12 @@ suppression_lists_autoremove_from_esp:
   queue: default
 
 batch_send_to_adopia:
-  cron: "0 * * * *"
+  cron: "0 */2 * * *"
   class: "Esp::BatchSendToAdopiaWorker"
   queue: leads
 
 batch_old_send_to_netatlantic:
-  cron: "0 * * * *"
+  cron: "0 */2 * * *"
   class: "Esp::BatchSendOldRefsToNetatlanticWorker"
   queue: leads
 
