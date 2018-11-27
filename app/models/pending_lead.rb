@@ -1,4 +1,6 @@
 class PendingLead < ApplicationRecord
+  acts_as_paranoid
+
   PROVIDERS = %w(netatlantic adopia).freeze
   VALID_REFERRERS = %w(applyforjobs.us applyforlocaljobs.net athomeworkfinder.com benefitsguide.co creditscout.com familybenefitsnetwork.co
                        familysupportnet.com fileforunemployment.net fileforunemployment.us findfamilysupport.com findgovernmentjobs.co
