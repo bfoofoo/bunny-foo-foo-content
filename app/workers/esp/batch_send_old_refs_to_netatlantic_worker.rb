@@ -7,7 +7,13 @@ module Esp
     def perform
       return if available_leads.empty?
       mappings.each do |referrer, list_name|
-        leads = referrer_leads(referrer).select { |l| is_impressionwise_test_success(l.email) }
+        leads = referrer_leads(referrer)
+        leads.select! do |l|
+          result = is_impressionwise_test_success(l.email)
+          l.destroy unless result
+          result
+        end
+        next if leads.empty?
         send_data(leads, list_name)
         mark_as_sent(leads)
         logger.info("Sent #{leads.count} to '#{list_name}', successfully sent: #{leads.count}")

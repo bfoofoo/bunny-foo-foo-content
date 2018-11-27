@@ -8,7 +8,12 @@ module Esp
       return if available_leads.empty?
       lists.each_with_index do |list, index|
         return unless chunked_leads[index]
-        leads = chunked_leads[index].compact.select { |l| is_impressionwise_test_success(l.email) }
+        leads = chunked_leads[index].compact
+        leads.select! do |l|
+          result = is_impressionwise_test_success(l.email)
+          l.destroy unless result
+          result
+        end
         next if leads.empty?
         result = send_data(leads, list.adopia_account.name, list.name)
         mark_as_sent(leads)
