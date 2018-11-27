@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181121163600) do
+ActiveRecord::Schema.define(version: 20181127152058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -633,6 +633,8 @@ ActiveRecord::Schema.define(version: 20181121163600) do
     t.text     "referrer"
     t.boolean  "sent_to_adopia",      default: false
     t.boolean  "sent_to_netatlantic", default: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_pending_leads_on_deleted_at", using: :btree
     t.index ["destination_type"], name: "index_pending_leads_on_destination_type", using: :btree
     t.index ["referrer"], name: "index_pending_leads_on_referrer", using: :btree
     t.index ["sent_to_adopia"], name: "index_pending_leads_on_sent_to_adopia", using: :btree
