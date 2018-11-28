@@ -43,7 +43,10 @@ gem 'rest-client', '~> 2.0', '>= 2.0.2'
 gem 'json'
 gem 'bigdecimal'
 gem 'health-monitor-rails'
+
+# Webhooks
 gem 'discord-notifier'
+gem "slack-notifier"
 
 #IMAGES
 gem 'carrierwave'

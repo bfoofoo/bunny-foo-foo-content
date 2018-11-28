@@ -425,6 +425,7 @@ GEM
       sidekiq (>= 4.2.1)
     simple_enum (2.3.2)
       activesupport (>= 4.0.0)
+    slack-notifier (2.3.2)
     slop (3.6.0)
     socksify (1.7.1)
     spring (2.0.2)
@@ -559,6 +560,7 @@ DEPENDENCIES
   sidekiq-cron (~> 1.0, >= 1.0.4)
   simple_enum
   simple_spark!
+  slack-notifier
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
