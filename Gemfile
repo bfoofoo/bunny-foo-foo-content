@@ -42,7 +42,12 @@ gem "flutie"
 gem 'rest-client', '~> 2.0', '>= 2.0.2'
 gem 'json'
 gem 'bigdecimal'
-gem 'health-monitor-rails'
+gem 'health-monitor-rails', github: 'bfoofoo/health-monitor-rails'
+
+# Webhooks
+gem 'discord-notifier'
+gem "slack-notifier"
+gem 'slackistrano'
 
 #IMAGES
 gem 'carrierwave'

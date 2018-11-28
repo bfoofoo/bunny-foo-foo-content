@@ -5,12 +5,12 @@ require "capistrano/deploy"
 require "capistrano/scm/git"
 require 'capistrano/rails'
 require 'capistrano/rails/console'
-# require 'capistrano/rails/migrations'
 require 'capistrano/dotenv/tasks'
 require 'capistrano/passenger'
 require 'capistrano/bundler'
 require 'capistrano/rbenv'
 require 'capistrano/sidekiq'
+require 'slackistrano/capistrano'
 set :rbenv_type, :user
 set :rbenv_ruby, '2.4.1'
 set :rbenv_path, '/home/sammy/.rbenv/'
