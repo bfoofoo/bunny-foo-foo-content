@@ -47,6 +47,7 @@ gem 'health-monitor-rails'
 # Webhooks
 gem 'discord-notifier'
 gem "slack-notifier"
+gem 'slackistrano'
 
 #IMAGES
 gem 'carrierwave'
