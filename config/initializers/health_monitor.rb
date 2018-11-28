@@ -7,7 +7,7 @@ HealthMonitor.configure do |config|
     sidekiq_config.latency = 1.hour
   end
 
-  config.error_callback = proc do |e, c|
+  config.error_callback = proc do |e|
     unless Rails.env == 'development'
       Discord::Notifier.message("[#{Rails.env}] Health check failed with #{e.class.demodulize}: #{e.message}")
       SlackNotifier.instance.post(
