@@ -1,4 +1,5 @@
 require 'capistrano/bundler'
+require 'resolv-replace'
 
 set :application, "bff_admin"
 set :repo_url, "git@github.com:flywithmemsl/bunny-foo-foo-content.git"
