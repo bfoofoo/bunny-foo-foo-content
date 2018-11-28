@@ -1,5 +1,4 @@
 require 'capistrano/bundler'
-require 'resolv-replace'
 
 set :application, "bff_admin"
 set :repo_url, "git@github.com:flywithmemsl/bunny-foo-foo-content.git"
@@ -10,7 +9,7 @@ set :rbenv_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 set :linked_files, %w{.env}
 set :slackistrano, {
   channel: "#adsense-pulse",
-  webhook: ENV['SLACK_WEBHOOK_URL']
+  webhook: fetch(:slack_webhook_url)
 }
 append :linked_files, "config/database.yml", "config/secrets.yml"
 # TODO remove 'tmp/leads' after all leads are sent
