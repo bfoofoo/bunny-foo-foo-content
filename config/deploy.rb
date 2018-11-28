@@ -1,4 +1,5 @@
 require 'capistrano/bundler'
+require 'discord_notifier'
 
 set :application, "bff_admin"
 set :repo_url, "git@github.com:flywithmemsl/bunny-foo-foo-content.git"
@@ -29,3 +30,18 @@ namespace :rails do
     exec cmd
   end
 end
+
+namespace :discord do
+  desc 'Notify when deploy started'
+  task :started do
+    Discord::Notifier.message("Started deploying branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
+  end
+
+  desc 'Notify when app published'
+  task :published do
+    Discord::Notifier.message("Finished deploying branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
+  end
+end
+
+after 'deploy:finishing', 'discord:published'
+after 'deploy:updating', 'discord:started'

@@ -47,7 +47,6 @@ gem 'health-monitor-rails', github: 'bfoofoo/health-monitor-rails'
 # Webhooks
 gem 'discord-notifier'
 gem "slack-notifier"
-gem 'slackistrano'
 
 #IMAGES
 gem 'carrierwave'
@@ -82,7 +81,7 @@ group :development, :test do
   gem 'capistrano-rbenv', '~> 2.1'
   gem 'capistrano-sidekiq'
   gem 'rspec-rails', '~> 3.5'
-
+  gem 'slackistrano'
   gem 'pry-rails'
   gem 'pry-remote'
   gem 'pry-nav'

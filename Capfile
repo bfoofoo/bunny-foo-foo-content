@@ -17,6 +17,7 @@ set :rbenv_path, '/home/sammy/.rbenv/'
 
 Dotenv.load
 set :slack_webhook_url, ENV['SLACK_WEBHOOK_URL']
+set :discord_webhook_url, ENV['DISCORD_NOTIFICATION_WEBHOOK_URL']
 
 install_plugin Capistrano::SCM::Git
 
