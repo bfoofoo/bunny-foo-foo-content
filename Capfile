@@ -12,7 +12,7 @@ require 'capistrano/rbenv'
 require 'capistrano/sidekiq'
 require 'slackistrano/capistrano'
 set :rbenv_type, :user
-set :rbenv_ruby, '2.4.1'
+set :rbenv_ruby, '2.5.3'
 set :rbenv_path, '/home/sammy/.rbenv/'
 install_plugin Capistrano::SCM::Git
 
