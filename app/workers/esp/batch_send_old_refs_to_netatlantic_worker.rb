@@ -3,12 +3,13 @@ module Esp
     include Sidekiq::Worker
 
     TARGET_BATCH_SIZE = 15000.freeze
+    DEFAULT_LIST = 'dd-daily'.freeze
 
     def perform
       return if available_leads.empty?
-      mappings.each do |referrer, list_name|
-        leads = referrer_leads(referrer)
-        leads.select! do |l|
+      grouped_leads.each do |referrer, leads_by_referrer|
+        list_name = mappings[referrer] || DEFAULT_LIST
+        leads = leads_by_referrer.select do |l|
           result = is_impressionwise_test_success(l.email)
           l.destroy unless result
           result
@@ -22,8 +23,8 @@ module Esp
 
     private
 
-    def referrer_leads(referrer)
-      leads_to_send.select { |l| l.referrer == referrer }
+    def grouped_leads
+      @grouped_leads = leads_to_send.group_by(&:referrer)
     end
 
     def formsite_service
@@ -45,9 +46,9 @@ module Esp
         'resourcedepotweb.com' => 'resourcedepot',
         'resourcedepot.co' => 'resourcedepot',
         'www.resourcedepot.info' => 'resourcedepot',
-        "openposition.co" => "DD daily",
-        "openposition.net" => "DD daily",
-        "open-positions.net" => "DD daily",
+        "openposition.co" => "dd-daily",
+        "openposition.net" => "dd-daily",
+        "open-positions.net" => "dd-daily",
         "applyforjobs.us" => "typesofaid",
         "applyforlocaljobs.net" => "typesofaid",
         "apply-for-jobs.com" => "typesofaid",
@@ -60,10 +61,6 @@ module Esp
         "housinggrantinfo.com" => "typesofaid",
         "findunclaimedmoney.net" => "typesofaid"
       }
-    end
-
-    def excluded_accounts
-      %w(resource applyforjobsdirect)
     end
 
     def leads_to_send
@@ -86,7 +83,7 @@ module Esp
     end
 
     def available_leads
-      PendingLead.where(referrer: mappings.keys).order('id DESC').not_sent_to_netatlantic
+      PendingLead.select(:id, :email, :full_name, :referrer, :deleted_at).with_valid_referrers.order('id DESC').not_sent_to_netatlantic
     end
   end
 end
