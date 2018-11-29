@@ -27,6 +27,7 @@ class LeadgenRevSite < ApplicationRecord
   accepts_nested_attributes_for :categories, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true
   accepts_nested_attributes_for :trackers, allow_destroy: true
+  accepts_nested_attributes_for :widgets, allow_destroy: true
   accepts_nested_attributes_for :esp_rules, allow_destroy: true
   accepts_nested_attributes_for :leadgen_rev_site_users, allow_destroy: true
   accepts_nested_attributes_for :advertisements, allow_destroy: true

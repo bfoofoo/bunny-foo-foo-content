@@ -9,6 +9,7 @@ class Website < ApplicationRecord
 
   has_many :advertisements, -> { advertisements } , :through => :website_ads, source: :ad
   has_many :trackers, -> { trackers } , :through => :website_ads, source: :ad
+  has_many :widgets, -> { trackers } , :through => :website_ads, source: :ad
 
   has_many :formsite_users, dependent: :restrict_with_error, foreign_key: :website_id
   has_many :users, through: :formsite_users do
@@ -29,6 +30,7 @@ class Website < ApplicationRecord
   accepts_nested_attributes_for :ads, allow_destroy: true
   accepts_nested_attributes_for :trackers, allow_destroy: true
   accepts_nested_attributes_for :advertisements, allow_destroy: true
+  accepts_nested_attributes_for :widgets, allow_destroy: true
   accepts_nested_attributes_for :product_cards, allow_destroy: true
   accepts_nested_attributes_for :questions, allow_destroy: true
   accepts_nested_attributes_for :formsite_users, allow_destroy: true
