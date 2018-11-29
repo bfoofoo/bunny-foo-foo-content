@@ -23,7 +23,7 @@ module EmailMarketerService
                 })
                 @processed_emails << item
               rescue ::Adopia::Errors::Error => e
-                puts "Adopia adding subscriber error - #{e}".red
+                nil
               end
             end
           end
