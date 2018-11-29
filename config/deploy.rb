@@ -41,7 +41,13 @@ namespace :discord do
   task :published do
     Discord::Notifier.message("Finished deploying branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
   end
+
+  desc 'Notify when app deploy failed'
+  task :failed do
+    Discord::Notifier.message("Failed to deploy branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
+  end
 end
 
-after 'deploy:finishing', 'discord:published'
-after 'deploy:updating', 'discord:started'
+after 'deploy:finished', 'discord:published'
+after 'deploy:starting', 'discord:started'
+after 'deploy:failed', 'discord:failed'
