@@ -32,8 +32,3 @@ batch_old_send_to_netatlantic:
   cron: "0 */2 * * *"
   class: "Esp::BatchSendOldRefsToNetatlanticWorker"
   queue: leads
-
-send_emails_to_mailgun:
-  cron: "0 10,13 * * *"
-  class: "Esp::SendEmailsToMailgunWorker"
-  queue: default

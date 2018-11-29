@@ -1,3 +1,4 @@
 class MailgunTemplate < ApplicationRecord
-  belongs_to :mailgun_list
+  has_many :mailgun_templates_schedules, dependent: :destroy
+  has_many :mailgun_lists, through: :mailgun_templates_schedules
 end
