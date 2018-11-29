@@ -18,16 +18,6 @@ send_website_users_to_esp:
   class: "WebsiteUsers::SendToEspWorker"
   queue: default
 
-aweber_migrate_subscribers:
-  cron: "0 0 * * *"
-  class: "Aweber::MigrateSubscribersWorker"
-  queue: default
-
-aweber_collect_statistics:
-  cron: "0 0 * * 1,4"
-  class: "Aweber::CollectStatisticsWorker"
-  queue: statistics
-
 suppression_lists_autoremove_from_esp:
   cron: "0 0  * * *"
   class: "SuppressionLists::AutoremoveFromEspWorker"
@@ -41,11 +31,6 @@ batch_send_to_adopia:
 batch_old_send_to_netatlantic:
   cron: "0 */2 * * *"
   class: "Esp::BatchSendOldRefsToNetatlanticWorker"
-  queue: leads
-
-batch_send_to_netatlantic:
-  cron: "*/10 * * * *"
-  class: "Esp::BatchSendToNetatlanticWorker"
   queue: leads
 
 send_emails_to_mailgun:
