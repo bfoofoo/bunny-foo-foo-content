@@ -20,6 +20,10 @@ Rails.application.routes.draw do
 
       resources :websites, only: [:index, :show] do
         member do
+          post 'add_user', to: 'websites#add_formsite_user', as: 'add_user'
+          post 'unsubscribe_user', to: 'websites#unsubscribe_user', as: 'unsubscribe_user'
+          get 'questions', to: 'websites#get_website_questions'
+          get 'questions_by_position/:position', to: 'websites#get_website_question'
           get 'setup'
           get 'build'
           get 'rebuild_old'
@@ -30,6 +34,11 @@ Rails.application.routes.draw do
           get 'articles', to: 'websites#get_articles'
           get 'product_cards', to: 'websites#get_product_cards'
           get 'articles/:article_id', to: 'websites#get_category_article'
+        end
+        resources :questions, only: [:index] do
+          member do
+            post "create_answer", to: "websites_questions#create_answer"
+          end
         end
       end
 

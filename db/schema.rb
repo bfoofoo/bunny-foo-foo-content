@@ -666,9 +666,11 @@ ActiveRecord::Schema.define(version: 20181127152058) do
     t.datetime "deleted_at"
     t.boolean  "is_last",             default: false,        null: false
     t.integer  "leadgen_rev_site_id"
+    t.integer  "website_id"
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_questions_on_leadgen_rev_site_id", using: :btree
+    t.index ["website_id"], name: "index_questions_on_website_id", using: :btree
   end
 
   create_table "sparkpost_accounts", force: :cascade do |t|
@@ -725,6 +727,16 @@ ActiveRecord::Schema.define(version: 20181127152058) do
     t.index ["website_id"], name: "index_website_ads_on_website_id", using: :btree
   end
 
+  create_table "website_user_answers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "website_id"
+    t.integer  "question_id"
+    t.integer  "answer_id"
+    t.integer  "formsite_user_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
   create_table "websites", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -779,6 +791,7 @@ ActiveRecord::Schema.define(version: 20181127152058) do
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
   add_foreign_key "questions", "leadgen_rev_sites"
+  add_foreign_key "questions", "websites"
   add_foreign_key "sparkpost_lists", "sparkpost_accounts"
   add_foreign_key "suppression_email_marketer_lists", "suppression_lists"
   add_foreign_key "website_ads", "ads"

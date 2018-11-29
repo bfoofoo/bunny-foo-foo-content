@@ -2,8 +2,10 @@ class Question < ApplicationRecord
   acts_as_paranoid
   audited only: [:position, :is_last]
 
+  # TODO: refactor to polymorphic?
   belongs_to :formsite, optional: true
   belongs_to :leadgen_rev_site, optional: true
+  belongs_to :website, optional: true
 
   has_many :answers, dependent: :destroy
   has_many :formsite_questions
