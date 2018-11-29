@@ -10,7 +10,7 @@ module EmailMarketerService
 
       def call
         params = {
-          from: "#{@mail.author.downcase}@#{domain}",
+          from: "#{@mail.author} #{@mail.author.parameterize.underscore}@#{domain}",
           to: @list.address,
           subject: @mail.subject,
           html: @mail.body
