@@ -79,7 +79,7 @@ module Esp
 
     def mark_as_sent(leads)
       sent_leads = PendingLead.where(id: leads.map(&:id))
-      sent_leads.update_all(sent_to_netatlantic: true)
+      sent_leads.update_all(sent_to_netatlantic: true, sent_at: Time.zone.now)
     end
 
     def available_leads
