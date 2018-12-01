@@ -37,6 +37,7 @@ class Formsite < ApplicationRecord
   mount_uploader :background, CommonUploader
 
   validates_associated :esp_rules
+  validates :name, presence: true, uniqueness: true
 
   after_save :mark_last_question
 

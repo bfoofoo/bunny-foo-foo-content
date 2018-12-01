@@ -36,11 +36,9 @@ class Website < ApplicationRecord
   accepts_nested_attributes_for :formsite_users, allow_destroy: true
   accepts_nested_attributes_for :esp_rules, allow_destroy: true
 
-
   after_save :mark_last_question
 
-
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
   validates_associated :esp_rules
 
   mount_uploader :favicon_image, CommonUploader
