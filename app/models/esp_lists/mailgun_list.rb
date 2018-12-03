@@ -1,11 +1,10 @@
-class MailgunList < ApplicationRecord
-  include Esp::ListMethods
+class MailgunList < EspList
+  belongs_to :mailgun_account, foreign_key: :account_id
 
-  belongs_to :mailgun_account
   has_many :mailgun_templates_schedules, dependent: :destroy
   has_many :mailgun_templates, through: :mailgun_templates_schedules
 
-  validates :name, uniqueness: { scope: :mailgun_account_id }
-
   alias_attribute :account, :mailgun_account
+
+  validates :name, uniqueness: { scope: :account_id }
 end

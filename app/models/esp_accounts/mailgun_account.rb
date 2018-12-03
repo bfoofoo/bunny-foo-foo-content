@@ -1,5 +1,5 @@
-class MailgunAccount < ApplicationRecord
-  has_many :mailgun_lists
+class MailgunAccount < EspAccount
+  has_many :mailgun_lists, dependent: :destroy
 
   validates :api_key, presence: true, uniqueness: true
 

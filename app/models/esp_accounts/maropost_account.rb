@@ -1,5 +1,5 @@
-class MaropostAccount < ApplicationRecord
-  has_many :maropost_lists, dependent: :delete_all
+class MaropostAccount < EspAccount
+  has_many :maropost_lists, dependent: :destroys
 
   alias_attribute :lists, :maropost_lists
 

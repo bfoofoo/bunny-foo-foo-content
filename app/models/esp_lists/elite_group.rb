@@ -1,14 +1,7 @@
-class EliteGroup < ApplicationRecord
-  belongs_to :elite_account
+class EliteGroup < EspList
+  belongs_to :elite_account, foreign_key: :account_id
 
   alias_attribute :account, :elite_account
-
-  def full_name
-    return name if account.sender.blank?
-    "#{account.sender} - #{name}"
-  end
-
-  def id_with_type
-    "#{model_name.name}_#{self.id}"
-  end
+  alias_attribute :list_id, :slug
+  alias_attribute :group_id, :slug
 end

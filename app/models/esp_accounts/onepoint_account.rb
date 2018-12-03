@@ -1,7 +1,9 @@
-class OnepointAccount < ApplicationRecord
-  has_many :onepoint_lists
+class OnepointAccount < EspAccount
+  has_many :onepoint_lists, dependent: :destroy
 
   alias_attribute :lists, :onepoint_lists
+
+  validates :api_key, :username, presence: true, uniqueness: true
 
   after_create :fetch_lists
 
@@ -9,5 +11,7 @@ class OnepointAccount < ApplicationRecord
     EmailMarketerService::Onepoint::FetchLists.new(account: self).call
   end
 
-  validates :api_key, :username, presence: true, uniqueness: true
+  def display_name
+    username
+  end
 end

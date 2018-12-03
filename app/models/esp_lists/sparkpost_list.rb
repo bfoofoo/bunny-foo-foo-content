@@ -1,13 +1,6 @@
-class SparkpostList < ApplicationRecord
-  include Esp::ListMethods
+class SparkpostList < EspList
+  belongs_to :sparkpost_account, foreign_key: :account_id
+  alias_attribute :account, :sparkpost_account
 
-  belongs_to :sparkpost_account
-
-  alias_method :account, :sparkpost_account
-
-  private
-
-  def account_display_name
-    account.username
-  end
+  alias_attribute :list_id, :slug
 end
