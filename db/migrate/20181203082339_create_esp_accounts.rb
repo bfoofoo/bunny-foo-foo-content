@@ -1,6 +1,7 @@
 class CreateEspAccounts < ActiveRecord::Migration[5.0]
   def change
     create_table :esp_accounts do |t|
+      t.string :type, null: false
       t.string :name
       t.text :api_key
       t.text :access_token
