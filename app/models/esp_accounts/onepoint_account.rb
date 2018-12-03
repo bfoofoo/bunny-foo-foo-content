@@ -1,5 +1,5 @@
 class OnepointAccount < EspAccount
-  has_many :onepoint_lists, dependent: :destroy
+  has_many :onepoint_lists, dependent: :destroy, foreign_key: :account_id
 
   alias_attribute :lists, :onepoint_lists
 

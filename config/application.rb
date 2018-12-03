@@ -18,7 +18,8 @@ module BffAdmin
     config.assets.paths << "#{Rails.root}/app/assets/videos"
     config.autoload_paths << Rails.root.join('app', 'use_cases')
     config.autoload_paths << Rails.root.join('app', 'apis')
-    config.autoload_paths += Dir[Rails.root.join("app", "models", "{*/}")]
+    config.autoload_paths << Rails.root.join('app', 'models', 'esp_accounts')
+    config.autoload_paths << Rails.root.join('app', 'models', 'esp_lists')
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
     config.i18n.default_locale = :en
   end

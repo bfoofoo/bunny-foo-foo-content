@@ -1,5 +1,5 @@
 class MaropostAccount < EspAccount
-  has_many :maropost_lists, dependent: :destroys
+  has_many :maropost_lists, dependent: :destroys, foreign_key: :account_id
 
   alias_attribute :lists, :maropost_lists
 

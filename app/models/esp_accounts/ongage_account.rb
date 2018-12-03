@@ -1,5 +1,5 @@
 class OngageAccount < EspAccount
-  has_many :ongage_lists, dependent: :destroy
+  has_many :ongage_lists, dependent: :destroy, foreign_key: :account_id
 
   validates :username, :password, :account_code, presence: true
 

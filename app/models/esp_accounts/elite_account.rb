@@ -1,5 +1,5 @@
 class EliteAccount < EspAccount
-  has_many :elite_groups, dependent: :destroy
+  has_many :elite_groups, dependent: :destroy, foreign_key: :account_id
 
   validates :api_key, presence: true, uniqueness: true
 
