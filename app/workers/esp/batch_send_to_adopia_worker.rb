@@ -24,7 +24,7 @@ module Esp
     private
 
     def lists
-      @lists ||= AdopiaList.joins(:adopia_account).includes(:adopia_account).where.not(adopia_accounts: { name: excluded_accounts }).to_a
+      @lists ||= AdopiaList.joins(:adopia_account).includes(:adopia_account).where.not(esp_accounts: { name: excluded_accounts }).to_a
     end
 
     def excluded_accounts
