@@ -152,7 +152,7 @@ module FormsiteInteractor
       end
 
       def formsite_user_params
-        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip, :site_type)
+        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip, :site_type, :url)
       end
 
       def job_formsite_user_params
