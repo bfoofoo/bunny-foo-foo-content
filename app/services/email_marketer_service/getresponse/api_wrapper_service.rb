@@ -4,6 +4,10 @@ module EmailMarketerService
       API_PATH="https://api.getresponse.com/v3"
       AUTH_HEADER_KEY="X-Auth-Token"
       AUTH_KEY_TYPE="api-key"
+      CUSTOM_FIELDS={
+        "url" => "YJlIN",
+        "method" => "bW0bx",
+      }
 
       def initialize(account:)
         @account = account
@@ -22,6 +26,11 @@ module EmailMarketerService
         HTTParty.get(uri("/campaigns"), query:{}, headers: auth_headers)
       end
 
+      def create_contact(params)
+        puts "sending contact to getresponse API"
+        HTTParty.post(uri("/contacts"), body: params, headers: auth_headers)
+      end
+
       private
 
       def uri path
@@ -30,7 +39,8 @@ module EmailMarketerService
 
       def auth_headers
         return {
-          "#{AUTH_HEADER_KEY}": "#{AUTH_KEY_TYPE} #{@account.api_key}"
+          "#{AUTH_HEADER_KEY}": "#{AUTH_KEY_TYPE} #{@account.api_key}",
+          "Content-Type" => "application/json"
         }
       end
     end
