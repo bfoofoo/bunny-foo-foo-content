@@ -9,7 +9,7 @@ class EspRule < ApplicationRecord
   validate :must_have_lists
 
   def split?
-    esp_rules_lists.count > 1
+    esp_rules_lists.below_limit.count > 1
   end
 
   def should_send_now?(datetime)

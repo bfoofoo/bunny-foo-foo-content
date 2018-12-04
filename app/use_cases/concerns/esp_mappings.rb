@@ -25,6 +25,10 @@ module Concerns
 
     def send_user(list, rule, params)
       return if user.sent_to_list?(list)
+      if list.sending_limit&.reached? || list.sending_limit&.isp_limit_reached?(user.email)
+        send_over_limit(rule, params)
+        return
+      end
       subscription_service_for(list.model_name.name).new(list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[list.model_name.name], user)
     end
 
@@ -36,7 +40,17 @@ module Concerns
         index = lists.find_index { |l| l == last_list }
         next_list = lists[index + 1]
       end
+      if next_list.sending_limit&.reached? || next_list.sending_limit&.isp_limit_reached?(user.email)
+        send_over_limit(rule, params)
+        return
+      end
       send_user(next_list, rule, params)
+    end
+
+    def send_over_limit(rule, params)
+      list = rule.esp_rules_lists.above_limit.sample
+      return if list.blank?
+      subscription_service_for(list.model_name.name).new(list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[list.model_name.name], user)
     end
   end
 end

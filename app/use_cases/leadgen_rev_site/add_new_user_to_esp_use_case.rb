@@ -16,9 +16,9 @@ class LeadgenRevSite
       rules.each do |rule|
         next if rule.domain.present? && !(leadgen_rev_site_user.email =~ /@#{Regexp.quote(rule.domain)}\.\w+$/)
         if rule.split?
-          send_user_to_next_list(rule.esp_rules_lists.map(&:list), rule, @params)
+          send_user_to_next_list(rule.esp_rules_lists.below_limit.map(&:list), rule, @params)
         else
-          send_user(rule.esp_rules_lists.first.list, rule, @params)
+          send_user(rule.esp_rules_lists.below_limit.first.list, rule, @params)
         end
       end
     end
