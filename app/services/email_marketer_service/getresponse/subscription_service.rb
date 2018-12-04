@@ -32,17 +32,20 @@ module EmailMarketerService
 
       private
 
-      def generate_custom_field_array
-        return [
+      def generate_custom_field_array params
+        response =  [
           {
             "customFieldId" => Getresponse::ApiWrapperService::CUSTOM_FIELDS["method"],
             "value" => ["Webform"]
-          },
-          {
-            "customFieldId" => Getresponse::ApiWrapperService::CUSTOM_FIELDS["url"],
-            "value" => ["https://app.getresponse.com/contacts"]
           }
         ]
+        if !params[:url].blank?
+          response << {
+            "customFieldId" => Getresponse::ApiWrapperService::CUSTOM_FIELDS["url"],
+            "value" => [params[:url]]
+          }
+        end
+        return response
       end
 
       def handle_user_record(user)
