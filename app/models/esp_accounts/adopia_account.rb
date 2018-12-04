@@ -1,5 +1,5 @@
-class AdopiaAccount < ApplicationRecord
-  has_many :adopia_lists
+class AdopiaAccount < EspAccount
+  has_many :adopia_lists, dependent: :destroy, foreign_key: :account_id
 
   validates :api_key, uniqueness: true
 

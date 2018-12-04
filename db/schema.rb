@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181129162628) do
+ActiveRecord::Schema.define(version: 20181204064928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -277,6 +277,34 @@ ActiveRecord::Schema.define(version: 20181129162628) do
     t.string   "domain"
     t.index ["destination_type", "destination_id"], name: "index_email_marketer_mappings_on_source", using: :btree
     t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
+  end
+
+  create_table "esp_accounts", force: :cascade do |t|
+    t.string   "type",                     null: false
+    t.string   "name"
+    t.text     "api_key"
+    t.text     "access_token"
+    t.text     "secret_token"
+    t.text     "oauth_token"
+    t.integer  "account_id"
+    t.string   "account_code"
+    t.string   "username"
+    t.string   "password"
+    t.integer  "daily_limit",  default: 0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "esp_lists", force: :cascade do |t|
+    t.integer  "account_id", null: false
+    t.string   "type",       null: false
+    t.bigint   "list_id"
+    t.string   "slug"
+    t.string   "address"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -792,7 +820,7 @@ ActiveRecord::Schema.define(version: 20181129162628) do
   add_foreign_key "leadgen_rev_site_users", "users"
   add_foreign_key "leads", "users"
   add_foreign_key "mailgun_lists", "mailgun_accounts"
-  add_foreign_key "mailgun_templates_schedules", "mailgun_lists"
+  add_foreign_key "mailgun_templates_schedules", "esp_lists", column: "mailgun_list_id"
   add_foreign_key "mailgun_templates_schedules", "mailgun_templates"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "onepoint_lists", "onepoint_accounts"
