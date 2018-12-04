@@ -32,7 +32,7 @@ module EmailMarketerService
 
       private
 
-      def generate_custom_field_array params
+      def generate_custom_field_array
         response =  [
           {
             "customFieldId" => Getresponse::ApiWrapperService::CUSTOM_FIELDS["method"],
