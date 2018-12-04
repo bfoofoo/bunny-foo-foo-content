@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181127152058) do
+ActiveRecord::Schema.define(version: 20181204064928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,6 +279,34 @@ ActiveRecord::Schema.define(version: 20181127152058) do
     t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
   end
 
+  create_table "esp_accounts", force: :cascade do |t|
+    t.string   "type",                     null: false
+    t.string   "name"
+    t.text     "api_key"
+    t.text     "access_token"
+    t.text     "secret_token"
+    t.text     "oauth_token"
+    t.integer  "account_id"
+    t.string   "account_code"
+    t.string   "username"
+    t.string   "password"
+    t.integer  "daily_limit",  default: 0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "esp_lists", force: :cascade do |t|
+    t.integer  "account_id", null: false
+    t.string   "type",       null: false
+    t.bigint   "list_id"
+    t.string   "slug"
+    t.string   "address"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
+  end
+
   create_table "esp_rules", force: :cascade do |t|
     t.string   "source_type"
     t.integer  "source_id"
@@ -545,13 +573,22 @@ ActiveRecord::Schema.define(version: 20181127152058) do
   end
 
   create_table "mailgun_templates", force: :cascade do |t|
-    t.integer  "mailgun_list_id"
     t.string   "author"
     t.string   "subject"
     t.text     "body"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["mailgun_list_id"], name: "index_mailgun_templates_on_mailgun_list_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "mailgun_templates_schedules", force: :cascade do |t|
+    t.integer  "mailgun_template_id", null: false
+    t.integer  "mailgun_list_id",     null: false
+    t.datetime "sending_time",        null: false
+    t.string   "scheduled_job_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["mailgun_list_id"], name: "index_mailgun_templates_schedules_on_mailgun_list_id", using: :btree
+    t.index ["mailgun_template_id"], name: "index_mailgun_templates_schedules_on_mailgun_template_id", using: :btree
   end
 
   create_table "maropost_accounts", force: :cascade do |t|
@@ -729,7 +766,7 @@ ActiveRecord::Schema.define(version: 20181127152058) do
 
   create_table "website_user_answers", force: :cascade do |t|
     t.integer  "user_id"
-    t.integer  "website_id"
+    t.integer  "formsite_id"
     t.integer  "question_id"
     t.integer  "answer_id"
     t.integer  "formsite_user_id"
@@ -783,7 +820,8 @@ ActiveRecord::Schema.define(version: 20181127152058) do
   add_foreign_key "leadgen_rev_site_users", "users"
   add_foreign_key "leads", "users"
   add_foreign_key "mailgun_lists", "mailgun_accounts"
-  add_foreign_key "mailgun_templates", "mailgun_lists"
+  add_foreign_key "mailgun_templates_schedules", "esp_lists", column: "mailgun_list_id"
+  add_foreign_key "mailgun_templates_schedules", "mailgun_templates"
   add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "onepoint_lists", "onepoint_accounts"
   add_foreign_key "ongage_lists", "ongage_accounts"
