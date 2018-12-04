@@ -16,8 +16,8 @@ set :rbenv_ruby, '2.4.1'
 set :rbenv_path, '/home/sammy/.rbenv/'
 
 Dotenv.load
-set :slack_webhook_url, ENV['SLACK_WEBHOOK_URL']
-set :discord_webhook_url, ENV['DISCORD_NOTIFICATION_WEBHOOK_URL']
+set :slack_webhook_url, 'https://hooks.slack.com/services/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'
+set :discord_webhook_url, 'https://discordapp.com/api/webhooks/516937679745843200/acb3ipQpHsN1CdrTvj_eqIgKw8-XHxVEnYqSJvluMptNYK2c1QDvHEP-bjaIe5mwyQe9'
 
 install_plugin Capistrano::SCM::Git
 
