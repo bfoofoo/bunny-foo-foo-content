@@ -55,7 +55,6 @@ module EmailMarketerService
 
         client.operations
         client.call(:api_version)
-        binding.pry
         # http = Net::HTTP.new('go.netatlantic.com', 82)
         # http.use_ssl = false
         # path = '/'

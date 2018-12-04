@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181204064928) do
+ActiveRecord::Schema.define(version: 20181204161407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,8 +189,9 @@ ActiveRecord::Schema.define(version: 20181204064928) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "collect_statistics", default: false, null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -296,15 +297,15 @@ ActiveRecord::Schema.define(version: 20181204064928) do
   end
 
   create_table "esp_lists", force: :cascade do |t|
-    t.integer  "account_id", null: false
-    t.string   "type",       null: false
+    t.integer  "account_id",  null: false
+    t.string   "type",        null: false
     t.bigint   "list_id"
     t.string   "slug"
     t.string   "address"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "campaign_id"
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -403,6 +404,7 @@ ActiveRecord::Schema.define(version: 20181204064928) do
     t.string   "data_key"
     t.string   "site_type",                      default: "leadgen"
     t.integer  "website_id"
+    t.string   "url"
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
     t.index ["website_id"], name: "index_formsite_users_on_website_id", using: :btree
   end
