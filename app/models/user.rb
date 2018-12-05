@@ -15,7 +15,10 @@ class User < ApplicationRecord
 
   validates :first_name, :last_name, presence: true
 
-  scope :unsubscribed, -> { where(unsubscribed: true) }
+  scope :unsubscribed, -> { where.not(unsubscribed_at: nil) }
+  scope :unsubscribed_between_dates, -> (start_date, end_date) {
+    where("users.unsubscribed_at >= ? AND users.unsubscribed_at <= ?", start_date.beginning_of_day, end_date.end_of_day)
+  }
 
   def full_name
     "#{self.first_name} #{self.last_name}"
