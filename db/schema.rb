@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181204161407) do
+ActiveRecord::Schema.define(version: 20181205142910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,15 @@ ActiveRecord::Schema.define(version: 20181204161407) do
     t.index ["deleted_at"], name: "index_articles_on_deleted_at", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_articles_on_leadgen_rev_site_id", using: :btree
     t.index ["website_id"], name: "index_articles_on_website_id", using: :btree
+  end
+
+  create_table "articles_leadgen_rev_sites", force: :cascade do |t|
+    t.integer  "article_id"
+    t.integer  "leadgen_rev_site_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["article_id"], name: "index_articles_leadgen_rev_sites_on_article_id", using: :btree
+    t.index ["leadgen_rev_site_id"], name: "index_articles_leadgen_rev_sites_on_leadgen_rev_site_id", using: :btree
   end
 
   create_table "assets", force: :cascade do |t|
