@@ -10,7 +10,7 @@ development:
 
 test:
   <<: *default
-  database: povo_test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: bffadmin_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:
   <<: *default
