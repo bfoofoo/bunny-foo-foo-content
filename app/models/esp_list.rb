@@ -1,4 +1,6 @@
 class EspList < ApplicationRecord
+  has_one :exported_lead, as: :list
+
   delegate :sending_limit, to: :account
 
   def id_with_type

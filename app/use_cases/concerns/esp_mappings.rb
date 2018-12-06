@@ -48,7 +48,7 @@ module Concerns
     end
 
     def send_over_limit(rule, params)
-      list = rule.esp_rules_lists.above_limit.sample
+      list = rule.esp_rules_lists.above_limit.sample&.list
       return if list.blank?
       subscription_service_for(list.model_name.name).new(list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[list.model_name.name], user)
     end

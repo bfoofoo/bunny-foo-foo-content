@@ -79,7 +79,7 @@ module Esp
       leads_to_send.each do |lead|
         linkable_type = lead.source_type == 'ApiUser' ? 'ApiUser' : 'User'
         linkable_id = lead.source_type == 'ApiUser' ? lead.id : lead.user_id
-        ExportedLead.find_or_create_by(list: list, linkable_type: linkable_type, linkable_id: linkable_id)
+        ExportedLead.find_or_create_by(list_id: list.id, list_type: list.type, linkable_type: linkable_type, linkable_id: linkable_id)
       end
     end
 
