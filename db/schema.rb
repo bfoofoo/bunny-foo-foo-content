@@ -198,9 +198,8 @@ ActiveRecord::Schema.define(version: 20181205142910) do
     t.integer  "aweber_account_id"
     t.string   "name"
     t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   create_table "aweber_rules", force: :cascade do |t|
@@ -452,6 +451,7 @@ ActiveRecord::Schema.define(version: 20181205142910) do
     t.string   "affiliate_description"
     t.boolean  "is_phone_number",             default: false
     t.datetime "deleted_at"
+    t.string   "fraud_user_redirect_url"
     t.index ["deleted_at"], name: "index_formsites_on_deleted_at", using: :btree
   end
 
@@ -762,7 +762,7 @@ ActiveRecord::Schema.define(version: 20181205142910) do
     t.datetime "updated_at",                      null: false
     t.boolean  "added_to_aweber", default: false
     t.datetime "deleted_at"
-    t.boolean  "unsubscribed",    default: false, null: false
+    t.datetime "unsubscribed_at"
     t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   end
 

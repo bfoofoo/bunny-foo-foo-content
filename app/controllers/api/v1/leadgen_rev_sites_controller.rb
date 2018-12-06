@@ -80,7 +80,7 @@ class Api::V1::LeadgenRevSitesController < ApiController
     if params[:email].present?
       user = User.find_by(email: params[:email])
       if user.present?
-        user.update(unsubscribed: true) if user.present?
+        user.update(unsubscribed_at: DateTime.current)
         render json: {message: 'success'}
       else
         render json: {message: 'user not found'}
