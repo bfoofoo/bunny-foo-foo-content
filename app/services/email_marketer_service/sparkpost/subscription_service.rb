@@ -23,12 +23,12 @@ module EmailMarketerService
       private
 
       def handle_user_record(user)
-        ExportedLead.find_or_create_by(list: list, linkable: user).update(esp_rule: @esp_rule) if user.is_a?(ActiveRecord::Base)
+        ExportedLead.find_or_create_by(list_id: list.id, list_type: list.type, linkable: user).update(esp_rule: @esp_rule) if user.is_a?(ActiveRecord::Base)
       end
 
       def is_valid?(user)
         if user.is_a?(ActiveRecord::Base)
-          !ExportedLead.where(list: list, linkable: user).exists?
+          !ExportedLead.where(list_id: list.id, list_type: list.type, linkable: user).exists?
         else
           true
         end
