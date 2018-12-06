@@ -16,9 +16,8 @@ module EmailMarketerService
               email: user.email,
               first_name: user.try(:first_name),
               last_name: user.try(:last_name),
-              affiliate: params[:affiliate],
               list_id: list.list_id
-            })
+            }.merge(params.slice(:affiliate, :casl_ipaddress, :casl_signupdate, :casl_signup_method, :casl_signup_url)))
             handle_user_record(user)
           end
         rescue ::Onepoint::Errors::Error => e

@@ -17,6 +17,10 @@ module Onepoint
         'FirstName' => data[:first_name],
         'LastName' => data[:last_name],
         'ListId' => data[:list_id],
+        'casl_signupdate' => data[:date].strftime('%m/%d/%Y'),
+        'casl_signup_method' => data[:signup_method],
+        'casl_signup_url' => data[:url],
+        'casl_ipaddress' => data[:ip]
       }
       if data[:affiliate]
         params['CustomFields'] = [
@@ -26,7 +30,7 @@ module Onepoint
           }
         ]
       end
-      params
+      params.compact
     end
   end
 end
