@@ -17,6 +17,7 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :formsite_questions, allow_destroy: true
 
   validates :text, presence: true
+  validates :position, presence: true
 
   as_enum :flow, [:vertical, :horizontal, :grid, :date, :select, :number], source: :flow, map: :string
   
