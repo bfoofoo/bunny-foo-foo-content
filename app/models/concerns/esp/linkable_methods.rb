@@ -14,7 +14,8 @@ module Esp
       netatlantic: 'NetatlanticList',
       mailgun: 'MailgunList',
       onepoint: 'OnepointList',
-      sparkpost: 'SparkpostList'
+      sparkpost: 'SparkpostList',
+      getresponse: 'GetresponseList'
     }.freeze
 
     ESP_LIST_TYPES.each do |provider, type|
