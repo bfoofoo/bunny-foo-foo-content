@@ -17,7 +17,7 @@ module EmailMarketerService
               contact_email: user.email,
               is_double_opt_in: 0,
               contact_name: user_name,
-              **params
+              **additional_fields
             })
             handle_user_record(user)
           end
@@ -27,6 +27,15 @@ module EmailMarketerService
       end
 
       private
+
+      def additional_fields
+        {
+          affiliate: params[:affiliate],
+          ip_address: params[:ip],
+          joining_date: params[:date],
+          source_url: params[:url]
+        }
+      end
 
       def handle_user_record(user)
         ExportedLead.find_or_create_by(list_id: list.id, list_type: list.type, linkable: user).update(esp_rule: @esp_rule) if user.is_a?(ActiveRecord::Base)
