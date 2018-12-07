@@ -26,11 +26,11 @@ module EmailMarketerService
       def contact_params_for(user)
         hash = {
           'EmailAddress' => user.email,
-          'FirstName' => user.try(:first_name),
-          'LastName' => user.try(:last_name),
+          'FirstName' => user.try(:first_name) || user.full_name&.split(' ')&.first,
+          'LastName' => user.try(:last_name) || user.full_name&.split(' ')&.last,
           'ListId' => list.list_id,
           'casl_ipaddress' => params[:ip],
-          'casl_signupdate' => params[:date],
+          'casl_signupdate' => params[:date].strftime('%m/%d/%Y'),
           'casl_signup_method' => params[:signup_method],
           'casl_signup_url' => params[:url]
         }

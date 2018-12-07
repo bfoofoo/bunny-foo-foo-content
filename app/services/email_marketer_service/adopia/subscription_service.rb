@@ -34,7 +34,7 @@ module EmailMarketerService
           ip_address: params[:ip],
           joining_date: params[:date],
           source_url: params[:url]
-        }
+        }.compact
       end
 
       def handle_user_record(user)
