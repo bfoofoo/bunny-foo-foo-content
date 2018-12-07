@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181207093528) do
+ActiveRecord::Schema.define(version: 20181207125610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -187,33 +187,6 @@ ActiveRecord::Schema.define(version: 20181207093528) do
     t.index ["user_id", "user_type"], name: "user_index", using: :btree
   end
 
-  create_table "aweber_accounts", force: :cascade do |t|
-    t.integer  "account_id"
-    t.string   "access_token"
-    t.string   "secret_token"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.string   "oauth_token"
-    t.string   "name"
-  end
-
-  create_table "aweber_lists", force: :cascade do |t|
-    t.integer  "aweber_account_id"
-    t.string   "name"
-    t.integer  "list_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.boolean  "collect_statistics", default: false, null: false
-  end
-
-  create_table "aweber_rules", force: :cascade do |t|
-    t.integer  "list_from_id"
-    t.integer  "list_to_id"
-    t.string   "time"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
   create_table "categories", force: :cascade do |t|
     t.string   "name"
     t.string   "slug"
@@ -263,33 +236,6 @@ ActiveRecord::Schema.define(version: 20181207093528) do
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
     t.index ["elite_account_id"], name: "index_elite_groups_on_elite_account_id", using: :btree
-  end
-
-  create_table "email_marketer_campaigns", force: :cascade do |t|
-    t.integer  "campaign_id"
-    t.integer  "list_ids",    default: [], null: false, array: true
-    t.string   "subject"
-    t.string   "origin"
-    t.string   "source_url"
-    t.jsonb    "stats",       default: {}, null: false
-    t.datetime "sent_at"
-    t.integer  "account_id"
-  end
-
-  create_table "email_marketer_mappings", force: :cascade do |t|
-    t.string   "source_type"
-    t.integer  "source_id"
-    t.string   "destination_type"
-    t.integer  "destination_id"
-    t.date     "start_date"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.datetime "last_transfer_at"
-    t.string   "tag"
-    t.integer  "delay_in_hours",   default: 0
-    t.string   "domain"
-    t.index ["destination_type", "destination_id"], name: "index_email_marketer_mappings_on_source", using: :btree
-    t.index ["source_type", "source_id"], name: "index_email_marketer_mappings_on_destination", using: :btree
   end
 
   create_table "esp_accounts", force: :cascade do |t|
@@ -555,31 +501,13 @@ ActiveRecord::Schema.define(version: 20181207093528) do
     t.string   "form_box_title_text"
     t.string   "affiliate_description"
     t.boolean  "is_phone_number"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.boolean  "show_popup",                  default: false
-    t.string   "popup_iframe_urls",           default: [],                 array: true
+    t.string   "popup_iframe_urls",           default: [],                     array: true
     t.integer  "popup_delay"
-    t.string   "leadgen_entry"
+    t.string   "leadgen_entry",               default: "explore"
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
-  end
-
-  create_table "leads", force: :cascade do |t|
-    t.string   "type"
-    t.string   "email"
-    t.string   "full_name"
-    t.jsonb    "details",        default: {}, null: false
-    t.datetime "converted_at"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "source_id"
-    t.integer  "destination_id"
-    t.integer  "user_id"
-    t.string   "status"
-    t.string   "affiliate"
-    t.datetime "event_at"
-    t.integer  "campaign_id"
-    t.index ["user_id"], name: "index_leads_on_user_id", using: :btree
   end
 
   create_table "mailgun_accounts", force: :cascade do |t|
@@ -617,23 +545,6 @@ ActiveRecord::Schema.define(version: 20181207093528) do
     t.index ["mailgun_template_id"], name: "index_mailgun_templates_schedules_on_mailgun_template_id", using: :btree
   end
 
-  create_table "maropost_accounts", force: :cascade do |t|
-    t.integer  "account_id", null: false
-    t.text     "auth_token", null: false
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "maropost_lists", force: :cascade do |t|
-    t.integer  "maropost_account_id", null: false
-    t.integer  "list_id",             null: false
-    t.string   "name",                null: false
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.index ["maropost_account_id"], name: "index_maropost_lists_on_maropost_account_id", using: :btree
-  end
-
   create_table "netatlantic_accounts", force: :cascade do |t|
     t.string   "sender"
     t.string   "sender_name"
@@ -664,23 +575,6 @@ ActiveRecord::Schema.define(version: 20181207093528) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.index ["onepoint_account_id"], name: "index_onepoint_lists_on_onepoint_account_id", using: :btree
-  end
-
-  create_table "ongage_accounts", force: :cascade do |t|
-    t.string   "username",     null: false
-    t.string   "password",     null: false
-    t.string   "account_code", null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  create_table "ongage_lists", force: :cascade do |t|
-    t.integer  "list_id",           null: false
-    t.integer  "ongage_account_id", null: false
-    t.string   "name"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["ongage_account_id"], name: "index_ongage_lists_on_ongage_account_id", using: :btree
   end
 
   create_table "pending_leads", force: :cascade do |t|
@@ -717,6 +611,15 @@ ActiveRecord::Schema.define(version: 20181207093528) do
     t.integer  "leadgen_rev_site_id"
     t.index ["leadgen_rev_site_id"], name: "index_product_cards_on_leadgen_rev_site_id", using: :btree
     t.index ["website_id"], name: "index_product_cards_on_website_id", using: :btree
+  end
+
+  create_table "product_cards_leadgen_rev_sites", force: :cascade do |t|
+    t.integer  "product_card_id"
+    t.integer  "leadgen_rev_site_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["leadgen_rev_site_id"], name: "index_product_cards_leadgen_rev_sites_on_leadgen_rev_site_id", using: :btree
+    t.index ["product_card_id"], name: "index_product_cards_leadgen_rev_sites_on_product_card_id", using: :btree
   end
 
   create_table "questions", force: :cascade do |t|
@@ -844,13 +747,10 @@ ActiveRecord::Schema.define(version: 20181207093528) do
   add_foreign_key "leadgen_rev_site_user_answers", "users"
   add_foreign_key "leadgen_rev_site_users", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_users", "users"
-  add_foreign_key "leads", "users"
   add_foreign_key "mailgun_lists", "mailgun_accounts"
   add_foreign_key "mailgun_templates_schedules", "esp_lists", column: "mailgun_list_id"
   add_foreign_key "mailgun_templates_schedules", "mailgun_templates"
-  add_foreign_key "maropost_lists", "maropost_accounts"
   add_foreign_key "onepoint_lists", "onepoint_accounts"
-  add_foreign_key "ongage_lists", "ongage_accounts"
   add_foreign_key "product_cards", "leadgen_rev_sites"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"

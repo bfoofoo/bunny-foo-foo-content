@@ -19,7 +19,8 @@ class LeadgenRevSite < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :articles_leadgen_rev_sites
   has_many :articles, through: :articles_leadgen_rev_sites, dependent: :destroy
-  has_many :product_cards, dependent: :destroy
+  has_many :product_cards_leadgen_rev_sites
+  has_many :product_cards, through: :product_cards_leadgen_rev_sites, dependent: :destroy
   has_many :esp_rules, as: :source, class_name: 'EspRules::LeadgenRevSite'
   has_many :advertisements, -> { advertisements } , through: :leadgen_rev_site_ads, source: :ad
   has_many :trackers, -> { trackers } , through: :leadgen_rev_site_ads, source: :ad
