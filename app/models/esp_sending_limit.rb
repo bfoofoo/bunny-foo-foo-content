@@ -1,7 +1,7 @@
 class EspSendingLimit < ApplicationRecord
   store_accessor :isp_limits
 
-  PROVIDERS = %w(Adopia Aweber Elite Getresponse Mailgun Maropost Netatlantic Onepoint Ongage Sparkpost)
+  PROVIDERS = %w(Adopia Elite Getresponse Mailgun Netatlantic Onepoint Sparkpost)
 
   validates :provider, presence: true, uniqueness: true
   validates :daily_limit, numericality: { greater_than_or_equal_to: 0 }

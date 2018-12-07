@@ -3,10 +3,8 @@ module Concerns
     extend ActiveSupport::Concern
 
     ESP_METHOD_MAPPING = {
-      'AweberList' => :add_subscriber,
       'AdopiaList' => :add_contact,
       'EliteGroup' => :add_contact,
-      'OngageList' => :add_contact,
       'NetatlanticList' => :add_subscriber,
       'MailgunList' => :add_member,
       'OnepointList' => :add_contact,

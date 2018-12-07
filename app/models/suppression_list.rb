@@ -1,12 +1,4 @@
 class SuppressionList < ApplicationRecord
-  has_many :suppression_aweber_lists, -> { where(removable_type: 'AweberList') }, dependent: :delete_all, inverse_of: :suppression_list
-  has_many :suppression_maropost_lists, -> { where(removable_type: 'MaropostList') }, dependent: :delete_all, inverse_of: :suppression_list
-  has_many :aweber_lists, through: :suppression_aweber_lists, source: :removable, source_type: 'AweberList'
-  has_many :maropost_lists, through: :suppression_maropost_lists, source: :removable, source_type: 'MaropostList'
-
-  accepts_nested_attributes_for :suppression_aweber_lists, allow_destroy: true
-  accepts_nested_attributes_for :suppression_maropost_lists, allow_destroy: true
-
   FILE_NAME_DELIMITER = "---"
   
   mount_uploader :file, SuppressionListUploader
