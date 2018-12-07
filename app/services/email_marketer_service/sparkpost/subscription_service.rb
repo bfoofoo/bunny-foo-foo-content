@@ -9,7 +9,7 @@ module EmailMarketerService
         @esp_rule = esp_rule
       end
 
-      def add_recipient(user)
+      def add(user)
         begin
           if is_valid?(user)
             response = client.recipient_lists.update(list.list_id, recipients: existing_recipients_for(list.list_id).concat([build_recipient(user)]))

@@ -8,7 +8,14 @@ class LeadgenRevSite
       @user = user
       @leadgen_rev_site = leadgen_rev_site
       @leadgen_rev_site_user = leadgen_rev_site_user
-      @params = { affiliate: leadgen_rev_site_user.affiliate }.compact
+      @params = {
+        affiliate: leadgen_rev_site_user.affiliate,
+        ipAddress: leadgen_rev_site_user.ip,
+        url: leadgen_rev_site_user.url,
+        ip: leadgen_rev_site_user.ip,
+        date: leadgen_rev_site_user.created_at,
+        signup_method: 'Webform'
+      }.compact
     end
 
     def perform

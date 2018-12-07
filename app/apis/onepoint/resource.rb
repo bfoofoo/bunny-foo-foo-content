@@ -6,6 +6,8 @@ module Onepoint
 
     private
 
-    def base_path; end
+    def base_path
+      nil
+    end
   end
 end

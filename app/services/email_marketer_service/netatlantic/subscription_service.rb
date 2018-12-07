@@ -10,7 +10,7 @@ module EmailMarketerService
         @esp_rule = esp_rule
       end
 
-      def add_subscriber(user)
+      def add(user)
         user_name = user.try(:full_name).blank? ? user.try(:name) : user.full_name
         HTTParty.post("#{API_PATH}/create_member.php", body: {email: user.email, full_name: user_name, account: account.account_name, list: list.name})
         handle_user_record(user)

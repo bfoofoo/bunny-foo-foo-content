@@ -5,11 +5,17 @@ module ApiUsers
 
     def perform
       rules.each do |rule|
-        params = { affiliate: rule.affiliate }.compact
         api_users = available_api_users_for(rule)
         api_users = api_users.by_email_domain(rule.domain) if rule.domain.present?
         api_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
           slice.each_with_index do |api_user, index|
+            params = {
+              affiliate: rule.affiliate,
+              ipAddress: api_user.ip,
+              ip: api_user.ip,
+              date: api_user.created_at,
+              signup_method: 'Webform'
+            }.compact
             next unless rule.should_send_now?(api_user.created_at)
             esp_list = rule.esp_rules_lists[index]
             esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.sending_limit&.reached? || esp_list.sending_limit&.isp_limit_reached?(api_user.email)

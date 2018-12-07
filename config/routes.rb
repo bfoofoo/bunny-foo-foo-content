@@ -9,12 +9,6 @@ Rails.application.routes.draw do
     mount Sidekiq::Web, at: '/sidekiq'
   end
 
-  namespace :callbacks do
-    namespace :aweber do
-      get "/auth_account", to: "accounts#auth_account"
-    end
-  end
-
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
       resources :mailgun_templates, only: [] do

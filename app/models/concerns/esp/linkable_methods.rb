@@ -7,10 +7,8 @@ module Esp
     end
 
     ESP_LIST_TYPES = {
-      aweber: 'AweberList',
       adopia: 'AdopiaList',
       elite: 'EliteGroup',
-      ongage: 'OngageList',
       netatlantic: 'NetatlanticList',
       mailgun: 'MailgunList',
       onepoint: 'OnepointList',

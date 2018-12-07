@@ -1,5 +1,7 @@
 module Adopia
   class Client
+    attr_accessor :request
+
     def initialize(api_key)
       @request = Request.new(api_key)
     end

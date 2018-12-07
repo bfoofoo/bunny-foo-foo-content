@@ -10,7 +10,14 @@ module FormsiteUsers
         formsite_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
           slice.each_with_index do |formsite_user, index|
             next unless rule.should_send_now?(formsite_user.created_at)
-            params = { affiliate: formsite_user.affiliate }.compact
+            @params = {
+              affiliate: formsite_user.affiliate,
+              ipAddress: formsite_user.ip,
+              url: formsite_user.url,
+              ip: formsite_user.ip,
+              date: formsite_user.created_at,
+              signup_method: 'Webform'
+            }.compact
             esp_list = rule.esp_rules_lists[index]
             esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.sending_limit&.reached? || esp_list.sending_limit&.isp_limit_reached?(formsite_user.user.email)
             next unless esp_list

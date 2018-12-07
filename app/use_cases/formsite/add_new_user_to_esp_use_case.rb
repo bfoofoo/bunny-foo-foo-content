@@ -8,7 +8,14 @@ class Formsite
       @user = user
       @formsite = formsite
       @formsite_user = formsite_user
-      @params = { affiliate: formsite_user.affiliate, ipAddress: formsite_user.ip, url: formsite_user.url }.compact
+      @params = {
+        affiliate: formsite_user.affiliate,
+        ipAddress: formsite_user.ip,
+        url: formsite_user.url,
+        ip: formsite_user.ip,
+        date: formsite_user.created_at,
+        signup_method: 'Webform'
+      }.compact
     end
 
     def perform

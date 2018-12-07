@@ -23,7 +23,6 @@ gem 'acts_as_paranoid', '~> 0.6.0'
 gem 'capistrano-rails-console', require: false
 gem 'savon', '~> 2.12.0'
 gem 'rubyntlm'
-gem 'mailgun-ruby', '~> 1.1', '>= 1.1.11'
 
 # APIS
 gem 'cloudflare'
@@ -56,10 +55,9 @@ gem "awesome_print", require: "ap"
 gem 'devise'
 gem "audited", "~> 4.7"
 
-# Email marketing services
-gem 'aweber', github: 'bfoofoo/AWeber-API-Ruby-Library'
-gem 'maropost_api', github: 'bfoofoo/maropost_api'
+# ESP
 gem 'simple_spark', github: 'bfoofoo/simple_spark'
+gem 'mailgun-ruby', '~> 1.1', '>= 1.1.11'
 
 # Background jobs
 gem 'sidekiq'

@@ -41,10 +41,10 @@ module EmailMarketerService
       def build_contacts(emails, list)
         emails.map do |email|
           {
-            email: email,
-            first_name: '',
-            last_name: '',
-            list_id: list.list_id
+            'EmailAddress' => email,
+            'FirstName' => '',
+            'LastName' => '',
+            'ListId' => list.list_id
           }
         end
       end
