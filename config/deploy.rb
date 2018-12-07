@@ -34,17 +34,17 @@ end
 namespace :discord do
   desc 'Notify when deploy started'
   task :started do
-    Discord::Notifier.message("Started deploying branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
+    Discord::Notifier.message("#{fetch(:local_user)} started deploying branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
   end
 
   desc 'Notify when app published'
   task :published do
-    Discord::Notifier.message("Finished deploying branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
+    Discord::Notifier.message("#{fetch(:local_user)} finished deploying branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
   end
 
   desc 'Notify when app deploy failed'
   task :failed do
-    Discord::Notifier.message("Failed to deploy branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
+    Discord::Notifier.message("#{fetch(:local_user)}  failed to deploy branch #{fetch(:branch)} of #{fetch(:application)} to #{fetch(:rails_env)}", url: fetch(:discord_webhook_url))
   end
 end
 

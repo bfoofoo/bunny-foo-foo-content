@@ -14,6 +14,7 @@ require 'slackistrano/capistrano'
 set :rbenv_type, :user
 set :rbenv_ruby, '2.4.1'
 set :rbenv_path, '/home/sammy/.rbenv/'
+set :local_user, -> { `git config user.name`.chomp }
 
 Dotenv.load
 set :slack_webhook_url, 'https://hooks.slack.com/services/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'
