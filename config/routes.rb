@@ -33,7 +33,6 @@ Rails.application.routes.draw do
           get 'product_cards', to: 'websites#get_product_cards'
           get 'categories/:category_id', to: 'websites#get_category_with_articles'
           get 'articles', to: 'websites#get_articles'
-          get 'product_cards', to: 'websites#get_product_cards'
           get 'articles/:article_id', to: 'websites#get_category_article'
         end
         resources :questions, only: [:index] do

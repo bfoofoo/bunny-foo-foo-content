@@ -4,7 +4,7 @@ class Api::V1::ProductCardsController < ApiController
   def index
     product_cards = ProductCard.all.order('created_at DESC')
     if params[:leadgen_rev_site_id]
-      query = product_cards.where(leadgen_rev_site_id: params[:leadgen_rev_site_id])
+      query = product_cards.joins(:product_cards_leadgen_rev_sites).where(product_cards_leadgen_rev_sites: {leadgen_rev_site_id: params[:leadgen_rev_site_id]})
       return render json: paginate_items(query)
     end
     render json: product_cards
