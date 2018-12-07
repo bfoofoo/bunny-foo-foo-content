@@ -33,7 +33,7 @@ class LeadgenRevSite
     private
 
     def rules
-      EspRules::Formsite.where(source: leadgen_rev_site, delay_in_hours: 0)
+      EspRules::LeadgenRevSite.where(source: leadgen_rev_site, delay_in_hours: 0)
     end
   end
 end
