@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181207125610) do
+ActiveRecord::Schema.define(version: 20181207152745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,12 +130,15 @@ ActiveRecord::Schema.define(version: 20181207125610) do
     t.integer  "category_id"
     t.string   "slug"
     t.string   "cover_image"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.integer  "website_id"
     t.integer  "formsite_id"
     t.datetime "deleted_at"
     t.integer  "leadgen_rev_site_id"
+    t.boolean  "show_popup",          default: false
+    t.string   "popup_iframe_urls",   default: [],                 array: true
+    t.integer  "popup_delay"
     t.index ["category_id"], name: "index_articles_on_category_id", using: :btree
     t.index ["deleted_at"], name: "index_articles_on_deleted_at", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_articles_on_leadgen_rev_site_id", using: :btree
@@ -264,6 +267,7 @@ ActiveRecord::Schema.define(version: 20181207125610) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -462,6 +466,7 @@ ActiveRecord::Schema.define(version: 20181207125610) do
     t.boolean  "is_email_duplicate",             default: false
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
+    t.string   "url"
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
     t.index ["user_id"], name: "index_leadgen_rev_site_users_on_user_id", using: :btree
   end
