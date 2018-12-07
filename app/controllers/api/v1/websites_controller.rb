@@ -1,9 +1,9 @@
 class Api::V1::WebsitesController < ApiController
-  before_action :authenticate, only: [:create, :update]
+  #before_action :authenticate, only: [:create, :update]
   before_action :set_website, only: [
       :show, :get_categories, :get_articles, :get_product_cards,
       :get_category_with_articles, :get_category_article,
-      :setup, :build, :rebuild_old, :get_config
+      :setup, :build, :rebuild_old, :get_config, :get_website_questions, :get_website_question
   ]
 
   def index
@@ -13,6 +13,44 @@ class Api::V1::WebsitesController < ApiController
 
   def show
     render json: @website
+  end
+
+  def get_website_questions
+    @questions = @website.questions.order_by_position.includes(:answers)
+    render json: @questions
+  end
+
+  def get_website_question
+    @question = @website.questions.find_by(position: params[:position])
+    render json: @question
+  end
+
+  def add_formsite_user
+    website_interactor = WebsiteInteractor::AddUser.call({
+      params: params,
+      request: request,
+      website: @website
+    })
+
+    if website_interactor.api_response[:is_verified]
+      Website::AddNewUserToEspUseCase.new(@website, website_interactor.user, website_interactor.formsite_user).perform
+    end
+
+    render json: website_interactor.api_response
+  end
+
+  def unsubscribe_user
+    if params[:email].present?
+      user = User.find_by(email: params[:email])
+      if user.present?
+        user.update(unsubscribed_at: DateTime.current)
+        render json: {message: 'success'}
+      else
+        render json: {message: 'user not found'}
+      end
+    else
+      render json: {message: 'email required'}
+    end
   end
 
   def get_categories

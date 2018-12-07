@@ -4,25 +4,14 @@ class FormsiteUser < ApplicationRecord
   acts_as_paranoid
 
   belongs_to :formsite
+  belongs_to :website
   belongs_to :user, optional: true
-
-  has_many :aweber_list_users, through: :user
-  has_many :formsite_aweber_lists, through: :formsite
-  has_many :aweber_lists, through: :formsite_aweber_lists, source: :destination, source_type: 'AweberList'
-
-  has_many :adopia_list_users, through: :user
-  has_many :formsite_adopia_lists, through: :formsite
-  has_many :adopia_lists, through: :formsite_adopia_lists, source: :destination, source_type: 'AdopiaList'
-
-  has_many :elite_group_users, through: :user
-  has_many :formsite_elite_groups, through: :formsite
-  has_many :elite_groups, through: :formsite_elite_groups, source: :destination, source_type: 'EliteGroup'
-
-  has_many :ongage_list_users, through: :user
-  has_many :formsite_ongage_lists, through: :formsite
-  has_many :ongage_lists, through: :formsite_ongage_lists, source: :destination, source_type: 'OngageList'
+  has_many :esp_rules, through: :formsite
+  has_many :esp_rules_lists, through: :esp_rules
+  has_many :exported_leads, through: :user
 
   delegate :email, :sent_to_aweber?, :sent_to_adopia?, :sent_to_elite?, :sent_to_ongage?,
+           :sent_to_netatlantic?, :full_name, :sent_to_mailgun?, :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?,
            to: :user, allow_nil: true
 
   scope :by_s_filter, -> (s_field) {
@@ -48,4 +37,17 @@ class FormsiteUser < ApplicationRecord
   scope :between_dates, -> (start_date, end_date) {
     where("formsite_users.created_at >= ? AND formsite_users.created_at <= ?", start_date, end_date)
   }
+
+  scope :by_email_domain, ->(domain) { joins(:user).where('users.email ~* ?', '@' + domain + '\.\w+$') }
+
+  User::ESP_LIST_TYPES.each do |provider, type|
+    define_method :"local_sent_to_#{provider}?" do
+      return false unless user_id
+      exported_leads
+        .joins(:esp_rule)
+        .where(exported_leads: { list_type: type, linkable_type: 'User', linkable_id: user_id })
+        .where(esp_rules: { source_type: 'Formsite', source_id: formsite_id })
+        .exists?
+    end
+  end
 end

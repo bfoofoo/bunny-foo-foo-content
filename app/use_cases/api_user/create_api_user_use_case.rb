@@ -37,15 +37,15 @@ class ApiUser
         return {message: user.errors, status: :unprocessable_entity}
       end
     end
-
+    
     def formsite_service
       @formsite_service ||= FormsiteService.new
     end
-
+    
     def is_useragent_valid
       @is_useragent_valid ||= formsite_service.is_useragent_valid(user_agent)
     end
-
+    
     def is_impressionwise_test_success(api_user_params)
       formsite_service.is_impressionwise_test_success(api_user_params)
     end
@@ -59,19 +59,16 @@ class ApiUser
       @api_user = ApiUser.new(
         parsed_params.merge(
             api_client_id: api_client.id,
-            is_verified: is_useragent_valid && is_impressionwise_test_success(params) && !is_duplicate,
+            is_verified: is_useragent_valid && is_impressionwise_test_success(parsed_params) && !is_duplicate(parsed_params[:email]),
             is_useragent_valid: is_useragent_valid,
-            is_impressionwise_test_success: is_impressionwise_test_success(params),
+            is_impressionwise_test_success: is_impressionwise_test_success(parsed_params),
             is_duplicate: is_duplicate(parsed_params[:email])
         )
       )
     end
 
     def send_to_esp(user)
-      ApiUser::AddNewUserToAweberUseCase.new(user).perform
-      ApiUser::AddNewUserToAdopiaUseCase.new(user).perform
-      ApiUser::AddNewUserToEliteUseCase.new(user).perform
-      ApiUser::AddNewUserToOngageUseCase.new(user).perform
+      ApiUser::AddNewUserToEspUseCase.new(user).perform
     end
 
     def api_user_params(user_params)

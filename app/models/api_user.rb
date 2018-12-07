@@ -2,18 +2,9 @@ class ApiUser < ApplicationRecord
   include Swagger::Blocks
   include Esp::LinkableMethods
 
-  ESP_MAPPING_TYPES = {
-    aweber: :api_client_aweber_lists,
-    adopia: :api_client_adopia_lists,
-    elite: :api_client_elite_groups,
-    ongage: :api_client_ongage_lists
-  }.freeze
-
   belongs_to :api_client
-  has_many :api_client_aweber_lists, through: :api_client, class_name: 'ApiClientMappings::Aweber'
-  has_many :api_client_adopia_lists, through: :api_client, class_name: 'ApiClientMappings::Adopia'
-  has_many :api_client_elite_groups, through: :api_client, class_name: 'ApiClientMappings::Elite'
-  has_many :api_client_ongage_lists, through: :api_client, class_name: 'ApiClientMappings::Ongage'
+  has_many :esp_rules, through: :api_client, class_name: 'EspRules::ApiClient'
+  has_many :esp_rules_lists, through: :esp_rules
 
   validates :email, :first_name, :last_name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -21,9 +12,8 @@ class ApiUser < ApplicationRecord
   alias_attribute :name, :first_name
 
   scope :verified, -> { where("is_verified = ?", true) }
-  ESP_MAPPING_TYPES.each do |provider, klass|
-    scope :"with_#{provider}_mappings", -> { joins(klass).includes(klass) }
-  end
+
+  scope :by_email_domain, ->(domain) { where('api_users.email ~* ?', '@' + domain + '\.\w+$') }
 
   swagger_schema :ApiUser do
     key :required, [:email, :first_name, :last_name]

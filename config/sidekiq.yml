@@ -1,5 +1,8 @@
-:concurrency: 5
+:concurrency: 10
 max_retries: 2
 :queues:
+  - api_users_refresh
   - default
   - statistics
+  - leads
+  - mailgun

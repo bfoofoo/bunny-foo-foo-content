@@ -22,7 +22,7 @@ module Elite
     #  'EmailAddress' => String
     def create_contacts(params, contacts)
       response = request.post(self_path, {
-        'GroupsToAddToIds' => params['GroupsToAddToIds'],
+        'GroupsToAddToNames' => params['GroupsToAddToNames'],
         'CreateContactItems' => contacts.map do |c|
           {
             'EmailAddress' => c['EmailAddress'],

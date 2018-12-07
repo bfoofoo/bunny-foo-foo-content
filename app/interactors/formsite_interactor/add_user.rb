@@ -24,7 +24,7 @@ module FormsiteInteractor
       end
 
       def formsite_service
-        @formsite_service ||= FormsiteService.new()
+        @formsite_service ||= FormsiteService.new
       end
 
       def is_useragent_valid
@@ -111,11 +111,16 @@ module FormsiteInteractor
       end
 
       def handle_openposition_formsite
+        is_verified = is_useragent_valid && is_impressionwise_test_success
+        is_verified = is_verified && !params[:user][:first_name].blank? && !params[:user][:last_name].blank?
+
         attributes = formsite_user_params
                 .merge(formsite_user_dynamic_params)
+                .merge(job_formsite_user_params)
                 .merge({
                   ip: user_ip,
-                  user_id: user.id
+                  user_id: user.id,
+                  is_verified: is_verified
                 })
 
         if !params[:user][:key].blank?
@@ -147,7 +152,11 @@ module FormsiteInteractor
       end
 
       def formsite_user_params
-        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip)
+        params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip, :site_type, :url)
+      end
+
+      def job_formsite_user_params
+        params.require(:user).permit(:external_link, :company, :abstract, :title, :data_key)
       end
   end
 end

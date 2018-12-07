@@ -1,55 +1,34 @@
-send_api_users_to_aweber:
+send_api_users_to_esp:
   cron: "0 * * * *"
-  class: "ApiUsers::SendToAweberWorker"
+  class: "ApiUsers::SendToEspWorker"
   queue: default
 
-send_formsite_users_to_aweber:
+send_formsite_users_to_esp:
   cron: "0 * * * *"
-  class: "FormsiteUsers::SendToAweberWorker"
+  class: "FormsiteUsers::SendToEspWorker"
   queue: default
 
-send_api_users_to_adopia:
+send_leadgen_rev_site_users_to_esp:
   cron: "0 * * * *"
-  class: "ApiUsers::SendToAdopiaWorker"
+  class: "LeadgenRevSiteUsers::SendToEspWorker"
   queue: default
 
-send_formsite_users_to_adopia:
+send_website_users_to_esp:
   cron: "0 * * * *"
-  class: "FormsiteUsers::SendToAdopiaWorker"
+  class: "WebsiteUsers::SendToEspWorker"
   queue: default
-
-send_api_users_to_elite:
-  cron: "0 * * * *"
-  class: "ApiUsers::SendToEliteWorker"
-  queue: default
-
-send_formsite_users_to_elite:
-  cron: "0 * * * *"
-  class: "FormsiteUsers::SendToEliteWorker"
-  queue: default
-
-send_api_users_to_ongage:
-  cron: "0 * * * *"
-  class: "ApiUsers::SendToOngageWorker"
-  queue: default
-
-send_formsite_users_to_ongage:
-  cron: "0 * * * *"
-  class: "FormsiteUsers::SendToOngageWorker"
-  queue: default
-
-aweber_migrate_subscribers:
-  cron: "0 0 * * *"
-  class: "Aweber::MigrateSubscribersWorker"
-  queue: default
-
-aweber_collect_statistics:
-  cron: "0 0 * * 1,4"
-  class: "Aweber::CollectStatisticsWorker"
-  queue: statistics
 
 suppression_lists_autoremove_from_esp:
   cron: "0 0  * * *"
   class: "SuppressionLists::AutoremoveFromEspWorker"
   queue: default
 
+batch_send_to_adopia:
+  cron: "0 */2 * * *"
+  class: "Esp::BatchSendToAdopiaWorker"
+  queue: leads
+
+batch_old_send_to_netatlantic:
+  cron: "0 */2 * * *"
+  class: "Esp::BatchSendOldRefsToNetatlanticWorker"
+  queue: leads

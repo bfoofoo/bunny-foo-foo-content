@@ -29,22 +29,23 @@ class Api::V1::FormsitesController < ApiController
     })
 
     if formsite_interactor.api_response[:is_verified]
-      Formsite::AddNewUserToAweberUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
-      Formsite::AddNewUserToAdopiaUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
-      Formsite::AddNewUserToEliteUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
-      Formsite::AddNewUserToOngageUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
+      Formsite::AddNewUserToEspUseCase.new(@formsite, formsite_interactor.user, formsite_interactor.formsite_user).perform
     end
 
     render json: formsite_interactor.api_response
   end
 
   def unsubscribe_user
-    user = User.find_by(email: params[:email])
-    if user.present?
-      user.update(unsubscribed: true) if user.present?
-      render json: {message: 'success'}
+    if params[:email].present?
+      user = User.find_by(email: params[:email])
+      if user.present?
+        user.update(unsubscribed_at: DateTime.current)
+        render json: {message: 'success'}
+      else
+        render json: {message: 'user not found'}
+      end
     else
-      render json: {message: 'user not found'}
+      render json: {message: 'email required'}
     end
   end
 
@@ -71,7 +72,11 @@ class Api::V1::FormsitesController < ApiController
   private
 
   def set_formsite
-    @formsite = Formsite.find(params[:id])
+    if params.dig(:user, :site_type) == "revenue"
+      @formsite = Website.find(params[:id])
+    else
+      @formsite = Formsite.find(params[:id])
+    end
   rescue ActiveRecord::RecordNotFound => e
     render json: {message: e.message}
   end

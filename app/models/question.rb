@@ -2,7 +2,10 @@ class Question < ApplicationRecord
   acts_as_paranoid
   audited only: [:position, :is_last]
 
-  belongs_to :formsite
+  # TODO: refactor to polymorphic?
+  belongs_to :formsite, optional: true
+  belongs_to :leadgen_rev_site, optional: true
+  belongs_to :website, optional: true
 
   has_many :answers, dependent: :destroy
   has_many :formsite_questions
@@ -14,6 +17,7 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :formsite_questions, allow_destroy: true
 
   validates :text, presence: true
+  validates :position, presence: true
 
   as_enum :flow, [:vertical, :horizontal, :grid, :date, :select, :number], source: :flow, map: :string
   

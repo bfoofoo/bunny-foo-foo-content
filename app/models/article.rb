@@ -4,7 +4,8 @@ class Article < ApplicationRecord
   belongs_to :category
   belongs_to :website, optional: true
   belongs_to :formsite, optional: true
-  belongs_to :leadgen_ref_site, optional: true
+  has_many :articles_leadgen_rev_sites
+  has_many :leadgen_rev_sites, through: :articles_leadgen_rev_sites
 
   mount_base64_uploader :cover_image, CommonUploader
 

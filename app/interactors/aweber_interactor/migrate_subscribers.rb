@@ -8,8 +8,8 @@ module AweberInteractor
         list_from = rule.list_from
         list_to   = rule.list_to
 
-        subs_from_service = subscriptions_service(list_from)
-        subs_to_service = subscriptions_service(list_to)
+        subs_from_service = subscription_service(list_from)
+        subs_to_service = subscription_service(list_to)
 
         puts "Start migrating subscribers from: #{list_from.full_name}".light_green
         migrate_subscribers(rule, list_from, list_to, subs_from_service, subs_to_service)
@@ -43,8 +43,8 @@ module AweberInteractor
         @rules = AweberRule.includes([list_to: [:aweber_account], list_from: [:aweber_account]]).all
       end
 
-      def subscriptions_service list
-        EmailMarketerService::Aweber::SubscriptionsService.new(list: list)
+      def subscription_service(list)
+        EmailMarketerService::Aweber::SubscriptionService.new(list)
       end
     
 

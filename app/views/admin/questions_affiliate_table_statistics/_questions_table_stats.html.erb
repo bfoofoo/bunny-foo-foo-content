@@ -1,7 +1,0 @@
-<%= render "admin/shared/question_table_tabs", selected: "affiliate" %>
-
-<%- if table_stats.blank? %>
-  <h2>There is no questions for selected Leadgen Site.</h2>
-<% else %>
-  <%= render "admin/shared/question_affiliate_table_stats", table_stats: table_stats%>
-<% end %>
