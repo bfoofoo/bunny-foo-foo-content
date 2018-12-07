@@ -9,7 +9,7 @@ module EmailMarketerService
         @esp_rule = esp_rule
       end
 
-      def add_contact(user)
+      def add(user)
         begin
           if is_valid?(user)
             client.contact.create(contact_params_for(user))

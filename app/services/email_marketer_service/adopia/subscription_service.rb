@@ -9,7 +9,7 @@ module EmailMarketerService
         @esp_rule = esp_rule
       end
 
-      def add_contact(user)
+      def add(user)
         begin
           user_name = user.try(:full_name).blank? ? user.try(:name) : user.full_name
           if is_valid?(user)
