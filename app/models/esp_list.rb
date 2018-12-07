@@ -1,5 +1,5 @@
 class EspList < ApplicationRecord
-  has_one :exported_lead, as: :list
+  has_many :exported_leads, as: :list
 
   delegate :sending_limit, to: :account
 
