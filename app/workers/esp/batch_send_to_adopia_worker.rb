@@ -10,7 +10,7 @@ module Esp
         return unless chunked_leads[index]
         leads = chunked_leads[index].compact
         leads.select! do |l|
-          result = is_impressionwise_test_success(l.email)
+          result = valid_email?(email) && is_impressionwise_test_success(l.email)
           l.destroy unless result
           result
         end
@@ -33,6 +33,10 @@ module Esp
 
     def formsite_service
       @formsite_service ||= FormsiteService.new
+    end
+
+    def valid_email?(email)
+      email =~ Devise.email_regexp
     end
 
     def is_impressionwise_test_success(email)
