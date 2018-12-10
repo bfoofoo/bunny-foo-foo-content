@@ -42,6 +42,7 @@ gem 'rest-client', '~> 2.0', '>= 2.0.2'
 gem 'json'
 gem 'bigdecimal'
 gem 'health-monitor-rails', github: 'bfoofoo/health-monitor-rails'
+gem 'geocoder', '~> 1.5'
 
 # Webhooks
 gem 'discord-notifier'
