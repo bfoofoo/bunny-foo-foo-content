@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 20181210114233) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -368,8 +369,6 @@ ActiveRecord::Schema.define(version: 20181210114233) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
-    t.date     "date_of_birth"
-    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"

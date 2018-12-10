@@ -1,12 +1,25 @@
 module EmailMarketerService
   module Getresponse
     class ApiWrapperService
-      API_PATH="https://api.getresponse.com/v3"
-      AUTH_HEADER_KEY="X-Auth-Token"
-      AUTH_KEY_TYPE="api-key"
-      CUSTOM_FIELDS={
+      API_PATH = "https://api.getresponse.com/v3"
+      AUTH_HEADER_KEY = "X-Auth-Token"
+      AUTH_KEY_TYPE = "api-key"
+      CUSTOM_FIELDS = {
         "url" => "YJlIN",
         "method" => "bW0bx",
+        "ipaddress" => "bkGXO",
+        "join_date" => "bkG7n",
+        "state" => "YJlqn",
+        "affiliate" => "bkXc4"
+      }
+
+      CUSTOM_FIELD_MAPPING = {
+        "url" => :url,
+        "method" => :signup_method,
+        "ipaddress" => :ip,
+        "join_date" => :date,
+        "state" => :state,
+        "affiliate" => :affiliate
       }
 
       def initialize(account:)
@@ -27,8 +40,11 @@ module EmailMarketerService
       end
 
       def create_contact(params)
-        puts "sending contact to getresponse API"
         HTTParty.post(uri("/contacts"), body: params, headers: auth_headers)
+      end
+
+      def get_fields(params = {})
+        HTTParty.get(uri("/custom-fields"), body: params, headers: auth_headers)
       end
 
       private
