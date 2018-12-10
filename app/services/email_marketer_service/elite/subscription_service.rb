@@ -21,8 +21,13 @@ module EmailMarketerService
                   'EmailAddress' => user.email,
                   'Affiliate' => params[:affiliate],
                   'FirstName' => user.try(:first_name),
-                  'LastName' => user.try(:last_name)
-                }
+                  'LastName' => user.try(:last_name),
+                  'State' => params[:state],
+                  'IP' => params[:ip],
+                  'Join date' => params[:date],
+                  'Signup method' => params[:signup_method],
+                  'URL' => params[:url]
+                }.compact
               ]
             )
             handle_user_record(user)
