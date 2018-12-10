@@ -32,7 +32,8 @@ module EmailMarketerService
           'casl_ipaddress' => params[:ip],
           'casl_signupdate' => params[:date].strftime('%m/%d/%Y'),
           'casl_signup_method' => params[:signup_method],
-          'casl_signup_url' => params[:url]
+          'casl_signup_url' => params[:url],
+          'State' => params[:state]
         }
 
         if params[:affiliate]

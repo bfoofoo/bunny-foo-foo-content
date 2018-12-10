@@ -16,7 +16,8 @@ module FormsiteUsers
               url: formsite_user.url,
               ip: formsite_user.ip,
               date: formsite_user.created_at,
-              signup_method: 'Webform'
+              signup_method: 'Webform',
+              state: formsite_user.state
             }.compact
             esp_list = rule.esp_rules_lists[index]
             esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.sending_limit&.reached? || esp_list.sending_limit&.isp_limit_reached?(formsite_user.user.email)

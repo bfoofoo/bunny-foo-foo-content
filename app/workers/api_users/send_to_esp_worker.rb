@@ -14,7 +14,8 @@ module ApiUsers
               ipAddress: api_user.ip,
               ip: api_user.ip,
               date: api_user.created_at,
-              signup_method: 'Webform'
+              signup_method: 'Webform',
+              state: api_user.state
             }.compact
             next unless rule.should_send_now?(api_user.created_at)
             esp_list = rule.esp_rules_lists[index]
