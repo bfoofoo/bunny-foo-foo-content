@@ -10,7 +10,7 @@ module Esp
         return unless chunked_leads[index]
         leads = chunked_leads[index].compact
         leads.select! do |l|
-          result = valid_email?(email) && is_impressionwise_test_success(l.email)
+          result = valid_email?(l.email) && is_impressionwise_test_success(l.email)
           l.destroy unless result
           result
         end
