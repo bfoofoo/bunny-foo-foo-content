@@ -3,7 +3,7 @@ class Api::V1::ArticlesController < ApiController
   before_action :authenticate, only: [:create, :update]
 
   def index
-    @articles = Article.all.order("created_at DESC")
+    @articles = Article.includes(:article_popups  ).all.order("created_at DESC")
     if params[:leadgen_rev_site_id] || params[:category_id]
       query = @articles.joins(:articles_leadgen_rev_sites).where({
         articles_leadgen_rev_sites: {leadgen_rev_site_id: params[:leadgen_rev_site_id]},
