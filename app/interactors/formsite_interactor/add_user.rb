@@ -23,8 +23,7 @@ module FormsiteInteractor
     end
 
     def user_state
-      results = Geocoder.search(user_ip)
-      results&.first&.state
+      GeocoderInteractor::GetStateByIP.call(ip: user_ip)&.state
     rescue
       nil
     end

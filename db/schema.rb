@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181210162306) do
+ActiveRecord::Schema.define(version: 20181211131643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -430,6 +430,16 @@ ActiveRecord::Schema.define(version: 20181210162306) do
     t.datetime "deleted_at"
     t.string   "fraud_user_redirect_url"
     t.index ["deleted_at"], name: "index_formsites_on_deleted_at", using: :btree
+  end
+
+  create_table "ip_locations", force: :cascade do |t|
+    t.bigint "ip_from"
+    t.bigint "ip_to"
+    t.string "country_code", limit: 2
+    t.string "country_name", limit: 64
+    t.string "region_name",  limit: 128
+    t.string "city_name",    limit: 128
+    t.index ["ip_from", "ip_to"], name: "index_ip_locations_on_ip_from_and_ip_to", using: :btree
   end
 
   create_table "leadgen_rev_site_ads", force: :cascade do |t|

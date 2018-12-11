@@ -29,8 +29,7 @@ class ApiUser
     end
 
     def user_state_for_ip(ip)
-      results = Geocoder.search(ip)
-      results&.first&.state
+      GeocoderInteractor::GetStateByIP.call(ip: user_ip)&.state
     rescue
       nil
     end
