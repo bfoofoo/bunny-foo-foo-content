@@ -14,7 +14,7 @@ module EmailMarketerService
           if is_valid?(user)
             client.contact.create_contacts(
               {
-                'GroupsToAddToIds' => [group.group_id]
+                'GroupsToAddToNames' => [group.name]
               },
               [
                 {
@@ -24,8 +24,8 @@ module EmailMarketerService
                   'LastName' => user.try(:last_name),
                   'State' => params[:state],
                   'IP' => params[:ip],
-                  'Join date' => params[:date],
-                  'Signup method' => params[:signup_method],
+                  'Joindate' => params[:date]&.strftime('%d.%m.%Y'),
+                  'Signupmethod' => params[:signup_method],
                   'URL' => params[:url]
                 }.compact
               ]
