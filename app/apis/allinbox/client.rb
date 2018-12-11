@@ -5,17 +5,8 @@ module Allinbox
       @api_key = api_key
     end
 
-
     def contact
       @contact ||= Contact.new(api_key)
-    end
-
-    
-
-    
-
-    def self_path
-      caller_locations(1,1)[0].label.to_s.camelize(:lower)
     end
   end
 end
