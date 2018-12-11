@@ -10,7 +10,7 @@ module Esp
       grouped_leads.each do |referrer, leads_by_referrer|
         list_name = mappings[referrer] || DEFAULT_LIST
         leads = leads_by_referrer.select do |l|
-          result = is_impressionwise_test_success(l.email)
+          result = valid_email?(l.email) && is_impressionwise_test_success(l.email)
           l.destroy unless result
           result
         end
@@ -29,6 +29,10 @@ module Esp
 
     def formsite_service
       @formsite_service ||= FormsiteService.new
+    end
+
+    def valid_email?(email)
+      email =~ Devise.email_regexp
     end
 
     def is_impressionwise_test_success(email)

@@ -14,7 +14,8 @@ class Formsite
         url: formsite_user.url,
         ip: formsite_user.ip,
         date: formsite_user.created_at,
-        signup_method: 'Webform'
+        signup_method: 'Webform',
+        state: formsite_user.state
       }.compact
     end
 

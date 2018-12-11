@@ -16,7 +16,7 @@ module EmailMarketerService
             client.post(members_path, {
               'address' => user.email,
               'name' => user_name,
-              'vars' => { 'affiliate' => params[:affiliate] }.to_json,
+              'vars' => params.slice(*meta_attributes).compact.to_json,
               'upsert' => 'yes'
             })
             handle_user_record(user)
@@ -53,6 +53,9 @@ module EmailMarketerService
         @account ||= list.mailgun_account
       end
 
+      def meta_attributes
+        %i(affiliate date signup_method url ip state)
+      end
     end
   end
 end

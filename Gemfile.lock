@@ -202,6 +202,7 @@ GEM
     fugit (1.1.6)
       et-orbi (~> 1.1, >= 1.1.6)
       raabro (~> 1.1)
+    geocoder (1.5.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     guard (2.14.1)
@@ -514,6 +515,7 @@ DEPENDENCIES
   factory_bot_rails (~> 4.0)
   faker
   flutie
+  geocoder (~> 1.5)
   guard-livereload (~> 2.5)
   health-monitor-rails!
   httparty

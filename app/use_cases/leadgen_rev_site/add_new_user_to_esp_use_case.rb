@@ -14,7 +14,8 @@ class LeadgenRevSite
         url: leadgen_rev_site_user.url,
         ip: leadgen_rev_site_user.ip,
         date: leadgen_rev_site_user.created_at,
-        signup_method: 'Webform'
+        signup_method: 'Webform',
+        state: leadgen_rev_site_user.state
       }.compact
     end
 

@@ -7,6 +7,8 @@ class Article < ApplicationRecord
   has_many :articles_leadgen_rev_sites
   has_many :leadgen_rev_sites, through: :articles_leadgen_rev_sites
 
+  has_many :article_popups
+
   mount_base64_uploader :cover_image, CommonUploader
 
   before_save :update_slug

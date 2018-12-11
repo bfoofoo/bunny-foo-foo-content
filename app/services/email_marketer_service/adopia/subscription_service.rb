@@ -33,7 +33,8 @@ module EmailMarketerService
           affiliate: params[:affiliate],
           ip_address: params[:ip],
           joining_date: params[:date],
-          source_url: params[:url]
+          source_url: params[:url],
+          state: params[:state]
         }.compact
       end
 

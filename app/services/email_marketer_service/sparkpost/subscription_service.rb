@@ -51,6 +51,10 @@ module EmailMarketerService
         @account ||= list.account
       end
 
+      def meta_attributes
+        %i(affiliate date signup_method url ip state)
+      end
+
       def build_recipient(user)
         user_name = user.try(:full_name).blank? ? user.try(:name) : user.full_name
         {
@@ -58,9 +62,7 @@ module EmailMarketerService
                 email: user.email,
                 name: user_name
             },
-            metadata: {
-                affiliate: params[:affiliate]
-            }
+            metadata: params.slice(*meta_attributes)
         }
       end
     end

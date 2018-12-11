@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181207152745) do
+ActiveRecord::Schema.define(version: 20181210162306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,18 @@ ActiveRecord::Schema.define(version: 20181207152745) do
     t.string   "job"
     t.index ["api_client_id"], name: "index_api_users_on_api_client_id", using: :btree
     t.index ["email"], name: "index_api_users_on_email", using: :btree
+  end
+
+  create_table "article_popups", force: :cascade do |t|
+    t.integer  "article_id"
+    t.integer  "leadgen_rev_site_id"
+    t.boolean  "show_popup",          default: false
+    t.string   "popup_iframe_urls",   default: [],                 array: true
+    t.integer  "popup_delay"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.index ["article_id", "leadgen_rev_site_id"], name: "index_article_popups_on_article_id_and_leadgen_rev_site_id", using: :btree
+    t.index ["article_id"], name: "index_article_popups_on_article_id", using: :btree
   end
 
   create_table "articles", force: :cascade do |t|
@@ -377,6 +389,7 @@ ActiveRecord::Schema.define(version: 20181207152745) do
     t.string   "site_type",                      default: "leadgen"
     t.integer  "website_id"
     t.string   "url"
+    t.string   "state"
     t.index ["deleted_at"], name: "index_formsite_users_on_deleted_at", using: :btree
     t.index ["website_id"], name: "index_formsite_users_on_website_id", using: :btree
   end
@@ -467,6 +480,7 @@ ActiveRecord::Schema.define(version: 20181207152745) do
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
     t.string   "url"
+    t.string   "state"
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
     t.index ["user_id"], name: "index_leadgen_rev_site_users_on_user_id", using: :btree
   end

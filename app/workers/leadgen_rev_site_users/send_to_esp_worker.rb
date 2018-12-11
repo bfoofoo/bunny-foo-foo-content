@@ -16,12 +16,13 @@ module LeadgenRevSiteUsers
               url: leadgen_rev_site_user.url,
               ip: leadgen_rev_site_user.ip,
               date: leadgen_rev_site_user.created_at,
-              signup_method: 'Webform'
+              signup_method: 'Webform',
+              state: leadgen_rev_site_user.state
             }.compact
             esp_list = rule.esp_rules_lists[index]
             esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.sending_limit&.reached? || esp_list.sending_limit&.isp_limit_reached?(leadgen_rev_site_user.user.email)
             next unless esp_list
-            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[esp_list.list_type], leadgen_rev_site_user.user)
+            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(:add, leadgen_rev_site_user.user)
           end
         end
       end

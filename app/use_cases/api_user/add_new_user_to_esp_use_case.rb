@@ -29,7 +29,8 @@ class ApiUser
         ip: api_user.ip,
         date: api_user.created_at,
         signup_method: 'Webform',
-        affiliate: rule.affiliate
+        affiliate: rule.affiliate,
+        state: api_user.state
       }.compact
     end
 

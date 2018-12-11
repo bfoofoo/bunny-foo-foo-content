@@ -14,13 +14,14 @@ module ApiUsers
               ipAddress: api_user.ip,
               ip: api_user.ip,
               date: api_user.created_at,
-              signup_method: 'Webform'
+              signup_method: 'Webform',
+              state: api_user.state
             }.compact
             next unless rule.should_send_now?(api_user.created_at)
             esp_list = rule.esp_rules_lists[index]
             esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.sending_limit&.reached? || esp_list.sending_limit&.isp_limit_reached?(api_user.email)
             next unless esp_list
-            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(ESP_METHOD_MAPPING[esp_list.list_type], api_user)
+            subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(:add, api_user)
           end
         end
       end
