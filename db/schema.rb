@@ -279,6 +279,7 @@ ActiveRecord::Schema.define(version: 20181210162306) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|

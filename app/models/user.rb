@@ -4,7 +4,9 @@ class User < ApplicationRecord
   acts_as_paranoid
 
   has_many :formsite_users
+  has_many :leadgen_rev_site_users
   has_many :formsites, through: :formsite_users
+  has_many :leadgen_rev_sites, through: :leadgen_rev_site_users
   has_many :formsite_user_answers
   has_many :leads
   has_many :esp_rules, as: :source, class_name: 'EspRules::Formsite'
