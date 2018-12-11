@@ -12,6 +12,7 @@ module Esp
       netatlantic: 'NetatlanticList',
       mailgun: 'MailgunList',
       onepoint: 'OnepointList',
+      allinbox: 'AllinboxList',      
       sparkpost: 'SparkpostList',
       getresponse: 'GetresponseList'
     }.freeze
