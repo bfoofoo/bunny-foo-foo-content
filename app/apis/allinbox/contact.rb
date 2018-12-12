@@ -1,7 +1,7 @@
 module Allinbox
   class Contact < Resource
     def create(params)
-      response = @request.post("contact", create_params(params))
+      response = @request.post("contacts", create_params(params))
       Response.new(response).parse
     end
 
@@ -14,8 +14,8 @@ module Allinbox
     def create_params(data)
       params = {
         'email' => data[:email],
-        'first_name' => data[:first_name],
-        'last_name' => data[:last_name],
+        #'first_name' => data[:first_name],
+        #'last_name' => data[:last_name],
         'source_id' => data[:list_id],
         'api_key' => data[:api_key],
         'ip_address' => data[:ip]               
