@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181211131643) do
+ActiveRecord::Schema.define(version: 20181212120033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,7 +279,6 @@ ActiveRecord::Schema.define(version: 20181211131643) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
-    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -381,6 +380,8 @@ ActiveRecord::Schema.define(version: 20181211131643) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -572,6 +573,38 @@ ActiveRecord::Schema.define(version: 20181211131643) do
     t.datetime "updated_at",          null: false
     t.index ["mailgun_list_id"], name: "index_mailgun_templates_schedules_on_mailgun_list_id", using: :btree
     t.index ["mailgun_template_id"], name: "index_mailgun_templates_schedules_on_mailgun_template_id", using: :btree
+  end
+
+  create_table "message_recipients", force: :cascade do |t|
+    t.integer  "message_schedule_id", null: false
+    t.string   "email",               null: false
+    t.hstore   "metadata"
+    t.datetime "sent_at"
+    t.index ["message_schedule_id"], name: "index_message_recipients_on_message_schedule_id", using: :btree
+  end
+
+  create_table "message_schedules", force: :cascade do |t|
+    t.integer  "message_template_id",                     null: false
+    t.string   "esp_list_type"
+    t.integer  "esp_list_id"
+    t.datetime "time",                                    null: false
+    t.string   "scheduled_job_id"
+    t.string   "state",               default: "pending", null: false
+    t.integer  "time_span",           default: 0,         null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
+    t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
+  end
+
+  create_table "message_templates", force: :cascade do |t|
+    t.string   "author"
+    t.string   "subject"
+    t.text     "body"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "netatlantic_accounts", force: :cascade do |t|
@@ -779,6 +812,8 @@ ActiveRecord::Schema.define(version: 20181211131643) do
   add_foreign_key "mailgun_lists", "mailgun_accounts"
   add_foreign_key "mailgun_templates_schedules", "esp_lists", column: "mailgun_list_id"
   add_foreign_key "mailgun_templates_schedules", "mailgun_templates"
+  add_foreign_key "message_recipients", "message_schedules"
+  add_foreign_key "message_schedules", "message_templates"
   add_foreign_key "onepoint_lists", "onepoint_accounts"
   add_foreign_key "product_cards", "leadgen_rev_sites"
   add_foreign_key "product_cards", "websites"
