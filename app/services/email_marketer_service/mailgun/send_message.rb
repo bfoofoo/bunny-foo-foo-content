@@ -57,18 +57,20 @@ module EmailMarketerService
       end
 
       def send_gradually
-        @delivery_time = Time.zone.now
-        recipients = MessageRecipient.where(message_schedule_id: @schedule.id).to_a
+        @start_time = Time.zone.now
+        @end_time = @start_time + @schedule.time_span.minutes
+        recipients = MessageRecipient.where(message_schedule_id: @schedule.id).order('RANDOM()').to_a
         recipients.each do |r|
+          delivery_time = Time.zone.at((end_time.to_f - start_time.to_f)*rand + start_time.to_f)
+
           params = {
             from: "#{@template.author} #{@template.author.parameterize.underscore}@#{domain}",
             to: r.email,
             subject: @template.subject,
             html: @template.body,
-            'o:deliverytime' => @delivery_time.rfc2822
+            'o:deliverytime' => delivery_time.rfc2822
           }
           client.post("/#{domain}/messages", params)
-          @delivery_time += interval(recipients.count).seconds
         end
       end
 
@@ -80,11 +82,6 @@ module EmailMarketerService
           html: @template.body
         }
         client.post("/#{domain}/messages", params)
-      end
-
-      # calculate interval between each recipient in seconds
-      def interval(recipients_count)
-        @schedule.time_span / recipients_count.to_f * 60
       end
 
       def domain
