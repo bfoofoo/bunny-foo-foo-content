@@ -3,4 +3,8 @@ class MessageTemplate < ApplicationRecord
 
   has_many :message_schedules, dependent: :destroy
   has_many :message_recipients, dependent: :destroy
+
+  def name
+    "#{subject} (##{id})"
+  end
 end
