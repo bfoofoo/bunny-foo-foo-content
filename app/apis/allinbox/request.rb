@@ -2,7 +2,7 @@ module Allinbox
   class Request
     include HTTParty
     attr_reader :api_key
-
+    debug_output Rails.logger
     API_ENDPOINT = 'https://api2.all-inbox.com/?resource='.freeze
 
     base_uri API_ENDPOINT
@@ -13,7 +13,7 @@ module Allinbox
 
     
     def post(path, params={})
-      self.class.post(uri(path),:body => params,:debug_output => $stdout, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})       
+      self.class.post(uri(path),:body => params,:headers => {"Content-Type" => "application/x-www-form-urlencoded"})       
     end
 
     def get(path, params={})
