@@ -19,4 +19,8 @@ class EspList < ApplicationRecord
   def purge_esp_rules_lists
     EspRulesList.where(list_type: type, list_id: id).delete_all
   end
+
+  def self.provider
+    self.model_name.name.underscore.split('_').first
+  end
 end

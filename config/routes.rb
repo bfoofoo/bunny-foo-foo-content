@@ -11,10 +11,10 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
-      resources :mailgun_templates, only: [] do
-        collection do
+      resources :message_schedules, only: [] do
+        member do
           post 'schedule_sending'
-          post 'delete_schedule'
+          post 'cancel'
           post 'send_now'
         end
       end
