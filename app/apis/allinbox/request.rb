@@ -2,7 +2,6 @@ module Allinbox
   class Request
     include HTTParty
     attr_reader :api_key
-    debug_output Rails.logger
     API_ENDPOINT = 'https://api2.all-inbox.com/?resource='.freeze
 
     base_uri API_ENDPOINT
