@@ -14,7 +14,7 @@ module EmailMarketerService
       def call
         selected_lists.each do |list|
           data.each_slice(BATCH_SIZE) do |slice|
-            add_members(slice, list)
+            add_members_one_by_one(slice, list)
             @processed_emails.concat(slice)
           end
         end
@@ -25,6 +25,25 @@ module EmailMarketerService
       def selected_lists
         return NetatlanticList.where(name: @list_names) unless @list_names.empty?
         NetatlanticList.all
+      end
+
+      def add_members_one_by_one(data, list)
+        members = data.map do |item|
+          if item.is_a?(Hash)
+            { 'EmailAddress' => item[:email], 'FullName' => item[:full_name] }
+          else
+            { 'EmailAddress' => item, 'FullName' => '' }
+          end
+        end
+
+        members.each do |member|
+          response = HTTParty.post("#{API_PATH}/create_member.php", body: { email: member["EmailAddress"], full_name: member["FullName"], account: list.account.account_name, list: list.name }.compact)
+
+          EmailMarketerService::Netatlantic::SubscriptionService
+            .new(list)
+            .update_member_demographics(response, member["EmailAddress"])
+        end
+
       end
 
       def add_members(data, list)
