@@ -19,7 +19,7 @@ module ApiUsers
             }.compact
             next unless rule.should_send_now?(api_user.created_at)
             esp_list = rule.esp_rules_lists[index]
-            esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.sending_limit&.reached? || esp_list.sending_limit&.isp_limit_reached?(api_user.email)
+            esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.list.sending_limit&.reached? || esp_list.list.sending_limit&.isp_limit_reached?(api_user.email)
             next unless esp_list
             subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(:add, api_user)
           end
