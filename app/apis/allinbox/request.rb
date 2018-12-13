@@ -13,7 +13,7 @@ module Allinbox
 
     
     def post(path, params={})
-      self.class.post(uri(path),:body => params, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})       
+      self.class.post(uri(path),:body => params,:debug_output => $stdout, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})       
     end
 
     def get(path, params={})
