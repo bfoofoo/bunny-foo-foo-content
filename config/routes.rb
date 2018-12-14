@@ -9,8 +9,6 @@ Rails.application.routes.draw do
     mount Sidekiq::Web, at: '/sidekiq'
   end
 
-  get 'test', to: 'application#test'
-
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
       resources :message_schedules, only: [] do

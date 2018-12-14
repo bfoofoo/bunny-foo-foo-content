@@ -1,11 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :save_user_email_to_session
 
-  def test
-    restuls = Esp::BatchSendToNetatlanticWorker.new().test
-    send_data restuls, filename: "filename.csv"
-  end
-
   def save_user_email_to_session
     if session[:user_email].blank? && !current_admin_user.blank? && session[:user_email] != current_admin_user&.email
       session[:user_email] ||= current_admin_user&.email
