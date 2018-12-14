@@ -13,7 +13,9 @@ class Article < ApplicationRecord
 
   before_save :update_slug
 
-  validates :name, presence: true, uniqueness: true
+  validates_as_paranoid
+  validates_uniqueness_of_without_deleted :name
+  validates :name, presence: true
 
   private
 
