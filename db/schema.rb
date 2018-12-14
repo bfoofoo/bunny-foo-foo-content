@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181214130837) do
+ActiveRecord::Schema.define(version: 20181214134844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,6 +279,7 @@ ActiveRecord::Schema.define(version: 20181214130837) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -458,6 +459,7 @@ ActiveRecord::Schema.define(version: 20181214130837) do
     t.integer  "leadgen_rev_site_user_id"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.string   "url"
     t.index ["answer_id"], name: "index_leadgen_rev_site_user_answers_on_answer_id", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_user_answers_on_leadgen_rev_site_id", using: :btree
     t.index ["leadgen_rev_site_user_id"], name: "index_leadgen_rev_site_user_answers_on_leadgen_rev_site_user_id", using: :btree
@@ -583,16 +585,16 @@ ActiveRecord::Schema.define(version: 20181214130837) do
   end
 
   create_table "message_schedules", force: :cascade do |t|
-    t.integer  "message_template_id",                     null: false
+    t.integer  "message_template_id",             null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
-    t.datetime "time",                                    null: false
+    t.datetime "time",                            null: false
     t.string   "scheduled_job_id"
-    t.string   "state",               default: "pending", null: false
-    t.integer  "time_span",           default: 0,         null: false
+    t.string   "state"
+    t.integer  "time_span",           default: 0, null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
   end
