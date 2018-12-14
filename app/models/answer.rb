@@ -7,11 +7,14 @@ class Answer < ApplicationRecord
   belongs_to :formsite_user, optional: true
 
   has_many :formsite_user_answers
+  has_many :leadgen_rev_site_user_answers
 
   validates :text, presence: true
 
   scope :order_by_id, -> () { order(id: :asc) }
   scope :order_by_question_id, -> () { order(question_id: :asc) }
+  scope :of_formsites, -> { joins(:question).where.not(questions: { formsite_id: nil }) }
+  scope :of_leadgen_rev_sites, -> { joins(:question).where.not(questions: { leadgen_rev_site_id: nil }) }
 
   default_scope {order(id: :asc)}
 
