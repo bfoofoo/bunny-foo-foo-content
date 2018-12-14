@@ -128,7 +128,7 @@ module LeadgenRevSiteInteractor
     end
 
     def leadgen_rev_site_user_params
-      params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip, :url)
+      params.require(:user).permit(:user_id, :s1, :s2, :s3, :s4, :s5, :birthday, :phone, :zip, :url, :sms_compliant)
     end
   end
 end
