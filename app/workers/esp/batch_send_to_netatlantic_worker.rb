@@ -4,6 +4,27 @@ module Esp
 
     BATCH_SIZE = 2000.freeze
 
+    def test
+      ids = LeadgenRevSite.all.pluck(:id)
+      users = LeadgenRevSiteUser.includes(:user).where(is_verified: true, leadgen_rev_site_id: ids).where.not(phone: "", phone: nil, user_id: nil)
+
+      CSV.generate(headers: true, quote_char: '"', force_quotes: true) do |csv|
+        csv << [
+          "id", "site_name", "ip", "email", "first_name", "last_name",
+          "url", "affiliate", "job_key", "state", 
+          "phone", "zip"
+        ]
+
+        users.each do |user|
+          row = [
+            user.id, user.leadgen_rev_site.name, user.ip, user.user.email, user.user.first_name, user.user.last_name,
+            user.url, user.affiliate, user.job_key, user.state, user.phone, user.zip
+          ]
+          csv << row
+        end
+      end
+    end
+
     def perform
       return if available_leads.empty?
       selected_leads = available_leads.where(destination_name: all_api_clients + all_formsites).limit(BATCH_SIZE).to_a
