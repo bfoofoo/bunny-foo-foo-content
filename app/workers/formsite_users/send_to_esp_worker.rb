@@ -10,7 +10,7 @@ module FormsiteUsers
         formsite_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
           slice.each_with_index do |formsite_user, index|
             next unless rule.should_send_now?(formsite_user.created_at)
-            @params = {
+            params = {
               affiliate: formsite_user.affiliate,
               ipAddress: formsite_user.ip,
               url: formsite_user.url,

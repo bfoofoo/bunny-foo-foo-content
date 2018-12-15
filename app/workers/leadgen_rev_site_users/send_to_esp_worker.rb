@@ -10,7 +10,7 @@ module LeadgenRevSiteUsers
         leadgen_rev_site_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
           slice.each_with_index do |leadgen_rev_site_user, index|
             next unless rule.should_send_now?(leadgen_rev_site_user.created_at)
-            @params = {
+            params = {
               affiliate: leadgen_rev_site_user.affiliate,
               ipAddress: leadgen_rev_site_user.ip,
               url: leadgen_rev_site_user.url,
