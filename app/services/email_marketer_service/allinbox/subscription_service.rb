@@ -12,7 +12,6 @@ module EmailMarketerService
       def add(user)
         begin
           if is_valid?(user)
-            puts user
             client.contact.create( {
               email: user.email,
               first_name: user.try(:first_name),
