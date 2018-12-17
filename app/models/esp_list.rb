@@ -1,7 +1,8 @@
 class EspList < ApplicationRecord
-  has_many :exported_leads, as: :list
+  has_many :exported_leads, as: :list, dependent: :delete_all
+  has_many :message_auto_responses, as: :esp_list, dependent: :nullify
 
-  before_destroy :purge_esp_rules_lists
+  before_destroy :purge_associations
 
   delegate :sending_limit, to: :account
 
@@ -16,8 +17,9 @@ class EspList < ApplicationRecord
 
   # Workaround to delete esp rules lists
   # TODO resolve this to work in rails way
-  def purge_esp_rules_lists
+  def purge_associations
     EspRulesList.where(list_type: type, list_id: id).delete_all
+    MessageAutoResponse.where(esp_list_type: type, esp_list_id: id).delete_all
   end
 
   def self.provider
