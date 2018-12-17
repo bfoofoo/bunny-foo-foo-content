@@ -279,6 +279,7 @@ ActiveRecord::Schema.define(version: 20181217155736) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -598,16 +599,16 @@ ActiveRecord::Schema.define(version: 20181217155736) do
   end
 
   create_table "message_schedules", force: :cascade do |t|
-    t.integer  "message_template_id",                     null: false
+    t.integer  "message_template_id",             null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
-    t.datetime "time",                                    null: false
+    t.datetime "time",                            null: false
     t.string   "scheduled_job_id"
-    t.string   "state",               default: "pending", null: false
-    t.integer  "time_span",           default: 0,         null: false
+    t.string   "state"
+    t.integer  "time_span",           default: 0, null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
   end
