@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby "2.4.1"
+ruby "2.5.3"
 # git_source(:github) do |repo_name|
 #   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
 #   "https://github.com/#{repo_name}.git"
@@ -59,7 +59,7 @@ gem "audited", "~> 4.7"
 # ESP
 gem 'simple_spark', github: 'bfoofoo/simple_spark'
 gem 'mailgun-ruby', '~> 1.1', '>= 1.1.11'
-
+gem 'constantcontact', '~> 4.0.0'
 # Background jobs
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 1.0', '>= 1.0.4'
