@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181214134844) do
+ActiveRecord::Schema.define(version: 20181217155736) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,7 +279,6 @@ ActiveRecord::Schema.define(version: 20181214134844) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
-    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -318,6 +317,7 @@ ActiveRecord::Schema.define(version: 20181214134844) do
     t.integer  "linkable_id"
     t.datetime "created_at"
     t.integer  "esp_rule_id"
+    t.datetime "autoresponded_at"
     t.index ["esp_rule_id"], name: "index_exported_leads_on_esp_rule_id", using: :btree
     t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
     t.index ["list_type", "list_id"], name: "index_exported_leads_on_list_type_and_list_id", using: :btree
@@ -576,6 +576,19 @@ ActiveRecord::Schema.define(version: 20181214134844) do
     t.index ["mailgun_template_id"], name: "index_mailgun_templates_schedules_on_mailgun_template_id", using: :btree
   end
 
+  create_table "message_auto_responses", force: :cascade do |t|
+    t.integer  "message_template_id",             null: false
+    t.string   "esp_list_type"
+    t.integer  "esp_list_id"
+    t.string   "scheduled_job_id"
+    t.integer  "delay_in_minutes",    default: 0, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.index ["esp_list_type", "esp_list_id"], name: "index_message_auto_responses_on_esp_list_type_and_esp_list_id", using: :btree
+    t.index ["message_template_id"], name: "index_message_auto_responses_on_message_template_id", using: :btree
+  end
+
   create_table "message_recipients", force: :cascade do |t|
     t.integer  "message_schedule_id", null: false
     t.string   "email",               null: false
@@ -585,16 +598,16 @@ ActiveRecord::Schema.define(version: 20181214134844) do
   end
 
   create_table "message_schedules", force: :cascade do |t|
-    t.integer  "message_template_id",             null: false
+    t.integer  "message_template_id",                     null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
-    t.datetime "time",                            null: false
+    t.datetime "time",                                    null: false
     t.string   "scheduled_job_id"
-    t.string   "state"
-    t.integer  "time_span",           default: 0, null: false
+    t.string   "state",               default: "pending", null: false
+    t.integer  "time_span",           default: 0,         null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
   end
@@ -660,6 +673,14 @@ ActiveRecord::Schema.define(version: 20181214134844) do
     t.index ["sent_to_adopia"], name: "index_pending_leads_on_sent_to_adopia", using: :btree
     t.index ["sent_to_netatlantic"], name: "index_pending_leads_on_sent_to_netatlantic", using: :btree
     t.index ["source_type", "source_id"], name: "index_pending_leads_on_source_type_and_source_id", using: :btree
+  end
+
+  create_table "pixel_code_snippets", force: :cascade do |t|
+    t.string   "leadgen_entry"
+    t.integer  "leadgen_rev_site_id"
+    t.string   "first_question_code_snippet"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "product_cards", force: :cascade do |t|
@@ -813,6 +834,7 @@ ActiveRecord::Schema.define(version: 20181214134844) do
   add_foreign_key "mailgun_lists", "mailgun_accounts"
   add_foreign_key "mailgun_templates_schedules", "esp_lists", column: "mailgun_list_id"
   add_foreign_key "mailgun_templates_schedules", "mailgun_templates"
+  add_foreign_key "message_auto_responses", "message_templates"
   add_foreign_key "message_recipients", "message_schedules"
   add_foreign_key "message_schedules", "message_templates"
   add_foreign_key "onepoint_lists", "onepoint_accounts"

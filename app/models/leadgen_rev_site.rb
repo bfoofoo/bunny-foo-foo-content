@@ -16,6 +16,7 @@ class LeadgenRevSite < ApplicationRecord
   has_many :leadgen_rev_site_ads, dependent: :restrict_with_error
   has_many :ads, through: :leadgen_rev_site_ads
 
+  has_many :pixel_code_snippets, dependent: :destroy
   has_many :questions, dependent: :destroy
   has_many :articles_leadgen_rev_sites
   has_many :articles, through: :articles_leadgen_rev_sites, dependent: :destroy
