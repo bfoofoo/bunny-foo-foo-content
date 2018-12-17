@@ -57,11 +57,11 @@ module EmailMarketerService
       end
 
       def send_gradually
-        @start_time = Time.zone.now
-        @end_time = @start_time + @schedule.time_span.minutes
+        start_time = Time.zone.now
+        end_time = start_time + @schedule.time_span.minutes
         recipients = MessageRecipient.where(message_schedule_id: @schedule.id).order('RANDOM()').to_a
         recipients.each do |r|
-          delivery_time = Time.zone.at((@end_time.to_f - @start_time.to_f)*rand + start_time.to_f)
+          delivery_time = Time.zone.at((end_time.to_f - start_time.to_f)*rand + start_time.to_f)
 
           params = {
             from: "#{@template.author} #{@template.author.parameterize.underscore}@#{domain}",
