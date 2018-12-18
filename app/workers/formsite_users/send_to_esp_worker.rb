@@ -35,7 +35,7 @@ module FormsiteUsers
     end
 
     def available_formsite_users_for(rule)
-      rule.formsite.formsite_users.is_verified.where('formsite_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
+      rule.formsite.formsite_users.is_verified.joins(:user).where('formsite_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
     end
   end
 end
