@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181217155736) do
+ActiveRecord::Schema.define(version: 20181218105400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -319,6 +319,8 @@ ActiveRecord::Schema.define(version: 20181217155736) do
     t.datetime "created_at"
     t.integer  "esp_rule_id"
     t.datetime "autoresponded_at"
+    t.datetime "clicked_at"
+    t.datetime "opened_at"
     t.index ["esp_rule_id"], name: "index_exported_leads_on_esp_rule_id", using: :btree
     t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
     t.index ["list_type", "list_id"], name: "index_exported_leads_on_list_type_and_list_id", using: :btree
