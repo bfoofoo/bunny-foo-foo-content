@@ -9,7 +9,7 @@ module EmailMarketerService
 
       def call
         return unless email
-        mark_lead_as_autoresponded if send_message
+        touch_lead if send_message
       end
 
       private
@@ -41,8 +41,8 @@ module EmailMarketerService
         @list.address.split('@').second
       end
 
-      def mark_lead_as_autoresponded
-        @lead.touch(:autoresponded_at)
+      def touch_lead
+        @lead.autoresponded_at? ? @lead.touch(:followed_up_at) : @lead.touch(:autoresponded_at)
       end
     end
   end

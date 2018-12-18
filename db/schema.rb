@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181218105400) do
+ActiveRecord::Schema.define(version: 20181218123756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -321,6 +321,7 @@ ActiveRecord::Schema.define(version: 20181218105400) do
     t.datetime "autoresponded_at"
     t.datetime "clicked_at"
     t.datetime "opened_at"
+    t.datetime "followed_up_at"
     t.index ["esp_rule_id"], name: "index_exported_leads_on_esp_rule_id", using: :btree
     t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
     t.index ["list_type", "list_id"], name: "index_exported_leads_on_list_type_and_list_id", using: :btree
@@ -580,14 +581,16 @@ ActiveRecord::Schema.define(version: 20181218105400) do
   end
 
   create_table "message_auto_responses", force: :cascade do |t|
-    t.integer  "message_template_id",             null: false
+    t.integer  "message_template_id",                 null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
     t.string   "scheduled_job_id"
-    t.integer  "delay_in_minutes",    default: 0, null: false
+    t.integer  "delay_in_minutes",    default: 0,     null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "followup",            default: false
+    t.string   "event"
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_auto_responses_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_auto_responses_on_message_template_id", using: :btree
   end

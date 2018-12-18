@@ -1,6 +1,7 @@
 module Messages
   class MassSendWorker
     include Sidekiq::Worker
+    sidekiq_options queue: 'messages'
 
     def perform(message_schedule_id)
       schedule = MessageSchedule.find(message_schedule_id)

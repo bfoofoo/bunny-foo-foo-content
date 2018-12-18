@@ -5,4 +5,4 @@ max_retries: 2
   - default
   - statistics
   - leads
-  - mailgun
+  - messages

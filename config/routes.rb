@@ -87,6 +87,10 @@ Rails.application.routes.draw do
       end
       resources :articles, only: [:index, :show, :create]
       resources :api_users, only: [:show, :create, :update]
+      resources :mailgun_callbacks, only: [] do
+        post "click"
+        post "open"
+      end
     end
   end
 end

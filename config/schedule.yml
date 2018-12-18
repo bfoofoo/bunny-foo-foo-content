@@ -32,3 +32,8 @@ batch_old_send_to_netatlantic:
   cron: "0 * * * *"
   class: "Esp::BatchSendOldRefsToNetatlanticWorker"
   queue: leads
+
+autorespond_to_inactive_recipients:
+  cron: "1 * * * *"
+  class: "Messages::ReminderWoker"
+  queue: messages
