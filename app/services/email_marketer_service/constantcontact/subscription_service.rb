@@ -21,7 +21,6 @@ module EmailMarketerService
             new_contact.add_list(list_to_add_to)
             new_contact.first_name = user.try(:first_name)
             new_contact.last_name = user.try(:last_name)
-            puts new_contact.to_json
             client.add_contact(new_contact)
             handle_user_record(user)
           end
@@ -53,7 +52,6 @@ module EmailMarketerService
       
       def account
         @account ||= list.constantcontact_account
-        puts @account
       end
 
     end
