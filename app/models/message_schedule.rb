@@ -6,7 +6,7 @@ class MessageSchedule < ApplicationRecord
 
   validates :message_template_id, :esp_list_id, :time, presence: true
   validates :time_span, numericality: { greater_than_or_equal_to: 0 }
-  validate :check_time
+  validate :check_time, on: :create
 
   after_commit :schedule_sending, on: [:create, :update]
   before_destroy :cancel
