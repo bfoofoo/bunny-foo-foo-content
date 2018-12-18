@@ -10,7 +10,7 @@ class FormsiteUser < ApplicationRecord
   has_many :esp_rules_lists, through: :esp_rules
   has_many :exported_leads, through: :user
 
-  delegate :email, :sent_to_adopia?, :sent_to_elite?, :sent_to_netatlantic?, :sent_to_mailgun?,
+  delegate :email,  :first_name, :last_name, :sent_to_adopia?, :sent_to_elite?, :sent_to_netatlantic?, :sent_to_mailgun?,
            :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?,  :sent_to_allinbox?,   :sent_to_constantcontact?,
            to: :user, allow_nil: true
 
