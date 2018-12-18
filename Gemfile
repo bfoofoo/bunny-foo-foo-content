@@ -59,7 +59,7 @@ gem "audited", "~> 4.7"
 # ESP
 gem 'simple_spark', github: 'bfoofoo/simple_spark'
 gem 'mailgun-ruby', '~> 1.1', '>= 1.1.11'
-
+gem 'constantcontact', '~> 4.0.0'
 # Background jobs
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 1.0', '>= 1.0.4'

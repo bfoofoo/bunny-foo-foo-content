@@ -10,8 +10,8 @@ class FormsiteUser < ApplicationRecord
   has_many :esp_rules_lists, through: :esp_rules
   has_many :exported_leads, through: :user
 
-  delegate :email, :first_name, :last_name, :sent_to_adopia?, :sent_to_elite?,
-           :sent_to_netatlantic?, :full_name, :sent_to_mailgun?, :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?,
+  delegate :email,  :first_name, :last_name, :sent_to_adopia?, :sent_to_elite?, :sent_to_netatlantic?, :sent_to_mailgun?,
+           :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?,  :sent_to_allinbox?,   :sent_to_constantcontact?,
            to: :user, allow_nil: true
 
   scope :by_s_filter, -> (s_field) {
@@ -39,6 +39,14 @@ class FormsiteUser < ApplicationRecord
   }
 
   scope :by_email_domain, ->(domain) { joins(:user).where('users.email ~* ?', '@' + domain + '\.\w+$') }
+
+  def full_name
+    if user&.first_name.blank? && user&.last_name.blank? && !user.blank?
+      user.email
+    elsif !user&.first_name.blank? || !user&.last_name.blank?
+      "#{user&.first_name} #{user&.last_name}"
+    end
+  end
 
   User::ESP_LIST_TYPES.each do |provider, type|
     define_method :"local_sent_to_#{provider}?" do
