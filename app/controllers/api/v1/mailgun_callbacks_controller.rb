@@ -2,10 +2,12 @@ class Api::V1::MailgunCallbacksController < ApiController
   before_action :set_recipient, only: [:click, :open]
 
   def click
-    if @recipient
+    if @recipient&.autoresponse_message_id == message_id
       @recipient.touch(:clicked_at)
       @recipient.autorespond(followup: true, event: :click)
       render json: { message: 'success' }
+    elsif @recipient
+      head :no_content
     else
       render json: { message: 'Recipient not found' }, status: :not_found
     end
@@ -31,5 +33,9 @@ class Api::V1::MailgunCallbacksController < ApiController
       .order(created_at: :desc)
       .autoresponded
       .first
+  end
+
+  def message_id
+    params.dig('mesaage', 'headers', 'message-id')
   end
 end

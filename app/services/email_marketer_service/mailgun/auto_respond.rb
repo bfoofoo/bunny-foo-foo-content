@@ -9,7 +9,8 @@ module EmailMarketerService
 
       def call
         return unless email
-        touch_lead if send_message
+        result = send_message
+        update_lead(result.try(:fetch, 'id'))
       end
 
       private
@@ -22,8 +23,7 @@ module EmailMarketerService
           html: @template.body
         }
         response = client.post("/#{domain}/messages", params)
-        body = JSON.parse(response.body)
-        body.try(:fetch, 'id')
+        JSON.parse(response.body)
       rescue JSON::ParserError
         false
       end
@@ -41,8 +41,13 @@ module EmailMarketerService
         @list.address.split('@').second
       end
 
-      def touch_lead
-        @lead.autoresponded_at? ? @lead.touch(:followed_up_at) : @lead.touch(:autoresponded_at)
+      def update_lead(message_id)
+        return unless message_id
+        if @lead.autoresponded_at?
+          @lead.touch(:followed_up_at)
+        else
+          @lead.update(autoresponse_message_id: message_id, autoresponded_at: Time.zone.now)
+        end
       end
     end
   end

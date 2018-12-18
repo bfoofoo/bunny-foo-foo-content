@@ -279,7 +279,6 @@ ActiveRecord::Schema.define(version: 20181218123756) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
-    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -319,6 +318,7 @@ ActiveRecord::Schema.define(version: 20181218123756) do
     t.datetime "created_at"
     t.integer  "esp_rule_id"
     t.datetime "autoresponded_at"
+    t.string   "autoresponse_message_id"
     t.datetime "clicked_at"
     t.datetime "opened_at"
     t.datetime "followed_up_at"
@@ -385,6 +385,8 @@ ActiveRecord::Schema.define(version: 20181218123756) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -604,16 +606,16 @@ ActiveRecord::Schema.define(version: 20181218123756) do
   end
 
   create_table "message_schedules", force: :cascade do |t|
-    t.integer  "message_template_id",             null: false
+    t.integer  "message_template_id",                     null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
-    t.datetime "time",                            null: false
+    t.datetime "time",                                    null: false
     t.string   "scheduled_job_id"
-    t.string   "state"
-    t.integer  "time_span",           default: 0, null: false
+    t.string   "state",               default: "pending", null: false
+    t.integer  "time_span",           default: 0,         null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
   end
