@@ -24,7 +24,7 @@ suppression_lists_autoremove_from_esp:
   queue: default
 
 batch_send_to_adopia:
-  cron: "0 */2 * * *"
+  cron: "0 * * * *"
   class: "Esp::BatchSendToAdopiaWorker"
   queue: leads
 
