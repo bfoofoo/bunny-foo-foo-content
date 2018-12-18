@@ -2,7 +2,7 @@ module Esp
   class BatchSendToAdopiaWorker
     include Sidekiq::Worker
 
-    TARGET_BATCH_SIZE = 15000.freeze
+    TARGET_BATCH_SIZE = 7500.freeze
 
     def perform
       return if available_leads.empty?
@@ -36,7 +36,7 @@ module Esp
     end
 
     def valid_email?(email)
-      email =~ Devise.email_regexp
+      email =~ URI::MailTo::EMAIL_REGEXP
     end
 
     def is_impressionwise_test_success(email)

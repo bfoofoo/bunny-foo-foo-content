@@ -2,14 +2,13 @@ module Esp
   class BatchSendOldRefsToNetatlanticWorker
     include Sidekiq::Worker
 
-    TARGET_BATCH_SIZE = 15000.freeze
-    DEFAULT_LIST = 'dd-daily'.freeze
+    TARGET_BATCH_SIZE = 7500.freeze
 
     def perform
       return if available_leads.empty?
-      grouped_leads.each do |referrer, leads_by_referrer|
-        list_name = mappings[referrer] || DEFAULT_LIST
-        leads = leads_by_referrer.select do |l|
+      leads_to_send.each_slice(TARGET_BATCH_SIZE / destination_lists.count).with_index do |slice, index|
+        list_name = destination_lists[index % destination_lists.count]
+        leads = slice.select do |l|
           result = valid_email?(l.email) && is_impressionwise_test_success(l.email)
           l.destroy unless result
           result
@@ -23,55 +22,27 @@ module Esp
 
     private
 
-    def grouped_leads
-      @grouped_leads = leads_to_send.group_by(&:referrer)
-    end
-
     def formsite_service
       @formsite_service ||= FormsiteService.new
     end
 
     def valid_email?(email)
-      email =~ Devise.email_regexp
+      email =~ URI::MailTo::EMAIL_REGEXP
     end
 
     def is_impressionwise_test_success(email)
       formsite_service.is_impressionwise_test_success({email: email})
     end
 
-    def mappings
-      {
-        'homeresourcedepot.com' => 'resourcedepot',
-        'myresourcedepot.com' => 'resourcedepot',
-        'resourcedepotapp.com' => 'resourcedepot',
-        'resourcedepotart.com' => 'resourcedepot',
-        'resourcedepot.info' => 'resourcedepot',
-        'resourcedepotstudio.com' => 'resourcedepot',
-        'resourcedepotweb.com' => 'resourcedepot',
-        'resourcedepot.co' => 'resourcedepot',
-        'www.resourcedepot.info' => 'resourcedepot',
-        "openposition.co" => "dd-daily",
-        "openposition.net" => "dd-daily",
-        "open-positions.net" => "dd-daily",
-        "applyforjobs.us" => "typesofaid",
-        "applyforlocaljobs.net" => "typesofaid",
-        "apply-for-jobs.com" => "typesofaid",
-        "governmentgrants.info" => "typesofaid",
-        "www.apply-for-jobs.com" => "typesofaid",
-        "www.applyforjobs.us" => "typesofaid",
-        "applyforbenefits.net" => "typesofaid",
-        "applyforgrants.net" => "typesofaid",
-        "grantresources.org" => "typesofaid",
-        "housinggrantinfo.com" => "typesofaid",
-        "findunclaimedmoney.net" => "typesofaid"
-      }
+    def destination_lists
+      %w(resourcedepot dd-daily typesofaid)
     end
 
     def leads_to_send
       @leads_to_send ||= available_leads.limit(TARGET_BATCH_SIZE).to_a
     end
 
-    def send_data(leads, list_name)    
+    def send_data(leads, list_name)
       data = leads.to_a.map do |lead|
         {
           email: lead.email,
