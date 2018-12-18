@@ -145,6 +145,9 @@ GEM
     colorize (0.8.1)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.2)
+    constantcontact (4.0.0)
+      json (~> 2.1)
+      rest-client (~> 2.0)
     crass (1.0.3)
     database_cleaner (1.7.0)
     debug_inspector (0.0.3)
@@ -506,6 +509,7 @@ DEPENDENCIES
   cloudflare
   coffee-rails (~> 4.2)
   colorize
+  constantcontact (~> 4.0.0)
   database_cleaner
   devise
   discord-notifier
