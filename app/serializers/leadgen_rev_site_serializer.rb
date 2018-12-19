@@ -5,6 +5,7 @@ class LeadgenRevSiteSerializer < ActiveModel::Serializer
   has_many :advertisements
   has_many :trackers
   has_many :pixel_code_snippets
+  has_many :leadgen_rev_site_popups
   has_many :widgets
 
   def content
