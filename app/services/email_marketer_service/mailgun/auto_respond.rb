@@ -1,6 +1,8 @@
 module EmailMarketerService
   module Mailgun
     class AutoRespond
+      CALLBACK_BASE_URL = "#{SITE_HOST}/api/v1/mailgun_callbacks"
+
       def initialize(list:, template:, lead:)
         @list = list
         @template = template
@@ -9,7 +11,8 @@ module EmailMarketerService
 
       def call
         return unless email
-        mark_lead_as_autoresponded if send_message
+        result = send_message
+        update_lead(result.try(:fetch, 'id'))
       end
 
       private
@@ -19,11 +22,12 @@ module EmailMarketerService
           from: "#{@template.author} #{@template.author.parameterize.underscore}@#{domain}",
           to: email,
           subject: @template.subject,
-          html: @template.body
+          html: @template.body,
+          'o:tracking-clicks' => "#{CALLBACK_BASE_URL}/click",
+          'o:tracking-opens' => "#{CALLBACK_BASE_URL}/open"
         }
         response = client.post("/#{domain}/messages", params)
-        body = JSON.parse(response.body)
-        body.try(:fetch, 'id')
+        JSON.parse(response.body)
       rescue JSON::ParserError
         false
       end
@@ -41,8 +45,13 @@ module EmailMarketerService
         @list.address.split('@').second
       end
 
-      def mark_lead_as_autoresponded
-        @lead.touch(:autoresponded_at)
+      def update_lead(message_id)
+        return unless message_id
+        if @lead.autoresponded_at?
+          @lead.touch(:followed_up_at)
+        else
+          @lead.update(autoresponse_message_id: message_id, autoresponded_at: Time.zone.now)
+        end
       end
     end
   end

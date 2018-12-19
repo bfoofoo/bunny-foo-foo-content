@@ -1,6 +1,7 @@
 module Messages
   class AutoResponseWorker
     include Sidekiq::Worker
+    sidekiq_options queue: 'messages'
 
     def perform(auto_response_id, lead_id)
       auto_response = MessageAutoResponse.find(auto_response_id)
