@@ -7,10 +7,8 @@ class Api::V1::MailgunCallbacksController < ApiController
       @recipient.touch(:clicked_at)
       @recipient.autorespond(followup: true, event: :click)
       render json: { message: 'success' }
-    elsif @recipient
-      head :no_content
     else
-      render json: { message: 'Recipient not found' }, status: :not_found
+      head :no_content
     end
   end
 
