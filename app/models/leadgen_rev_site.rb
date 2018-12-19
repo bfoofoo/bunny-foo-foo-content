@@ -16,6 +16,8 @@ class LeadgenRevSite < ApplicationRecord
   has_many :leadgen_rev_site_ads, dependent: :restrict_with_error
   has_many :ads, through: :leadgen_rev_site_ads
 
+  has_many :pixel_code_snippets, dependent: :destroy
+  has_many :leadgen_rev_site_popups, dependent: :destroy
   has_many :questions, dependent: :destroy
   has_many :articles_leadgen_rev_sites
   has_many :articles, through: :articles_leadgen_rev_sites, dependent: :destroy
@@ -27,6 +29,7 @@ class LeadgenRevSite < ApplicationRecord
   has_many :widgets, -> { widgets } , through: :leadgen_rev_site_ads, source: :ad
 
   accepts_nested_attributes_for :categories, allow_destroy: true
+  accepts_nested_attributes_for :leadgen_rev_site_popups, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true
   accepts_nested_attributes_for :trackers, allow_destroy: true
   accepts_nested_attributes_for :widgets, allow_destroy: true
