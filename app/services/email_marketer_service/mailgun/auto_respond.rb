@@ -47,7 +47,7 @@ module EmailMarketerService
         if @lead.autoresponded_at?
           @lead.touch(:followed_up_at)
         else
-          @lead.update(autoresponse_message_id: message_id, autoresponded_at: Time.zone.now)
+          @lead.update(autoresponse_message_id: message_id.tr('<>', ''), autoresponded_at: Time.zone.now)
         end
       end
     end
