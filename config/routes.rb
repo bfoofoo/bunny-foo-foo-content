@@ -58,7 +58,7 @@ Rails.application.routes.draw do
             post "create_answer", to: "formsites_questions#create_answer"
           end
         end
-        end
+      end
 
       resources :leadgen_rev_sites, only: [:index, :show] do
         member do
@@ -88,8 +88,10 @@ Rails.application.routes.draw do
       resources :articles, only: [:index, :show, :create]
       resources :api_users, only: [:show, :create, :update]
       resources :mailgun_callbacks, only: [] do
-        post "click"
-        post "open"
+        collection do
+          post "click"
+          post "open"
+        end
       end
     end
   end

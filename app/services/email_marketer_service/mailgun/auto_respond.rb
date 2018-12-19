@@ -1,6 +1,8 @@
 module EmailMarketerService
   module Mailgun
     class AutoRespond
+      CALLBACK_BASE_URL = "#{SITE_HOST}/api/v1/mailgun_callbacks"
+
       def initialize(list:, template:, lead:)
         @list = list
         @template = template
@@ -20,7 +22,9 @@ module EmailMarketerService
           from: "#{@template.author} #{@template.author.parameterize.underscore}@#{domain}",
           to: email,
           subject: @template.subject,
-          html: @template.body
+          html: @template.body,
+          'o:tracking-clicks' => "#{CALLBACK_BASE_URL}/click",
+          'o:tracking-opens' => "#{CALLBACK_BASE_URL}/open"
         }
         response = client.post("/#{domain}/messages", params)
         JSON.parse(response.body)

@@ -9,7 +9,9 @@ module Messages
     def call(lead, followup = false, event = nil)
       return if MessageAutoResponse::AUTORESPONDING_ESPS.exclude?(esp_list.account.provider)
       # TODO this is bad, need to use EspList associations once it works
-      MessageAutoResponse.where(esp_list_id: esp_list.id, esp_list_type: esp_list.type, followup: followup, event: event).each do |m|
+      conditions = { esp_list_id: esp_list.id, esp_list_type: esp_list.type, followup: followup }
+      conditions[:event] = event if event && followup
+      MessageAutoResponse.where(conditions).each do |m|
         params = [m.id, lead.id]
         m.instant? ? Messages::AutoResponseWorker.perform_async(*params) : Messages::AutoResponseWorker.perform_at(m.at, *params)
       end
