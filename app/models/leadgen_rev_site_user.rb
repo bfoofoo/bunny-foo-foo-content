@@ -38,6 +38,10 @@ class LeadgenRevSiteUser < ApplicationRecord
   }
 
   scope :by_email_domain, ->(domain) { joins(:user).where('users.email ~* ?', '@' + domain + '\.\w+$') }
+  scope :by_page, ->(page) do
+    regex = "https?:\\/\\/[\\w.-]+\\/#{page}"
+    where('leadgen_rev_site_users.url ~ ?', regex)
+  end
 
   User::ESP_LIST_TYPES.each do |provider, type|
     define_method :"local_sent_to_#{provider}?" do

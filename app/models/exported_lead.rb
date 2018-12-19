@@ -9,6 +9,7 @@ class ExportedLead < ApplicationRecord
   after_create :autorespond
 
   scope :autoresponded, -> { where.not(autoresponded_at: nil) }
+  scope :not_followed_up, -> { where(followed_up_at: nil) }
   scope :clickers, -> { where.not(clicked_at: nil) }
   scope :openers, -> { where.not(opened_at: nil) }
   scope :inactive_within, ->(minutes) { where(clicked_at: nil, opened_at: nil, followed_up_at: nil).where('autoresponded_at <= ?', minutes.minutes.ago) }
