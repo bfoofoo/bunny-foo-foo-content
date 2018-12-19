@@ -3,7 +3,7 @@ class Api::V1::MailgunCallbacksController < ApiController
   # TODO maybe verify all requests
 
   def click
-    if message_id && @recipient
+    if message_id && @recipient && !@recipient.clicked_at?
       @recipient.touch(:clicked_at)
       @recipient.autorespond(followup: true, event: :click)
       render json: { message: 'success' }
@@ -13,7 +13,7 @@ class Api::V1::MailgunCallbacksController < ApiController
   end
 
   def open
-    if @recipient&.autoresponse_message_id == message_id
+    if message_id && @recipient && !@recipient.opened_at?
       @recipient.touch(:opened_at)
       @recipient.autorespond(followup: true, event: :open)
       render json: { message: 'success' }
@@ -29,7 +29,6 @@ class Api::V1::MailgunCallbacksController < ApiController
   def set_recipient
     @recipient = ExportedLead
       .autoresponded
-      .not_followed_up
       .where(list_type: 'MailgunList')
       .where('exported_leads.autoresponse_message_id = ?', message_id)
       .order(created_at: :desc)
