@@ -8,12 +8,14 @@ module EmailMarketerService
       end
 
       def call
-        if !@schedule || @schedule.is_batch?
-          send_batch
-        else
-          import_recipients
-          send_gradually
-        end
+        # TODO: removed mailgun EmailMarketerService while account is inactive
+        
+        # if !@schedule || @schedule.is_batch?
+        #   send_batch
+        # else
+        #   import_recipients
+        #   send_gradually
+        # end
       end
 
       private
