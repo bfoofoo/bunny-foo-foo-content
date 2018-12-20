@@ -86,7 +86,8 @@ module LeadgenRevSiteInteractor
                      .merge(dynamic_params)
                      .merge({
                               ip: user_ip,
-                              state: user_state
+                              state: user_state,
+                              user_agent: request.user_agent
                             })
 
       if user.blank?
