@@ -17,7 +17,7 @@ module EmailMarketerService
               first_name: user.try(:first_name),
               last_name: user.try(:last_name),
               api_key: account.api_key,
-              ip: user.ip,
+              ip: params.try(:fetch, :ip),
               list_id: list.list_id
             })
             handle_user_record(user)
