@@ -82,6 +82,9 @@ Rails.application.routes.draw do
           resources :articles, only: [:index, :show]
         end
       end
+      resources :leadgen_rev_site_users, only: [] do
+        post "enable_tracking", on: :member
+      end
       resources :categories, only: [:index, :show, :create] do
         resources :articles, only: [:index, :show]
       end
