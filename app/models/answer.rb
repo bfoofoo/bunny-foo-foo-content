@@ -8,6 +8,7 @@ class Answer < ApplicationRecord
 
   has_many :formsite_user_answers
   has_many :leadgen_rev_site_user_answers
+  has_many :prelander_site_user_answers
 
   validates :text, presence: true
 

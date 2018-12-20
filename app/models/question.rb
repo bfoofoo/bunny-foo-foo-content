@@ -6,6 +6,7 @@ class Question < ApplicationRecord
   belongs_to :formsite, optional: true
   belongs_to :leadgen_rev_site, optional: true
   belongs_to :website, optional: true
+  belongs_to :prelander_site, optional: true
 
   has_many :answers, dependent: :destroy
   has_many :formsite_questions
@@ -13,6 +14,7 @@ class Question < ApplicationRecord
 
   has_many :formsite_user_answers
   has_many :leadgen_rev_site_user_answers
+  has_many :prelander_site_user_answers
 
   accepts_nested_attributes_for :answers, allow_destroy: true
   accepts_nested_attributes_for :formsite_questions, allow_destroy: true
@@ -26,6 +28,7 @@ class Question < ApplicationRecord
   scope :order_by_position, -> (position=:asc) { order(position: position) }
   scope :of_formsites, -> { where.not(formsite_id: nil) }
   scope :of_leadgen_rev_sites, -> { where.not(leadgen_rev_site_id: nil) }
+  scope :of_prelander_sites, -> { where.not(prelander_site_id: nil) }
 
   default_scope {order_by_position}
 
