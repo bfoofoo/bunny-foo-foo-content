@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181219142810) do
+ActiveRecord::Schema.define(version: 20181221073951) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+
+  create_table "accounts", force: :cascade do |t|
+    t.string   "type"
+    t.string   "name"
+    t.string   "api_key"
+    t.hstore   "params"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -279,6 +288,7 @@ ActiveRecord::Schema.define(version: 20181219142810) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
+    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -433,6 +443,9 @@ ActiveRecord::Schema.define(version: 20181219142810) do
     t.boolean  "is_phone_number",             default: false
     t.datetime "deleted_at"
     t.string   "fraud_user_redirect_url"
+    t.string   "size_slug"
+    t.integer  "account_id"
+    t.index ["account_id"], name: "index_formsites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_formsites_on_deleted_at", using: :btree
   end
 
@@ -507,6 +520,8 @@ ActiveRecord::Schema.define(version: 20181219142810) do
     t.string   "url"
     t.string   "state"
     t.boolean  "sms_compliant",                  default: false
+    t.boolean  "is_tracking_enabled"
+    t.string   "user_agent"
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
     t.index ["user_id"], name: "index_leadgen_rev_site_users_on_user_id", using: :btree
   end
@@ -552,6 +567,9 @@ ActiveRecord::Schema.define(version: 20181219142810) do
     t.string   "popup_iframe_urls",           default: [],                     array: true
     t.integer  "popup_delay"
     t.string   "leadgen_entry",               default: "explore"
+    t.string   "size_slug"
+    t.integer  "account_id"
+    t.index ["account_id"], name: "index_leadgen_rev_sites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
   end
 
@@ -614,16 +632,16 @@ ActiveRecord::Schema.define(version: 20181219142810) do
   end
 
   create_table "message_schedules", force: :cascade do |t|
-    t.integer  "message_template_id",                     null: false
+    t.integer  "message_template_id",             null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
-    t.datetime "time",                                    null: false
+    t.datetime "time",                            null: false
     t.string   "scheduled_job_id"
-    t.string   "state",               default: "pending", null: false
-    t.integer  "time_span",           default: 0,         null: false
+    t.string   "state"
+    t.integer  "time_span",           default: 0, null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
   end

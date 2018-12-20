@@ -28,6 +28,8 @@ class LeadgenRevSite < ApplicationRecord
   has_many :trackers, -> { trackers } , through: :leadgen_rev_site_ads, source: :ad
   has_many :widgets, -> { widgets } , through: :leadgen_rev_site_ads, source: :ad
 
+  belongs_to :digital_ocean_account, foreign_key: :account_id
+
   accepts_nested_attributes_for :categories, allow_destroy: true
   accepts_nested_attributes_for :leadgen_rev_site_popups, allow_destroy: true
   accepts_nested_attributes_for :ads, allow_destroy: true
@@ -70,7 +72,9 @@ class LeadgenRevSite < ApplicationRecord
       repo_url: self.repo_url,
       ad_client: self.ad_client || '',
       ads: self.ads,
-      type: 'leadgen_rev_site'
+      type: 'leadgen_rev_site',
+      size_slug: self.size_slug,
+      account_id: self.account_id
     }
   end
 end
