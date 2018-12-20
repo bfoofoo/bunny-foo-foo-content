@@ -43,11 +43,11 @@ module LeadgenRevSiteInteractor
 
     def is_email_duplicate
       return false if user.blank?
-      !leadgen_rev_site.leadgen_rev_site_users.joins(:user).where("users.email = ? AND users.created_at >= ?", user.email, 5.days.ago).blank?
+      !leadgen_rev_site.leadgen_rev_site_users.joins(:user).where("users.email = ?", user.email).blank?
     end
 
     def is_ip_duplicate?
-      !leadgen_rev_site.leadgen_rev_site_users.where('leadgen_rev_site_users.ip = ? AND leadgen_rev_site_users.created_at >= ?', user_ip, 5.days.ago).blank?
+      !leadgen_rev_site.leadgen_rev_site_users.where(ip: user_ip).blank?
     end
 
     def create_user
