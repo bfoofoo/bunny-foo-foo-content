@@ -18,7 +18,7 @@ end
 
       API_PATH = "https://app.abstractsolutions.net/exlapiservice/member/create"
       NL_PATH = "https://app.abstractsolutions.net/exlapi/sms/networklookup"      
-
+      LOGIN_PATH = " https://app.abstractsolutions.net/exlapiservice/users/login"      
       AUTH_HEADER_KEY = "user_key"
       AUTH_KEY_TYPE = "api-key"
       APIKEY = "f50e29109ab2be1e0402d3e00a870be2"
@@ -37,6 +37,11 @@ end
        
       end
 
+      def login(username,password)
+        params = {username: username, password: password}
+        HTTParty.post(LOGIN_PATH, body: params, :headers => {CaseSensitiveString.new("apikey") => "c93aca05269ece2b4eebc31b69c4ba55","Content-Type" => "application/x-www-form-urlencoded"})
+      end
+        
       def lookup_provider(params,count)
         nparams = params.merge(auth_headers)
         p2 = {}
