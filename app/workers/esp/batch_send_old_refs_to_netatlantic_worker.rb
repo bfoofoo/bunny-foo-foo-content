@@ -47,6 +47,11 @@ module Esp
         {
           email: lead.email,
           full_name: lead.full_name,
+          fields: {
+            ip: lead.ip_address,
+            url: lead.referrer,
+            date: lead.joined_at
+          }
         }
       end
       EmailMarketerService::Netatlantic::BatchSendLeads.new(data, list_name).call
@@ -58,7 +63,7 @@ module Esp
     end
 
     def available_leads
-      PendingLead.select(:id, :email, :full_name, :referrer, :deleted_at).with_valid_referrers.order('id DESC').not_sent_to_netatlantic
+      PendingLead.with_valid_referrers.order('id DESC').not_sent_to_netatlantic
     end
   end
 end
