@@ -30,7 +30,7 @@ module EmailMarketerService
       def add_members_one_by_one(data, list)
         members = data.map do |item|
           if item.is_a?(Hash)
-            { 'EmailAddress' => item[:email], 'FullName' => item[:full_name] }
+            { 'EmailAddress' => item[:email], 'FullName' => item[:full_name], 'fields' => item[:fields] }
           else
             { 'EmailAddress' => item, 'FullName' => '' }
           end
@@ -41,7 +41,7 @@ module EmailMarketerService
 
           EmailMarketerService::Netatlantic::SubscriptionService
             .new(list)
-            .update_member_demographics(response, member["EmailAddress"])
+            .update_member_demographics(response, member["EmailAddress"], params: member['fields'])
         end
 
       end
