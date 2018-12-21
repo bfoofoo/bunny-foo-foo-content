@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181219142810) do
+ActiveRecord::Schema.define(version: 20181220171459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -507,6 +507,8 @@ ActiveRecord::Schema.define(version: 20181219142810) do
     t.string   "url"
     t.string   "state"
     t.boolean  "sms_compliant",                  default: false
+    t.boolean  "is_tracking_enabled",            default: false
+    t.string   "user_agent"
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
     t.index ["user_id"], name: "index_leadgen_rev_site_users_on_user_id", using: :btree
   end

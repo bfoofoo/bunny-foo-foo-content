@@ -1,5 +1,5 @@
 class LeadgenRevSite
-  class AddNewUserToSMSUseCase
+  class AddNewUserToSmsUseCase
 
     attr_reader :leadgen_rev_site, :user, :leadgen_rev_site_user, :params
 
@@ -10,6 +10,8 @@ class LeadgenRevSite
       @params = {
         affiliate: leadgen_rev_site_user.affiliate,
         ipAddress: leadgen_rev_site_user.ip,
+        phone: leadgen_rev_site_user.phone,
+        zip: leadgen_rev_site_user.zip,
         url: leadgen_rev_site_user.url,
         ip: leadgen_rev_site_user.ip,
         date: leadgen_rev_site_user.created_at,
@@ -20,7 +22,7 @@ class LeadgenRevSite
 
     def perform
       return false if !leadgen_rev_site_user.is_verified || user.blank?
-      Sms::Waypoint::SubscriptionService.new(params).add(user)
+      Sms::Waypoint::SubscriptionService.new(params: params).add(user)
     end
   end
 end

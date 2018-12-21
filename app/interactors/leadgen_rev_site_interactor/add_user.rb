@@ -7,7 +7,7 @@ module LeadgenRevSiteInteractor
     def call
       create_user
       create_leadgen_rev_site_user
-      context.api_response = {user: user, is_verified: leadgen_rev_site_user&.is_verified, leadgen_rev_site_user: leadgen_rev_site_user}
+      context.api_response = {user: user, is_verified: leadgen_rev_site_user&.is_verified, leadgen_rev_site_user: leadgen_rev_site_user, sms_compliant: leadgen_rev_site_user&.sms_compliant}
     end
 
     def rollback; end
