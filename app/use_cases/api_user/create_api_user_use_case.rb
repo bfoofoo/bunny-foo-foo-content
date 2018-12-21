@@ -57,7 +57,7 @@ class ApiUser
     end
 
     def is_duplicate(email)
-      ApiUser.where("email = ?", email).exists?
+      ApiUser.where("email = ? AND created_at >= ?", email, LOOKBACK_PERIOD.ago).exists?
     end
 
     def build_api_user(params)

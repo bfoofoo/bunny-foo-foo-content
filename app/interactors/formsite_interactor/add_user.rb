@@ -43,11 +43,11 @@ module FormsiteInteractor
 
     def is_email_duplicate
       return false if user.blank?
-      !formsite.formsite_users.joins(:user).where("users.email = ?", user.email).blank?
+      !formsite.formsite_users.joins(:user).where("users.email = ? AND users.created_at >= ?", user.email, LOOKBACK_PERIOD.ago).blank?
     end
 
     def is_ip_duplicate?
-      !formsite.formsite_users.where(ip: user_ip).blank?
+      !formsite.formsite_users.where('formsite_users.ip = ? AND formsite_users.created_at >= ?', user_ip, LOOKBACK_PERIOD.ago).blank?
     end
 
     def create_user
