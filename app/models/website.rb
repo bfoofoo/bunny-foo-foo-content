@@ -61,7 +61,9 @@ class Website < ApplicationRecord
       repo_url: self.repo_url,
       ad_client: self.ad_client || '',
       ads: self.ads,
-      type: 'website'
+      type: 'website',
+      size_slug: 's-2vcpu-4gb',
+      account_id: DigitalOceanAccount.find_by(name: 'BunnyFooFoo')&.id
     }
   end
 

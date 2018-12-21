@@ -57,7 +57,9 @@ module Esp
         {
           contact_email: lead.email,
           contact_name: lead.full_name,
-          OriginReferrer: lead.referrer
+          OriginReferrer: lead.referrer,
+          ip_address: lead.ip_address,
+          joining_date: lead.joined_at
         }
       end
       service = EmailMarketerService::Adopia::BatchSendLeads.new(data, account_name, list_name)
@@ -71,7 +73,7 @@ module Esp
     end
 
     def available_leads
-      PendingLead.select(:id, :email, :full_name, :referrer, :deleted_at).with_valid_referrers.order('id DESC').not_sent_to_adopia
+      PendingLead.with_valid_referrers.order('id DESC').not_sent_to_adopia
     end
 
     # Round a number of leads to send to fit lists count

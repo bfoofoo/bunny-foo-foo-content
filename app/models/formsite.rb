@@ -21,6 +21,8 @@ class Formsite < ApplicationRecord
   has_many :formsite_ads, dependent: :destroy
   has_many :ads, through: :formsite_ads
 
+  belongs_to :digital_ocean_account, foreign_key: :account_id
+
   accepts_nested_attributes_for :categories, allow_destroy: true
   accepts_nested_attributes_for :esp_rules, allow_destroy: true
 
@@ -54,7 +56,9 @@ class Formsite < ApplicationRecord
         zone_id: self.zone_id,
         repo_url: self.repo_url,
         ad_client: self.ad_client || '',
-        type: 'formsite'
+        type: 'formsite',
+        size_slug: self.size_slug,
+        account_id: self.account_id
     }
   end
 
