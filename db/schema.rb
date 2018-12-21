@@ -702,6 +702,7 @@ ActiveRecord::Schema.define(version: 20181221120524) do
     t.boolean  "sent_to_netatlantic", default: false
     t.datetime "deleted_at"
     t.string   "ip_address"
+    t.datetime "joined_at"
     t.index ["deleted_at"], name: "index_pending_leads_on_deleted_at", using: :btree
     t.index ["destination_type"], name: "index_pending_leads_on_destination_type", using: :btree
     t.index ["referrer"], name: "index_pending_leads_on_referrer", using: :btree
