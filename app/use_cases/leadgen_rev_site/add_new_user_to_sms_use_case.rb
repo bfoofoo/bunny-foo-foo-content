@@ -23,6 +23,7 @@ class LeadgenRevSite
     def perform
       return false if !leadgen_rev_site_user.is_verified || user.blank?
       Sms::Waypoint::SubscriptionService.new(params: params).add(user)
+      Sms::Abstractsolutions::SubscriptionService.new(params: params).add(user)      
     end
   end
 end
