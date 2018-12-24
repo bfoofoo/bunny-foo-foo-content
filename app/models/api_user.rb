@@ -5,6 +5,8 @@ class ApiUser < ApplicationRecord
   belongs_to :api_client
   has_many :esp_rules, through: :api_client, class_name: 'EspRules::ApiClient'
   has_many :esp_rules_lists, through: :esp_rules
+  has_many :exported_leads, as: :linkable
+  has_many :sms_subscribers, as: :linkable
 
   validates :email, :first_name, :last_name, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }

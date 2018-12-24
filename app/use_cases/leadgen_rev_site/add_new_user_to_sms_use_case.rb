@@ -24,10 +24,10 @@ class LeadgenRevSite
     def perform
       return false if !leadgen_rev_site_user.is_verified || user.blank?
       return false if leadgen_rev_site_user&.phone.blank?
-      Sms::Waypoint::SubscriptionService.new(params: params).add(user)
+      Sms::Waypoint::SubscriptionService.new(params: params).add(user, leadgen_rev_site)
       # TODO remove this when rules are implemented
       if ABSTRACTSOLUTIONS_SITES.include?(@leadgen_rev_site.name)
-        Sms::Abstractsolutions::SubscriptionService.new(params: params).add(user)
+        Sms::Abstractsolutions::SubscriptionService.new(params: params).add(user, leadgen_rev_site)
       end
     end
   end

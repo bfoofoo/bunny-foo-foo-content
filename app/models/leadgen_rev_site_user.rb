@@ -8,6 +8,7 @@ class LeadgenRevSiteUser < ApplicationRecord
   has_many :esp_rules, through: :user
   has_many :esp_rules_lists, through: :esp_rules
   has_many :exported_leads, through: :user
+  has_many :sms_subscribers, through: :user
 
   delegate :email, :first_name, :last_name, :sent_to_adopia?, :sent_to_elite?,
            :sent_to_netatlantic?, :full_name, :sent_to_mailgun?, :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?, :sent_to_allinbox?, :sent_to_constantcontact?,

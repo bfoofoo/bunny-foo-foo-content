@@ -14,28 +14,26 @@ module Sms
         puts "AbstractSolutions lookup subscriber error - #{e}".red
       end
 
-      def add(user)
-        begin
-          provider = find_provider(params[:phone])
-          return if provider.nil?
-          new_params = params.merge(
-            member_info:{
-              email: user.try(:email),
-              optin_ip: params[:ip],
-              first_name: user&.first_name,
-              last_name: user&.last_name,
-              cellphone: params[:phone],
-              country_id: "223",
-              carrier: provider
-            }
-          )
-          response = client.create_contact(new_params)
-          # TODO mark successfully added contacts like this
-          # if response['status'] == 'success'
-          response
-        rescue RequestError => e
-          puts "AbstractSolutions adding subscriber error - #{e}".red
-        end
+      def add(user, leadgen_rev_site = nil)
+        return unless valid?(user, leadgen_rev_site)
+        provider = find_provider(params[:phone])
+        return if provider.nil?
+        new_params = params.merge(
+          member_info:{
+            email: user.try(:email),
+            optin_ip: params[:ip],
+            first_name: user&.first_name,
+            last_name: user&.last_name,
+            cellphone: params[:phone],
+            country_id: "223",
+            carrier: provider
+          }
+        )
+        response = client.create_contact(new_params)
+        mark_as_saved(user, leadgen_rev_site) if response['status'] == 'success'
+        response
+      rescue RequestError => e
+        puts "AbstractSolutions adding subscriber error - #{e}".red
       end
 
       private
@@ -45,6 +43,19 @@ module Sms
         @client = Sms::Abstractsolutions::ApiWrapperService.new
       end
 
+      def valid?(user, leadgen_rev_site)
+        if user.is_a?(ActiveRecord::Base)
+          !SmsSubscriber.where(provider: 'AbstractSolutions', linkable: user, source: leadgen_rev_site).exists?
+        else
+          true
+        end
+      end
+
+      def mark_as_saved(user, leadgen_rev_site)
+        if user.is_a?(ActiveRecord::Base)
+          SmsSubscriber.find_or_create_by(provider: 'AbstractSolutions', linkable: user, source: leadgen_rev_site)
+        end
+      end
     end
   end
 end
