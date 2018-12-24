@@ -14,41 +14,33 @@ module Sms
       end
     end
 
+    class RequestError < StandardError; end
+
     class ApiWrapperService
-      API_PATH = "https://app.abstractsolutions.net/exlapiservice/member/create"
-      NL_PATH = "https://app.abstractsolutions.net/exlapi/sms/networklookup"
-      LOGIN_PATH =  "https://app.abstractsolutions.net/exlapiservice/users/login"
-      AUTH_HEADER_KEY = "user_key"
-      AUTH_KEY_TYPE = "api-key"
+      API_PATH = 'https://app.abstractsolutions.net/exlapiservice/'
 
-      attr_reader :params, :account
-
-      def initialize(account:nil, params:{})
-        @params = params
-        @account = account
+      def initialize
+        store_auth_session if session_empty?
       end
 
       def create_contact(params={})
-        params = params.merge(auth_headers)
-        HTTParty.post(API_PATH, body: params, :headers => {CaseSensitiveString.new("apikey") => ENV['ABSTRACTSOLUTIONS_API_KEY'],"Content-Type" => "application/x-www-form-urlencoded"})
-
+        invoke_as_authorized('member/create', params)
       end
 
       def login(username, password)
-        params = {username: username, password: password}
-        HTTParty.post(LOGIN_PATH, body: params, :headers => {CaseSensitiveString.new("apikey") => ENV['ABSTRACTSOLUTIONS_API_KEY'],"Content-Type" => "application/x-www-form-urlencoded"})
+        response = HTTParty.post(uri('users/login'), body: { username: username, password: password }, headers: auth_headers)
+        body = JSON.parse(response.body)
+        if body['status'] == 'success'
+          body['data']
+        else
+          raise RequestError, response['message']
+        end
       end
 
-      def lookup_provider(params, count = 0)
-        nparams = { data: params.merge(auth_headers) }
-        resp = HTTParty.post(NL_PATH, body: nparams.to_json, :headers => {CaseSensitiveString.new("apikey") => ENV['ABSTRACTSOLUTIONS_API_KEY'],"Content-Type" => "application/json" })
-        if resp.success?
-          bresp = JSON.parse(resp.body)
-          bresp["result"].last["carrier"]
-        else
-          newcount = count + 1
-          return -1 if count > 3
-          lookup_provider(params, newcount)
+      def lookup_provider(params)
+        response =  invoke_as_authorized('member/networklookup', params)
+        if response['status'] == 'success'
+          response['data']['id']
         end
       end
 
@@ -58,11 +50,55 @@ module Sms
         "#{API_PATH}#{path}"
       end
 
+      def session_params
+        if session_empty?
+          store_auth_session
+        end
+        {
+          'user_key' => fetch('abstractsolutions_user_key'),
+          'client_id' => fetch('abstractsolutions_client_id')
+        }
+      end
+
       def auth_headers
         {
-          "#{AUTH_HEADER_KEY}": ENV['ABSTRACTSOLUTIONS_USER_KEY'],
-          "client_id": ENV['ABSTRACTSOLUTIONS_CLIENT_ID']
+          CaseSensitiveString.new("apikey") => api_key,
+          "Content-Type" => "application/x-www-form-urlencoded"
         }
+      end
+
+      def store_auth_session
+        data = login(ENV['ABSTRACTSOLUTIONS_USERNAME'], password: ENV['ABSTRACTSOLUTIONS_PASSWORD'])
+        Rails.cache.write('abstractsolutions_user_key', data['user_key'])
+        Rails.cache.write('abstractsolutions_client_id', data['client_id'])
+      end
+
+      def session_empty?
+        fetch('abstractsolutions_client_id').blank? || fetch('abstractsolutions_user_key').blank?
+      end
+
+      def api_key
+        ENV['ABSTRACTSOLUTIONS_API_KEY']
+      end
+
+      def invoke_as_authorized(path, params)
+        response = perform_api_call(path, params)
+        if response['error'] == 'The user key is invalid'
+          store_auth_session
+          response = perform_api_call(path, params)
+        end
+        raise RequestError, response['error'] if response['status'] == 'failure'
+        response
+      end
+
+      def perform_api_call(path, params)
+        response = HTTParty.post(uri(path), body: params.merge(session_params), headers: auth_headers)
+        raise RequestError, response.to_s unless response.success?
+        JSON.parse(response.body)
+      end
+
+      def fetch(key)
+        Rails.cache.read(key)
       end
     end
   end
