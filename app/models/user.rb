@@ -11,6 +11,8 @@ class User < ApplicationRecord
   has_many :leads
   has_many :esp_rules, as: :source, class_name: 'EspRules::Formsite'
   has_many :esp_rules_lists, through: :esp_rules
+  has_many :exported_leads, as: :linkable
+  has_many :sms_subscribers, as: :linkable
 
   accepts_nested_attributes_for :formsite_users
   accepts_nested_attributes_for :formsites

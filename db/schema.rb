@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181220171459) do
+ActiveRecord::Schema.define(version: 20181224140052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+
+  create_table "accounts", force: :cascade do |t|
+    t.string   "type"
+    t.string   "name"
+    t.string   "api_key"
+    t.hstore   "params"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -385,6 +394,8 @@ ActiveRecord::Schema.define(version: 20181220171459) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -433,6 +444,9 @@ ActiveRecord::Schema.define(version: 20181220171459) do
     t.boolean  "is_phone_number",             default: false
     t.datetime "deleted_at"
     t.string   "fraud_user_redirect_url"
+    t.string   "size_slug"
+    t.integer  "account_id"
+    t.index ["account_id"], name: "index_formsites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_formsites_on_deleted_at", using: :btree
   end
 
@@ -554,6 +568,9 @@ ActiveRecord::Schema.define(version: 20181220171459) do
     t.string   "popup_iframe_urls",           default: [],                     array: true
     t.integer  "popup_delay"
     t.string   "leadgen_entry",               default: "explore"
+    t.string   "size_slug"
+    t.integer  "account_id"
+    t.index ["account_id"], name: "index_leadgen_rev_sites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
   end
 
@@ -685,6 +702,8 @@ ActiveRecord::Schema.define(version: 20181220171459) do
     t.boolean  "sent_to_adopia",      default: false
     t.boolean  "sent_to_netatlantic", default: false
     t.datetime "deleted_at"
+    t.string   "ip_address"
+    t.datetime "joined_at"
     t.index ["deleted_at"], name: "index_pending_leads_on_deleted_at", using: :btree
     t.index ["destination_type"], name: "index_pending_leads_on_destination_type", using: :btree
     t.index ["referrer"], name: "index_pending_leads_on_referrer", using: :btree
@@ -739,6 +758,18 @@ ActiveRecord::Schema.define(version: 20181220171459) do
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_questions_on_leadgen_rev_site_id", using: :btree
     t.index ["website_id"], name: "index_questions_on_website_id", using: :btree
+  end
+
+  create_table "sms_subscribers", force: :cascade do |t|
+    t.string   "provider"
+    t.string   "linkable_type"
+    t.integer  "linkable_id"
+    t.string   "source_type"
+    t.integer  "source_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["linkable_type", "linkable_id"], name: "index_sms_subscribers_on_linkable_type_and_linkable_id", using: :btree
+    t.index ["source_type", "source_id"], name: "index_sms_subscribers_on_source_type_and_source_id", using: :btree
   end
 
   create_table "sparkpost_accounts", force: :cascade do |t|

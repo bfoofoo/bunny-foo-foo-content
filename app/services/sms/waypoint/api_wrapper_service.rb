@@ -21,11 +21,11 @@ module Sms
       private
 
       def uri path
-        return "#{API_PATH}#{path}"
+        "#{API_PATH}#{path}"
       end
 
       def auth_headers
-        return {
+        {
           "#{AUTH_HEADER_KEY}": ENV["WAYPOINT_KEY"],
         }
       end

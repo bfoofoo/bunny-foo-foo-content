@@ -27,6 +27,7 @@ class LeadgenRevSite < ApplicationRecord
   has_many :advertisements, -> { advertisements } , through: :leadgen_rev_site_ads, source: :ad
   has_many :trackers, -> { trackers } , through: :leadgen_rev_site_ads, source: :ad
   has_many :widgets, -> { widgets } , through: :leadgen_rev_site_ads, source: :ad
+  has_many :sms_subscribers, as: :source
 
   belongs_to :digital_ocean_account, foreign_key: :account_id
 
