@@ -1,87 +1,105 @@
 module Sms
   module Abstractsolutions
     class CaseSensitiveString < String
-  def downcase
-    self
-  end
+      def downcase
+        self
+      end
 
-  def capitalize
-    self
-  end
+      def capitalize
+        self
+      end
 
-  def to_s
-    self
-  end
-end
+      def to_s
+        self
+      end
+    end
+
+    class RequestError < StandardError; end
+
     class ApiWrapperService
+      API_PATH = 'https://app.abstractsolutions.net/exlapiservice/'
 
-
-      API_PATH = "https://app.abstractsolutions.net/exlapiservice/member/create"
-      NL_PATH = "https://app.abstractsolutions.net/exlapi/sms/networklookup"      
-      LOGIN_PATH =  "https://app.abstractsolutions.net/exlapiservice/users/login"      
-      AUTH_HEADER_KEY = "user_key"
-      AUTH_KEY_TYPE = "api-key"
-      APIKEY = "f50e29109ab2be1e0402d3e00a870be2"
-      CLIENTID = "6198"
-      attr_reader :params, :account
-
-      def initialize(account:nil, params:{})
-        @params = params
-        @account = account
+      def initialize
+        store_auth_session if session_empty?
       end
 
       def create_contact(params={})
-        params = params.merge(auth_headers)
-        #params2 = { username: "abstract", password: "bunnylabs401"}
-        HTTParty.post(API_PATH, body: params, :headers => {CaseSensitiveString.new("apikey") => "c93aca05269ece2b4eebc31b69c4ba55","Content-Type" => "application/x-www-form-urlencoded"})
-       
+        invoke_as_authorized('member/create', params)
       end
 
-      def login(username,password)
-        params = {username: username, password: password}
-        login_resp = HTTParty.post(LOGIN_PATH, body: params, :headers => {CaseSensitiveString.new("apikey") => "c93aca05269ece2b4eebc31b69c4ba55","Content-Type" => "application/x-www-form-urlencoded"})
-      end
-        
-      def lookup_provider(params,count)
-        nparams = params.merge(auth_headers)
-        p2 = {}
-        p3 = p2.merge(data: nparams )
-        if( count > 3)
-          carrier = -1
-          return carrier 
-        end
-        #params2 = { username: "abstract", password: "bunnylabs401"}
-        resp = HTTParty.post(NL_PATH, body: p3.to_json, :headers => {CaseSensitiveString.new("apikey") => "c93aca05269ece2b4eebc31b69c4ba55","Content-Type" => "application/json" })
-        if( resp.success?)
-          
-          bresp = JSON.parse(resp.body)
-          carrier =  bresp["result"].last["carrier"]
+      def login(username, password)
+        response = HTTParty.post(uri('users/login'), body: { username: username, password: password }, headers: auth_headers)
+        body = JSON.parse(response.body)
+        if body['status'] == 'success'
+          body['data']
         else
-          newcount = count+1
-          lookup_provider(params,newcount)
+          raise RequestError, response['message']
         end
-        return carrier
-        
-       
       end
 
+      def lookup_provider(params)
+        response =  invoke_as_authorized('member/networklookup', params)
+        if response['status'] == 'success'
+          response['data']['id']
+        end
+      end
 
-      
       private
 
-      def uri path
-        return "#{API_PATH}#{path}"
+      def uri(path)
+        "#{API_PATH}#{path}"
       end
 
-      def auth_headers
-        return {
-          "#{AUTH_HEADER_KEY}": APIKEY,
-          "client_id": CLIENTID      
+      def session_params
+        if session_empty?
+          store_auth_session
+        end
+        {
+          'user_key' => fetch('abstractsolutions_user_key'),
+          'client_id' => fetch('abstractsolutions_client_id')
         }
       end
 
+      def auth_headers
+        {
+          CaseSensitiveString.new("apikey") => api_key,
+          "Content-Type" => "application/x-www-form-urlencoded"
+        }
+      end
 
+      def store_auth_session
+        data = login(ENV['ABSTRACTSOLUTIONS_USERNAME'], password: ENV['ABSTRACTSOLUTIONS_PASSWORD'])
+        Rails.cache.write('abstractsolutions_user_key', data['user_key'])
+        Rails.cache.write('abstractsolutions_client_id', data['client_id'])
+      end
 
+      def session_empty?
+        fetch('abstractsolutions_client_id').blank? || fetch('abstractsolutions_user_key').blank?
+      end
+
+      def api_key
+        ENV['ABSTRACTSOLUTIONS_API_KEY']
+      end
+
+      def invoke_as_authorized(path, params)
+        response = perform_api_call(path, params)
+        if response['error'] == 'The user key is invalid'
+          store_auth_session
+          response = perform_api_call(path, params)
+        end
+        raise RequestError, response['error'] if response['status'] == 'failure'
+        response
+      end
+
+      def perform_api_call(path, params)
+        response = HTTParty.post(uri(path), body: params.merge(session_params), headers: auth_headers)
+        raise RequestError, response.to_s unless response.success?
+        JSON.parse(response.body)
+      end
+
+      def fetch(key)
+        Rails.cache.read(key)
+      end
     end
   end
 end
