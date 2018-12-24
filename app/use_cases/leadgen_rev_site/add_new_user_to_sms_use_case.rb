@@ -1,5 +1,6 @@
 class LeadgenRevSite
   class AddNewUserToSmsUseCase
+    ABSTRACTSOLUTIONS_SITES = %w(the-resource-depot.com)
 
     attr_reader :leadgen_rev_site, :user, :leadgen_rev_site_user, :params
 
@@ -24,7 +25,10 @@ class LeadgenRevSite
       return false if !leadgen_rev_site_user.is_verified || user.blank?
       return false if leadgen_rev_site_user&.phone.blank?
       Sms::Waypoint::SubscriptionService.new(params: params).add(user)
-      Sms::Abstractsolutions::SubscriptionService.new(params: params).add(user)
+      # TODO remove this when rules are implemented
+      if ABSTRACTSOLUTIONS_SITES.include?(@leadgen_rev_site.name)
+        Sms::Abstractsolutions::SubscriptionService.new(params: params).add(user)
+      end
     end
   end
 end
