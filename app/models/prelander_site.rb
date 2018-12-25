@@ -30,7 +30,6 @@ class PrelanderSite < ApplicationRecord
           description: self.description || '',
           favicon_image: self.favicon_image.url || '',
           logo_image: self.logo_image.url || '',
-          text_file: self.text_file.url || '',
           website_id: self.id,
           droplet_ip: self.droplet_ip,
           droplet_id: self.droplet_id,

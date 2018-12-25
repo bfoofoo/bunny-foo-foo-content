@@ -1,4 +1,4 @@
-class LeadgenRevSiteSerializer < ActiveModel::Serializer
+class PrelanderSiteSerializer < ActiveModel::Serializer
     attributes :id, :name, :shortname, :favicon_image, :logo_image, :background, :created_at, :updated_at, :content, :options
   
     def content
