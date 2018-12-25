@@ -1,5 +1,5 @@
 module Sms
-  module Abstractsolutions
+  module AbstractSolutions
     class CaseSensitiveString < String
       def downcase
         self
@@ -17,10 +17,13 @@ module Sms
     class RequestError < StandardError; end
 
     class ApiWrapperService
+      attr_reader :account
+
       API_PATH = 'https://app.abstractsolutions.net/exlapiservice/'
 
-      def initialize
+      def initialize(account: nil)
         store_auth_session if session_empty?
+        @account = account
       end
 
       def create_contact(params={})
@@ -38,7 +41,7 @@ module Sms
       end
 
       def lookup_provider(params)
-        response =  invoke_as_authorized('member/networklookup', params)
+        response = invoke_as_authorized('member/networklookup', params)
         if response['status'] == 'success'
           response['data']['id']
         end
@@ -68,7 +71,7 @@ module Sms
       end
 
       def store_auth_session
-        data = login(ENV['ABSTRACTSOLUTIONS_USERNAME'], password: ENV['ABSTRACTSOLUTIONS_PASSWORD'])
+        data = login(username, password)
         Rails.cache.write('abstractsolutions_user_key', data['user_key'])
         Rails.cache.write('abstractsolutions_client_id', data['client_id'])
       end
@@ -78,7 +81,15 @@ module Sms
       end
 
       def api_key
-        ENV['ABSTRACTSOLUTIONS_API_KEY']
+        account&.api_key || ENV['ABSTRACTSOLUTIONS_API_KEY']
+      end
+
+      def username
+        account&.username || ENV['ABSTRACTSOLUTIONS_USERNAME']
+      end
+
+      def password
+        account&.password || ENV['ABSTRACTSOLUTIONS_PASSWORD']
       end
 
       def invoke_as_authorized(path, params)

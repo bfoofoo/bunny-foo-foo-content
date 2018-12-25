@@ -1,10 +1,11 @@
 module Sms
-  module Abstractsolutions
+  module AbstractSolutions
     class SubscriptionService
-      attr_reader :params, :account
+      attr_reader :params, :group, :cep_rule
 
-      def initialize(params: {}, account:nil)
-        @account = account
+      def initialize(params: {}, group: nil, cep_rule: nil)
+        @group = group
+        @cep_rule = cep_rule
         @params = params
       end
 
@@ -27,7 +28,8 @@ module Sms
             cellphone: params[:phone],
             country_id: "223",
             carrier: provider
-          }
+          },
+          group_id: group&.group_id
         )
         response = client.create_contact(new_params)
         mark_as_saved(user, leadgen_rev_site) if response['status'] == 'success'
@@ -40,7 +42,7 @@ module Sms
 
       def client
         return @client if defined?(@client)
-        @client = Sms::Abstractsolutions::ApiWrapperService.new
+        @client = Sms::AbstractSolutions::ApiWrapperService.new(account: group&.account)
       end
 
       def valid?(user, leadgen_rev_site)
@@ -53,7 +55,9 @@ module Sms
 
       def mark_as_saved(user, leadgen_rev_site)
         if user.is_a?(ActiveRecord::Base)
-          SmsSubscriber.find_or_create_by(provider: 'AbstractSolutions', linkable: user, source: leadgen_rev_site)
+          SmsSubscriber
+            .create_with(cep_rule_id: cep_rule.id, group_id: group&.id)
+            .find_or_create_by(provider: 'AbstractSolutions', linkable: user, source: leadgen_rev_site)
         end
       end
     end

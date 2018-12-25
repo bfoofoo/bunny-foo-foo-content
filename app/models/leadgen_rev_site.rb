@@ -28,6 +28,8 @@ class LeadgenRevSite < ApplicationRecord
   has_many :trackers, -> { trackers } , through: :leadgen_rev_site_ads, source: :ad
   has_many :widgets, -> { widgets } , through: :leadgen_rev_site_ads, source: :ad
   has_many :sms_subscribers, as: :source
+  has_many :cep_rules, dependent: :destroy
+  has_many :cep_groups, through: :cep_rules, dependent: :destroy
 
   belongs_to :digital_ocean_account, foreign_key: :account_id
 
