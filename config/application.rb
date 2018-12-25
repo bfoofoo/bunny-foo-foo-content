@@ -19,6 +19,7 @@ module BffAdmin
     config.autoload_paths << Rails.root.join('app', 'use_cases')
     config.autoload_paths << Rails.root.join('app', 'apis')
     config.autoload_paths << Rails.root.join('app', 'models', 'accounts')
+    config.autoload_paths << Rails.root.join('app', 'models', 'cep_groups')
     config.autoload_paths << Rails.root.join('app', 'models', 'esp_accounts')
     config.autoload_paths << Rails.root.join('app', 'models', 'esp_lists')
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
