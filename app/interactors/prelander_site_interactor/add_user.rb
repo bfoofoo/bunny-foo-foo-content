@@ -29,17 +29,17 @@ module PrelanderSiteInteractor
       attributes = prelander_site_user_params
                      .merge(dynamic_params)
                      .merge({ ip: user_ip })
-      if !is_ip_duplicate?
-        context.prelander_site_user = prelander_site.prelander_site_users.create(attributes)
-      else
-        context.prelander_site_user = prelander_site.prelander_site_users.find_by(ip: user_ip)
-      end
+      context.prelander_site_user = prelander_site.prelander_site_users.create(attributes)
     end
 
     def dynamic_params
       {
         affiliate: params[:user][:a]
       }
+    end
+
+    def prelander_site_user_params
+      params.require(:user).permit(:ip)
     end
   end
 end
