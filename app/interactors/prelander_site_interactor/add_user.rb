@@ -14,8 +14,8 @@ module PrelanderSiteInteractor
     private
 
     def user_ip
-      if !params.dig(:user, :ip).blank?
-        params.dig(:user, :ip)
+      if !params.dig(:ip).blank?
+        params.dig(:ip)
       else
         request.env['REMOTE_ADDR']
       end
@@ -26,20 +26,15 @@ module PrelanderSiteInteractor
     end
 
     def handle_site_user_creation
-      attributes = prelander_site_user_params
-                     .merge(dynamic_params)
+      attributes =    dynamic_params
                      .merge({ ip: user_ip })
       context.prelander_site_user = prelander_site.prelander_site_users.create(attributes)
     end
 
     def dynamic_params
       {
-        affiliate: params[:user][:a]
+        affiliate: params[:a]
       }
-    end
-
-    def prelander_site_user_params
-      params.require(:user).permit(:ip)
     end
   end
 end
