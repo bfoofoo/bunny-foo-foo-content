@@ -99,7 +99,7 @@ Rails.application.routes.draw do
 
       resources :prelander_sites, only: [:index, :show] do
         member do
-          post 'add_user', to: 'prelander_sites#add_leadgen_rev_site_user', as: 'add_user'
+          post 'add_user', to: 'prelander_sites#add_prelander_site_user', as: 'add_user'
           get 'config', to: 'prelander_sites#get_config', as: 'get_config'
           get 'questions', to: 'prelander_sites#get_prelander_site_questions'
           get 'question_by_position', to: 'prelander_sites#get_question_by_position'
