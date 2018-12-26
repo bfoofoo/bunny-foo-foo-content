@@ -29,20 +29,10 @@ module PrelanderSiteInteractor
       attributes = prelander_site_user_params
                      .merge(dynamic_params)
                      .merge({ ip: user_ip })
-      if user.blank?
-        if !is_ip_duplicate?
-          context.prelander_site_user = prelander_site.prelander_site_users.create(attributes)
-        else
-          context.prelander_site_user = prelander_site.prelander_site_users.find_by(ip: user_ip)
-        end
+      if !is_ip_duplicate?
+        context.prelander_site_user = prelander_site.prelander_site_users.create(attributes)
       else
-        prelander_site_user = prelander_site.prelander_site_users.find_by(ip: user_ip)
-        if prelander_site_user&.persisted?
-          prelander_site_user.update(attributes.merge(is_duplicate: false, is_verified: is_useragent_valid && is_impressionwise_test_success))
-          context.prelander_site_user = prelander_site_user
-        else
-          context.prelander_site_user = prelander_site.prelander_site_users.create(attributes)
-        end
+        context.prelander_site_user = prelander_site.prelander_site_users.find_by(ip: user_ip)
       end
     end
 

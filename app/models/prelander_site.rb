@@ -13,6 +13,8 @@ class PrelanderSite < ApplicationRecord
         end
     end
 
+    belongs_to :digital_ocean_account, foreign_key: :account_id
+
     accepts_nested_attributes_for :questions, allow_destroy: true
 
     validates :name, presence: true, uniqueness: true
@@ -35,7 +37,9 @@ class PrelanderSite < ApplicationRecord
           droplet_id: self.droplet_id,
           zone_id: self.zone_id,
           repo_url: self.repo_url,
-          type: 'prelander_site'
+          type: 'prelander_site',
+          size_slug: self.size_slug,
+          account_id: self.account_id
         }
     end
 
