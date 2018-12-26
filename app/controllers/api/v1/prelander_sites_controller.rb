@@ -27,7 +27,10 @@ class Api::V1::PrelanderSitesController < ApiController
             }
           }
   
-      render json: {"#{@config[:name].strip}": site_config}
+      render json: {
+        "#{@config[:name].strip}": site_config,
+        "site_info": @config
+      }
     end
 
     def get_prelander_site_questions
@@ -46,11 +49,6 @@ class Api::V1::PrelanderSitesController < ApiController
         request: request,
         prelander_site: @prelander_site
       })
-  
-      #if prelander_site_interactor.api_response[:is_verified]
-        # TODO add EspUseCase for Prelander if needed
-        #PrelanderSite::AddNewUserToEspUseCase.new(@prelander_site, prelander_site_interactor.user, prelander_site_interactor.prelander_site_user).perform
-      #end
   
       render json: prelander_site_interactor.api_response
     end
