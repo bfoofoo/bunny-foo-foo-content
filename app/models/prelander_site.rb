@@ -19,6 +19,12 @@ class PrelanderSite < ApplicationRecord
 
     validates :name, presence: true, uniqueness: true
 
+    after_save :mark_last_question
+
+    mount_uploader :favicon_image, CommonUploader
+    mount_uploader :logo_image, CommonUploader
+    mount_uploader :background, CommonUploader
+
     def mark_last_question
         return if questions.empty?
         questions.update_all(is_last: false)
