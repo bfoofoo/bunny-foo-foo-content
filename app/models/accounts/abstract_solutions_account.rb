@@ -5,6 +5,8 @@ class AbstractSolutionsAccount < Account
 
   after_create :fetch_groups
 
+  alias_attribute :name, :username
+
   def fetch_groups
     Sms::AbstractSolutions::FetchGroups.new(account: self)
   end
