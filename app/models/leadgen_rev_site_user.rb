@@ -7,6 +7,7 @@ class LeadgenRevSiteUser < ApplicationRecord
   belongs_to :user, optional: true
   has_many :esp_rules, through: :user
   has_many :esp_rules_lists, through: :esp_rules
+  has_many :cep_rules, through: :leadgen_rev_site
   has_many :exported_leads, through: :user
   has_many :sms_subscribers, through: :user
 
@@ -51,6 +52,18 @@ class LeadgenRevSiteUser < ApplicationRecord
         .joins(:esp_rule)
         .where(exported_leads: { list_type: type, linkable_type: 'User', linkable_id: user_id })
         .where(esp_rules: { source_type: 'LeadgenRevSite', source_id: leadgen_rev_site_id })
+        .exists?
+    end
+  end
+
+  CepGroup::PROVIDERS.each do |provider|
+    define_method :"sent_to_#{provider.underscore}?" do
+      sms_subscribers.where(provider: provider).exists?
+    end
+
+    define_method :"local_sent_to_#{provider.underscore}?" do
+      sms_subscribers
+        .where(sms_subscribers: { provider: provider, source_type: 'LeadgenRevSite', source_id: leadgen_rev_site_id })
         .exists?
     end
   end
