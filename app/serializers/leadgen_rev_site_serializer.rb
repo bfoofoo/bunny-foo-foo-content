@@ -7,6 +7,7 @@ class LeadgenRevSiteSerializer < ActiveModel::Serializer
   has_many :pixel_code_snippets
   has_many :leadgen_rev_site_popups
   has_many :widgets
+  has_many :leadgen_entries
 
   def content
     %i(first_question_code_snippet left_side_content right_side_content head_code_snippet).each_with_object({}) do |attr, memo|
