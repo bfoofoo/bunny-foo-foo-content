@@ -28,11 +28,9 @@ module Sms
             first_name: user&.first_name,
             last_name: user&.last_name,
             number: params[:phone],
-            country_id: "223",
             carrier_id: provider,
-            state: params[:state],
             zip: params[:zip]
-          },
+          }.compact,
           custom_info: {
             SourceURL: params[:url]
           },
