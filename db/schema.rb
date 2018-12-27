@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181225094138) do
+ActiveRecord::Schema.define(version: 20181227130939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -480,6 +480,19 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.index ["ip_from", "ip_to"], name: "index_ip_locations_on_ip_from_and_ip_to", using: :btree
   end
 
+  create_table "leadgen_entries", force: :cascade do |t|
+    t.string   "entry",               null: false
+    t.integer  "leadgen_rev_site_id"
+    t.string   "background"
+    t.string   "background_color"
+    t.integer  "background_opacity"
+    t.text     "left_side_content"
+    t.text     "right_side_content"
+    t.string   "form_box_title_text"
+    t.datetime "deleted_at"
+    t.index ["leadgen_rev_site_id"], name: "index_leadgen_entries_on_leadgen_rev_site_id", using: :btree
+  end
+
   create_table "leadgen_rev_site_ads", force: :cascade do |t|
     t.integer  "leadgen_rev_site_id"
     t.integer  "ad_id"
@@ -590,6 +603,8 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.string   "leadgen_entry",               default: "explore"
     t.string   "size_slug"
     t.integer  "account_id"
+    t.integer  "background_opacity"
+    t.string   "background_color"
     t.index ["account_id"], name: "index_leadgen_rev_sites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
   end
@@ -740,6 +755,73 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.datetime "updated_at",                  null: false
   end
 
+  create_table "prelander_site_user_answers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "prelander_site_id"
+    t.integer  "question_id"
+    t.integer  "answer_id"
+    t.integer  "prelander_site_user_id"
+    t.string   "url"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "prelander_site_users", force: :cascade do |t|
+    t.boolean  "is_verified"
+    t.boolean  "is_useragent_valid"
+    t.boolean  "is_impressionwise_test_success"
+    t.boolean  "is_duplicate"
+    t.string   "s4"
+    t.string   "s5"
+    t.string   "s1"
+    t.string   "s2"
+    t.string   "s3"
+    t.string   "ndm_token"
+    t.string   "affiliate"
+    t.datetime "birthday"
+    t.string   "zip"
+    t.string   "phone"
+    t.string   "ip"
+    t.string   "job_key"
+    t.boolean  "is_email_duplicate",             default: false
+    t.string   "url"
+    t.string   "state"
+    t.boolean  "sms_compliant",                  default: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.datetime "deleted_at"
+    t.integer  "prelander_site_id"
+    t.integer  "user_id"
+    t.index ["deleted_at"], name: "index_prelander_site_users_on_deleted_at", using: :btree
+    t.index ["prelander_site_id"], name: "index_prelander_site_users_on_prelander_site_id", using: :btree
+    t.index ["user_id"], name: "index_prelander_site_users_on_user_id", using: :btree
+  end
+
+  create_table "prelander_sites", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "droplet_id"
+    t.integer  "droplet_ip"
+    t.integer  "zone_id"
+    t.string   "repo_url"
+    t.string   "favicon_image"
+    t.string   "logo_image"
+    t.string   "shortname"
+    t.string   "fraud_user_redirect_url"
+    t.string   "first_redirect_url"
+    t.string   "final_redirect_url"
+    t.string   "background"
+    t.text     "head_code_snippet"
+    t.string   "right_side_content"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.datetime "deleted_at"
+    t.string   "size_slug"
+    t.integer  "account_id"
+    t.index ["account_id"], name: "index_prelander_sites_on_account_id", using: :btree
+    t.index ["deleted_at"], name: "index_prelander_sites_on_deleted_at", using: :btree
+  end
+
   create_table "product_cards", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
@@ -750,6 +832,8 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.string   "url"
     t.float    "rate"
     t.integer  "leadgen_rev_site_id"
+    t.string   "button_text"
+    t.text     "full_description"
     t.index ["leadgen_rev_site_id"], name: "index_product_cards_on_leadgen_rev_site_id", using: :btree
     t.index ["website_id"], name: "index_product_cards_on_website_id", using: :btree
   end
@@ -774,9 +858,11 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.boolean  "is_last",             default: false,        null: false
     t.integer  "leadgen_rev_site_id"
     t.integer  "website_id"
+    t.integer  "prelander_site_id"
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_questions_on_leadgen_rev_site_id", using: :btree
+    t.index ["prelander_site_id"], name: "index_questions_on_prelander_site_id", using: :btree
     t.index ["website_id"], name: "index_questions_on_website_id", using: :btree
   end
 
@@ -896,6 +982,7 @@ ActiveRecord::Schema.define(version: 20181225094138) do
   add_foreign_key "exported_leads", "esp_rules"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
+  add_foreign_key "leadgen_entries", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_ads", "ads"
   add_foreign_key "leadgen_rev_site_ads", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_user_answers", "answers"
@@ -912,10 +999,13 @@ ActiveRecord::Schema.define(version: 20181225094138) do
   add_foreign_key "message_recipients", "message_schedules"
   add_foreign_key "message_schedules", "message_templates"
   add_foreign_key "onepoint_lists", "onepoint_accounts"
+  add_foreign_key "prelander_site_users", "prelander_sites"
+  add_foreign_key "prelander_site_users", "users"
   add_foreign_key "product_cards", "leadgen_rev_sites"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
   add_foreign_key "questions", "leadgen_rev_sites"
+  add_foreign_key "questions", "prelander_sites"
   add_foreign_key "questions", "websites"
   add_foreign_key "sparkpost_lists", "sparkpost_accounts"
   add_foreign_key "suppression_email_marketer_lists", "suppression_lists"
