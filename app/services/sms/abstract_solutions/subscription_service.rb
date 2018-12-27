@@ -27,9 +27,9 @@ module Sms
             optinip: params[:ip],
             first_name: user&.first_name,
             last_name: user&.last_name,
-            cellphone: params[:phone],
+            number: params[:phone],
             country_id: "223",
-            carrier: provider,
+            carrier_id: provider,
             state: params[:state],
             zip: params[:zip]
           },
