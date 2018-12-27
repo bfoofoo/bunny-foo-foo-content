@@ -25,8 +25,11 @@ module Sms
           subscriber_info:{
             email: user.try(:email),
             number: params[:phone],
+            cellphone: params[:phone],
             carrier: provider,
+            carrier_id: provider,
             optinip: params[:ip],
+            optin_ip: params[:ip],
             first_name: user&.first_name,
             last_name: user&.last_name,
             state: params[:state]
