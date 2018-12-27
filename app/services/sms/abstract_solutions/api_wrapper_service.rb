@@ -20,18 +20,23 @@ module Sms
       attr_reader :account
 
       API_PATH = 'https://app.abstractsolutions.net/exlapiservice/'
+      API_V2_PATH = 'https://app.abstractsolutions.net/exlapi/'
 
       def initialize(account: nil)
         store_auth_session if session_empty?
         @account = account
       end
 
-      def create_contact(params={})
-        invoke_as_authorized('member/create', params)
+      def add_subscriber(params)
+        invoke_as_authorized('member/addsubscriber', params, 'v2')
+      end
+
+      def update_subscriber(params)
+        invoke_as_authorized('member/updatesubscriber', params, 'v2')
       end
 
       def login(username, password)
-        response = HTTParty.post(uri('users/login'), body: { username: username, password: password }, headers: auth_headers)
+        response = HTTParty.post("#{API_PATH}users/login", body: { username: username, password: password }, headers: auth_headers)
         body = JSON.parse(response.body)
         if body['status'] == 'success'
           body['data']
@@ -47,26 +52,22 @@ module Sms
         end
       end
 
-      private
-
-      def uri(path)
-        "#{API_PATH}#{path}"
-      end
-
       def session_params
         if session_empty?
           store_auth_session
         end
         {
-          'user_key' => fetch('abstractsolutions_user_key'),
-          'client_id' => fetch('abstractsolutions_client_id')
+          user_key: fetch('abstractsolutions_user_key'),
+          client_id: fetch('abstractsolutions_client_id')
         }
       end
 
-      def auth_headers
+      private
+
+      def auth_headers(content_type = 'x-www-form-urlencoded')
         {
           CaseSensitiveString.new("apikey") => api_key,
-          "Content-Type" => "application/x-www-form-urlencoded"
+          "Content-Type" => "application/#{content_type}"
         }
       end
 
@@ -92,18 +93,27 @@ module Sms
         account&.password || ENV['ABSTRACTSOLUTIONS_PASSWORD']
       end
 
-      def invoke_as_authorized(path, params)
-        response = perform_api_call(path, params)
+      def invoke_as_authorized(path, params, endpoint = 'service')
+        method = endpoint == 'service' ? :perform_service_api_call : :perform_api_call
+        response = self.send(method, path, params)
         if response['error'] == 'The user key is invalid'
           store_auth_session
-          response = perform_api_call(path, params)
+          response = self.send(method, path, params)
         end
         raise RequestError, response['error'] if response['status'] == 'failure'
         response
       end
 
+      def perform_service_api_call(path, params)
+        response = HTTParty.post("#{API_PATH}#{path}", body: params.merge(session_params), headers: auth_headers)
+        raise RequestError, response.to_s unless response.success?
+        JSON.parse(response.body)
+      end
+
       def perform_api_call(path, params)
-        response = HTTParty.post(uri(path), body: params.merge(session_params), headers: auth_headers)
+        response = HTTParty.post("#{API_V2_PATH}#{path}", body: {
+          data: params.merge(user_key: session_params[:user_key], user_id: session_params[:client_id])
+        }.to_json, headers: auth_headers('json'))
         raise RequestError, response.to_s unless response.success?
         JSON.parse(response.body)
       end
