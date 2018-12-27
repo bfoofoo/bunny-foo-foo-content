@@ -30,7 +30,7 @@ module Sms
             cellphone: params[:phone],
             country_id: "223",
             carrier: provider,
-            #state: params[:state],
+            state: params[:state],
             zip: params[:zip]
           },
           custom_info: {
