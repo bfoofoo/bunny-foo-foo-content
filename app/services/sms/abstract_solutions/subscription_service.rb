@@ -19,20 +19,17 @@ module Sms
 
       def add(user, leadgen_rev_site = nil)
         return unless valid?(user, leadgen_rev_site)
-        provider = find_provider(params[:phone])
+        provider = find_provider(phone_number)
         return if provider.nil?
         new_params = {
           subscriber_info:{
             email: user.try(:email),
-            number: params[:phone],
-            cellphone: params[:phone],
-            carrier: provider,
+            number: phone_number,
             carrier_id: provider,
             optinip: params[:ip],
-            optin_ip: params[:ip],
             first_name: user&.first_name,
             last_name: user&.last_name,
-            state: params[:state]
+            state: params[:state],
           }.compact,
           custom_info: {
             SourceURL: params[:url]
@@ -64,6 +61,15 @@ module Sms
       end
 
       private
+
+      def phone_number
+        number = params[:phone]
+        if number.length == 11
+          number
+        elsif number.length == 10
+          "1#{number}"
+        end
+      end
 
       def client
         return @client if defined?(@client)
