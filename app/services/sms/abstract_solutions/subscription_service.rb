@@ -24,12 +24,12 @@ module Sms
         new_params = {
           subscriber_info:{
             email: user.try(:email),
+            number: params[:phone],
+            carrier: provider,
             optinip: params[:ip],
             first_name: user&.first_name,
             last_name: user&.last_name,
-            number: params[:phone],
-            carrier_id: provider,
-            zip: params[:zip]
+            state: params[:state]
           }.compact,
           custom_info: {
             SourceURL: params[:url]
