@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181225094138) do
+ActiveRecord::Schema.define(version: 20181228171052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,22 +56,6 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.datetime "updated_at",                          null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
-  end
-
-  create_table "adopia_accounts", force: :cascade do |t|
-    t.string   "name"
-    t.string   "api_key"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "adopia_lists", force: :cascade do |t|
-    t.integer  "adopia_account_id", null: false
-    t.integer  "list_id",           null: false
-    t.string   "name"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["adopia_account_id"], name: "index_adopia_lists_on_adopia_account_id", using: :btree
   end
 
   create_table "ads", force: :cascade do |t|
@@ -245,6 +229,7 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.integer  "account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "keyword"
     t.index ["account_id"], name: "index_cep_groups_on_account_id", using: :btree
   end
 
@@ -265,22 +250,6 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
-  end
-
-  create_table "elite_accounts", force: :cascade do |t|
-    t.string   "sender"
-    t.string   "api_key",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "elite_groups", force: :cascade do |t|
-    t.integer  "elite_account_id", null: false
-    t.string   "name"
-    t.string   "group_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.index ["elite_account_id"], name: "index_elite_groups_on_elite_account_id", using: :btree
   end
 
   create_table "esp_accounts", force: :cascade do |t|
@@ -309,7 +278,6 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
-    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -365,14 +333,6 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.datetime "updated_at",  null: false
     t.index ["ad_id"], name: "index_formsite_ads_on_ad_id", using: :btree
     t.index ["formsite_id"], name: "index_formsite_ads_on_formsite_id", using: :btree
-  end
-
-  create_table "formsite_aweber_lists", force: :cascade do |t|
-    t.integer  "aweber_list_id"
-    t.integer  "formsite_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.integer  "delay_in_hours", default: 0, null: false
   end
 
   create_table "formsite_questions", force: :cascade do |t|
@@ -480,6 +440,19 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.index ["ip_from", "ip_to"], name: "index_ip_locations_on_ip_from_and_ip_to", using: :btree
   end
 
+  create_table "leadgen_entries", force: :cascade do |t|
+    t.string   "entry",               null: false
+    t.integer  "leadgen_rev_site_id"
+    t.string   "background"
+    t.string   "background_color"
+    t.integer  "background_opacity"
+    t.text     "left_side_content"
+    t.text     "right_side_content"
+    t.string   "form_box_title_text"
+    t.datetime "deleted_at"
+    t.index ["leadgen_rev_site_id"], name: "index_leadgen_entries_on_leadgen_rev_site_id", using: :btree
+  end
+
   create_table "leadgen_rev_site_ads", force: :cascade do |t|
     t.integer  "leadgen_rev_site_id"
     t.integer  "ad_id"
@@ -541,7 +514,7 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.string   "url"
     t.string   "state"
     t.boolean  "sms_compliant",                  default: false
-    t.boolean  "is_tracking_enabled"
+    t.boolean  "is_tracking_enabled",            default: false
     t.string   "user_agent"
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
     t.index ["user_id"], name: "index_leadgen_rev_site_users_on_user_id", using: :btree
@@ -590,24 +563,12 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.string   "leadgen_entry",               default: "explore"
     t.string   "size_slug"
     t.integer  "account_id"
+    t.integer  "background_opacity"
+    t.string   "background_color"
+    t.string   "form_background_color"
+    t.string   "form_text_color"
     t.index ["account_id"], name: "index_leadgen_rev_sites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
-  end
-
-  create_table "mailgun_accounts", force: :cascade do |t|
-    t.string   "api_key",    null: false
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mailgun_lists", force: :cascade do |t|
-    t.string   "name"
-    t.string   "address"
-    t.integer  "mailgun_account_id", null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.index ["mailgun_account_id"], name: "index_mailgun_lists_on_mailgun_account_id", using: :btree
   end
 
   create_table "mailgun_templates", force: :cascade do |t|
@@ -653,16 +614,16 @@ ActiveRecord::Schema.define(version: 20181225094138) do
   end
 
   create_table "message_schedules", force: :cascade do |t|
-    t.integer  "message_template_id",             null: false
+    t.integer  "message_template_id",                     null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
-    t.datetime "time",                            null: false
+    t.datetime "time",                                    null: false
     t.string   "scheduled_job_id"
-    t.string   "state"
-    t.integer  "time_span",           default: 0, null: false
+    t.string   "state",               default: "pending", null: false
+    t.integer  "time_span",           default: 0,         null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
   end
@@ -674,38 +635,6 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "netatlantic_accounts", force: :cascade do |t|
-    t.string   "sender"
-    t.string   "sender_name"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.string   "account_name"
-  end
-
-  create_table "netatlantic_lists", force: :cascade do |t|
-    t.integer  "list_id"
-    t.string   "name"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "netatlantic_account_id"
-  end
-
-  create_table "onepoint_accounts", force: :cascade do |t|
-    t.string   "username",   null: false
-    t.string   "api_key",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "onepoint_lists", force: :cascade do |t|
-    t.integer  "onepoint_account_id", null: false
-    t.integer  "list_id",             null: false
-    t.string   "name"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.index ["onepoint_account_id"], name: "index_onepoint_lists_on_onepoint_account_id", using: :btree
   end
 
   create_table "pending_leads", force: :cascade do |t|
@@ -740,6 +669,73 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.datetime "updated_at",                  null: false
   end
 
+  create_table "prelander_site_user_answers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "prelander_site_id"
+    t.integer  "question_id"
+    t.integer  "answer_id"
+    t.integer  "prelander_site_user_id"
+    t.string   "url"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "prelander_site_users", force: :cascade do |t|
+    t.boolean  "is_verified"
+    t.boolean  "is_useragent_valid"
+    t.boolean  "is_impressionwise_test_success"
+    t.boolean  "is_duplicate"
+    t.string   "s4"
+    t.string   "s5"
+    t.string   "s1"
+    t.string   "s2"
+    t.string   "s3"
+    t.string   "ndm_token"
+    t.string   "affiliate"
+    t.datetime "birthday"
+    t.string   "zip"
+    t.string   "phone"
+    t.string   "ip"
+    t.string   "job_key"
+    t.boolean  "is_email_duplicate",             default: false
+    t.string   "url"
+    t.string   "state"
+    t.boolean  "sms_compliant",                  default: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.datetime "deleted_at"
+    t.integer  "prelander_site_id"
+    t.integer  "user_id"
+    t.index ["deleted_at"], name: "index_prelander_site_users_on_deleted_at", using: :btree
+    t.index ["prelander_site_id"], name: "index_prelander_site_users_on_prelander_site_id", using: :btree
+    t.index ["user_id"], name: "index_prelander_site_users_on_user_id", using: :btree
+  end
+
+  create_table "prelander_sites", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "droplet_id"
+    t.string   "droplet_ip"
+    t.string   "zone_id"
+    t.string   "repo_url"
+    t.string   "favicon_image"
+    t.string   "logo_image"
+    t.string   "shortname"
+    t.string   "fraud_user_redirect_url"
+    t.string   "first_redirect_url"
+    t.string   "final_redirect_url"
+    t.string   "background"
+    t.text     "head_code_snippet"
+    t.string   "right_side_content"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.datetime "deleted_at"
+    t.string   "size_slug"
+    t.integer  "account_id"
+    t.index ["account_id"], name: "index_prelander_sites_on_account_id", using: :btree
+    t.index ["deleted_at"], name: "index_prelander_sites_on_deleted_at", using: :btree
+  end
+
   create_table "product_cards", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
@@ -750,6 +746,8 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.string   "url"
     t.float    "rate"
     t.integer  "leadgen_rev_site_id"
+    t.string   "button_text"
+    t.text     "full_description"
     t.index ["leadgen_rev_site_id"], name: "index_product_cards_on_leadgen_rev_site_id", using: :btree
     t.index ["website_id"], name: "index_product_cards_on_website_id", using: :btree
   end
@@ -774,9 +772,11 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.boolean  "is_last",             default: false,        null: false
     t.integer  "leadgen_rev_site_id"
     t.integer  "website_id"
+    t.integer  "prelander_site_id"
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_questions_on_leadgen_rev_site_id", using: :btree
+    t.index ["prelander_site_id"], name: "index_questions_on_prelander_site_id", using: :btree
     t.index ["website_id"], name: "index_questions_on_website_id", using: :btree
   end
 
@@ -793,23 +793,6 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.index ["cep_rule_id"], name: "index_sms_subscribers_on_cep_rule_id", using: :btree
     t.index ["linkable_type", "linkable_id"], name: "index_sms_subscribers_on_linkable_type_and_linkable_id", using: :btree
     t.index ["source_type", "source_id"], name: "index_sms_subscribers_on_source_type_and_source_id", using: :btree
-  end
-
-  create_table "sparkpost_accounts", force: :cascade do |t|
-    t.integer  "account_id"
-    t.string   "username"
-    t.string   "api_key",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "sparkpost_lists", force: :cascade do |t|
-    t.integer  "sparkpost_account_id", null: false
-    t.string   "list_id",              null: false
-    t.string   "name"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.index ["sparkpost_account_id"], name: "index_sparkpost_lists_on_sparkpost_account_id", using: :btree
   end
 
   create_table "suppression_email_marketer_lists", force: :cascade do |t|
@@ -832,9 +815,8 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.string   "email"
     t.string   "first_name"
     t.string   "last_name"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "added_to_aweber", default: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
     t.datetime "unsubscribed_at"
     t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
@@ -881,7 +863,6 @@ ActiveRecord::Schema.define(version: 20181225094138) do
     t.index ["deleted_at"], name: "index_websites_on_deleted_at", using: :btree
   end
 
-  add_foreign_key "adopia_lists", "adopia_accounts"
   add_foreign_key "answers", "questions"
   add_foreign_key "api_users", "api_clients"
   add_foreign_key "articles", "categories"
@@ -891,11 +872,11 @@ ActiveRecord::Schema.define(version: 20181225094138) do
   add_foreign_key "cep_groups", "accounts"
   add_foreign_key "cep_rules", "leadgen_rev_sites"
   add_foreign_key "configs", "websites"
-  add_foreign_key "elite_groups", "elite_accounts"
   add_foreign_key "esp_rules_lists", "esp_rules"
   add_foreign_key "exported_leads", "esp_rules"
   add_foreign_key "formsite_ads", "ads"
   add_foreign_key "formsite_ads", "formsites"
+  add_foreign_key "leadgen_entries", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_ads", "ads"
   add_foreign_key "leadgen_rev_site_ads", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_user_answers", "answers"
@@ -905,19 +886,19 @@ ActiveRecord::Schema.define(version: 20181225094138) do
   add_foreign_key "leadgen_rev_site_user_answers", "users"
   add_foreign_key "leadgen_rev_site_users", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_users", "users"
-  add_foreign_key "mailgun_lists", "mailgun_accounts"
   add_foreign_key "mailgun_templates_schedules", "esp_lists", column: "mailgun_list_id"
   add_foreign_key "mailgun_templates_schedules", "mailgun_templates"
   add_foreign_key "message_auto_responses", "message_templates"
   add_foreign_key "message_recipients", "message_schedules"
   add_foreign_key "message_schedules", "message_templates"
-  add_foreign_key "onepoint_lists", "onepoint_accounts"
+  add_foreign_key "prelander_site_users", "prelander_sites"
+  add_foreign_key "prelander_site_users", "users"
   add_foreign_key "product_cards", "leadgen_rev_sites"
   add_foreign_key "product_cards", "websites"
   add_foreign_key "questions", "formsites"
   add_foreign_key "questions", "leadgen_rev_sites"
+  add_foreign_key "questions", "prelander_sites"
   add_foreign_key "questions", "websites"
-  add_foreign_key "sparkpost_lists", "sparkpost_accounts"
   add_foreign_key "suppression_email_marketer_lists", "suppression_lists"
   add_foreign_key "website_ads", "ads"
   add_foreign_key "website_ads", "websites"
