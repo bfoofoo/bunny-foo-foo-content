@@ -20,16 +20,28 @@ class ApiUser
     private
     
     def create_multiple_users
+      creation_errors = prevalidate_api_users(params[:api_users])
+      return { message: 'Invalid data provided', status: :unprocessable_entity, errors: creation_errors } if creation_errors.count == params[:api_users].count
       ApiUsers::CreateApiUsersWorker.perform_async(
         params[:api_users].to_json,
         user_agent, 
         api_client.id
       )
-      return {message: "success", status: 200}
+      { message: "success", status: 200, errors: creation_errors }
+    end
+
+    def prevalidate_api_users(data)
+      creation_errors = []
+      data.each.with_index do |attributes, index|
+        api_user = ::ApiUser.new(api_user_params(attributes))
+        api_user.valid?
+        creation_errors << { "ApiUser ##{index + 1}" => api_user.errors.full_messages } unless api_user.errors.blank?
+      end
+      creation_errors.flatten.compact
     end
 
     def user_state_for_ip(ip)
-      GeocoderInteractor::GetStateByIP.call(ip: user_ip)&.state
+      GeocoderInteractor::GetStateByIP.call(ip: ip)&.state
     rescue
       nil
     end
@@ -38,9 +50,9 @@ class ApiUser
       @user = build_api_user(params)
       if @user.save
         send_to_esp
-        return {message: "success", status: 200}
+        { message: "success", status: 200 }
       else
-        return {message: @user.errors, status: :unprocessable_entity}
+        { message: @user.errors, status: :unprocessable_entity }
       end
     end
     
