@@ -19,7 +19,7 @@ module Sms
 
       def add(user, leadgen_rev_site = nil)
         return unless valid?(user, leadgen_rev_site)
-        provider = find_provider(params[:phone])
+        provider = find_provider(phone_number)
         return if provider.nil?
         new_params = {
           subscriber_info:{
@@ -52,7 +52,18 @@ module Sms
             }
           ]
         }
+
         response = client.add_subscriber(new_params)
+        
+        mo_params = {
+          cellnumber: phone_number,
+          carrier_id: provider,
+          shortcode_id: "55",
+          message: group&.keyword
+        }
+
+        response = client.simulate_mo(mo_params)
+
         if response['status'] == 'success'
           id = response.dig('subscriber', 'id')
           mark_as_saved(user, leadgen_rev_site, id)
