@@ -31,6 +31,14 @@ module Sms
         invoke_as_authorized('member/addsubscriber', params, 'v2')
       end
 
+      def simulate_mo(params)
+        invoke_as_authorized('sms/mo', params)
+      end
+
+      def get_keywords(params)
+        invoke_as_authorized('/campaign/keywords', params)
+      end
+
       def update_subscriber(params)
         invoke_as_authorized('member/updatesubscriber', params, 'v2')
       end
