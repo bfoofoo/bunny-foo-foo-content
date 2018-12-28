@@ -50,6 +50,8 @@ class Api::V1::ApiUsersController < ApiController
     response = ApiUser::CreateApiUserUseCase.new(params, request.user_agent, @api_client).perform
 
     render json: response, status: response[:status]
+  rescue => e
+    render json: { message: e.message, status: 500 }
   end
 
   private
