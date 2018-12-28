@@ -35,7 +35,7 @@ class ApiUser
     end
 
     def rules
-      EspRules::ApiClient.where(source: api_user.api_client, delay_in_hours: 0)
+      ::EspRules::ApiClient.where(source: api_user.api_client, delay_in_hours: 0)
     end
   end
 end
