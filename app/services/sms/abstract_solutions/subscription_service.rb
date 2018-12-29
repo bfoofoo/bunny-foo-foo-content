@@ -60,12 +60,12 @@ module Sms
           message: group&.keyword
         }
 
-        response = client.simulate_mo(mo_params)
-
         if response['status'] == 'success'
           id = response.dig('subscriber', 'id')
           mark_as_saved(user, leadgen_rev_site, id)
+          client.simulate_mo(mo_params)
         end
+
         response
       rescue RequestError => e
         puts "AbstractSolutions adding subscriber error - #{e}".red
