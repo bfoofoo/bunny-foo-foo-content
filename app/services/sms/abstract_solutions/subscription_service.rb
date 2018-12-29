@@ -98,7 +98,7 @@ module Sms
       def mark_as_saved(user, leadgen_rev_site, id)
         if user.is_a?(ActiveRecord::Base)
           SmsSubscriber
-            .create_with(cep_rule_id: cep_rule&.id, group_id: group&.id, id: id)
+            .create_with(cep_rule_id: cep_rule&.id, group_id: group&.id, subscriber_id: id)
             .find_or_create_by(provider: 'AbstractSolutions', linkable: user, source: leadgen_rev_site)
         end
       end
