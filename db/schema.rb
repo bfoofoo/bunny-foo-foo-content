@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181228092111) do
+ActiveRecord::Schema.define(version: 20190105141450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 20181228092111) do
     t.integer  "account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "keyword"
     t.index ["account_id"], name: "index_cep_groups_on_account_id", using: :btree
   end
 
@@ -516,6 +517,7 @@ ActiveRecord::Schema.define(version: 20181228092111) do
     t.boolean  "sms_compliant",                  default: false
     t.boolean  "is_tracking_enabled"
     t.string   "user_agent"
+    t.boolean  "network_lookup_success",         default: false
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
     t.index ["user_id"], name: "index_leadgen_rev_site_users_on_user_id", using: :btree
   end
