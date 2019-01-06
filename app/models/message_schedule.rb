@@ -8,7 +8,8 @@ class MessageSchedule < ApplicationRecord
   validates :time_span, numericality: { greater_than_or_equal_to: 0 }
   validate :check_time, on: :create
 
-  after_commit :schedule_sending, on: [:create, :update]
+  after_commit :schedule_sending, on: [:create]
+  after_update :schedule_sending, if: :time_changed?
   before_destroy :cancel
 
   def is_batch?

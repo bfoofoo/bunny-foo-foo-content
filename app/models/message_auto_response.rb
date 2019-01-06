@@ -1,7 +1,5 @@
 class MessageAutoResponse < ApplicationRecord
-  # AUTORESPONDING_ESPS = %w(mailgun).freeze
-  AUTORESPONDING_ESPS = %w().freeze
-  # TODO: removed mailgun from AUTORESPONDING_ESPS because account was suspended
+  AUTORESPONDING_ESPS = %w(mailgun).freeze
 
   EVENTS = %w(open click nothing).freeze
 

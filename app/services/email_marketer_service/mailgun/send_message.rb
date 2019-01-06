@@ -1,6 +1,8 @@
 module EmailMarketerService
   module Mailgun
     class SendMessage
+      MIN_INTERVAL = 0.2.seconds # To avoid API abusing
+
       def initialize(list:, template:, schedule: nil)
         @list = list
         @template = template
@@ -8,14 +10,12 @@ module EmailMarketerService
       end
 
       def call
-        # TODO: removed mailgun EmailMarketerService while account is inactive
-        
-        # if !@schedule || @schedule.is_batch?
-        #   send_batch
-        # else
-        #   import_recipients
-        #   send_gradually
-        # end
+         if !@schedule || @schedule.is_batch?
+           send_batch
+         else
+           import_recipients
+           send_gradually
+         end
       end
 
       private
@@ -25,10 +25,8 @@ module EmailMarketerService
         emails = parse_emails(body)
         return if emails.blank?
 
-
-        while true do
+        while body do
           body = client.get(body['next_link'])
-          break if parse_emails(body).blank?
           emails += parse_emails(body)
         end
 
@@ -61,9 +59,12 @@ module EmailMarketerService
       def send_gradually
         start_time = Time.zone.now
         end_time = start_time + @schedule.time_span.minutes
-        recipients = MessageRecipient.where(message_schedule_id: @schedule.id).order('RANDOM()').to_a
-        recipients.each do |r|
-          delivery_time = Time.zone.at((end_time.to_f - start_time.to_f)*rand + start_time.to_f)
+        if (end_time.to_f - start_time.to_f).seconds / message_recipients.count < MIN_INTERVAL
+          end_time = start_time + (MIN_INTERVAL * message_recipients.count).seconds
+        end
+
+        message_recipients.each do |r|
+          delivery_time = Time.zone.at(interval(start_time, end_time))
 
           params = {
             from: "#{@template.author} #{@template.author.parameterize.underscore}@#{domain}",
@@ -74,6 +75,14 @@ module EmailMarketerService
           }
           client.post("/#{domain}/messages", params)
         end
+      end
+
+      def message_recipients
+        @message_recipients ||= MessageRecipient.where(message_schedule_id: @schedule.id).order('RANDOM()').to_a
+      end
+
+      def interval(start_time, end_time)
+        (end_time.to_f - start_time.to_f)*rand + start_time.to_f
       end
 
       def send_batch
