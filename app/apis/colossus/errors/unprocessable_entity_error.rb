@@ -1,4 +1,4 @@
-module Allinbox
+module Colossus
   module Errors
     class UnprocessableEntityError < Error
     end

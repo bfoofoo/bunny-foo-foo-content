@@ -12,10 +12,7 @@ module EmailMarketerService
             list_id: 1676,
           ).update(name: 'list1')
         end
-      end
-
-      
-    
+      end  
     end
   end
 
