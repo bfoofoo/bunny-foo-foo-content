@@ -26,7 +26,9 @@ module EmailMarketerService
         return if emails.blank?
 
         while body do
-          body = client.get(body['next_link'])
+          next_link = body.try(:dig, 'paging', 'next')
+          break unless next_link
+          body = fetch_recipients(next_link.split('/v3').second)
           emails += parse_emails(body)
         end
 
