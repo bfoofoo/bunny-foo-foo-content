@@ -1,7 +1,6 @@
 class PendingLead < ApplicationRecord
   acts_as_paranoid
-
-  has_many :exported_leads, as: :linkable
+  include Esp::LinkableMethods
 
   PROVIDERS = %w(netatlantic adopia).freeze
   VALID_REFERRERS = %w(applyforjobs.us applyforlocaljobs.net athomeworkfinder.com benefitsguide.co creditscout.com familybenefitsnetwork.co
@@ -14,8 +13,8 @@ class PendingLead < ApplicationRecord
                        usresourcecenter.net www.jobs-in-my-area.net www.resourcedepot.info).freeze
 
   PROVIDERS.each do |provider|
-    scope "sent_to_#{provider}", -> { joins(:exported_leads).where(exported_leads: { list_type: "#{provider.capitalize}List"}) }
-    scope "not_sent_to_#{provider}", -> { left_joins(:exported_leads).where.not(exported_leads: { list_type: "#{provider.capitalize}List" }) }
+    scope "sent_to_#{provider}", -> { joins(:exported_leads).where(exported_leads: { list_type: ESP_LIST_TYPES[provider]}) }
+    scope "not_sent_to_#{provider}", -> { left_joins(:exported_leads).where.not(exported_leads: { list_type: ESP_LIST_TYPES[provider] }) }
   end
 
   scope :with_valid_referrers, -> { where(referrer: VALID_REFERRERS) }
