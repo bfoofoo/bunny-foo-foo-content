@@ -16,7 +16,7 @@ class EspList < ApplicationRecord
   
   # TODO resolve this to work in association
   def exported_leads
-    ExportedLead.where(list_type: type, list_id: id).count
+    ExportedLead.where(list_type: type, list_id: id)
   end
   
   # Workaround to delete esp rules lists
