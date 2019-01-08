@@ -15,7 +15,7 @@ module Esp
       allinbox: 'AllinboxList',      
       sparkpost: 'SparkpostList',
       getresponse: 'GetresponseList'
-    }.freeze
+    }.with_indifferent_access.freeze
 
     ESP_LIST_TYPES.each do |provider, type|
       define_method :"sent_to_#{provider}?" do
