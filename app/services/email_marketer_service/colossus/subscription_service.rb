@@ -12,7 +12,7 @@ module EmailMarketerService
       def add(user)
         begin
           if is_valid?(user)
-            client.contact.create( {
+            request_params = {
               email: user.email,
               first_name: user.try(:first_name),
               last_name: user.try(:last_name),
@@ -21,7 +21,8 @@ module EmailMarketerService
               list_id: list.list_id,
               phone: params[:phone],
               state: params[:state]
-            })
+            }
+            client.create_contact(request_params)
             handle_user_record(user)
           end
         rescue ::Colossus::Errors::Error => e
@@ -50,7 +51,6 @@ module EmailMarketerService
       def account
         @account ||= list.colossus_account
       end
-
     end
   end
 end
