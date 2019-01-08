@@ -9,7 +9,6 @@ module Colossus
     def initialize(api_key)
       @api_key = api_key
     end
-
     
     def post(path, params={})
       self.class.post(uri(path),:body => params,:headers => {"Content-Type" => "application/x-www-form-urlencoded"})       
@@ -39,6 +38,7 @@ module Colossus
     def uri(path)
       "#{API_ENDPOINT}#{path}"
     end
+    
     def payload(params = {})
       {
         headers: {

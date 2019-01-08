@@ -1,7 +1,5 @@
 module Colossus
   class Resource
-
-
     def initialize(api_key)
       @request =  Request.new(api_key)
     end
