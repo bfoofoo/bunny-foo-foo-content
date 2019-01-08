@@ -16,7 +16,7 @@ module Esp
         end
         next if leads.empty?
         result = send_data(leads, list.adopia_account.name, list.name)
-        mark_as_sent(leads)
+        mark_as_sent(leads, list)
         logger.info("Sent #{leads.count} to '#{list.name}', successfully sent: #{result.processed_emails.count}")
       end
     end
@@ -67,9 +67,17 @@ module Esp
       service
     end
 
-    def mark_as_sent(leads)
+    def mark_as_sent(leads, list)
       sent_leads = PendingLead.where(id: leads.map(&:id))
-      sent_leads.update_all(sent_to_adopia: true)
+      exported_leads = sent_leads.map do |sl|
+        {
+          linkable_type: 'PendingLead',
+          linkable_id: sl.id,
+          list_type: 'AdopiaList',
+          list_id: list.id
+        }
+      end
+      ExportedLead.import(exported_leads)
     end
 
     def available_leads

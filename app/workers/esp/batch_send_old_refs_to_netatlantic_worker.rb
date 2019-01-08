@@ -15,7 +15,7 @@ module Esp
         end
         next if leads.empty?
         send_data(leads, list_name)
-        mark_as_sent(leads)
+        mark_as_sent(leads, list_name)
         logger.info("Sent #{leads.count} to '#{list_name}', successfully sent: #{leads.count}")
       end
     end
@@ -38,6 +38,10 @@ module Esp
       %w(resourcedepot dd-daily typesofaid)
     end
 
+    def list_by_name(name)
+      NetatlanticList.find_by(name: name)
+    end
+
     def leads_to_send
       @leads_to_send ||= available_leads.limit(TARGET_BATCH_SIZE).to_a
     end
@@ -57,9 +61,18 @@ module Esp
       EmailMarketerService::Netatlantic::BatchSendLeads.new(data, list_name).call
     end
 
-    def mark_as_sent(leads)
+    def mark_as_sent(leads, list_name)
+      list = list_by_name(list_name)
       sent_leads = PendingLead.where(id: leads.map(&:id))
-      sent_leads.update_all(sent_to_netatlantic: true, sent_at: Time.zone.now)
+      exported_leads = sent_leads.map do |sl|
+        {
+          linkable_type: 'PendingLead',
+          linkable_id: sl.id,
+          list_type: 'NetatlanticList',
+          list_id: list.id
+        }
+      end
+      ExportedLead.import(exported_leads)
     end
 
     def available_leads
