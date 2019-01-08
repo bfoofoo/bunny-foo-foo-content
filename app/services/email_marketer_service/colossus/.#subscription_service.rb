@@ -1,1 +1,0 @@
-riz@Rizs-MacBook-Pro.local.54920
