@@ -10,8 +10,9 @@ class LeadgenRevSiteUserAnswer
     def perform
       @lrsu_answer = @question.leadgen_rev_site_user_answers.build(@params)
       @lrsu_answer.save!
-      if @question.custom_field_id && user
-        user.update(@question.custom_field.name => answer.custom_field_value)
+      key = @question.custom_field.name
+      if @question.custom_field_id && user && user.try(key).blank?
+        user.update(key => answer.custom_field_value)
       end
       true
     rescue
