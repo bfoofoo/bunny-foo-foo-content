@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190105141450) do
+ActiveRecord::Schema.define(version: 20190110093450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20190105141450) do
     t.datetime "deleted_at"
     t.integer  "next_question_position"
     t.boolean  "last_question",          default: false
+    t.string   "custom_field_value"
     t.index ["deleted_at"], name: "index_answers_on_deleted_at", using: :btree
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
   end
@@ -252,6 +253,12 @@ ActiveRecord::Schema.define(version: 20190105141450) do
     t.index ["website_id"], name: "index_configs_on_website_id", using: :btree
   end
 
+  create_table "custom_fields", force: :cascade do |t|
+    t.string   "name",                    null: false
+    t.string   "values",     default: [], null: false, array: true
+    t.datetime "deleted_at"
+  end
+
   create_table "esp_accounts", force: :cascade do |t|
     t.string   "type",                     null: false
     t.string   "name"
@@ -278,7 +285,6 @@ ActiveRecord::Schema.define(version: 20190105141450) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "campaign_id"
-    t.index ["account_id"], name: "index_esp_lists_on_account_id", using: :btree
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -377,6 +383,8 @@ ActiveRecord::Schema.define(version: 20190105141450) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -515,7 +523,7 @@ ActiveRecord::Schema.define(version: 20190105141450) do
     t.string   "url"
     t.string   "state"
     t.boolean  "sms_compliant",                  default: false
-    t.boolean  "is_tracking_enabled"
+    t.boolean  "is_tracking_enabled",            default: false
     t.string   "user_agent"
     t.boolean  "network_lookup_success",         default: false
     t.index ["leadgen_rev_site_id"], name: "index_leadgen_rev_site_users_on_leadgen_rev_site_id", using: :btree
@@ -616,16 +624,16 @@ ActiveRecord::Schema.define(version: 20190105141450) do
   end
 
   create_table "message_schedules", force: :cascade do |t|
-    t.integer  "message_template_id",             null: false
+    t.integer  "message_template_id",                     null: false
     t.string   "esp_list_type"
     t.integer  "esp_list_id"
-    t.datetime "time",                            null: false
+    t.datetime "time",                                    null: false
     t.string   "scheduled_job_id"
-    t.string   "state"
-    t.integer  "time_span",           default: 0, null: false
+    t.string   "state",               default: "pending", null: false
+    t.integer  "time_span",           default: 0,         null: false
     t.datetime "deleted_at"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_schedules_on_esp_list_type_and_esp_list_id", using: :btree
     t.index ["message_template_id"], name: "index_message_schedules_on_message_template_id", using: :btree
   end
@@ -775,6 +783,8 @@ ActiveRecord::Schema.define(version: 20190105141450) do
     t.integer  "leadgen_rev_site_id"
     t.integer  "website_id"
     t.integer  "prelander_site_id"
+    t.integer  "custom_field_id"
+    t.index ["custom_field_id"], name: "index_questions_on_custom_field_id", using: :btree
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
     t.index ["leadgen_rev_site_id"], name: "index_questions_on_leadgen_rev_site_id", using: :btree
@@ -821,6 +831,7 @@ ActiveRecord::Schema.define(version: 20190105141450) do
     t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
     t.datetime "unsubscribed_at"
+    t.hstore   "custom_fields"
     t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   end
 
@@ -897,6 +908,7 @@ ActiveRecord::Schema.define(version: 20190105141450) do
   add_foreign_key "prelander_site_users", "users"
   add_foreign_key "product_cards", "leadgen_rev_sites"
   add_foreign_key "product_cards", "websites"
+  add_foreign_key "questions", "custom_fields"
   add_foreign_key "questions", "formsites"
   add_foreign_key "questions", "leadgen_rev_sites"
   add_foreign_key "questions", "prelander_sites"

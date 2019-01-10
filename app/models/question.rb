@@ -8,6 +8,8 @@ class Question < ApplicationRecord
   belongs_to :website, optional: true
   belongs_to :prelander_site, optional: true
 
+  belongs_to :custom_field, optional: true
+
   has_many :answers, dependent: :destroy
   has_many :formsite_questions
   # has_many :formsite, :through => :formsite_questions
