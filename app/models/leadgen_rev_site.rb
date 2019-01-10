@@ -19,6 +19,7 @@ class LeadgenRevSite < ApplicationRecord
   has_many :pixel_code_snippets, dependent: :destroy
   has_many :leadgen_rev_site_popups, dependent: :destroy
   has_many :questions, dependent: :destroy
+  has_many :prelender_questions, -> { for_prelender },  dependent: :destroy, class_name: 'Question'
   has_many :articles_leadgen_rev_sites
   has_many :articles, through: :articles_leadgen_rev_sites, dependent: :destroy
   has_many :product_cards_leadgen_rev_sites

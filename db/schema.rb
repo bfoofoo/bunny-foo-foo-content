@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190110093450) do
+ActiveRecord::Schema.define(version: 20190110142535) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -383,8 +383,6 @@ ActiveRecord::Schema.define(version: 20190110093450) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
-    t.date     "date_of_birth"
-    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -565,18 +563,19 @@ ActiveRecord::Schema.define(version: 20190110093450) do
     t.string   "form_box_title_text"
     t.string   "affiliate_description"
     t.boolean  "is_phone_number"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
-    t.boolean  "show_popup",                  default: false
-    t.string   "popup_iframe_urls",           default: [],                     array: true
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.boolean  "show_popup",                   default: false
+    t.string   "popup_iframe_urls",            default: [],                     array: true
     t.integer  "popup_delay"
-    t.string   "leadgen_entry",               default: "explore"
+    t.string   "leadgen_entry",                default: "explore"
     t.string   "size_slug"
     t.integer  "account_id"
     t.integer  "background_opacity"
     t.string   "background_color"
     t.string   "form_background_color"
     t.string   "form_text_color"
+    t.string   "prelander_final_redirect_url"
     t.index ["account_id"], name: "index_leadgen_rev_sites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
   end
@@ -784,6 +783,7 @@ ActiveRecord::Schema.define(version: 20190110093450) do
     t.integer  "website_id"
     t.integer  "prelander_site_id"
     t.integer  "custom_field_id"
+    t.boolean  "for_prelender",       default: false
     t.index ["custom_field_id"], name: "index_questions_on_custom_field_id", using: :btree
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
@@ -821,6 +821,12 @@ ActiveRecord::Schema.define(version: 20190110093450) do
     t.datetime "updated_at",                          null: false
     t.string   "file_name"
     t.boolean  "autoremove_from_esp", default: false, null: false
+  end
+
+  create_table "templeads", id: false, force: :cascade do |t|
+    t.string   "email"
+    t.string   "ip_address", limit: 256
+    t.datetime "created_at"
   end
 
   create_table "users", force: :cascade do |t|

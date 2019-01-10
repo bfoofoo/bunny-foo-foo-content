@@ -26,6 +26,7 @@ class Question < ApplicationRecord
 
   as_enum :flow, [:vertical, :horizontal, :grid, :date, :select, :number], source: :flow, map: :string
   
+  scope :for_prelender, -> () { where(for_prelender: true) }
   scope :order_by_id, -> () { order(id: :asc) }
   scope :order_by_position, -> (position=:asc) { order(position: position) }
   scope :of_formsites, -> { where.not(formsite_id: nil) }
