@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190110142535) do
+ActiveRecord::Schema.define(version: 20190110163509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -783,7 +783,7 @@ ActiveRecord::Schema.define(version: 20190110142535) do
     t.integer  "website_id"
     t.integer  "prelander_site_id"
     t.integer  "custom_field_id"
-    t.boolean  "for_prelender",       default: false
+    t.boolean  "for_prelander",       default: false
     t.index ["custom_field_id"], name: "index_questions_on_custom_field_id", using: :btree
     t.index ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
     t.index ["formsite_id"], name: "index_questions_on_formsite_id", using: :btree
