@@ -14,6 +14,8 @@ class User < ApplicationRecord
   has_many :exported_leads, as: :linkable
   has_many :sms_subscribers, as: :linkable
 
+  store_accessor :custom_fields, *COLOSSUS_CUSTOM_FIELDS
+
   accepts_nested_attributes_for :formsite_users
   accepts_nested_attributes_for :formsites
 

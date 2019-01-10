@@ -37,3 +37,9 @@ autorespond_to_inactive_recipients:
   cron: "1 * * * *"
   class: "Messages::ReminderWoker"
   queue: messages
+
+send_leadrev_users_to_colossus:
+  cron: "10 3,15 * * *"
+  class: "LeadgenRevSiteUsers::SendToColossusWorker"
+  queue: default
+  status: disabled
