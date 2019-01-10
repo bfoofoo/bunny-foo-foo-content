@@ -16,7 +16,7 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
     if service.perform
       render json: service.lrsu_answer
     else
-      render json: {message: answer.errors}, status: 422
+      render json: {message: service.lrsu_answer.errors}, status: 422
     end
   end
 
