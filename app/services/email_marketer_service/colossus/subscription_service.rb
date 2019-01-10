@@ -12,6 +12,7 @@ module EmailMarketerService
       def add(user)
         begin
           if is_valid?(user)
+            custom_fields = COLOSSUS_CUSTOM_FIELDS.each_with_object({}) { |cf, memo| memo[cf] = params[cf] }
             request_params = {
               email: user.email,
               first_name: user.try(:first_name),
@@ -20,7 +21,8 @@ module EmailMarketerService
               ip: params.try(:fetch, :ip),
               list_id: list.list_id,
               phone: params[:phone],
-              state: params[:state]
+              state: params[:state],
+              **custom_fields
             }
             client.create_contact(request_params)
             handle_user_record(user)
