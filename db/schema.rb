@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190110163509) do
+ActiveRecord::Schema.define(version: 20190111132454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -576,6 +576,10 @@ ActiveRecord::Schema.define(version: 20190110163509) do
     t.string   "form_background_color"
     t.string   "form_text_color"
     t.string   "prelander_final_redirect_url"
+    t.string   "prelander_title"
+    t.string   "prelander_main_text"
+    t.string   "prelander_button_text"
+    t.string   "prelander_image"
     t.index ["account_id"], name: "index_leadgen_rev_sites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
   end
