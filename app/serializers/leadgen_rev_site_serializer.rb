@@ -1,5 +1,6 @@
 class LeadgenRevSiteSerializer < ActiveModel::Serializer
-  attributes :id, :name, :shortname, :favicon_image, :logo_image, :background, :background_opacity, :background_color, :created_at, :updated_at, :content, :options
+  attributes :id, :name, :shortname, :favicon_image, :logo_image, :background, :background_opacity, :background_color,
+             :created_at, :updated_at, :content, :options, :prelander_config
 
   has_many :categories
   has_many :advertisements
@@ -9,11 +10,16 @@ class LeadgenRevSiteSerializer < ActiveModel::Serializer
   has_many :widgets
   has_many :leadgen_entries
   has_many :prelander_questions
-  has_many :prelander_final_redirect_url
 
   def content
-    %i(first_question_code_snippet left_side_content right_side_content head_code_snippet).each_with_object({}) do |attr, memo|
+    %i(first_question_code_snippet left_side_content right_side_content head_code_snippet disclaimer_text).each_with_object({}) do |attr, memo|
       memo[attr] = object.send(attr)
+    end
+  end
+
+  def prelander_config
+    %i(final_redirect_url title main_text button_text image).each_with_object({}) do |attr, memo|
+      memo[attr] = object.send(:"prelander_#{attr}")
     end
   end
 

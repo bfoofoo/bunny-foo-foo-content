@@ -55,6 +55,7 @@ class LeadgenRevSite < ApplicationRecord
   mount_uploader :logo_image, CommonUploader
   mount_uploader :background, CommonUploader
   mount_uploader :text_file, TextFileUploader
+  mount_uploader :prelander_image, CommonUploader
 
   def mark_last_question
     return if questions.empty?
