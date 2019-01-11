@@ -1,4 +1,7 @@
 class QuestionSerializer < ActiveModel::Serializer
-  attributes :id, :text, :position, :flow
-  has_many :answers
+  attributes :id, :text, :position, :flow, :answers
+  
+  def answers
+    object.answers
+  end
 end
