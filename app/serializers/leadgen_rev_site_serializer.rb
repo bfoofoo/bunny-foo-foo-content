@@ -12,7 +12,7 @@ class LeadgenRevSiteSerializer < ActiveModel::Serializer
   has_many :prelander_questions
 
   def content
-    %i(first_question_code_snippet left_side_content right_side_content head_code_snippet).each_with_object({}) do |attr, memo|
+    %i(first_question_code_snippet left_side_content right_side_content head_code_snippet disclaimer_text).each_with_object({}) do |attr, memo|
       memo[attr] = object.send(attr)
     end
   end
