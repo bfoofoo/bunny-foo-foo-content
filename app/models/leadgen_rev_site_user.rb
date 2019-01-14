@@ -11,6 +11,8 @@ class LeadgenRevSiteUser < ApplicationRecord
   has_many :exported_leads, through: :user
   has_many :sms_subscribers, through: :user
 
+  store_accessor :custom_fields, *COLOSSUS_CUSTOM_FIELDS
+
   delegate :email, :first_name, :last_name, :sent_to_adopia?, :sent_to_elite?,
            :sent_to_netatlantic?, :full_name, :sent_to_mailgun?, :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?, :sent_to_allinbox?, :sent_to_constantcontact?,
            to: :user, allow_nil: true
@@ -44,6 +46,7 @@ class LeadgenRevSiteUser < ApplicationRecord
     regex = "https?:\\/\\/[\\w.-]+\\/#{page}"
     where('leadgen_rev_site_users.url ~ ?', regex)
   end
+  scope :from_prelander, -> { where(from_prelander: true) }
 
   User::ESP_LIST_TYPES.each do |provider, type|
     define_method :"local_sent_to_#{provider}?" do

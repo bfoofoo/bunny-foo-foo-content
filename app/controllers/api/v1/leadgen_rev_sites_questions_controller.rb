@@ -10,9 +10,10 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
 
   def create_answer
     service = LeadgenRevSiteUserAnswer::CreateAnswerUseCase.new(@question, answer_params.merge(
-      leadgen_rev_site_user_id: @leadgen_rev_site_user.id,
-      leadgen_rev_site_id: @leadgen_rev_site.id)
-    )
+      leadgen_rev_site_user_id: @leadgen_rev_site_user&.id,
+      leadgen_rev_site_id: @leadgen_rev_site.id,
+      ip: request.env['REMOTE_ADDR']
+    ))
     if service.perform
       render json: service.lrsu_answer
     else
@@ -27,9 +28,7 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
   end
 
   def set_leadgen_rev_site_user
-    @leadgen_rev_site_user = LeadgenRevSiteUser.find_by!(ip: request.env['REMOTE_ADDR'], leadgen_rev_site_id: @leadgen_rev_site.id)
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {message: e.message}
+    @leadgen_rev_site_user = LeadgenRevSiteUser.find_by(ip: request.env['REMOTE_ADDR'], leadgen_rev_site_id: @leadgen_rev_site.id)
   end
 
   def set_leadgen_rev_site
