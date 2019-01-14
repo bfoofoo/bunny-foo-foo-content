@@ -8,11 +8,11 @@ class LeadgenRevSiteUserAnswer
     end
 
     def perform
-      @lrsu_answer = @question.leadgen_rev_site_user_answers.build(@params)
+      @lrsu_answer = @question.leadgen_rev_site_user_answers.build(answer_params)
       @lrsu_answer.save!
       key = @question.custom_field&.name
-      if @question.custom_field_id && user && user.try(key).blank?
-        user.update(key => answer.custom_field_value)
+      if @question.custom_field_id && leadrev_user && leadrev_user.try(key).blank?
+        leadrev_user.update(key => answer.custom_field_value)
       end
       true
     rescue => e
@@ -20,11 +20,25 @@ class LeadgenRevSiteUserAnswer
       false
     end
 
-    def user
-      return @user if defined?(@user)
-      lrsu = LeadgenRevSiteUser.find_by(id: @params[:leadgen_rev_site_user_id])
-      return unless lrsu&.user_id
-      @user = lrsu.user
+    private
+
+    def answer_params
+      @params[:leadgen_rev_site_user_id] ||= leadrev_user&.id
+      @params
+    end
+
+    def leadrev_user
+      return @leadrev_user if defined?(@leadrev_user)
+      @leadrev_user = LeadgenRevSiteUser.find_by(id: @params[:leadgen_rev_site_user_id])
+      @leadrev_user = create_leadrev_user if @leadrev_user.blank? && @question.for_prelander?
+      @leadrev_user
+    end
+
+    def create_leadrev_user
+      LeadgenRevSiteUser.create(
+        leadgen_rev_site_id: @params[:leadgen_rev_site_id],
+        ip: request.env['REMOTE_ADDR']
+      )
     end
 
     def answer
