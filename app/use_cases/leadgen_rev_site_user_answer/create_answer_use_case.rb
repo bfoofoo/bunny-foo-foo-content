@@ -16,6 +16,7 @@ class LeadgenRevSiteUserAnswer
       end
       true
     rescue => e
+      p e
       Rollbar.error(e)
       false
     end
@@ -24,7 +25,7 @@ class LeadgenRevSiteUserAnswer
 
     def answer_params
       @params[:leadgen_rev_site_user_id] ||= leadrev_user&.id
-      @params
+      @params.except(:ip)
     end
 
     def leadrev_user
@@ -37,7 +38,7 @@ class LeadgenRevSiteUserAnswer
     def create_leadrev_user
       LeadgenRevSiteUser.create(
         leadgen_rev_site_id: @params[:leadgen_rev_site_id],
-        ip: request.env['REMOTE_ADDR']
+        ip: @params[:ip]
       )
     end
 
