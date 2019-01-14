@@ -16,7 +16,6 @@ class LeadgenRevSiteUserAnswer
       end
       true
     rescue => e
-      p e
       Rollbar.error(e)
       false
     end
@@ -31,14 +30,15 @@ class LeadgenRevSiteUserAnswer
     def leadrev_user
       return @leadrev_user if defined?(@leadrev_user)
       @leadrev_user = LeadgenRevSiteUser.find_by(id: @params[:leadgen_rev_site_user_id])
-      @leadrev_user = create_leadrev_user if @leadrev_user.blank? && @question.for_prelander?
+      @leadrev_user = create_prelander_user if @leadrev_user.blank? && @question.for_prelander?
       @leadrev_user
     end
 
-    def create_leadrev_user
+    def create_prelander_user
       LeadgenRevSiteUser.create(
         leadgen_rev_site_id: @params[:leadgen_rev_site_id],
-        ip: @params[:ip]
+        ip: @params[:ip],
+        from_prelander: true
       )
     end
 

@@ -46,6 +46,7 @@ class LeadgenRevSiteUser < ApplicationRecord
     regex = "https?:\\/\\/[\\w.-]+\\/#{page}"
     where('leadgen_rev_site_users.url ~ ?', regex)
   end
+  scope :from_prelander, -> { where(from_prelander: true) }
 
   User::ESP_LIST_TYPES.each do |provider, type|
     define_method :"local_sent_to_#{provider}?" do
