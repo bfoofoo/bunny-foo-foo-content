@@ -18,7 +18,7 @@ class LeadgenRevSiteSerializer < ActiveModel::Serializer
   end
 
   def prelander_config
-    %i(final_redirect_url title main_text button_text image).each_with_object({}) do |attr, memo|
+    %i(final_redirect_url title main_text button_text image calculate_effect).each_with_object({}) do |attr, memo|
       memo[attr] = object.send(:"prelander_#{attr}")
     end
   end
