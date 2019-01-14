@@ -16,26 +16,27 @@ class LeadgenRevSiteUserAnswer
       end
       true
     rescue => e
-      Rollbar.error(e)
+      @lrsu_answer.errors.add(:base, e.to_s)
       false
     end
 
     private
 
     def answer_params
-      @params[:leadgen_rev_site_user_id] ||= leadrev_user&.id
+      if @question.for_prelander?
+        @params[:leadgen_rev_site_user_id] ||= find_or_create_prelander_user&.id
+      end
       @params.except(:ip)
     end
 
     def leadrev_user
+      return find_or_create_prelander_user if @question.for_prelander?
       return @leadrev_user if defined?(@leadrev_user)
       @leadrev_user = LeadgenRevSiteUser.find_by(id: @params[:leadgen_rev_site_user_id])
-      @leadrev_user = create_prelander_user if @leadrev_user.blank? && @question.for_prelander?
-      @leadrev_user
     end
 
-    def create_prelander_user
-      LeadgenRevSiteUser.create(
+    def find_or_create_prelander_user
+      @new_leadrev_user ||= LeadgenRevSiteUser.find_or_create_by(
         leadgen_rev_site_id: @params[:leadgen_rev_site_id],
         ip: @params[:ip],
         from_prelander: true
