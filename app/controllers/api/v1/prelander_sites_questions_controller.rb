@@ -9,11 +9,14 @@ class Api::V1::PrelanderSitesQuestionsController < ApplicationController
     end
   
     def create_answer
-      answer = @question.prelander_site_user_answers.build(answer_params.merge({prelander_site_user_id: @prelander_site_user.id, prelander_site_id: @prelander_site.id}))
-      if answer.save
-        render json: answer
+      service = PrelanderSiteUserAnswer::CreateAnswerUseCase.new(@question, answer_params.merge(
+        prelander_site_user_id: @prelander_site_user.id,
+        prelander_site_id: @prelander_site.id)
+      )
+      if service.perform
+        render json: service.psu_answer
       else
-        render json: {message: answer.errors}, status: 422
+        render json: {message: service.psu_answer.errors}, status: 422
       end
     end
   
@@ -41,4 +44,3 @@ class Api::V1::PrelanderSitesQuestionsController < ApplicationController
       render json: {message: e.message}
     end
   end
-  

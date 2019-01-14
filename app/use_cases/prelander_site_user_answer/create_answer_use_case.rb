@@ -1,6 +1,6 @@
-class LeadgenRevSiteUserAnswer
+class PrelanderSiteUserAnswer
   class CreateAnswerUseCase
-    attr_reader :lrsu_answer
+    attr_reader :psu_answer
 
     def initialize(question, answer_params)
       @question = question
@@ -8,8 +8,8 @@ class LeadgenRevSiteUserAnswer
     end
 
     def perform
-      @lrsu_answer = @question.leadgen_rev_site_user_answers.build(@params)
-      @lrsu_answer.save!
+      @psu_answer = @question.prelander_site_user_answers.build(@params)
+      @psu_answer.save!
       key = @question.custom_field&.name
       if @question.custom_field_id && user && user.try(key).blank?
         user.update(key => answer.custom_field_value)
@@ -22,9 +22,9 @@ class LeadgenRevSiteUserAnswer
 
     def user
       return @user if defined?(@user)
-      lrsu = LeadgenRevSiteUser.find_by(id: @params[:leadgen_rev_site_user_id])
-      return unless lrsu&.user_id
-      @user = lrsu.user
+      psu = PrelanderSiteUser.find_by(id: @params[:prelander_site_user_id])
+      return unless psu&.user_id
+      @user = psu.user
     end
 
     def answer
