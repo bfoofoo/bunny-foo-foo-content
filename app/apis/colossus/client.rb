@@ -26,6 +26,9 @@ module Colossus
         'cust_field_34' => data[:employed],
         'cust_field_35' => data[:age_range],
         'cust_field_36' => data[:children],
+        'cust_field_37'=> data[:own_rent],
+        'cust_field_38'=> data[:relationship_status],
+        'cust_field_39'=> data[:own_vehicle],
         'cust_field_40' => data[:ten_k_credit_card_debt],
         'cust_field_41' => data[:credit_score],
         'cust_field_42' => data[:health_insurance],
@@ -36,8 +39,17 @@ module Colossus
         'cust_field_47' => data[:receive_coupons],
         'cust_field_48' => data[:horoscope],
         'cust_field_49' => data[:part_in_sweeps],
+        'cust_field_50' => data[:part_fantasy_sports],
         'cust_field_51' => data[:part_gambling],
-        'cust_field_52' => data[:hearing_loss_hearing_aid]
+        'cust_field_52' => data[:hearing_loss_hearing_aid],
+        'cust_field_54' => data[:personal_loan],
+        'cust_field_55'=> data[:apply_credit_card],
+        'cust_field_56'=> data[:view_credit_score],
+        'cust_field_57'=> data[:like_free_cell_phone],
+        'cust_field_59'=> data[:ssd_benefits],
+        'cust_field_60'=> data[:rent_to_own],
+        'cust_field_61'=> data[:unclaimed_money],
+        'cust_field_63'=> data[:edu_opportunities]
       }.compact
     end
   end
