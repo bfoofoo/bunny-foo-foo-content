@@ -4,7 +4,8 @@ module LeadgenRevSiteUsers
     sidekiq_options queue: 'colossus'
 
     def perform(leadgen_rev_site_user_id)
-      lrsu = LeadgenRevSiteUser.find(leadgen_rev_site_user_id)
+      lrsu = LeadgenRevSiteUser.find_by(id: leadgen_rev_site_user_id)
+      return unless lrsu&.user
       # TODO make list either dynamic or hardcoded
       list = ColossusList.first
       custom_fields = lrsu.custom_fields.try(:symbolize_keys) || {}
