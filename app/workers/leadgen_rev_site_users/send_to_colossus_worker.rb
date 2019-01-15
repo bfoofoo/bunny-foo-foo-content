@@ -1,7 +1,7 @@
 module LeadgenRevSiteUsers
   class SendToColossusWorker
     include Sidekiq::Worker
-    sidekiq_options queue: 'colossus'
+    sidekiq_options queue: 'сolossus'
 
     def perform(leadgen_rev_site_user_id)
       lrsu = LeadgenRevSiteUser.find(leadgen_rev_site_user_id)
