@@ -23,6 +23,8 @@ module Colossus
         'state' => data[:state],
         'phone' => data[:phone], 
         'ip' => data[:ip],
+        'date_subscribed' => data[:date]&.strftime('%Y-%m-%d %H:%M:%S'),
+        'offer' => data[:url],
         'cust_field_34' => data[:employed],
         'cust_field_35' => data[:age_range],
         'cust_field_36' => data[:children],
@@ -43,13 +45,14 @@ module Colossus
         'cust_field_51' => data[:part_gambling],
         'cust_field_52' => data[:hearing_loss_hearing_aid],
         'cust_field_54' => data[:personal_loan],
-        'cust_field_55'=> data[:apply_credit_card],
-        'cust_field_56'=> data[:view_credit_score],
-        'cust_field_57'=> data[:like_free_cell_phone],
-        'cust_field_59'=> data[:ssd_benefits],
-        'cust_field_60'=> data[:rent_to_own],
-        'cust_field_61'=> data[:unclaimed_money],
-        'cust_field_63'=> data[:edu_opportunities]
+        'cust_field_55' => data[:apply_credit_card],
+        'cust_field_56' => data[:view_credit_score],
+        'cust_field_57' => data[:like_free_cell_phone],
+        'cust_field_58' => data[:want_to_apply_for_job],
+        'cust_field_59' => data[:ssd_benefits],
+        'cust_field_60' => data[:rent_to_own],
+        'cust_field_61' => data[:unclaimed_money],
+        'cust_field_63' => data[:edu_opportunities]
       }.compact
     end
   end

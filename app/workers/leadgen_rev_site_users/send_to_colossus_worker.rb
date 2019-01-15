@@ -1,31 +1,23 @@
 module LeadgenRevSiteUsers
   class SendToColossusWorker
+    sidekiq_options queue: 'colossus'
+
     include Sidekiq::Worker
 
-    def perform
+    def perform(leadgen_rev_site_user_id)
+      lrsu = LeadgenRevSiteUser.find(leadgen_rev_site_user_id)
       # TODO make list either dynamic or hardcoded
       list = ColossusList.first
-      pending_users.each do |lrsu|
-        custom_fields = lrsu.custom_fields.symbolize_keys
-        params = {
-          ip: lrsu.ip,
-          phone: lrsu.phone,
-          state: lrsu.state,
-          **custom_fields
-        }
-        EmailMarketerService::Colossus::SubscriptionService.new(list, params: params).add(lrsu.user)
-      end
-    end
-
-    private
-
-    def pending_users
-      # TODO check certain `custom_fields` once we get more info
-      @users ||=
-        LeadgenRevSiteUser
-          .left_joins(user: :exported_leads)
-          .where.not(users: { id: nil, custom_fields: '' })
-          .where("exported_leads.list_type <> 'ColossusList' OR exported_leads.id IS NULL")
+      custom_fields = lrsu.custom_fields.try(:symbolize_keys) || {}
+      params = {
+        ip: lrsu.ip,
+        phone: lrsu.phone,
+        state: lrsu.state,
+        date: lrsu.created_at,
+        url: lrsu.url,
+        **custom_fields
+      }
+      EmailMarketerService::Colossus::SubscriptionService.new(list, params: params).add(lrsu.user)
     end
   end
 end

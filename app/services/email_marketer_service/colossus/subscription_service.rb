@@ -22,6 +22,8 @@ module EmailMarketerService
               list_id: list.list_id,
               phone: params[:phone],
               state: params[:state],
+              url: params[:url],
+              date: params[:date],
               **custom_fields
             }
             client.create_contact(request_params)
