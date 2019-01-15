@@ -23,6 +23,8 @@ module Colossus
         'state' => data[:state],
         'phone' => data[:phone], 
         'ip' => data[:ip],
+        'date_subscribed' => data[:date]&.strftime('%Y-%m-%d %H:%M:%S'),
+        'offer' => data[:url],
         'cust_field_34' => data[:employed],
         'cust_field_35' => data[:age_range],
         'cust_field_36' => data[:children],

@@ -11,6 +11,8 @@ module LeadgenRevSiteUsers
           ip: lrsu.ip,
           phone: lrsu.phone,
           state: lrsu.state,
+          date: lrsu.created_at,
+          url: lrsu.url,
           **custom_fields
         }
         EmailMarketerService::Colossus::SubscriptionService.new(list, params: params).add(lrsu.user)
