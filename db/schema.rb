@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190114124809) do
+ActiveRecord::Schema.define(version: 20190115083157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -383,8 +383,6 @@ ActiveRecord::Schema.define(version: 20190114124809) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
-    t.date     "date_of_birth"
-    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -585,27 +583,9 @@ ActiveRecord::Schema.define(version: 20190114124809) do
     t.string   "prelander_button_text"
     t.string   "prelander_image"
     t.text     "disclaimer_text"
+    t.string   "prelander_calculate_effect"
     t.index ["account_id"], name: "index_leadgen_rev_sites_on_account_id", using: :btree
     t.index ["deleted_at"], name: "index_leadgen_rev_sites_on_deleted_at", using: :btree
-  end
-
-  create_table "mailgun_templates", force: :cascade do |t|
-    t.string   "author"
-    t.string   "subject"
-    t.text     "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mailgun_templates_schedules", force: :cascade do |t|
-    t.integer  "mailgun_template_id", null: false
-    t.integer  "mailgun_list_id",     null: false
-    t.datetime "sending_time",        null: false
-    t.string   "scheduled_job_id"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.index ["mailgun_list_id"], name: "index_mailgun_templates_schedules_on_mailgun_list_id", using: :btree
-    t.index ["mailgun_template_id"], name: "index_mailgun_templates_schedules_on_mailgun_template_id", using: :btree
   end
 
   create_table "message_auto_responses", force: :cascade do |t|
@@ -832,6 +812,12 @@ ActiveRecord::Schema.define(version: 20190114124809) do
     t.boolean  "autoremove_from_esp", default: false, null: false
   end
 
+  create_table "templeads", id: false, force: :cascade do |t|
+    t.string   "email"
+    t.string   "ip_address", limit: 256
+    t.datetime "created_at"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email"
     t.string   "first_name"
@@ -908,8 +894,6 @@ ActiveRecord::Schema.define(version: 20190114124809) do
   add_foreign_key "leadgen_rev_site_user_answers", "users"
   add_foreign_key "leadgen_rev_site_users", "leadgen_rev_sites"
   add_foreign_key "leadgen_rev_site_users", "users"
-  add_foreign_key "mailgun_templates_schedules", "esp_lists", column: "mailgun_list_id"
-  add_foreign_key "mailgun_templates_schedules", "mailgun_templates"
   add_foreign_key "message_auto_responses", "message_templates"
   add_foreign_key "message_recipients", "message_schedules"
   add_foreign_key "message_schedules", "message_templates"
