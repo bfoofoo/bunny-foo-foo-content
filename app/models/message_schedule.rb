@@ -1,8 +1,8 @@
 class MessageSchedule < ApplicationRecord
   acts_as_paranoid
 
-  belongs_to :message_template
-  belongs_to :esp_list, polymorphic: true
+  belongs_to :message_template, dependent: :destroy
+  belongs_to :esp_list, polymorphic: true, dependent: :destroy
 
   validates :message_template_id, :esp_list_id, :time, presence: true
   validates :time_span, numericality: { greater_than_or_equal_to: 0 }
