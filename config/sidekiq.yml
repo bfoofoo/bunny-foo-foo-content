@@ -6,4 +6,4 @@ max_retries: 2
   - [statistics, 1]
   - [leads, 1]
   - [messages, 1]
-  - [сolossus, 1]
+  - [colossus, 1]
