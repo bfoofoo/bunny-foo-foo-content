@@ -1,9 +1,9 @@
 :concurrency: 10
 max_retries: 2
 :queues:
-  - api_users_refresh
-  - default
-  - statistics
-  - leads
-  - messages
-  - сolossus
+  - [api_users_refresh, 1]
+  - [default, 1]
+  - [statistics, 1]
+  - [leads, 1]
+  - [messages, 1]
+  - [сolossus, 1]
