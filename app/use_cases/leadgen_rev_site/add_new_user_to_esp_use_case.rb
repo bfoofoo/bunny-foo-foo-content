@@ -40,7 +40,7 @@ class LeadgenRevSite
     end
 
     def schedule_for_colossus
-      LeadgenRevSiteUsers::SendToColossusWorker.perform_at(10.minutes.from_now, leadgen_rev_site_user.id)
+      LeadgenRevSiteUsers::SendToColossusWorker.perform_at(10.minutes.from_now, leadgen_rev_site_user.id, user.id)
     end
   end
 end
