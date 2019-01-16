@@ -78,7 +78,7 @@ module Esp
     end
 
     def available_leads
-      PendingLead.with_valid_referrers.order('id DESC').not_sent_to_netatlantic
+      @available_leads ||= PendingLead.with_valid_referrers.order('id DESC').not_sent_to_netatlantic
     end
   end
 end
