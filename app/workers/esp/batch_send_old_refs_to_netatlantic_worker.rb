@@ -2,7 +2,7 @@ module Esp
   class BatchSendOldRefsToNetatlanticWorker
     include Sidekiq::Worker
 
-    TARGET_BATCH_SIZE = 7500.freeze
+    TARGET_BATCH_SIZE = 3000.freeze
 
     def perform
       return if available_leads.empty?
