@@ -2,7 +2,7 @@ module Esp
   class BatchSendOldRefsToNetatlanticWorker
     include Sidekiq::Worker
 
-    TARGET_BATCH_SIZE = 3000.freeze
+    TARGET_BATCH_SIZE = 7500.freeze
 
     def perform
       return if available_leads.empty?
@@ -78,13 +78,7 @@ module Esp
     end
 
     def available_leads
-      return @available_leads if defined?(@available_leads)
-      sent_ids = ExportedLead.where(linkable_type: 'PendingLead', list_type: 'NetatlanticList').pluck(:linkable_id)
-      @available_leads =
-        PendingLead
-          .with_valid_referrers
-          .order('id DESC')
-          .where.not(id: sent_ids)
+      @available_leads ||= PendingLead.with_valid_referrers.order('id DESC').not_sent_to_netatlantic
     end
   end
 end
