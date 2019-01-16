@@ -2,11 +2,11 @@ module Esp
   class BatchSendOldRefsToNetatlanticWorker
     include Sidekiq::Worker
 
-    TARGET_BATCH_SIZE = 3000.freeze
+    PER_LIST = 420.freeze # to reach approx. 20,000 per day when sending every 30 min
 
     def perform
       return if available_leads.empty?
-      leads_to_send.each_slice(TARGET_BATCH_SIZE / destination_lists.count).with_index do |slice, index|
+      leads_to_send.each_slice(PER_LIST).with_index do |slice, index|
         list_name = destination_lists[index % destination_lists.count]
         leads = slice.select do |l|
           result = valid_email?(l.email) && is_impressionwise_test_success(l.email)
@@ -43,7 +43,11 @@ module Esp
     end
 
     def leads_to_send
-      @leads_to_send ||= available_leads.limit(TARGET_BATCH_SIZE).to_a
+      @leads_to_send ||= available_leads.limit(total_batch_size).to_a
+    end
+
+    def total_batch_size
+      PER_LIST * destination_lists.count
     end
 
     def send_data(leads, list_name)
