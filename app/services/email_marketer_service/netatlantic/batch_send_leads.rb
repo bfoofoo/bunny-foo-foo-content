@@ -13,10 +13,7 @@ module EmailMarketerService
 
       def call
         selected_lists.each do |list|
-          data.each_slice(BATCH_SIZE) do |slice|
-            add_members_one_by_one(slice, list)
-            @processed_emails.concat(slice)
-          end
+          data.each_slice(BATCH_SIZE) { |slice| add_members_one_by_one(slice, list) }
         end
       end
 
@@ -39,6 +36,7 @@ module EmailMarketerService
         members.each do |member|
           response = HTTParty.post("#{API_PATH}/create_member.php", body: { email: member["EmailAddress"], full_name: member["FullName"], account: list.account.account_name, list: list.name }.compact)
 
+          @processed_emails << member['EmailAddress'] if response['success']
           EmailMarketerService::Netatlantic::SubscriptionService
             .new(list)
             .update_member_demographics(response, member["EmailAddress"], params: member['fields'])

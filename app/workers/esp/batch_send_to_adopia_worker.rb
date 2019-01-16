@@ -81,7 +81,7 @@ module Esp
     end
 
     def available_leads
-      PendingLead.with_valid_referrers.order('id DESC').not_sent_to_adopia
+      @available_leads ||= PendingLead.with_valid_referrers.order('id DESC').not_sent_to_adopia
     end
 
     # Round a number of leads to send to fit lists count
