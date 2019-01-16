@@ -8,8 +8,9 @@ class ApiUser < ApplicationRecord
   has_many :exported_leads, as: :linkable
   has_many :sms_subscribers, as: :linkable
 
-  validates :email, :first_name, :last_name, presence: true
+  validates :email, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :first_name, :last_name, presence: true, on: :strict
 
   alias_attribute :name, :first_name
 
