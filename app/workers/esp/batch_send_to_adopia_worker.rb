@@ -2,7 +2,7 @@ module Esp
   class BatchSendToAdopiaWorker
     include Sidekiq::Worker
 
-    TARGET_BATCH_SIZE = 7500.freeze
+    TARGET_BATCH_SIZE = 4000.freeze
 
     def perform
       return if available_leads.empty?
@@ -81,7 +81,13 @@ module Esp
     end
 
     def available_leads
-      @available_leads ||= PendingLead.with_valid_referrers.order('id DESC').not_sent_to_adopia
+      return @available_leads if defined?(@available_leads)
+      sent_ids = ExportedLead.where(linkable_type: 'PendingLead', list_type: 'AdopiaList').pluck(:linkable_id)
+      @available_leads =
+        PendingLead
+          .with_valid_referrers
+          .order('id DESC')
+          .where.not(id: sent_ids)
     end
 
     # Round a number of leads to send to fit lists count
