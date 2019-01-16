@@ -38,7 +38,7 @@ module EmailMarketerService
             }
           }
           HTTParty.post("#{API_PATH}/update_member_demographics.php", body: body_params.compact)
-        end        
+        end
       end
 
       private

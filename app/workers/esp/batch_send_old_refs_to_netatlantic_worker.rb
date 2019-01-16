@@ -14,9 +14,9 @@ module Esp
           result
         end
         next if leads.empty?
-        send_data(leads, list_name)
+        result = send_data(leads, list_name)
         mark_as_sent(leads, list_name)
-        logger.info("Sent #{leads.count} to '#{list_name}', successfully sent: #{leads.count}")
+        logger.info("Sent #{leads.count} to '#{list_name}', successfully sent: #{result.processed_emails.count}")
       end
     end
 
@@ -58,7 +58,9 @@ module Esp
           }
         }
       end
-      EmailMarketerService::Netatlantic::BatchSendLeads.new(data, list_name).call
+      service = EmailMarketerService::Netatlantic::BatchSendLeads.new(data, list_name)
+      service.call
+      service
     end
 
     def mark_as_sent(leads, list_name)
