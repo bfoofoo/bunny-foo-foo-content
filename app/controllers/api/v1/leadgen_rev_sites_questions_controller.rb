@@ -4,7 +4,7 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
   before_action :set_leadgen_rev_site_user, only: [:create_answer]
 
   def index
-    @questions = @leadgen_rev_site.questions.order_by_position.includes(:answers)
+    @questions = @leadgen_rev_site.questions.order_by_position.not_for_prelander.includes(:answers)
     render json: @questions
   end
 
