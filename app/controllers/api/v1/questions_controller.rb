@@ -4,7 +4,7 @@ class Api::V1::QuestionsController < ApiController
   def index
     questions = Question.all.order('created_at DESC')
     if params[:leadgen_rev_site_id]
-      query = questions.where(leadgen_rev_site_id: params[:leadgen_rev_site_id])
+      query = questions.where(leadgen_rev_site_id: params[:leadgen_rev_site_id], for_prelander: false)
       return render json: paginate_items(query)
     end
     render json: questions
