@@ -89,7 +89,11 @@ Rails.application.routes.draw do
         resources :articles, only: [:index, :show]
       end
       resources :articles, only: [:index, :show, :create]
-      resources :api_users, only: [:show, :create, :update]
+      resources :api_users, only: [:show, :create, :update] do
+        collection do
+          post "add"
+        end
+      end
       resources :mailgun_callbacks, only: [] do
         collection do
           post "click"

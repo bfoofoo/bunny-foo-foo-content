@@ -2,8 +2,8 @@ class Api::V1::ApiUsersController < ApiController
   include Swagger::Blocks
 
   before_action :set_api_user, only: [:show, :update]
-  before_action :set_api_client, only: [:create]
-  before_action :authenticate, only: [:create, :update]
+  before_action :set_api_client, only: [:create, :add]
+  before_action :authenticate, only: [:create, :update, :add]
 
 
   swagger_path '/api_users/' do
@@ -37,6 +37,39 @@ class Api::V1::ApiUsersController < ApiController
     end
   end
 
+
+
+  swagger_path '/api_users/add' do
+    operation :post do
+      security do
+        key :api_key, []
+      end
+      key :produces, [
+        'application/json'
+      ]
+      key :summary, 'Add new api user without name validations'
+      key :operationId, 'createNewApiUser'
+      key :tags, [
+        'api_user'
+      ]
+      parameter do
+        key :name, :api_user
+        key :in, :body
+        key :required, true
+        schema do
+          key :'$ref', :ApiUserInput
+        end
+      end
+
+      response :default do
+        key :description, 'unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+  end
+
   def index
     @api_users = ApiUser.all
     render json: @api_users
@@ -48,6 +81,14 @@ class Api::V1::ApiUsersController < ApiController
 
   def create
     response = ApiUser::CreateApiUserUseCase.new(params, request.user_agent, @api_client).perform
+
+    render json: response, status: response[:status]
+  rescue => e
+    render json: { message: e.message, status: 500 }
+  end
+
+  def add
+    response = ApiUser::CreateApiUserUseCase.new(params, request.user_agent, @api_client, true).perform
 
     render json: response, status: response[:status]
   rescue => e

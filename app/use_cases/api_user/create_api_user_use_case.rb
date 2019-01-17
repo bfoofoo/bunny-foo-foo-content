@@ -3,10 +3,11 @@ class ApiUser
 
     attr_reader :params, :user_agent, :api_client
 
-    def initialize(params, user_agent, api_client)
+    def initialize(params, user_agent, api_client, skip_name_validations = false)
       @params  = params
       @user_agent = user_agent
       @api_client = api_client
+      @context = skip_name_validations ? :normal : :strict
     end
 
     def perform
@@ -25,7 +26,8 @@ class ApiUser
       ApiUsers::CreateApiUsersWorker.perform_async(
         params[:api_users].to_json,
         user_agent, 
-        api_client.id
+        api_client.id,
+        @context
       )
       { message: "success", status: 200, errors: creation_errors }
     end
@@ -34,7 +36,7 @@ class ApiUser
       creation_errors = []
       data.each.with_index do |attributes, index|
         api_user = ::ApiUser.new(api_user_params(attributes))
-        api_user.valid?
+        api_user.valid?(@context)
         creation_errors << { "ApiUser ##{index + 1}" => api_user.errors.full_messages } unless api_user.errors.blank?
       end
       creation_errors.flatten.compact
@@ -48,7 +50,7 @@ class ApiUser
 
     def create_api_user
       @user = build_api_user(params)
-      if @user.save
+      if @user.save(context: @context)
         send_to_esp
         { message: "success", status: 200 }
       else
