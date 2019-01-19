@@ -24,7 +24,7 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:question_id, :answer_id, :url)
+    params.require(:answer).permit(:question_id, :answer_id, :url, :email)
   end
 
   def set_leadgen_rev_site_user

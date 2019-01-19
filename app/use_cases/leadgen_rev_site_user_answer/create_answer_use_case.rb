@@ -24,17 +24,26 @@ class LeadgenRevSiteUserAnswer
 
     def answer_params
       if @question.for_prelander?
-        @params[:leadgen_rev_site_user_id] ||= find_or_create_prelander_user&.id
+        @params[:leadgen_rev_site_user_id] = find_leadrev_user_by_email&.id
       end
       @params.except(:ip)
     end
 
     def leadrev_user
-      return find_or_create_prelander_user if @question.for_prelander?
-      return @leadrev_user if defined?(@leadrev_user)
-      @leadrev_user = LeadgenRevSiteUser.find_by(id: @params[:leadgen_rev_site_user_id])
+      @leadrev_user ||= @question.for_prelander? ?
+                          find_leadrev_user_by_email : LeadgenRevSiteUser.find_by(id: @params[:leadgen_rev_site_user_id])
     end
 
+    def find_leadrev_user_by_email
+      User
+        .joins(:leadgen_rev_site_users)
+        .where(email: @params[:email])
+        .leadgen_rev_site_users
+        &.where(leadgen_rev_site_id: @params[:leadgen_rev_site_id], is_verified: true)
+        &.first
+    end
+
+    # TODO For prelander user identification, not currently in use
     def find_or_create_prelander_user
       @new_leadrev_user ||= LeadgenRevSiteUser.find_or_create_by(
         leadgen_rev_site_id: @params[:leadgen_rev_site_id],
