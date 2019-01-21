@@ -11,7 +11,7 @@ module Messages
         leads = ExportedLead.joins_linkable.autoresponded.inactive_within(auto_response.delay_in_minutes)
         leads.each do |lead|
           service_class = ['EmailMarketerService', lead.list_type.underscore.split('_').first.capitalize, 'AutoRespond'].join('::').constantize
-          service_class.new(list: auto_response.esp_list, template: auto_response.message_template, lead: lead).call
+          service_class.new(list: auto_response.esp_list, auto_response: auto_response, lead: lead).call
         end
       end
     end

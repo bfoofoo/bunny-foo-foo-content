@@ -1,26 +1,30 @@
 module EmailMarketerService
   module Mailgun
     class AutoRespond
-      def initialize(list:, template:, lead:)
+      def initialize(list:, auto_response:, lead:)
         @list = list
-        @template = template
+        @auto_response = auto_response
         @lead = lead
       end
 
       def call
         return unless email
         result = send_message
-        update_lead(result.try(:fetch, 'id'))
+        create_message_event(result.try(:fetch, 'id'))
       end
 
       private
 
+      def template
+        @auto_response.message_template
+      end
+
       def send_message
         params = {
-          from: "#{@template.author} #{@template.author.parameterize.underscore}@#{domain}",
+          from: "#{template.author} #{template.author.parameterize.underscore}@#{domain}",
           to: email,
-          subject: @template.subject,
-          html: @template.body,
+          subject: template.subject,
+          html: template.body,
           'o:tracking' => true
         }
         response = client.post("/#{domain}/messages", params)
@@ -42,13 +46,12 @@ module EmailMarketerService
         @list.address.split('@').second
       end
 
-      def update_lead(message_id)
-        return unless message_id
-        if @lead.autoresponded_at?
-          @lead.touch(:followed_up_at)
-        else
-          @lead.update(autoresponse_message_id: message_id.tr('<>', ''), autoresponded_at: Time.zone.now)
-        end
+      def create_message_event(message_id)
+        @lead.message_events.create(
+          message_id: message_id.tr('<>', ''),
+          event_type: @auto_response.type,
+          message_auto_response_id: @auto_response.id
+        )
       end
     end
   end

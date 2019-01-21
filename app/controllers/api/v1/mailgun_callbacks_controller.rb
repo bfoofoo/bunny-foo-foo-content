@@ -3,8 +3,7 @@ class Api::V1::MailgunCallbacksController < ApiController
   # TODO maybe verify all requests
 
   def click
-    if message_id && @recipient && !@recipient.clicked_at?
-      @recipient.touch(:clicked_at)
+    if message_id && @recipient
       @recipient.autorespond(followup: true, event: :click)
       render json: { message: 'success' }
     else
@@ -13,8 +12,7 @@ class Api::V1::MailgunCallbacksController < ApiController
   end
 
   def open
-    if message_id && @recipient && !@recipient.opened_at?
-      @recipient.touch(:opened_at)
+    if message_id && @recipient
       @recipient.autorespond(followup: true, event: :open)
       render json: { message: 'success' }
     elsif @recipient
