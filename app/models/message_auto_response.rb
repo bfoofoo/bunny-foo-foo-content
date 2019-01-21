@@ -7,6 +7,7 @@ class MessageAutoResponse < ApplicationRecord
 
   belongs_to :message_template
   belongs_to :esp_list, polymorphic: true
+  belongs_to :message_schedule, optional: true
 
   validates :message_template_id, :esp_list_id, presence: true
   validates :delay_in_minutes, numericality: { greater_than_or_equal_to: 0 }

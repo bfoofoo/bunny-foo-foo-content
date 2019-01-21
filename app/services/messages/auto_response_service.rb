@@ -15,6 +15,16 @@ module Messages
         params = [m.id, lead.id]
         m.instant? ? Messages::AutoResponseWorker.perform_async(*params) : Messages::AutoResponseWorker.perform_at(m.at, *params)
       end
+      update_lead(lead, event)
+    end
+
+    private
+
+    def update_lead(lead, event)
+      case event
+      when :click then lead.touch(:clicked_at)
+      when :open then lead.touch(:opened_at)
+      end
     end
   end
 end

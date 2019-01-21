@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190121072154) do
+ActiveRecord::Schema.define(version: 20190121122155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -599,7 +599,9 @@ ActiveRecord::Schema.define(version: 20190121072154) do
     t.datetime "updated_at",                          null: false
     t.boolean  "followup",            default: false
     t.string   "event"
+    t.integer  "message_schedule_id"
     t.index ["esp_list_type", "esp_list_id"], name: "index_message_auto_responses_on_esp_list_type_and_esp_list_id", using: :btree
+    t.index ["message_schedule_id"], name: "index_message_auto_responses_on_message_schedule_id", using: :btree
     t.index ["message_template_id"], name: "index_message_auto_responses_on_message_template_id", using: :btree
   end
 
