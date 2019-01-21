@@ -4,6 +4,6 @@ class MessageTemplate < ApplicationRecord
   has_many :message_schedules, dependent: :destroy
 
   def name
-    "#{subject} (##{id})"
+    label.blank? ? "#{subject} (##{id})" : label
   end
 end
