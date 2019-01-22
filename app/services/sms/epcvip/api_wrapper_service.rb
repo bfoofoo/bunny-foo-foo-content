@@ -25,10 +25,9 @@ module Sms
 
       def auth
         {
-         sourceId: 5018,
-         apiKey: "9$75df6",
-         campaignId: 5,                  
-         
+         sourceId: ENV['EPCVIP_SOURCE_ID'],
+         apiKey: ENV['EPCVIP_API_KEY'],
+         campaignId: ENV['EPCVIP_CAMPAIGN_ID'],
         }
       end
 
