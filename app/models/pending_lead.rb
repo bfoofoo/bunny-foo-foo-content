@@ -14,7 +14,7 @@ class PendingLead < ApplicationRecord
 
   PROVIDERS.each do |provider|
     scope "sent_to_#{provider}", -> { joins(:exported_leads).where(exported_leads: { list_type: ESP_LIST_TYPES[provider]}) }
-    scope "not_sent_to_#{provider}", -> { left_joins(:exported_leads).where('exported_leads.id IS NULL OR exported_leads.list_type <> ?', ESP_LIST_TYPES[provider]).uniq }
+    scope "not_sent_to_#{provider}", -> { where('NOT EXISTS (SELECT linkable_id FROM exported_leads WHERE linkable_id = pending_leads.id AND linkable_type = ? AND list_type = ?)', 'PendingLead', ESP_LIST_TYPES[provider]) }
   end
 
   scope :with_valid_referrers, -> { where(referrer: VALID_REFERRERS) }
