@@ -383,8 +383,6 @@ ActiveRecord::Schema.define(version: 20190121072154) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
-    t.date     "date_of_birth"
-    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -813,6 +811,12 @@ ActiveRecord::Schema.define(version: 20190121072154) do
     t.datetime "updated_at",                          null: false
     t.string   "file_name"
     t.boolean  "autoremove_from_esp", default: false, null: false
+  end
+
+  create_table "templeads", id: false, force: :cascade do |t|
+    t.string   "email"
+    t.string   "ip_address", limit: 256
+    t.datetime "created_at"
   end
 
   create_table "users", force: :cascade do |t|

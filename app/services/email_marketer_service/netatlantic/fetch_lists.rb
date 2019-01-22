@@ -8,7 +8,7 @@ module EmailMarketerService
       end
 
       def call
-        HTTParty.get("#{API_PATH}/lists.php?account=#{account.account_name}")
+        HTTParty.get("#{API_PATH}/lists.php?account=#{account.name}&user_email=#{account.username}")
       end
     end
   end
