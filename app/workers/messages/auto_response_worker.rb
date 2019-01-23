@@ -8,7 +8,7 @@ module Messages
       lead = ExportedLead.find(lead_id)
       list_class = auto_response.esp_list_type.constantize
       service_class = ['EmailMarketerService', list_class.provider.capitalize, 'AutoRespond'].join('::').constantize
-      service_class.new(list: auto_response.esp_list, template: auto_response.message_template, lead: lead).call
+      service_class.new(list: auto_response.esp_list, auto_response: auto_response, lead: lead).call
     end
   end
 end
