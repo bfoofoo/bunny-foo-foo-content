@@ -4,7 +4,7 @@ class Api::V1::MailgunCallbacksController < ApiController
 
   def click
     if message_id && @recipient
-      @recipient.autorespond(followup: true, event: :click)
+      @recipient.autorespond(message_id, event: :click)
       render json: { message: 'success' }
     else
       head :no_content
@@ -13,7 +13,7 @@ class Api::V1::MailgunCallbacksController < ApiController
 
   def open
     if message_id && @recipient
-      @recipient.autorespond(followup: true, event: :open)
+      @recipient.autorespond(message_id, event: :open)
       render json: { message: 'success' }
     elsif @recipient
       head :no_content
@@ -26,10 +26,8 @@ class Api::V1::MailgunCallbacksController < ApiController
 
   def set_recipient
     @recipient = ExportedLead
-      .autoresponded
+      .by_message(message_id)
       .where(list_type: 'MailgunList')
-      .where('exported_leads.autoresponse_message_id = ?', message_id)
-      .order(created_at: :desc)
       .first
   end
 

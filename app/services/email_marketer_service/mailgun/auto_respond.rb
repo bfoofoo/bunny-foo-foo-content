@@ -46,10 +46,19 @@ module EmailMarketerService
         @list.address.split('@').second
       end
 
+      def event_type
+        return 'welcome' unless @auto_response.followup
+        case @auto_response.event
+        when 'nothing' then 'remind'
+        when nil then 'followup'
+        else @auto_response.event
+        end
+      end
+
       def create_message_event(message_id)
         @lead.message_events.create(
           message_id: message_id.tr('<>', ''),
-          event_type: @auto_response.type,
+          event_type: event_type,
           message_auto_response_id: @auto_response.id
         )
       end

@@ -35,10 +35,15 @@ batch_old_send_to_netatlantic:
 
 autorespond_to_inactive_recipients:
   cron: "1 * * * *"
-  class: "Messages::ReminderWoker"
+  class: "Messages::ReminderWorker"
   queue: messages
 
 send_previous_leadrev_users_to_colossus:
   cron: "*/10 * * * *"
   class: "LeadgenRevSiteUsers::SendPrevUsersToColossus"
   queue: colossus
+
+recurring_autoresponse:
+  cron: "*/10 * * * *"
+  class: "Messages::RecurringAutoResponseWorker"
+  queue: messages
