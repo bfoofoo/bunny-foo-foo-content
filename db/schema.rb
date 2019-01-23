@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190121133929) do
+ActiveRecord::Schema.define(version: 20190123133548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -323,11 +323,6 @@ ActiveRecord::Schema.define(version: 20190121133929) do
     t.integer  "linkable_id"
     t.datetime "created_at"
     t.integer  "esp_rule_id"
-    t.datetime "autoresponded_at"
-    t.string   "autoresponse_message_id"
-    t.datetime "clicked_at"
-    t.datetime "opened_at"
-    t.datetime "followed_up_at"
     t.index ["esp_rule_id"], name: "index_exported_leads_on_esp_rule_id", using: :btree
     t.index ["linkable_type", "linkable_id"], name: "index_email_marketer_list_users_to_linkable", using: :btree
     t.index ["list_type", "list_id"], name: "index_exported_leads_on_list_type_and_list_id", using: :btree
@@ -383,6 +378,8 @@ ActiveRecord::Schema.define(version: 20190121133929) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -823,12 +820,6 @@ ActiveRecord::Schema.define(version: 20190121133929) do
     t.datetime "updated_at",                          null: false
     t.string   "file_name"
     t.boolean  "autoremove_from_esp", default: false, null: false
-  end
-
-  create_table "templeads", id: false, force: :cascade do |t|
-    t.string   "email"
-    t.string   "ip_address", limit: 256
-    t.datetime "created_at"
   end
 
   create_table "users", force: :cascade do |t|
