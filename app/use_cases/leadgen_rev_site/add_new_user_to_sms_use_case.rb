@@ -23,7 +23,8 @@ class LeadgenRevSite
       return false if !leadgen_rev_site_user.is_verified || user.blank?
       return false if leadgen_rev_site_user&.phone.blank?
       Sms::Waypoint::SubscriptionService.new(params: params).add(user, leadgen_rev_site)
-      Sms::Epcvip::SubscriptionService.new(params: params).add(user, leadgen_rev_site)      
+      Sms::Epcvip::SubscriptionService.new(params: params).add(user, leadgen_rev_site)
+      Sms::Yodel::SubscriptionService.new(params: params).add(user, leadgen_rev_site)            
       leadgen_rev_site.cep_rules.each do |rule|
         service = subscription_service_for(rule.cep_group)
         service.new(group: rule.cep_group, params: params, cep_rule: rule).send(:add, user, leadgen_rev_site)
