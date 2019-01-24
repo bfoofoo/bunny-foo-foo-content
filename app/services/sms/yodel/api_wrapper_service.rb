@@ -22,12 +22,9 @@ module Sms
 
       def auth
         {
-          lead_group_id: 2611
+          lead_group_id: ENV['YODEL_LEAD_GROUP_ID']
         }
       end
-
-      
-
     end
   end
 end
