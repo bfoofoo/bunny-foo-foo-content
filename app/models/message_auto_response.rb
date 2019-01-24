@@ -8,6 +8,7 @@ class MessageAutoResponse < ApplicationRecord
   belongs_to :message_template
   belongs_to :esp_list, polymorphic: true
   belongs_to :message_schedule, optional: true
+  belongs_to :previous_auto_response, class_name: 'MessageAutoResponse'
   has_many :message_events, dependent: :nullify
 
   validates :message_template_id, :esp_list_id, presence: true
