@@ -1,5 +1,5 @@
 class CepGroup < ApplicationRecord
-  PROVIDERS = %w(AbstractSolutions Waypoint).freeze
+  PROVIDERS = %w(AbstractSolutions Waypoint Epcvip Yodel).freeze
 
   belongs_to :account
   has_many :cep_rules, dependent: :destroy

@@ -1,5 +1,5 @@
 module Sms
-  module Epcvip
+  module Yodel
     class SubscriptionService
       attr_reader :params, :account
 
@@ -71,40 +71,40 @@ module Sms
       def add(user, leadgen_rev_site = nil)
         return unless valid?(user, leadgen_rev_site)
         new_params = params.merge({
-                                    email: user.try(:email),
-                                    ipaddress: params[:ip],
-                                    firstName: user&.first_name,
-                                    lastName: user&.last_name,
-                                    phoneMobile: params[:phone],
-                                    tcpa: 1,
-                                    optinDate: params[:date],
-                                    origin: params[:url],
-                                    homeState: STATES.key(params[:state]),
-                                    type: 1
+                                    #email: user.try(:email),
+                                    #ip: params[:ip],
+                                    source_id: leadgen_rev_site.id,
+                                    first_name: user&.first_name,
+                                    last_name: user&.last_name,
+                                    phone: params[:phone],
+                                    action_date: params[:date],
+                                    #origin: params[:url],
+                                    state: STATES.key(params[:state]),
+                                    zip: params[:zip],
                                   })
         client.create_contact(new_params)
         mark_as_saved(user, leadgen_rev_site)
       rescue => e
-        puts "Epcvip adding subscriber error - #{e}".red
+        puts "Yodel adding subscriber error - #{e}".red
       end
 
       private
 
       def client
         return @client if defined?(@client)
-        @client = Sms::Epcvip::ApiWrapperService.new(account: account, params: params)
+        @client = Sms::Yodel::ApiWrapperService.new(account: account, params: params)
       end
 
       def valid?(user, leadgen_rev_site)
         if user.is_a?(ActiveRecord::Base)
-          !SmsSubscriber.where(provider: 'Epcvip', linkable: user, source: leadgen_rev_site).exists?
+          !SmsSubscriber.where(provider: 'Yodel', linkable: user, source: leadgen_rev_site).exists?
         else
           true
         end
       end
 
       def mark_as_saved(user, leadgen_rev_site)
-        SmsSubscriber.find_or_create_by(provider: 'Epcvip', linkable: user, source: leadgen_rev_site) if user.is_a?(ActiveRecord::Base)
+        SmsSubscriber.find_or_create_by(provider: 'Yodel', linkable: user, source: leadgen_rev_site) if user.is_a?(ActiveRecord::Base)
       end
     end
   end
