@@ -3,73 +3,73 @@ module Sms
     class SubscriptionService
       attr_reader :params, :account
 
-        States = {  AK: "Alaska",
-                      AL: "Alabama",
-                      AR: "Arkansas",
-                      AS: "American Samoa",
-                      AZ: "Arizona",
-                      CA: "California",
-                      CO: "Colorado",
-                      CT: "Connecticut",
-                      DC: "District of Columbia",
-                      DE: "Delaware",
-                      FL: "Florida",
-                      GA: "Georgia",
-                      GU: "Guam",
-                      HI: "Hawaii",
-                      IA: "Iowa",
-                      ID: "Idaho",
-                      IL: "Illinois",
-                      IN: "Indiana",
-                      KS: "Kansas",
-                      KY: "Kentucky",
-                      LA: "Louisiana",
-                      MA: "Massachusetts",
-                      MD: "Maryland",
-                      ME: "Maine",
-                      MI: "Michigan",
-                      MN: "Minnesota",
-                      MO: "Missouri",
-                      MS: "Mississippi",
-                      MT: "Montana",
-                      NC: "North Carolina",
-                      ND: "North Dakota",
-                      NE: "Nebraska",
-                      NH: "New Hampshire",
-                      NJ: "New Jersey",
-                      NM: "New Mexico",
-                      NV: "Nevada",
-                      NY: "New York",
-                      OH: "Ohio",
-                      OK: "Oklahoma",
-                      OR: "Oregon",
-                      PA: "Pennsylvania",
-                      PR: "Puerto Rico",
-                      RI: "Rhode Island",
-                      SC: "South Carolina",
-                      SD: "South Dakota",
-                      TN: "Tennessee",
-                      TX: "Texas",
-                      UT: "Utah",
-                      VA: "Virginia",
-                      VI: "Virgin Islands",
-                      VT: "Vermont",
-                      WA: "Washington",
-                      WI: "Wisconsin",
-                      WV: "West Virginia",
-                      WY: "Wyoming"
-                   }
+      STATES = {
+        AK: "Alaska",
+        AL: "Alabama",
+        AR: "Arkansas",
+        AS: "American Samoa",
+        AZ: "Arizona",
+        CA: "California",
+        CO: "Colorado",
+        CT: "Connecticut",
+        DC: "District of Columbia",
+        DE: "Delaware",
+        FL: "Florida",
+        GA: "Georgia",
+        GU: "Guam",
+        HI: "Hawaii",
+        IA: "Iowa",
+        ID: "Idaho",
+        IL: "Illinois",
+        IN: "Indiana",
+        KS: "Kansas",
+        KY: "Kentucky",
+        LA: "Louisiana",
+        MA: "Massachusetts",
+        MD: "Maryland",
+        ME: "Maine",
+        MI: "Michigan",
+        MN: "Minnesota",
+        MO: "Missouri",
+        MS: "Mississippi",
+        MT: "Montana",
+        NC: "North Carolina",
+        ND: "North Dakota",
+        NE: "Nebraska",
+        NH: "New Hampshire",
+        NJ: "New Jersey",
+        NM: "New Mexico",
+        NV: "Nevada",
+        NY: "New York",
+        OH: "Ohio",
+        OK: "Oklahoma",
+        OR: "Oregon",
+        PA: "Pennsylvania",
+        PR: "Puerto Rico",
+        RI: "Rhode Island",
+        SC: "South Carolina",
+        SD: "South Dakota",
+        TN: "Tennessee",
+        TX: "Texas",
+        UT: "Utah",
+        VA: "Virginia",
+        VI: "Virgin Islands",
+        VT: "Vermont",
+        WA: "Washington",
+        WI: "Wisconsin",
+        WV: "West Virginia",
+        WY: "Wyoming"
+      }
 
 
-      
       def initialize(params: {}, account:nil)
         @account = account
         @params = params
-              
+
       end
 
       def add(user, leadgen_rev_site = nil)
-        return unless valid?(user, leadgen_rev_site)    
+        return unless valid?(user, leadgen_rev_site)
         new_params = params.merge({
                                     email: user.try(:email),
                                     ipaddress: params[:ip],
@@ -79,7 +79,7 @@ module Sms
                                     tcpa: 1,
                                     optinDate: params[:date],
                                     origin: params[:url],
-                                    homeState: States.key(params[:state]),
+                                    homeState: STATES.key(params[:state]),
                                     type: 1
                                   })
         client.create_contact(new_params)
@@ -88,10 +88,6 @@ module Sms
         puts "Epcvip adding subscriber error - #{e}".red
       end
 
-      
-
-
-      
       private
 
       def client
