@@ -14,6 +14,10 @@ module Messages
                    .where.not(message_auto_response_id: auto_response.id)
                    .order('message_events.created_at DESC')
 
+        if auto_response.previous_auto_response_id
+          events = events.where(message_auto_response_id: auto_response.previous_auto_response_id)
+        end
+
         if auto_response.message_schedule_id
           events = events.joins(:message_schedule).where(message_schedules: { id: auto_response.message_schedule_id })
         end
