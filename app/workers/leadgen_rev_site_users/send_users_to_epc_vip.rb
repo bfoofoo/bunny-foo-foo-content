@@ -3,7 +3,8 @@ module LeadgenRevSiteUsers
     include Sidekiq::Worker
 
     def perform
-      leadrev_users = LeadgenRevSiteUser.joins(:user).where(created_at: (Time.zone.now.beginning_of_hour - ( 8 * 86400))..Time.zone.now - ( 7 * 86400 ))
+      hour = Time.zone.now.beginning_of_hour
+      leadrev_users = LeadgenRevSiteUser.is_verified.joins(:user).where(created_at: hour - 8.days..hour - 7.days)
       leadrev_users.each do |lrsu|
         return unless lrsu.user
         leadgen_rev_site = LeadgenRevSite.find(lrsu.leadgen_rev_site_id)
@@ -18,12 +19,8 @@ module LeadgenRevSiteUsers
           signup_method: 'Webform',
           state: lrsu.state
         }.compact
-        Sms::Epcvip::SubscriptionService.new(params: params).add(lrsu.user, leadgen_rev_site)        
+        Sms::Epcvip::SubscriptionService.new(params: params).add(lrsu.user, leadgen_rev_site)
       end
     end
-
-    private
-
-
   end
 end

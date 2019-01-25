@@ -48,8 +48,7 @@ recurring_autoresponse:
   class: "Messages::RecurringAutoResponseWorker"
   queue: messages
 
-
-send_users_to_epcvip
-  cron: "*/10 * * * *"
+send_users_to_epcvip:
+  cron: "0 * * * *"
   class: "LeadgenRevSiteUsers::SendUsersToEpcVip"
   queue: epc
