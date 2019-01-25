@@ -7,3 +7,4 @@ max_retries: 2
   - [leads, 1]
   - [messages, 1]
   - [colossus, 1]
+  - [epc, 1]

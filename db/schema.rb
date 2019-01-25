@@ -378,8 +378,6 @@ ActiveRecord::Schema.define(version: 20190124123015) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
-    t.date     "date_of_birth"
-    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
