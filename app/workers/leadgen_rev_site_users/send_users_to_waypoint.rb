@@ -20,7 +20,7 @@ module LeadgenRevSiteUsers
           signup_method: 'Webform',
           state: lrsu.state
         }.compact
-        Sms::Waypoint::SubscriptionService.new(params: params).add(user, leadgen_rev_site)        
+        Sms::Waypoint::SubscriptionService.new(params: params).add(lrsu.user, leadgen_rev_site)        
       end
     end
   end
