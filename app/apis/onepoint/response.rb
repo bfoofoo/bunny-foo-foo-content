@@ -24,12 +24,22 @@ module Onepoint
       body
     end
 
+    def parse_collection
+      multibody
+    end
+
     private
 
     def body
       JSON.parse(response.body).with_indifferent_access
     rescue JSON::ParserError
       {}
+    end
+
+    def multibody
+      JSON.parse(response.body).map(&:with_indifferent_access)
+    rescue JSON::ParserError
+      []
     end
   end
 end
