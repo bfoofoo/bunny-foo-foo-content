@@ -10,18 +10,32 @@ module EmailMarketerService
       end
 
       def add(user)
-        begin
-          if is_valid?(user)
-            client.contact.create(contact_params_for(user))
-            handle_user_record(user)
-          end
-        rescue ::Onepoint::Errors::Error => e
-          handle_user_record(user) if e.message == "email: Subscriber already subscribed."
-          puts "Onepoint adding subscriber error - #{e}".red
-        end
+        return unless is_valid?(user)
+        create_or_update_contact(user)
+      rescue ::Onepoint::Errors::Error => e
+        puts "Onepoint adding subscriber error - #{e}".red
       end
 
       private
+
+      def create_or_update_contact(user)
+        contact_exists?(user) ? add_contact_to_list(user) : create_contact(user)
+        handle_user_record(user)
+      end
+
+      def contact_exists?(user)
+        !!client.contact.get_by_email(user.email)
+      rescue ::Onepoint::Errors::BadRequestError
+        false
+      end
+
+      def create_contact(user)
+        client.contact.create(contact_params_for(user))
+      end
+
+      def add_contact_to_list(user)
+        client.lists.add_emails(list.list_id, user.email)
+      end
 
       def contact_params_for(user)
         hash = {
@@ -66,7 +80,6 @@ module EmailMarketerService
       def account
         @account ||= list.onepoint_account
       end
-
     end
   end
 end

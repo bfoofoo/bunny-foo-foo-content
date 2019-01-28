@@ -5,7 +5,7 @@ module Onepoint
     end
 
     def with_retry
-      retries = 0
+      retries ||= 0
       yield
     rescue Net::ReadTimeout
       retries += 1
