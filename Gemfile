@@ -23,7 +23,7 @@ gem 'acts_as_paranoid', '~> 0.6.0'
 gem 'capistrano-rails-console', require: false
 gem 'savon', '~> 2.12.0'
 gem 'rubyntlm'
-
+gem 'mailigen'
 # APIS
 gem 'cloudflare'
 gem 'droplet_kit'
