@@ -18,7 +18,11 @@ module Allinbox
         'last_name' => data[:last_name],
         'source_id' => data[:list_id],
         'api_key' => data[:api_key],
-        'ip_address' => data[:ip]               
+        'ip_address' => data[:ip],
+        'user_agent' => data[:user_agent],
+        'source_url' => data[:url],
+        'state' => data[:state],
+        'phone' => data[:phone]
        }
       params
     end

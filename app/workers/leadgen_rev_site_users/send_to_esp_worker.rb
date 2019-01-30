@@ -17,7 +17,8 @@ module LeadgenRevSiteUsers
               ip: leadgen_rev_site_user.ip,
               date: leadgen_rev_site_user.created_at,
               signup_method: 'Webform',
-              state: leadgen_rev_site_user.state
+              state: leadgen_rev_site_user.state,
+              user_agent: leadgen_rev_site_user.user_agent
             }.compact
             esp_list = rule.esp_rules_lists[index]
             esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.list.sending_limit&.reached? || esp_list.list.sending_limit&.isp_limit_reached?(leadgen_rev_site_user.user.email)
