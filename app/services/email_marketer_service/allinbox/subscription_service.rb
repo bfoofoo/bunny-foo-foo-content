@@ -12,14 +12,19 @@ module EmailMarketerService
       def add(user)
         begin
           if is_valid?(user)
-            client.contact.create( {
+            response = client.contact.create( {
               email: user.email,
               first_name: user.try(:first_name),
               last_name: user.try(:last_name),
               api_key: account.api_key,
               ip: params.try(:fetch, :ip),
-              list_id: list.list_id
+              list_id: list.list_id,
+              user_agent: params[:user_agent],
+              url: params[:url],
+              state: params[:state],
+              phone: params[:phone]
             })
+            raise ::Allinbox::Errors::BadRequestError, response unless response.try(:has_key?, :success)
             handle_user_record(user)
           end
         rescue ::Allinbox::Errors::Error => e

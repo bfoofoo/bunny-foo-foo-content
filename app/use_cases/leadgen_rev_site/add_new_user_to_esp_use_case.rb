@@ -16,7 +16,8 @@ class LeadgenRevSite
         date: leadgen_rev_site_user.created_at,
         signup_method: 'Webform',
         state: leadgen_rev_site_user.state,
-        phone: leadgen_rev_site_user.phone
+        phone: leadgen_rev_site_user.phone,
+        user_agent: leadgen_rev_site_user.user_agent
       }.compact
     end
 

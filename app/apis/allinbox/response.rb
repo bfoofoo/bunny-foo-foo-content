@@ -10,13 +10,13 @@ module Allinbox
     def parse
       case response.code
       when 400
-        raise Errors::BadRequestError.new, body[:message], caller
+        raise Errors::BadRequestError.new, body[:response], caller
       when 401
         raise Errors::UnauthorizedError.new
       when 404
         raise Errors::NotFoundError.new
       when 500
-        raise Errors::InternalServerError.new, body[:message], caller
+        raise Errors::InternalServerError.new, body[:response], caller
       else
         body[:response]
       end
@@ -25,8 +25,8 @@ module Allinbox
     private
 
     def body
-      JSON.parse(response.body).with_indifferent_access
-    rescue JSON::ParserError
+      Hash.from_xml(response.body).with_indifferent_access
+    rescue REXML::ParseException
       {}
     end
   end
