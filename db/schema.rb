@@ -276,16 +276,16 @@ ActiveRecord::Schema.define(version: 20190131083557) do
   end
 
   create_table "esp_lists", force: :cascade do |t|
-    t.integer  "account_id",    null: false
-    t.string   "type",          null: false
+    t.integer  "account_id",                       null: false
+    t.string   "type",                             null: false
     t.bigint   "list_id"
     t.string   "slug"
     t.string   "address"
     t.string   "name"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "campaign_id"
-    t.string   "member_status"
+    t.string   "member_status", default: "normal"
   end
 
   create_table "esp_rules", force: :cascade do |t|
