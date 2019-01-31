@@ -11,7 +11,6 @@ module Sms
       def add(user, leadgen_rev_site = nil)
         return unless valid?(user, leadgen_rev_site)
         new_params = params.merge({
-                                    email: user.try(:email),
                                     address1: params[:ip],
                                     firstname: user&.first_name,
                                     lastname: user&.last_name,
