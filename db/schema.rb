@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190124123015) do
+ActiveRecord::Schema.define(version: 20190131083557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -276,15 +276,16 @@ ActiveRecord::Schema.define(version: 20190124123015) do
   end
 
   create_table "esp_lists", force: :cascade do |t|
-    t.integer  "account_id",  null: false
-    t.string   "type",        null: false
+    t.integer  "account_id",                       null: false
+    t.string   "type",                             null: false
     t.bigint   "list_id"
     t.string   "slug"
     t.string   "address"
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "campaign_id"
+    t.string   "member_status", default: "normal"
   end
 
   create_table "esp_rules", force: :cascade do |t|
@@ -378,6 +379,8 @@ ActiveRecord::Schema.define(version: 20190124123015) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
