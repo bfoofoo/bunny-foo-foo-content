@@ -13,7 +13,7 @@ module EmailMarketerService
       def add(user)
         user_name = user.try(:full_name).blank? ? user.try(:name) : user.full_name
         response = HTTParty.post("#{API_PATH}/create_member.php", body: {email: user.email, full_name: user_name, account: account.account_name, list: list.name})
-
+1
         update_member_demographics(response, user.email, params: params)
         update_member_status(response, user.email, list.member_status)
         handle_user_record(user)
@@ -44,6 +44,7 @@ module EmailMarketerService
       def update_member_status(user_response, email, status)
         return if !user_response['success'] || status == 'normal'
         payload = {
+          account: list.account.account_name,
           simple_member_struct: {
             "MemberID" => user_response["memberid"],
             "EmailAddress" => email,
