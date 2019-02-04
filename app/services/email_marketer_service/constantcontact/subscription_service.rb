@@ -21,13 +21,10 @@ module EmailMarketerService
             new_contact.add_list(list_to_add_to)
             new_contact.first_name = user.try(:first_name)
             new_contact.last_name = user.try(:last_name)
-            client.add_contact(new_contact)
             handle_user_record(user)
           end
            rescue RestClient::BadRequest => e
              puts "#{e.http_code} - #{e.http_body}"
-        rescue ::ConstantContact::Errors::Error => e
-          puts "error - #{e}".red
         end
       end
 
