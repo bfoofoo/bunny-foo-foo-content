@@ -134,7 +134,7 @@ module LeadgenRevSiteInteractor
     end
 
     def prelander_answers_params
-      params.fetch(:prelander_answers, {}).permit!
+      params.fetch(:prelander_answers, {})&.permit! || nil
     end
 
     def leadgen_rev_site_user_params
