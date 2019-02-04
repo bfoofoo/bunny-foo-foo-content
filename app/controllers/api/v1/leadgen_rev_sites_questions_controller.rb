@@ -10,9 +10,8 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
 
   def create_answer
     service = LeadgenRevSiteUserAnswer::CreateAnswerUseCase.new(@question, answer_params.merge(
-      leadgen_rev_site_user_id: @leadgen_rev_site_user&.id,
-      leadgen_rev_site_id: @leadgen_rev_site.id,
-      ip: request.env['REMOTE_ADDR']
+      leadgen_rev_site_user_id: @leadgen_rev_site_user.id,
+      leadgen_rev_site_id: @leadgen_rev_site.id
     ))
     if service.perform
       render json: service.lrsu_answer
@@ -24,7 +23,7 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:question_id, :answer_id, :url, :email)
+    params.require(:answer).permit(:question_id, :answer_id, :url)
   end
 
   def set_leadgen_rev_site_user
