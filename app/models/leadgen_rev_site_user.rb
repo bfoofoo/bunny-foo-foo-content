@@ -10,6 +10,7 @@ class LeadgenRevSiteUser < ApplicationRecord
   has_many :cep_rules, through: :leadgen_rev_site
   has_many :exported_leads, through: :user
   has_many :sms_subscribers, through: :user
+  has_many :leadgen_rev_site_user_answers
 
   store_accessor :custom_fields, *COLOSSUS_CUSTOM_FIELDS
 
