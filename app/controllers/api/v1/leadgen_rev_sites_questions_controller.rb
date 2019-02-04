@@ -10,7 +10,7 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
 
   def create_answer
     service = LeadgenRevSiteUserAnswer::CreateAnswerUseCase.new(@question, answer_params.merge(
-      leadgen_rev_site_user_id: @leadgen_rev_site_user.id,
+      leadgen_rev_site_user_id: @leadgen_rev_site_user&.id,
       leadgen_rev_site_id: @leadgen_rev_site.id
     ))
     if service.perform
