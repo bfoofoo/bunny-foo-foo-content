@@ -63,11 +63,16 @@ class Api::V1::LeadgenRevSitesController < ApiController
   end
 
   def add_leadgen_rev_site_user
-    leadgen_rev_site_interactor = LeadgenRevSiteInteractor::AddUser.call({
-      params: params,
-      request: request,
-      leadgen_rev_site: @leadgen_rev_site
-    })
+    leadgen_rev_site_interactor = LeadgenRevSiteInteractor::AddUser.call(
+      {
+        params: params,
+        request: request,
+        leadgen_rev_site: @leadgen_rev_site
+      }
+    )
+    unless params[:prelander_answers].blank?
+      LeadgenRevSiteUser::MassCreateAnswersUseCase.new(leadgen_rev_site_interactor.leadgen_rev_site_user, params[:prelander_answers]).perform
+    end
 
     if leadgen_rev_site_interactor.api_response[:is_verified]
       LeadgenRevSite::AddNewUserToEspUseCase.new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user).perform
@@ -76,6 +81,7 @@ class Api::V1::LeadgenRevSitesController < ApiController
         LeadgenRevSite::AddNewUserToSmsUseCase.new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user).perform
       end
     end
+
 
     render json: leadgen_rev_site_interactor.api_response
   end

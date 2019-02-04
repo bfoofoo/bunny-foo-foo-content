@@ -124,8 +124,17 @@ module LeadgenRevSiteInteractor
         is_duplicate: is_ip_duplicate?,
         is_email_duplicate: is_email_duplicate,
         affiliate: params[:user][:a],
-        job_key: params[:user][:key]
+        job_key: params[:user][:key],
+        from_prelander: from_prelander
       }
+    end
+
+    def from_prelander
+      prelander_answers_params.present?
+    end
+
+    def prelander_answers_params
+      params.fetch(:prelander_answers, {}).permit!
     end
 
     def leadgen_rev_site_user_params
