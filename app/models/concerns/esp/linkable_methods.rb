@@ -12,9 +12,10 @@ module Esp
       netatlantic: 'NetatlanticList',
       mailgun: 'MailgunList',
       onepoint: 'OnepointList',
-      allinbox: 'AllinboxList',      
+      allinbox: 'AllinboxList',
       sparkpost: 'SparkpostList',
-      getresponse: 'GetresponseList'
+      getresponse: 'GetresponseList',
+      waypoint: 'WaypointList'
     }.with_indifferent_access.freeze
 
     ESP_LIST_TYPES.each do |provider, type|

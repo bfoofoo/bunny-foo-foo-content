@@ -11,8 +11,9 @@ class FormsiteUser < ApplicationRecord
   has_many :exported_leads, through: :user
   has_many :sms_subscribers, through: :user
 
-  delegate :email,  :first_name, :last_name, :sent_to_adopia?, :sent_to_elite?, :sent_to_netatlantic?, :sent_to_mailgun?,
-           :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?,  :sent_to_allinbox?,   :sent_to_constantcontact?, :sent_to_mailigen?,
+  delegate :email,  :first_name, :last_name, :sent_to_adopia?, :sent_to_elite?, :sent_to_netatlantic?,
+           :sent_to_mailgun?, :sent_to_onepoint?, :sent_to_sparkpost?, :sent_to_getresponse?,
+           :sent_to_allinbox?, :sent_to_constantcontact?, :sent_to_mailigen?, :sent_to_waypoint?,
            to: :user, allow_nil: true
 
   scope :by_s_filter, -> (s_field) {
