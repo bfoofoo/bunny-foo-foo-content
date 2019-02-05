@@ -14,8 +14,7 @@ module EmailMarketerService
         end
   
         def create_contact(params={})
-          params = params.merge(auth_headers)
-          HTTParty.post(API_PATH, body: params)
+            HTTParty.post(API_PATH, body: params)
         end
   
         private
