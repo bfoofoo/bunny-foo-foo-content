@@ -16,6 +16,10 @@ class EspRule < ApplicationRecord
     datetime.beginning_of_hour == Time.zone.now.beginning_of_hour - delay_in_hours.hours
   end
 
+  def delay_passed?
+    created_at < delay_in_hours.hours.ago.beginning_of_hour
+  end
+
   def must_have_lists
     if esp_rules_lists.empty? or esp_rules_lists.all? { |list| list.marked_for_destruction? }
       errors.add(:base, 'Must have at least one ESP rule list')

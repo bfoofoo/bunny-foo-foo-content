@@ -6,6 +6,7 @@ module FormsiteUsers
     def perform
       rules.each do |rule|
         formsite_users = available_formsite_users_for(rule)
+        return if formsite_users.blank? || rule.esp_rules_lists.below_limit.count.zero?
         formsite_users = formsite_users.where('users.email ~* ?', '@' + rule.domain + '\.\w+$') if rule.domain.present?
         formsite_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
           slice.each_with_index do |formsite_user, index|
@@ -35,6 +36,7 @@ module FormsiteUsers
     end
 
     def available_formsite_users_for(rule)
+      return if !rule.lookback && !rule.delay_passed?
       rule.formsite.formsite_users.is_verified.joins(:user).where('formsite_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
     end
   end
