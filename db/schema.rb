@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190206162104) do
+ActiveRecord::Schema.define(version: 20190131123745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -292,12 +292,11 @@ ActiveRecord::Schema.define(version: 20190206162104) do
   create_table "esp_rules", force: :cascade do |t|
     t.string   "source_type"
     t.integer  "source_id"
-    t.integer  "delay_in_hours", default: 0,     null: false
+    t.integer  "delay_in_hours", default: 0, null: false
     t.string   "domain"
     t.string   "affiliate"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.boolean  "lookback",       default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.index ["source_type", "source_id"], name: "index_esp_rules_on_source_type_and_source_id", using: :btree
   end
 
@@ -381,6 +380,8 @@ ActiveRecord::Schema.define(version: 20190206162104) do
     t.string   "job_key"
     t.datetime "deleted_at"
     t.boolean  "is_email_duplicate",             default: false
+    t.date     "date_of_birth"
+    t.string   "zip_code"
     t.string   "external_link"
     t.string   "company"
     t.string   "abstract"
@@ -822,12 +823,6 @@ ActiveRecord::Schema.define(version: 20190206162104) do
     t.datetime "updated_at",                          null: false
     t.string   "file_name"
     t.boolean  "autoremove_from_esp", default: false, null: false
-  end
-
-  create_table "templeads", id: false, force: :cascade do |t|
-    t.string   "email"
-    t.string   "ip_address", limit: 256
-    t.datetime "created_at"
   end
 
   create_table "users", force: :cascade do |t|

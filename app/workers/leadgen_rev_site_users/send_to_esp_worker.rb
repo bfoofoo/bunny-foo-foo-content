@@ -6,7 +6,6 @@ module LeadgenRevSiteUsers
     def perform
       rules.each do |rule|
         leadgen_rev_site_users = available_leadgen_rev_site_users_for(rule)
-        return if leadgen_rev_site_users.blank? || rule.esp_rules_lists.below_limit.count.zero?
         leadgen_rev_site_users = leadgen_rev_site_users.where('users.email ~* ?', '@' + rule.domain + '\.\w+$') if rule.domain.present?
         leadgen_rev_site_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
           slice.each_with_index do |leadgen_rev_site_user, index|

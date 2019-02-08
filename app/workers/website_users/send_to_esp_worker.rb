@@ -6,7 +6,6 @@ module WebsiteUsers
       def perform
         rules.each do |rule|
           website_users = available_website_users_for(rule)
-          return if website_users.blank? || rule.esp_rules_lists.below_limit.count.zero?
           website_users = website_users.where('users.email ~* ?', '@' + rule.domain + '\.\w+$') if rule.domain.present?
           website_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
             slice.each_with_index do |formsite_user, index|
@@ -28,7 +27,6 @@ module WebsiteUsers
       end
   
       def available_website_users_for(rule)
-        return if !rule.lookback && !rule.delay_passed?
         rule.website.formsite_users.is_verified
           .joins(:user)
           .where('formsite_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
