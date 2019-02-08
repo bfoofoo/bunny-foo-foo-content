@@ -37,7 +37,6 @@ module LeadgenRevSiteUsers
     end
 
     def available_leadgen_rev_site_users_for(rule)
-      return if !rule.lookback && !rule.delay_passed?
       rule.leadgen_rev_site.leadgen_rev_site_users.is_verified
         .joins(:user)
         .where('leadgen_rev_site_users.created_at >= ?', rule.delay_in_hours.hours.ago.beginning_of_hour).distinct
