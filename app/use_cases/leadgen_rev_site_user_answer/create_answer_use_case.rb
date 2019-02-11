@@ -10,6 +10,7 @@ class LeadgenRevSiteUserAnswer
     def perform
       @lrsu_answer = @question.leadgen_rev_site_user_answers.build(@params)
       @lrsu_answer.save!
+      leadrev_user = @lrsu_answer.leadgen_rev_site_user
       key = @question.custom_field&.name
       if @question.custom_field_id && leadrev_user && leadrev_user.try(key).blank?
         leadrev_user.update(key => answer.custom_field_value)
