@@ -7,7 +7,9 @@ module ApiUsers
       rules.each do |rule|
         api_users = available_api_users_for(rule)
         api_users = api_users.by_email_domain(rule.domain) if rule.domain.present?
-        api_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
+        filtered_esp_lists = filter_esp_rules_lists(rule.esp_rules_lists)
+        return if filtered_esp_lists.count.zero?
+        api_users.each_slice(filtered_esp_lists.count) do |slice|
           slice.each_with_index do |api_user, index|
             params = {
               affiliate: rule.affiliate,
@@ -18,8 +20,7 @@ module ApiUsers
               state: api_user.state
             }.compact
             next unless rule.should_send_now?(api_user.created_at)
-            esp_list = rule.esp_rules_lists[index]
-            esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.list.sending_limit&.reached? || esp_list.list.sending_limit&.isp_limit_reached?(api_user.email)
+            esp_list = filtered_esp_lists[index]
             next unless esp_list
             subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(:add, api_user)
           end

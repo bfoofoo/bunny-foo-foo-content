@@ -9,11 +9,15 @@ class EspRule < ApplicationRecord
   validate :must_have_lists
 
   def split?
-    esp_rules_lists.below_limit.count > 1
+    esp_rules_lists.count > 1
   end
 
   def should_send_now?(datetime)
     datetime.beginning_of_hour == Time.zone.now.beginning_of_hour - delay_in_hours.hours
+  end
+
+  def delay_passed?
+    created_at < delay_in_hours.hours.ago.beginning_of_hour
   end
 
   def must_have_lists
