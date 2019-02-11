@@ -7,12 +7,13 @@ module WebsiteUsers
         rules.each do |rule|
           website_users = available_website_users_for(rule)
           website_users = website_users.where('users.email ~* ?', '@' + rule.domain + '\.\w+$') if rule.domain.present?
-          website_users.each_slice(rule.esp_rules_lists.below_limit.count) do |slice|
+          filtered_esp_lists = filter_esp_rules_lists(rule.esp_rules_lists)
+          return if filtered_esp_lists.count.zero?
+          website_users.each_slice(filtered_esp_lists.count) do |slice|
             slice.each_with_index do |formsite_user, index|
               next unless rule.should_send_now?(formsite_user.created_at)
               params = { affiliate: formsite_user.affiliate }.compact
-              esp_list = rule.esp_rules_lists[index]
-              esp_list = rule.esp_rules_lists.above_limit.sample if esp_list.list.sending_limit&.reached? || esp_list.list.sending_limit&.isp_limit_reached?(formsite_user.user.email)
+              esp_list = filtered_esp_lists[index]
               next unless esp_list
               subscription_service_for(esp_list.list_type).new(esp_list.list, params: params, esp_rule: rule).send(:add, formsite_user.user)
             end
