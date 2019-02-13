@@ -43,11 +43,6 @@ recurring_autoresponse:
   class: "Messages::RecurringAutoResponseWorker"
   queue: messages
 
-send_users_to_epcvip:
-  cron: "*/10 * * * *"
-  class: "LeadgenRevSiteUsers::SendUsersToEpcVip"
-  queue: cep
-
 send_users_to_waypoint:
   cron: "*/15 * * * *"
   class: "LeadgenRevSiteUsers::SendUsersToWaypoint"
