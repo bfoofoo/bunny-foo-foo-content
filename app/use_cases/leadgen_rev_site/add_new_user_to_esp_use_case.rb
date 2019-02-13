@@ -4,10 +4,11 @@ class LeadgenRevSite
 
     attr_reader :leadgen_rev_site, :user, :leadgen_rev_site_user
 
-    def initialize(leadgen_rev_site, user, leadgen_rev_site_user)
+    def initialize(leadgen_rev_site, user, leadgen_rev_site_user, from_prelander = false)
       @user = user
       @leadgen_rev_site = leadgen_rev_site
       @leadgen_rev_site_user = leadgen_rev_site_user
+      @from_prelander = from_prelander
       @params = {
         affiliate: leadgen_rev_site_user.affiliate,
         ipAddress: leadgen_rev_site_user.ip,
@@ -41,7 +42,12 @@ class LeadgenRevSite
     end
 
     def schedule_for_colossus
-      LeadgenRevSiteUsers::SendToColossusWorker.perform_async(leadgen_rev_site_user.id, user.id)
+      worker = LeadgenRevSiteUsers::SendToColossusWorker
+      if @from_prelander
+        worker.perform_async(leadgen_rev_site_user.id, user.id)
+      else
+        worker.perform_at(15.minutes.from_now, leadgen_rev_site_user.id, user.id)
+      end
     end
   end
 end

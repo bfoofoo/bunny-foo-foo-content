@@ -70,15 +70,20 @@ class Api::V1::LeadgenRevSitesController < ApiController
         leadgen_rev_site: @leadgen_rev_site
       }
     )
-    unless params[:prelander_answers].blank?
-      LeadgenRevSiteUser::MassCreateAnswersUseCase.new(leadgen_rev_site_interactor.leadgen_rev_site_user, params[:prelander_answers]).perform
-    end
+    from_prelander = params[:prelander_answers].present?
+    LeadgenRevSiteUser::MassCreateAnswersUseCase
+      .new(leadgen_rev_site_interactor.leadgen_rev_site_user, params[:prelander_answers])
+      .perform if from_prelander
 
     if leadgen_rev_site_interactor.api_response[:is_verified]
-      LeadgenRevSite::AddNewUserToEspUseCase.new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user).perform
+      LeadgenRevSite::AddNewUserToEspUseCase
+        .new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user, from_prelander)
+        .perform
 
       if leadgen_rev_site_interactor.api_response[:sms_compliant]
-        LeadgenRevSite::AddNewUserToSmsUseCase.new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user).perform
+        LeadgenRevSite::AddNewUserToSmsUseCase
+          .new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user)
+          .perform
       end
     end
 
