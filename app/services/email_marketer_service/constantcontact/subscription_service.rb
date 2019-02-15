@@ -14,7 +14,7 @@ module EmailMarketerService
           new_contact = ConstantContact::Components::Contact.new
           new_contact.add_email(ConstantContact::Components::EmailAddress.new(user.email))
           list_to_add_to = ConstantContact::Components::ContactList.new
-          list_to_add_to.id = list.list_id
+          list_to_add_to.id = list.list_id.to_s
           new_contact.add_list(list_to_add_to)
           new_contact.first_name = user.try(:first_name)
           new_contact.last_name = user.try(:last_name)
