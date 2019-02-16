@@ -4,13 +4,15 @@ module EmailMarketerService
       API_PATH = "https://api.getresponse.com/v3"
       AUTH_HEADER_KEY = "X-Auth-Token"
       AUTH_KEY_TYPE = "api-key"
+
+      # This works on PER ACCOUNT basis! see output of #get_fields
       CUSTOM_FIELDS = {
-        "url" => "YJlIN",
-        "method" => "bW0bx",
-        "ipaddress" => "bkGXO",
-        "join_date" => "bkG7n",
-        "state" => "YJlqn",
-        "affiliate" => "bkXc4"
+        "url" => "dGR9W",
+        "method" => "d7IJ6",
+        "ipaddress" => "d7Imh",
+        "join_date" => "d7ItQ",
+        "state" => "dGRqu",
+        "affiliate" => "d7I0G"
       }
 
       CUSTOM_FIELD_MAPPING = {
@@ -50,12 +52,12 @@ module EmailMarketerService
       private
 
       def uri path
-        return "#{API_PATH}#{path}"
+        "#{API_PATH}#{path}"
       end
 
       def auth_headers
-        return {
-          "#{AUTH_HEADER_KEY}": "#{AUTH_KEY_TYPE} #{@account.api_key}",
+        {
+          "#{AUTH_HEADER_KEY}" => "#{AUTH_KEY_TYPE} #{@account.api_key}",
           "Content-Type" => "application/json"
         }
       end
