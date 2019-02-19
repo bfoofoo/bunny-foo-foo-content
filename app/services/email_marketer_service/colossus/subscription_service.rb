@@ -26,7 +26,10 @@ module EmailMarketerService
               date: params[:date],
               **custom_fields
             }
-            client.create_contact(request_params)
+            response = client.create_contact(request_params)
+            if response&.body != 'Success'
+              raise ::Colossus::Errors::BadRequestError, response&.body
+            end
             handle_user_record(user)
           end
         rescue ::Colossus::Errors::Error => e

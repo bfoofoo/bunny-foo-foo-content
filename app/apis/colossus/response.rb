@@ -18,16 +18,14 @@ module Colossus
       when 500
         raise Errors::InternalServerError.new, body[:message], caller
       else
-        body[:response]
+        body
       end
     end
 
     private
 
     def body
-      JSON.parse(response.body).with_indifferent_access
-    rescue JSON::ParserError
-      {}
+      response.body
     end
   end
 end

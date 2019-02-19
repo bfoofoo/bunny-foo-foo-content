@@ -7,8 +7,7 @@ module Colossus
     end
 
     def create_contact(params)
-      response = @request.post('leadimport.php', create_params(params))
-      Response.new(response).parse
+      @request.post('leadimport.php', create_params(params))
     end
     
     private
