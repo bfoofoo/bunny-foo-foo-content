@@ -52,7 +52,7 @@ module EmailMarketerService
       
       def client
         return @client if defined?(@client)
-        @client = Mailigen::Api.new(list.account.api_key)
+        @client = ::Mailigen::Api.new(list.account.api_key)
       end
       
       def account
