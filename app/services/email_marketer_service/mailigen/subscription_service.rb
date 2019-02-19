@@ -19,7 +19,7 @@ module EmailMarketerService
             handle_user_record(user)
           end
         rescue  => e
-          puts "error - #{e}".red
+          puts "Mailigen error - #{e}".red
         end
       end
    

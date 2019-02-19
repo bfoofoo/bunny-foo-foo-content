@@ -28,7 +28,7 @@ module EmailMarketerService
             handle_user_record(user)
           end
         rescue ::Allinbox::Errors::Error => e
-          puts "error - #{e}".red
+          puts "Allinbox error - #{e}".red
         end
       end
 

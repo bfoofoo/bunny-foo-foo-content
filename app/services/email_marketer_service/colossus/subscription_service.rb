@@ -33,7 +33,7 @@ module EmailMarketerService
             handle_user_record(user)
           end
         rescue ::Colossus::Errors::Error => e
-          puts "error - #{e}".red
+          puts "Colossus error - #{e}".red
         end
       end
 
