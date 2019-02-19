@@ -14,22 +14,21 @@ module EmailMarketerService
         begin
           if is_valid?(user)
             lid =  list.campaign_id
-            mergeparams = create_params(user)
-            addtolist(lid,mergeparams)
-            handle_user_record(user)
+            merge_params = create_params(user)
+            response = add_to_list(lid, merge_params)
+            handle_user_record(user) if response
           end
         rescue  => e
-          puts "error - #{e}".red
+          puts "Mailigen error - #{e}".red
         end
       end
    
     def create_params(data)
-      params = {
+      {
         'EMAIL' => data[:email],
         'FNAME' => data[:first_name],
         'LNAME' => data[:last_name],
-       }
-      params
+      }
     end
    
       private
@@ -46,9 +45,9 @@ module EmailMarketerService
         end
       end
 
-      def addtolist(listid,params)
+      def add_to_list(list_id, params)
       remail = params["EMAIL"]
-      resp = client.call :listSubscribe, {id: listid,email_address: remail, merge_vars: params , double_optin: false }
+      client.call :listSubscribe, {id: list_id, email_address: remail, merge_vars: params , double_optin: false }
     end
 
       
@@ -60,8 +59,6 @@ module EmailMarketerService
       def account
         @account ||= list.mailigen_account
       end
-
-  
     end
   end
 end
