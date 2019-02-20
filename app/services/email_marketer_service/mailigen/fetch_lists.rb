@@ -9,10 +9,9 @@ module EmailMarketerService
 
       def call
         lists.map do |list|
-          # TODO switch to check by list_id later
           account.lists.find_or_create_by(
-            name: list['name']
-          ).update(list_id: list['web_id'], slug: list['id'])
+            slug: list['id']
+          ).update(list_id: list['web_id'], name: list['name'])
         end
       end
 
