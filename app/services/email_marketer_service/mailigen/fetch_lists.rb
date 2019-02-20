@@ -9,16 +9,17 @@ module EmailMarketerService
 
       def call
         lists.map do |list|
+          # TODO switch to check by list_id later
           account.lists.find_or_create_by(
-            list_id: list['id'],
-            ).update(name: list['name'])
+            name: list['name']
+          ).update(list_id: list['web_id'], slug: list['id'])
         end
       end
 
       private
 
       def lists
-        client.call :lists
+        @lists ||= client.call :lists
       end
 
       def client

@@ -12,9 +12,9 @@ module EmailMarketerService
       def add(user)
         begin
           if is_valid?(user)
-            lid =  list.list_id
+            list_id =  list.slug
             merge_params = create_params(user)
-            response = add_to_list(lid, merge_params)
+            response = add_to_list(list_id, merge_params)
             handle_user_record(user) if response
           end
         rescue  => e
@@ -45,8 +45,7 @@ module EmailMarketerService
       end
 
       def add_to_list(list_id, params)
-      remail = params["EMAIL"]
-      client.call :listSubscribe, {id: list_id, email_address: remail, merge_vars: params , double_optin: false }
+      client.call :listSubscribe, {id: list_id, email_address: params["EMAIL"], merge_vars: params , double_optin: false }
     end
 
       
