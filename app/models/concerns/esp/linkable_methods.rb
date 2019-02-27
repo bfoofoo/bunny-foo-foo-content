@@ -15,7 +15,8 @@ module Esp
       allinbox: 'AllinboxList',
       sparkpost: 'SparkpostList',
       getresponse: 'GetresponseList',
-      waypoint: 'WaypointList'
+      waypoint: 'WaypointList',
+      colossus: 'ColossusList'
     }.with_indifferent_access.freeze
 
     ESP_LIST_TYPES.each do |provider, type|
