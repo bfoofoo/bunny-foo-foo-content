@@ -9,6 +9,9 @@ class Api::V1::LeadgenRevSitesQuestionsController < ApplicationController
   end
 
   def create_answer
+    if params[:email] && !@leadgen_rev_site_user
+      @leadgen_rev_site_user = LeadgenRevSiteUser::CloneUseCase.new(@leadgen_rev_site.id, params[:email]).perform
+    end
     service = LeadgenRevSiteUserAnswer::CreateAnswerUseCase.new(@question, answer_params.merge(
       leadgen_rev_site_user_id: @leadgen_rev_site_user&.id,
       leadgen_rev_site_id: @leadgen_rev_site.id
