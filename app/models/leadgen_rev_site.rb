@@ -57,6 +57,7 @@ class LeadgenRevSite < ApplicationRecord
   mount_uploader :text_file, TextFileUploader
   mount_uploader :prelander_image, CommonUploader
   mount_uploader :service_worker_file, ScriptUploader
+  mount_uploader :one_signal_sdk_worker_file, OneSignalScriptUploader
 
   def mark_last_question
     return if questions.empty?
@@ -82,7 +83,8 @@ class LeadgenRevSite < ApplicationRecord
       type: 'leadgen_rev_site',
       size_slug: self.size_slug,
       account_id: self.account_id,
-      service_worker_file: self.service_worker_file.url
+      service_worker_file: self.service_worker_file.url,
+      one_signal_sdk_worker_file: self.one_signal_sdk_worker_file.url
     }
   end
 end
