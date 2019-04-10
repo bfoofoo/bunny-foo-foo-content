@@ -7,12 +7,12 @@ module EmailMarketerService
 
       # This works on PER ACCOUNT basis! see output of #get_fields
       CUSTOM_FIELDS = {
-        "url" => "dGR9W",
-        "method" => "d7IJ6",
-        "ipaddress" => "d7Imh",
-        "join_date" => "d7ItQ",
-        "state" => "dGRqu",
-        "affiliate" => "d7I0G"
+        "url" => "Vpvsb2",
+        "method" => "VTz7ij",
+        "ipaddress" => "VTz7Ld",
+        "join_date" => "VTz7As",
+        "state" => "Vpvslj",
+        "affiliate" => "VTzIjc"
       }
 
       CUSTOM_FIELD_MAPPING = {
@@ -30,7 +30,7 @@ module EmailMarketerService
 
       def call
         lists.map do |list|
-          account.lists << AdopiaList.new(
+          account.lists << GetresponseList.new(
             list_id: list.id,
             name: list.name
           )
