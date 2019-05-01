@@ -19,6 +19,7 @@ class LeadgenRevSite
         state: leadgen_rev_site_user.state,
         phone: leadgen_rev_site_user.phone,
         user_agent: leadgen_rev_site_user.user_agent
+        updated_at: leadgen_rev_site_user.updated_at
       }.compact
     end
 
