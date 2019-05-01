@@ -24,7 +24,6 @@ module EmailMarketerService
               state: params[:state],
               phone: params[:phone],
               sign_up_date: params[:updated_at]
-
             })
             raise ::Allinbox::Errors::BadRequestError, response unless response.try(:has_key?, :success)
             handle_user_record(user)
