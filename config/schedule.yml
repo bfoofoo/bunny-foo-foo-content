@@ -1,17 +1,17 @@
-send_api_users_to_esp:
-  cron: "0 * * * *"
-  class: "ApiUsers::SendToEspWorker"
-  queue: default
+#send_api_users_to_esp:
+#  cron: "0 * * * *"
+#  class: "ApiUsers::SendToEspWorker"
+#  queue: default
 
 send_formsite_users_to_esp:
   cron: "0 * * * *"
   class: "FormsiteUsers::SendToEspWorker"
   queue: default
 
-send_leadgen_rev_site_users_to_esp:
-  cron: "0 * * * *"
-  class: "LeadgenRevSiteUsers::SendToEspWorker"
-  queue: default
+#send_leadgen_rev_site_users_to_esp:
+#  cron: "0 * * * *"
+#  class: "LeadgenRevSiteUsers::SendToEspWorker"
+#  queue: default
 
 send_website_users_to_esp:
   cron: "0 * * * *"
@@ -23,10 +23,10 @@ suppression_lists_autoremove_from_esp:
   class: "SuppressionLists::AutoremoveFromEspWorker"
   queue: default
 
-batch_old_send_to_netatlantic:
-  cron: "0,30 * * * *"
-  class: "Esp::BatchSendOldRefsToNetatlanticWorker"
-  queue: leads
+#batch_old_send_to_netatlantic:
+#  cron: "0,30 * * * *"
+#  class: "Esp::BatchSendOldRefsToNetatlanticWorker"
+#  queue: leads
 
 autorespond_to_inactive_recipients:
   cron: "1 * * * *"
@@ -43,7 +43,7 @@ send_users_to_waypoint:
   class: "LeadgenRevSiteUsers::SendUsersToWaypoint"
   queue: cep
 
-send_users_to_colossus:
-  cron: "1 * * * *"
-  class: "LeadgenRevSiteUsers::SendToColossusWorker"
-  queue: colossus
+#send_users_to_colossus:
+#  cron: "1 * * * *"
+#  class: "LeadgenRevSiteUsers::SendToColossusWorker"
+#  queue: colossus

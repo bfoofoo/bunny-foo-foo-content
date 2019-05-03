@@ -75,17 +75,17 @@ class Api::V1::LeadgenRevSitesController < ApiController
       .new(leadgen_rev_site_interactor.leadgen_rev_site_user, params[:prelander_answers])
       .perform if from_prelander
 
-    if leadgen_rev_site_interactor.api_response[:is_verified]
-      LeadgenRevSite::AddNewUserToEspUseCase
-        .new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user, from_prelander)
-        .perform
-
-      if leadgen_rev_site_interactor.api_response[:sms_compliant]
-        LeadgenRevSite::AddNewUserToSmsUseCase
-          .new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user)
-          .perform
-      end
-    end
+    #if leadgen_rev_site_interactor.api_response[:is_verified]
+    #  LeadgenRevSite::AddNewUserToEspUseCase
+    #    .new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user, from_prelander)
+    #    .perform
+#
+    #  if leadgen_rev_site_interactor.api_response[:sms_compliant]
+    #    LeadgenRevSite::AddNewUserToSmsUseCase
+    #      .new(@leadgen_rev_site, leadgen_rev_site_interactor.user, leadgen_rev_site_interactor.leadgen_rev_site_user)
+    #      .perform
+    #  end
+    #end
 
 
     render json: leadgen_rev_site_interactor.api_response
