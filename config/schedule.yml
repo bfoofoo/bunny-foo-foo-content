@@ -43,7 +43,7 @@ send_users_to_waypoint:
   class: "LeadgenRevSiteUsers::SendUsersToWaypoint"
   queue: cep
 
-#send_users_to_colossus:
-#  cron: "1 * * * *"
-#  class: "LeadgenRevSiteUsers::SendToColossusWorker"
-#  queue: colossus
+send_users_to_colossus:
+  cron: "1 * * * *"
+  class: "LeadgenRevSiteUsers::SendToColossusWorker"
+  queue: colossus
